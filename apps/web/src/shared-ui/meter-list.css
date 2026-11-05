@@ -1,0 +1,9 @@
+/* Labelled horizontal meters (vote shares, distributions). */
+@layer components {
+  .meter-list { display: grid; gap: 8px; }
+  .meter-row { display: grid; grid-template-columns: minmax(70px, 110px) minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 13px; }
+  .meter-row.is-emphasis .meter-label { font-weight: 700; }
+  .meter-track { height: 6px; background: var(--surface-2); border-radius: var(--r-pill); overflow: hidden; }
+  .meter-fill { height: 100%; background: var(--meter-fill, var(--primary)); border-radius: inherit; transition: width var(--t-fast); }
+  .meter-value { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+}

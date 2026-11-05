@@ -1,0 +1,12 @@
+/* Tier-framed portrait with photo credit (metal frame: gold double for Mítico, silver, bronze, neutral). */
+@layer components {
+  .tier-portrait { margin: 0; width: var(--portrait-w, 168px); aspect-ratio: 4 / 5; border-radius: var(--r-lg); overflow: hidden; position: relative; display: grid; place-items: center; border: 2px solid var(--border); background: var(--surface-2); flex: none; }
+  .tier-portrait-mythic { border-color: transparent; background: linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--grad-gold) border-box; outline: 1px solid var(--medal-gold); outline-offset: 5px; }
+  .tier-portrait-legendary { border-color: var(--medal-silver); }
+  .tier-portrait-elite { border-color: var(--medal-bronze); }
+  .tier-portrait-champion { border-color: var(--border-strong); }
+  .tier-portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; z-index: 1; }
+  .tier-portrait-fallback { font: 700 40px var(--font-display); color: var(--muted); }
+  .tier-portrait figcaption { position: absolute; z-index: 2; inset: auto 0 0 0; font-size: 10px; line-height: 1.3; padding: 14px 6px 4px; background: linear-gradient(transparent, color-mix(in oklab, var(--midnight) 85%, transparent)); color: var(--text); }
+  .tier-portrait figcaption a { color: inherit; text-decoration: underline; }
+}

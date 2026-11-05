@@ -1,0 +1,13 @@
+/* Switch: on/off setting (consents, preferences). Tokens only. */
+@layer components {
+  .switch-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; align-items: center; }
+  .switch-text { display: grid; gap: 2px; min-width: 0; }
+  .switch-label { font-weight: 600; cursor: pointer; }
+  .switch-desc { font-size: 13px; color: var(--muted); margin: 0; }
+  .switch-input { appearance: none; position: relative; width: 44px; height: 26px; margin: 0; border-radius: var(--r-pill); border: 1px solid var(--border-strong); background: var(--surface-2); cursor: pointer; flex: none; transition: background-color var(--t-fast), border-color var(--t-fast); }
+  .switch-input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); transition: transform var(--t-fast), background-color var(--t-fast); }
+  .switch-input:checked { background: var(--primary); border-color: var(--primary); }
+  .switch-input:checked::after { transform: translateX(18px); background: var(--on-primary); }
+  .switch-input:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .switch-input:disabled { opacity: .55; cursor: progress; }
+}
