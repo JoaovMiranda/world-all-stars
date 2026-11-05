@@ -1,0 +1,43 @@
+import { CommentSort, CommentsQuerySchema, ParticipationApi } from '@was/shared';
+
+import { demoStore } from '../demo.store';
+import { defineMutation, defineQuery } from '../define-endpoint.helper';
+import { postDemoComment, reactDemoComment } from '../fixtures/comment-mutations.fixture';
+import { buildComments, commentRows } from '../fixtures/comments.fixture';
+import { requireUser } from '../fixtures/require-user.fixture';
+import { meQuery, notificationsQuery, sessionQuery } from './session.query';
+
+/** GET /api/athletes/:slug/comments?sort=top|recent (doc 20). Public read. */
+export const commentsQuery = defineQuery(ParticipationApi.comments, {
+  sample: async ({ input, sample, session }) =>
+    buildComments(await commentRows(sample, session.user), input.params.slug, CommentsQuerySchema.parse(input.query ?? {}).sort ?? CommentSort.Top),
+  empty: () => ({ threads: [], total: 0, max: 500, nextCursor: null }),
+});
+
+const afterComment = [commentsQuery, sessionQuery, meQuery, notificationsQuery] as const;
+
+/** POST /api/athletes/:slug/comments: comment or reply (shared validation, 422 on failure). */
+export const postComment = defineMutation(
+  ParticipationApi.postComment,
+  ({ input, sample, session }) => postDemoComment(sample, requireUser(session), input.params.slug, input.body.body, input.body.parentId),
+  { invalidates: afterComment },
+);
+
+/** PUT /api/comments/:id/reaction: like/dislike, null undoes. 403 on your own comment. */
+export const reactToComment = defineMutation(
+  ParticipationApi.reactToComment,
+  ({ input, sample, session }) => reactDemoComment(sample, requireUser(session), input.params.id, input.body.reaction),
+  { invalidates: [commentsQuery] },
+);
+
+/** DELETE /api/comments/:id (soft delete by the author). */
+export const deleteComment = defineMutation(
+  ParticipationApi.deleteComment,
+  ({ input }) => {
+    demoStore.update((d) => {
+      d.deletedComments.push(input.params.id);
+    });
+    return { ok: true };
+  },
+  { invalidates: afterComment },
+);
