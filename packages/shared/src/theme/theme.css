@@ -31,7 +31,14 @@
 
   --lvl-world: var(--medal-gold); --lvl-continental: #6E7F8D; --lvl-national: var(--medal-bronze); --lvl-local: var(--muted);
   /* Níveis = metais: Mítico ouro · Lendário prata · Elite bronze · Campeão neutro */
-  --tier-mythic: var(--gold-text); --tier-legendary: var(--silver-text); --tier-elite: var(--bronze-text); --tier-champion: var(--text);
+  /* Níveis de campeão (separados das medalhas): Mítico = magia iridescente · Lendário = ouro · Elite = safira · Campeão = esmeralda.
+     --tier-X = texto (AA) · --tier-X-fill = cor sólida (anéis, barras) · --tier-X-grad = borda/preenchimento com brilho */
+  --tier-mythic: #6B2FC2; --tier-legendary: #7A5A1C; --tier-elite: #22509E; --tier-champion: #17684D;
+  --tier-mythic-fill: #8B5CF6; --tier-mythic-glow: #D946EF; --tier-legendary-fill: #D4AF37; --tier-elite-fill: #3B6FD8; --tier-champion-fill: #2F9E74;
+  --tier-mythic-grad: linear-gradient(115deg, #7C3AED 0%, #D946EF 22%, #F5C451 45%, #22D3EE 68%, #8B5CF6 90%, #D946EF 100%);
+  --tier-legendary-grad: linear-gradient(135deg, #9C7A1E 0%, #F1D774 45%, #B8921F 100%);
+  --tier-elite-grad: linear-gradient(135deg, #1E3A8A 0%, #7AA2F7 45%, #2848A8 100%);
+  --tier-champion-grad: linear-gradient(135deg, #0F5E45 0%, #6FD3A8 45%, #167A58 100%);
 
   --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-pill: 999px;   /* cantos suaves: cartões 12, botões e campos 8, selos 4 */
   --font-ui: Manrope, "Helvetica Neue", system-ui, sans-serif;            /* texto e interface: moderna e legível */
@@ -50,7 +57,7 @@
   --ocean: #14120E; --land: #3A3125; --metal: #8C6A2C; --metal-2: #C9A35C;
   --accent-text: #D9B96E; --success-text: #8CC7A1; --danger-text: #E8968A; --info-text: #9DBEDD;
   --on-primary: #0C0B09; --on-success: #0C0B09; --on-info: #0C0B09; --on-danger: #0C0B09;
-  --lvl-continental: #A9B7C4; --gold-text: #E2C15A; --silver-text: #D4D4D4; --bronze-text: #DE9558;
+  --lvl-continental: #A9B7C4; --gold-text: #E2C15A; --silver-text: #D4D4D4; --bronze-text: #DE9558; --tier-mythic: #C9B2FF; --tier-legendary: #E2C15A; --tier-elite: #9DBBF2; --tier-champion: #86D6B4;
   --float-shadow: 0 12px 32px rgba(0, 0, 0, .5);
 }
 @media (prefers-color-scheme: dark) {
@@ -63,7 +70,7 @@
     --ocean: #14120E; --land: #3A3125; --metal: #8C6A2C; --metal-2: #C9A35C;
     --accent-text: #D9B96E; --success-text: #8CC7A1; --danger-text: #E8968A; --info-text: #9DBEDD;
     --on-primary: #0C0B09; --on-success: #0C0B09; --on-info: #0C0B09; --on-danger: #0C0B09;
-    --lvl-continental: #A9B7C4; --gold-text: #E2C15A; --silver-text: #D4D4D4; --bronze-text: #DE9558;
+    --lvl-continental: #A9B7C4; --gold-text: #E2C15A; --silver-text: #D4D4D4; --bronze-text: #DE9558; --tier-mythic: #C9B2FF; --tier-legendary: #E2C15A; --tier-elite: #9DBBF2; --tier-champion: #86D6B4;
     --float-shadow: 0 12px 32px rgba(0, 0, 0, .5);
   }
 }
@@ -75,10 +82,13 @@
 /* Always-dark "stage" (Hall of Greats band): stays dark in both themes, on purpose. */
 .theme-stage {
   --accent-text: #E1C27A; --success-text: #8CC7A1; --info-text: #9DBEDD; --danger-text: #E8968A;
-  --tier-mythic: #E1C27A; --tier-legendary: #CFCBC2; --tier-elite: #D19A66; --tier-champion: #F2ECDF;
+  --tier-mythic: #C9B2FF; --tier-legendary: #E2C15A; --tier-elite: #9DBBF2; --tier-champion: #86D6B4;
   --primary: #E1C27A; --primary-hover: #EDD39A; --on-primary: #0C0B09; --accent: #C9A35C; --accent-soft: #241E13;
   --bg: #0C0B09; --surface: #14110D; --surface-2: #1C1813; --border: #3A3123; --border-strong: #5C4C2E;
   --muted: #B3A893; --text: #F2ECDF;
   color-scheme: dark;
   background: var(--midnight); color: var(--text);
 }
+
+/* Brilho "mágico" do Mítico: o gradiente iridescente desliza devagar (desligado com prefers-reduced-motion). */
+@keyframes tier-mythic-shimmer { from { background-position: 0% 50%, 0% 50%; } to { background-position: 0% 50%, 200% 50%; } }

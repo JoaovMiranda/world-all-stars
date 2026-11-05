@@ -1,4 +1,4 @@
-import { type AthleteProfile, type Tier, TIER_MEDAL, TIER_ORDER, type TierVotesResponse } from '@was/shared';
+import { type AthleteProfile, type Tier, TIER_ORDER, type TierVotesResponse } from '@was/shared';
 import { useState } from 'react';
 
 import { castTierVote, tierVotesQuery } from '@/data/endpoints/tier-votes.query';
@@ -16,10 +16,7 @@ import { ATHLETE_PROFILE_TEXT } from './athletes.const';
 import { percent } from './sport-panels/sport-panel.helper';
 
 const T = ATHLETE_PROFILE_TEXT.vote;
-const fillOf = (tier: Tier) => {
-  const metal = TIER_MEDAL[tier];
-  return metal ? `var(--grad-${metal})` : 'var(--border-strong)';
-};
+const fillOf = (tier: Tier) => `var(--tier-${tier}-grad)`;
 
 interface VoteOptionsProps {
   label: string;

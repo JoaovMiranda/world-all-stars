@@ -101,10 +101,11 @@
   /* Tags and chips */
   .tag { display: inline-flex; align-items: center; gap: 5px; font: 600 10.5px var(--font-ui); letter-spacing: .1em; text-transform: uppercase; padding: 4px 8px; border-radius: var(--r-sm); border: 1px solid currentColor; white-space: nowrap; color: var(--muted); }
   .tag-tier-mythic, .tag-tier-legendary, .tag-tier-elite { border: 1.5px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--metal-grad) border-box; }
-  .tag-tier-mythic { color: var(--tier-mythic); --metal-grad: var(--grad-gold); }
-  .tag-tier-legendary { color: var(--tier-legendary); --metal-grad: var(--grad-silver); }
-  .tag-tier-elite { color: var(--tier-elite); --metal-grad: var(--grad-bronze); }
-  .tag-tier-champion { color: var(--tier-champion); }
+  .tag-tier-mythic { color: var(--tier-mythic); --metal-grad: var(--tier-mythic-grad); background-size: 100% 100%, 200% 100%; animation: tier-mythic-shimmer 6s linear infinite; }
+  .tag-tier-legendary { color: var(--tier-legendary); --metal-grad: var(--tier-legendary-grad); }
+  .tag-tier-elite { color: var(--tier-elite); --metal-grad: var(--tier-elite-grad); }
+  .tag-tier-champion { color: var(--tier-champion); border-color: var(--tier-champion-fill); }
+  @media (prefers-reduced-motion: reduce) { .tag-tier-mythic { animation: none; } }
   .chip { font: 600 11px var(--font-ui); letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: var(--r-pill); padding: 6px 12px; min-height: 30px; cursor: pointer; transition: background-color var(--t-fast), border-color var(--t-fast); }
   .chip:hover { border-color: var(--accent); }
   .chip[aria-pressed="true"] { background: var(--primary-soft); border-color: var(--accent); }
@@ -153,7 +154,7 @@
   @media (max-width: 700px) { .cal-cell { min-height: 54px; padding: 4px; } .cal-cell .ev { font-size: 0; height: 6px; padding: 0; } .cal-cell .obs { font-size: 0; } .cal-cell .obs::before { content: "◆"; font-size: 11px; } }
 
   /* Footer */
-  .site-footer { border-top: 1px solid var(--border); box-shadow: 0 -3px 0 -2px var(--border); background: var(--bg); padding: 40px 0; font-size: 13.5px; color: var(--muted); }
+  .site-footer { margin-top: 64px; border-top: 1px solid var(--border); box-shadow: 0 -3px 0 -2px var(--border); background: var(--bg); padding: 40px 0; font-size: 13.5px; color: var(--muted); }
   .site-footer .cols { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
   @media (max-width: 700px) { .site-footer .cols { grid-template-columns: 1fr; } }
   .site-footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
