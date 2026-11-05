@@ -1,0 +1,21 @@
+// pt-BR messages of API errors (server responses and web fixtures say the same thing). Ready for i18n.
+export const API_ERROR_MESSAGES = {
+  checkFields: 'Confira os campos destacados.',
+  signIn: 'Entre para continuar.',
+  forbidden: 'Você não tem permissão para esta ação.',
+  banned: 'Sua conta está suspensa.',
+  notFound: 'Não encontrado.',
+  ownComment: 'Você não pode reagir ao próprio comentário.',
+  parentGone: 'O comentário respondido não existe mais.',
+  mythicNeedsDossier: 'Mítico exige um dossiê "Mudou o jogo" aprovado.',
+  sameTier: 'O atleta já está nesse tier.',
+  proposalDecided: 'Esta proposta já foi decidida.',
+  dossierDecided: 'Este dossiê já foi decidido.',
+  dossierAlreadyApproved: 'Você já aprovou este dossiê: falta a aprovação de outro admin.',
+  ownAccount: 'Você não pode alterar a própria conta.',
+  bannedWordExists: 'Esta palavra já está na lista.',
+  bannedWordExistsField: 'Esta palavra já está na lista deste idioma.',
+  invalidLinks: 'Há links inválidos.',
+  rateLimited: 'Muitas tentativas. Espere um pouco e tente de novo.',
+  internal: 'Algo deu errado do nosso lado. Tente de novo.',
+} as const;
