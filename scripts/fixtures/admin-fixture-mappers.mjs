@@ -9,7 +9,7 @@ import { mapRun } from './fixture-mappers.mjs';
 const DEMO = '(demo)';
 const DAY_MS = 86_400_000;
 const iso = (s) => (s && !s.includes('T') ? `${s}T00:00:00.000Z` : s);
-const SEED_ADMINS = ['Curador 1 (seed)', 'Curador 2 (seed)'];
+export const SEED_ADMINS = ['Curador 1 (seed)', 'Curador 2 (seed)'];
 
 /** Value of a dotted stats path (`stats.ufc_title_defenses`) in the athlete career stats. */
 const statValue = (db, athleteId, field) => {
@@ -65,7 +65,7 @@ export const mapAdminProposals = (db, sourceOf, baseProposals) => {
   return { items: [...demoConflict, ...demoAi, ...base, ...ai] };
 };
 
-const logsOf = (run) => {
+export const logsOf = (run) => {
   const at = run.startedAt;
   const lines = [{ at, level: 'info', message: `${run.checked} link(s) verificados (${run.mode})` }];
   if (run.unchanged) lines.push({ at, level: 'info', message: `${run.unchanged} sem mudança: portão "sem mudança", 0 tokens` });
@@ -120,6 +120,25 @@ export const mapAdminIngestion = (db, mockDir) => {
   };
 };
 
+/** A6 demo: "awaiting 2nd approval" dossiers of mock/ingest/admin-review.json (athletes without a dossier yet). */
+export const demoPendingDossiers = (db, mockDir) => {
+  const reviewFile = path.join(mockDir, 'ingest/admin-review.json');
+  const review = fs.existsSync(reviewFile) ? JSON.parse(fs.readFileSync(reviewFile, 'utf8')) : {};
+  return Object.entries(review).flatMap(([slug, decision]) => {
+    const athlete = db.all('athletes').find((a) => a.slug === slug);
+    if (!athlete || db.all('greats_dossiers').some((d) => d.athlete_id === athlete.id)) return [];
+    const quotes = db.all('field_provenance').filter((f) => f.entity_id === athlete.id && f.evidence_quote).slice(0, 3);
+    return [{
+      slug,
+      athleteId: athlete.id,
+      headline: `${athlete.known_as}: proposta de Mítico ${DEMO}`,
+      approvals: 1,
+      note: decision.note ?? null,
+      evidences: quotes.map((f, i) => ({ type: i === 0 ? 'decades_record' : 'institutional_recognition', description: f.evidence_quote, sourceLinkId: f.source_link_id })),
+    }];
+  });
+};
+
 /** A6: dossiers of the prototype (2 seed approvals) + the "awaiting 2nd approval" example of mock/ingest/admin-review.json. */
 export const mapAdminDossiers = (db, sourceOf, athleteRef, mockDir) => {
   const tr = (table, col, id) => db.all(table).find((t) => t[col] === id && t.locale === 'pt-BR') ?? db.all(table).find((t) => t[col] === id);
@@ -136,21 +155,17 @@ export const mapAdminDossiers = (db, sourceOf, athleteRef, mockDir) => {
     })),
     updatedAt: iso(d.updated_at),
   }));
-  const reviewFile = path.join(mockDir, 'ingest/admin-review.json');
-  const review = fs.existsSync(reviewFile) ? JSON.parse(fs.readFileSync(reviewFile, 'utf8')) : {};
-  for (const [slug, decision] of Object.entries(review)) {
-    const athlete = db.all('athletes').find((a) => a.slug === slug);
-    if (!athlete || items.some((d) => d.athlete.slug === slug)) continue;
-    const quotes = db.all('field_provenance').filter((f) => f.entity_id === athlete.id && f.evidence_quote).slice(0, 3);
+  for (const d of demoPendingDossiers(db, mockDir)) {
+    if (items.some((x) => x.athlete.slug === d.slug)) continue;
     items.push({
-      id: `demo-dossier-${slug}`,
-      athlete: athleteRef(athlete.id),
-      headline: `${athlete.known_as}: proposta de Mítico ${DEMO}`,
+      id: `demo-dossier-${d.slug}`,
+      athlete: athleteRef(d.athleteId),
+      headline: d.headline,
       status: 'pending',
       approvalsRequired: 2,
-      approvedBy: SEED_ADMINS.slice(0, 1),
-      reviewNote: decision.note ?? null,
-      evidences: quotes.map((f, i) => ({ id: `demo-evidence-${slug}-${i + 1}`, type: i === 0 ? 'decades_record' : 'institutional_recognition', description: f.evidence_quote, source: sourceOf(f.source_link_id) })),
+      approvedBy: SEED_ADMINS.slice(0, d.approvals),
+      reviewNote: d.note,
+      evidences: d.evidences.map((e, i) => ({ id: `demo-evidence-${d.slug}-${i + 1}`, type: e.type, description: e.description, source: sourceOf(e.sourceLinkId) })),
       updatedAt: '2026-11-04T00:00:00.000Z',
     });
   }

@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { demoPrivacyRequests, mapAdminDossiers, mapAdminIngestion, mapAdminProposals, mapAdminUsers } from './admin-fixture-mappers.mjs';
 import { mapGlobe, mapProposals, mapRun, toContract } from './fixture-mappers.mjs';
+import { runDemoActivity } from './prototype-demo-activity.mjs';
 import { loadPrototype } from './prototype-loader.mjs';
 import { loadShared } from './shared-loader.mjs';
 
@@ -23,14 +24,8 @@ const countries = createRequire(path.join(ROOT, 'apps/web/package.json'))('i18n-
 const { api: A, db, collectionRuns } = loadPrototype(MOCK_DIR);
 
 // ── Demo activity of the test reader (exercises the prototype API, so `me` and notifications have data) ──
-const READER = 'voce@exemplo.invalid';
-const ADMIN = 'admin@exemplo.invalid';
-const mine = A.postComment(READER, 'pele', 'Vi o milésimo gol num documentário. Que dia para o futebol!', null, '2026-10-20T18:00:00.000Z');
-A.postComment('leitor09@exemplo.invalid', 'pele', 'Foi em 1969, no Maracanã, de pênalti.', mine.id, '2026-10-21T09:30:00.000Z');
-A.submitSuggestion({ athleteName: 'Éder Jofre', sport: 'boxe', urls: ['https://en.wikipedia.org/wiki/%C3%89der_Jofre'], why: 'Campeão mundial em duas categorias.' });
-A.submitSuggestion({ athleteName: 'Marta', sport: 'futebol', urls: ['https://boxrec.com/x', 'https://www.wikidata.org/wiki/Q221'], why: '' });
-A.submitContact({ name: 'Ana Repórter', email: 'ana@exemplo.invalid', topic: 'press', body: 'Gostaria de entrevistar a curadoria sobre os critérios do Hall of Greats.' });
-A.submitContact({ name: 'Bruno', email: 'bruno@exemplo.invalid', topic: 'data_error', body: 'A altura do atleta está diferente da Wikipedia: https://en.wikipedia.org/wiki/Exemplo' });
+const { reader: READER, admin: ADMIN } = S.DEMO_SESSION_EMAILS;
+runDemoActivity(A, READER);
 
 // ── Build every payload ──
 const summaries = toContract(A.athletes());

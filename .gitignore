@@ -9,3 +9,5 @@ dist/
 !.env.example
 
 plan/
+# Local database (embedded PGlite, pnpm db:seed)
+.data/

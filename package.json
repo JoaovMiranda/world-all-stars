@@ -8,9 +8,15 @@
   },
   "scripts": {
     "dev": "turbo dev",
+    "dev:api": "VITE_DATA_SOURCE=http turbo dev",
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "start": "node apps/server/dist/main.js",
+    "db:generate": "pnpm --filter @was/db generate",
+    "db:migrate": "pnpm --filter @was/db migrate",
+    "db:seed": "pnpm --filter @was/db seed",
+    "db:reset": "pnpm --filter @was/db reset",
     "fixtures:export": "node scripts/fixtures/export-prototype-fixtures.mjs"
   },
   "devDependencies": {

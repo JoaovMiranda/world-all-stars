@@ -7,6 +7,9 @@
       ],
       "outputs": [
         "dist/**"
+      ],
+      "env": [
+        "VITE_*"
       ]
     },
     "typecheck": {
@@ -16,7 +19,20 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "passThroughEnv": [
+        "VITE_*",
+        "API_PROXY_TARGET",
+        "DATABASE_URL",
+        "PGLITE_DATA_DIR",
+        "PORT",
+        "HOST",
+        "CORS_ORIGINS",
+        "IP_HASH_SALT",
+        "RATE_LIMIT_ENABLED",
+        "LOG_REQUESTS",
+        "MIGRATE_ON_BOOT"
+      ]
     },
     "test": {
       "dependsOn": [
