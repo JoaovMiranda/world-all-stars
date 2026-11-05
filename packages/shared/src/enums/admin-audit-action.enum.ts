@@ -1,0 +1,22 @@
+/** Action recorded in the admin audit log (A4). */
+export const AdminAuditAction = {
+  RoleChanged: 'role_changed',
+  UserBanned: 'user_banned',
+  UserUnbanned: 'user_unbanned',
+  TierChanged: 'tier_changed',
+  ProposalApproved: 'proposal_approved',
+  ProposalRejected: 'proposal_rejected',
+  DossierApproved: 'dossier_approved',
+  DossierRejected: 'dossier_rejected',
+  SourceUpdated: 'source_updated',
+  LinksQueued: 'links_queued',
+  SuggestionReviewed: 'suggestion_reviewed',
+  MessageUpdated: 'message_updated',
+  PrivacyUpdated: 'privacy_updated',
+  CommentModerated: 'comment_moderated',
+  BannedWordAdded: 'banned_word_added',
+  BannedWordRemoved: 'banned_word_removed',
+  IngestionTriggered: 'ingestion_triggered',
+} as const;
+export type AdminAuditAction = (typeof AdminAuditAction)[keyof typeof AdminAuditAction];
+export const ADMIN_AUDIT_ACTION_VALUES = Object.values(AdminAuditAction) as [AdminAuditAction, ...AdminAuditAction[]];
