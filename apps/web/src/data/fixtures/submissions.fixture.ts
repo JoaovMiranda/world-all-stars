@@ -1,4 +1,6 @@
 import {
+  API_ERROR_MESSAGES,
+  ApiErrorCode,
   type ContactRequest,
   type ContactTopic,
   type SubmissionResponse,
@@ -14,7 +16,7 @@ import { demoId, demoProtocol, demoStore } from '../demo.store';
 import type { loadSample } from '../sample-fixtures.helper';
 
 const refuse = (errors: Record<string, string>) => {
-  throw new ApiError(422, { error: 'validation', message: 'Confira os campos destacados.', errors });
+  throw new ApiError(422, { error: ApiErrorCode.Validation, message: API_ERROR_MESSAGES.checkFields, errors });
 };
 
 /** POST /api/suggestions in fixture mode: shared validation, then stored for the admin inbox (A8). */

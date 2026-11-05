@@ -1,4 +1,4 @@
-import type { AdminContactMessage, AdminSuggestion, CommentReaction, SuggestionStatus, Tier } from '@was/shared';
+import { type AdminContactMessage, type AdminSuggestion, type CommentReaction, type SuggestionStatus, type Tier, submissionProtocol } from '@was/shared';
 
 import { type AdminDemoState, initialAdminDemo } from './fixtures/admin-demo.type';
 
@@ -86,4 +86,4 @@ export const demoStore = {
 /** Ids of demo records (`demo-<time>-<rand>`), never colliding with sample uuids. */
 export const demoId = (): string => `demo-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 /** Protocol shown after a submission (SUG-123456 / CTT-123456, doc 21). */
-export const demoProtocol = (prefix: 'SUG' | 'CTT'): string => `${prefix}-${String(Date.now()).slice(-6)}`;
+export const demoProtocol = (prefix: 'SUG' | 'CTT'): string => submissionProtocol(prefix);

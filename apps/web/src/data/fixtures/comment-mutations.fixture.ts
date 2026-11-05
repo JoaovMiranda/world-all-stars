@@ -1,4 +1,4 @@
-import { type ReactToCommentResponse, type SessionUser, validateComment } from '@was/shared';
+import { API_ERROR_MESSAGES, ApiErrorCode, type ReactToCommentResponse, type SessionUser, validateComment } from '@was/shared';
 
 import { ApiError } from '../api-error.error';
 import { demoId, demoStore } from '../demo.store';
@@ -13,7 +13,7 @@ export const postDemoComment = async (sample: typeof loadSample, user: SessionUs
   let parent: string | null = null;
   if (parentId) {
     const target = (await commentRows(sample, user)).find((c) => c.id === parentId && c.slug === slug);
-    if (!target) throw new ApiError(422, { error: 'parent', message: 'O comentário respondido não existe mais.' });
+    if (!target) throw new ApiError(422, { error: ApiErrorCode.Parent, message: API_ERROR_MESSAGES.parentGone });
     parent = target.parentId ?? target.id;
   }
   const id = demoId();
@@ -27,7 +27,7 @@ export const postDemoComment = async (sample: typeof loadSample, user: SessionUs
 export const reactDemoComment = async (sample: typeof loadSample, user: SessionUser, id: string, reaction: 'like' | 'dislike' | null): Promise<ReactToCommentResponse> => {
   const target = (await commentRows(sample, user)).find((c) => c.id === id);
   if (!target) throw new ApiError(404, { error: 'not_found' });
-  if (target.isMine) throw new ApiError(403, { error: 'own', message: 'Você não pode reagir ao próprio comentário.' });
+  if (target.isMine) throw new ApiError(403, { error: ApiErrorCode.Own, message: API_ERROR_MESSAGES.ownComment });
   demoStore.update((d) => {
     if (reaction) d.reactions[id] = reaction;
     else delete d.reactions[id];

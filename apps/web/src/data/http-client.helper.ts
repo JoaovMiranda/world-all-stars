@@ -1,7 +1,9 @@
 import { type ApiContract, ApiErrorSchema, buildApiPath, buildQueryString } from '@was/shared';
 
+import { sessionStore } from '@/session/session.store';
+
 import { ApiError } from './api-error.error';
-import { API_BASE_URL } from './data-layer.const';
+import { API_BASE_URL, SESSION_HEADER } from './data-layer.const';
 
 interface HttpInput {
   params?: Record<string, unknown>;
@@ -16,7 +18,8 @@ export const httpRequest = async (contract: ApiContract, input: HttpInput, signa
   const response = await fetch(url, {
     method: contract.method,
     credentials: 'include',
-    headers: { accept: 'application/json', ...(hasBody ? { 'content-type': 'application/json' } : {}) },
+    // Simulated session (dev): the server maps it to the demo accounts. Better Auth will use its cookie instead.
+    headers: { accept: 'application/json', [SESSION_HEADER]: sessionStore.get(), ...(hasBody ? { 'content-type': 'application/json' } : {}) },
     ...(hasBody ? { body: JSON.stringify(input.body) } : {}),
     ...(signal ? { signal } : {}),
   });

@@ -1,4 +1,4 @@
-import { type ApiContract, ApiAccess, FixtureMode, SessionKind } from '@was/shared';
+import { type ApiContract, FixtureMode, accessDenial } from '@was/shared';
 
 import { ApiError } from './api-error.error';
 import { FIXTURE_LATENCY_MS } from './data-layer.const';
@@ -41,8 +41,8 @@ export const runFixture = async <C extends ApiContract>(
   if (effective === FixtureMode.Error) throw new ApiError(503, { error: 'fixture_error', message: 'Falha simulada (?fixture=error).' });
 
   const session = await sessionSnapshot();
-  if (contract.access !== ApiAccess.Public && session.kind === SessionKind.Anon) throw new ApiError(401, { error: 'auth', message: 'Entre para continuar.' });
-  if (contract.access === ApiAccess.Admin && session.kind !== SessionKind.Admin) throw new ApiError(403, { error: 'forbidden' });
+  const denial = accessDenial(contract.access, session.kind);
+  if (denial) throw new ApiError(denial.status, denial.body);
 
   const ctx = { input: input as never, sample: loadSample, session };
   const isMutation = contract.method !== 'GET';

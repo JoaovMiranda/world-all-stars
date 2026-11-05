@@ -1,4 +1,4 @@
-import { DossierStatus, type SessionUser, type Tier, type TierVotesResponse } from '@was/shared';
+import { type SessionUser, type Tier, type TierVotesResponse, officialTierChangeError } from '@was/shared';
 
 import { ApiError } from '../api-error.error';
 import { demoStore } from '../demo.store';
@@ -30,10 +30,8 @@ export const setDemoOfficialTier = async (sample: typeof loadSample, slug: strin
   const profile = (await sample('athlete-profiles.json'))[slug];
   if (!profile) throw new ApiError(404, { error: 'not_found' });
   const current = demoStore.get().officialTiers[slug]?.tier ?? profile.tier;
-  if (tier === 'mythic' && profile.dossier?.status !== DossierStatus.Approved) {
-    throw new ApiError(422, { error: 'dossier_required', message: 'Mítico exige um dossiê "Mudou o jogo" aprovado.' });
-  }
-  if (tier === current) throw new ApiError(422, { error: 'same_tier', message: 'O atleta já está nesse tier.' });
+  const refusal = officialTierChangeError({ current, target: tier, dossierStatus: profile.dossier?.status ?? null });
+  if (refusal) throw new ApiError(422, refusal);
   demoStore.update((d) => {
     d.officialTiers[slug] = { tier, reason, at: new Date().toISOString() };
   });

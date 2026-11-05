@@ -1,4 +1,4 @@
-import { ANALYSIS_DIMENSIONS, CompareQuerySchema, PublicApi, matchesAthleteFilters } from '@was/shared';
+import { ANALYSIS_DIMENSIONS, CompareQuerySchema, PublicApi, composeCompare, matchesAthleteFilters } from '@was/shared';
 
 import { ApiError } from '../api-error.error';
 import { defineQuery } from '../define-endpoint.helper';
@@ -31,14 +31,8 @@ export const analysisDimensionsQuery = defineQuery(PublicApi.analysisDimensions,
 /** GET /api/compare?slugs=a,b (up to 5 athletes). */
 export const compareQuery = defineQuery(PublicApi.compare, {
   sample: async ({ input, sample }) => {
-    const slugs = CompareQuerySchema.parse(input.query).slugs;
     const [list, dims] = await Promise.all([sample('athletes.json'), sample('analysis-dimensions.json')]);
-    const athletes = slugs.flatMap((slug) => {
-      const a = list.items.find((x) => x.slug === slug);
-      const scores = dims.bySlug[slug];
-      return a && scores ? [{ ...withDemoTier(a), scores }] : [];
-    });
-    return { athletes, max: dims.max };
+    return composeCompare(CompareQuerySchema.parse(input.query).slugs, list.items.map(withDemoTier), dims);
   },
   empty: () => ({ athletes: [], max: Object.fromEntries(ANALYSIS_DIMENSIONS.map((k) => [k, 0])) }),
 });

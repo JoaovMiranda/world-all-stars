@@ -1,28 +1,25 @@
 import {
+  API_ERROR_MESSAGES,
   type AddCollectionLinksRequest,
   type AdminAuditAction,
   AdminAuditAction as Audit,
   type AdminDecision,
   AdminDecision as Decision,
-  type AdminSection,
   type AdminSummaryResponse,
   type BannedWord,
   type ContactStatus,
-  ContactStatus as Contact,
-  DossierStatus,
   type FieldErrors,
   IngestionRunStatus,
   PrivacyRequestStatus,
   type PrivacyRequestStatus as PrivacyStatus,
   ReviewStatus,
-  SourceUsageStatus,
   SuggestionStatus,
   type TierSignal,
   type UpdateSourceRequest,
   type UpdateUserRequest,
+  adminPendingCounts,
   checkSourceUrl,
-  isCommentFlagged,
-  isDossierApproved,
+  reviewDossierOutcome,
   tierSignalOf,
 } from '@was/shared';
 
@@ -65,7 +62,7 @@ export const buildProposals = async (sample: Sample) => {
 export const reviewDemoProposal = async (sample: Sample, session: Session, id: string, decision: AdminDecision, reason: string) => {
   const item = (await buildProposals(sample)).items.find((p) => p.id === id);
   if (!item) throw new ApiError(404, { error: 'not_found' });
-  if (item.status !== ReviewStatus.Pending) throw invalid('Esta proposta já foi decidida.');
+  if (item.status !== ReviewStatus.Pending) throw invalid(API_ERROR_MESSAGES.proposalDecided);
   const approve = decision === Decision.Approve;
   return decide(session, { action: approve ? Audit.ProposalApproved : Audit.ProposalRejected, target: `${item.entity.label} · ${item.field}`, reason }, (a) => {
     a.proposals[id] = { status: approve ? ReviewStatus.Approved : ReviewStatus.Rejected, reason };
@@ -148,7 +145,7 @@ const queueLinks = async (sample: Sample, athleteName: string, sport: string | n
     if (!r.ok) errors[`urls.${i}`] = r.message;
     return r;
   });
-  if (Object.keys(errors).length) throw invalid('Há links inválidos.', errors);
+  if (Object.keys(errors).length) throw invalid(API_ERROR_MESSAGES.invalidLinks, errors);
   const at = now();
   return checked.flatMap((r) => (r.ok ? [{ id: demoId(), athleteName, sport, url: r.url, sourceName: r.source?.name ?? null, origin, createdAt: at }] : []));
 };
@@ -170,7 +167,7 @@ export const buildUsers = async (sample: Sample) => {
 export const updateDemoUser = async (sample: Sample, session: Session, id: string, body: UpdateUserRequest) => {
   const target = (await buildUsers(sample)).items.find((u) => u.id === id);
   if (!target) throw new ApiError(404, { error: 'not_found' });
-  if (target.email === requireUser(session).email) throw invalid('Você não pode alterar a própria conta.');
+  if (target.email === requireUser(session).email) throw invalid(API_ERROR_MESSAGES.ownAccount);
   const action = body.role ? Audit.RoleChanged : body.banned ? Audit.UserBanned : Audit.UserUnbanned;
   return decide(session, { action, target: target.name, reason: body.reason }, (a) => {
     const prev = a.users[id] ?? {};
@@ -214,12 +211,9 @@ export const buildDossiers = async (sample: Sample) => {
 export const reviewDemoDossier = async (sample: Sample, session: Session, id: string, decision: AdminDecision, reason: string) => {
   const dossier = (await buildDossiers(sample)).items.find((d) => d.id === id);
   if (!dossier) throw new ApiError(404, { error: 'not_found' });
-  if (dossier.status !== DossierStatus.Pending && dossier.status !== DossierStatus.Draft) throw invalid('Este dossiê já foi decidido.');
-  const me = requireUser(session).name;
-  if (decision === Decision.Approve && dossier.approvedBy.includes(me)) throw invalid('Você já aprovou este dossiê: falta a aprovação de outro admin.');
-  const approvedBy = decision === Decision.Approve ? [...dossier.approvedBy, me] : dossier.approvedBy;
-  const status =
-    decision === Decision.Reject ? DossierStatus.Rejected : isDossierApproved(approvedBy, dossier.approvalsRequired) ? DossierStatus.Approved : DossierStatus.Pending;
+  const outcome = reviewDossierOutcome(dossier, decision, requireUser(session).name);
+  if (!outcome.ok) throw invalid(outcome.message);
+  const { approvedBy, status } = outcome;
   const action = decision === Decision.Approve ? Audit.DossierApproved : Audit.DossierRejected;
   return decide(session, { action, target: dossier.athlete.knownAs, reason }, (a) => {
     a.dossiers[id] = { approvedBy, status, reason };
@@ -240,7 +234,7 @@ export const buildAdminComments = async (sample: Sample) => {
 
 export const addDemoBannedWord = async (sample: Sample, session: Session, word: BannedWord) => {
   const { bannedWords } = await buildAdminComments(sample);
-  if (bannedWords.some((w) => wordKey(w) === wordKey(word))) throw invalid('Esta palavra já está na lista.', { term: 'Esta palavra já está na lista deste idioma.' });
+  if (bannedWords.some((w) => wordKey(w) === wordKey(word))) throw invalid(API_ERROR_MESSAGES.bannedWordExists, { term: API_ERROR_MESSAGES.bannedWordExistsField });
   return decide(session, { action: Audit.BannedWordAdded, target: `${word.term} (${word.locale})`, reason: null }, (a) => {
     a.bannedWordsRemoved = a.bannedWordsRemoved.filter((k) => k !== wordKey(word));
     a.bannedWordsAdded.unshift(word);
@@ -293,15 +287,6 @@ export const buildAdminSummary = async (sample: Sample): Promise<AdminSummaryRes
     buildDossiers(sample),
     buildPrivacy(sample),
   ]);
-  const pending: Record<AdminSection, number> = {
-    review: proposals.items.filter((p) => p.status === ReviewStatus.Pending).length + signals.items.filter((s) => s.isSignal).length,
-    ingestion: ingestion.runs.filter((r) => r.status === IngestionRunStatus.Failed || r.status === IngestionRunStatus.Partial).length,
-    sources: sources.sources.filter((s) => s.usageStatus === SourceUsageStatus.PendingPermission).length + sources.queuedLinks.length,
-    users: 0,
-    comments: comments.items.filter(isCommentFlagged).length,
-    contact: inbox.suggestions.filter((s) => s.status === SuggestionStatus.Pending).length + inbox.messages.filter((m) => m.status === Contact.New).length,
-    dossiers: dossiers.items.filter((d) => d.status === DossierStatus.Pending).length,
-    privacy: privacy.items.filter((r) => r.status === PrivacyRequestStatus.Open || r.status === PrivacyRequestStatus.InProgress).length,
-  };
-  return { pending };
+  // Same shared rule as the server (adminPendingCounts).
+  return { pending: adminPendingCounts({ proposals: proposals.items, signals: signals.items, runs: ingestion.runs, sources, comments: comments.items, inbox, dossiers: dossiers.items, privacy: privacy.items }) };
 };

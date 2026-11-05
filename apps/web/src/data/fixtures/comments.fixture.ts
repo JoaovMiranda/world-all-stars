@@ -1,12 +1,4 @@
-import {
-  type Comment,
-  type CommentReaction,
-  CommentSort,
-  type CommentsResponse,
-  type CommentThread,
-  COMMENT_MAX_LENGTH,
-  type SessionUser,
-} from '@was/shared';
+import { type Comment, type CommentReaction, type CommentSort, type CommentsResponse, type SessionUser, buildCommentThreads } from '@was/shared';
 
 import { demoStore } from '../demo.store';
 import type { loadSample } from '../sample-fixtures.helper';
@@ -35,18 +27,9 @@ export const commentRows = async (sample: typeof loadSample, user: SessionUser |
     });
 };
 
-const score = (c: Comment) => c.likes - c.dislikes;
-
-/** Threads of one athlete, sorted like the API (top: likes − dislikes then newest; recent: newest). */
-export const buildComments = (rows: readonly Row[], slug: string, sort: CommentSort): CommentsResponse => {
-  const own = rows.filter((r) => r.slug === slug);
-  const strip = ({ slug: _slug, ...c }: Row): Comment => c;
-  const threads: CommentThread[] = own
-    .filter((c) => !c.parentId)
-    .map((top) => ({
-      ...strip(top),
-      replies: own.filter((r) => r.parentId === top.id).sort((a, b) => a.at.localeCompare(b.at)).map(strip),
-    }))
-    .sort((a, b) => (sort === CommentSort.Recent ? b.at.localeCompare(a.at) : score(b) - score(a) || b.at.localeCompare(a.at)));
-  return { threads, total: own.length, max: COMMENT_MAX_LENGTH, nextCursor: null };
-};
+/** Threads of one athlete: same shared builder (order, 1-level replies) as the server. */
+export const buildComments = (rows: readonly Row[], slug: string, sort: CommentSort): CommentsResponse =>
+  buildCommentThreads(
+    rows.filter((r) => r.slug === slug).map(({ slug: _slug, ...c }): Comment => c),
+    sort,
+  );

@@ -10,6 +10,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // Future: apps/server (Hono) on :8787 → proxy: { '/api': 'http://localhost:8787' }
+    // apps/server (Hono). Used when VITE_DATA_SOURCE=http (fixtures never call /api).
+    proxy: { '/api': process.env.API_PROXY_TARGET ?? 'http://localhost:8787' },
   },
 });
