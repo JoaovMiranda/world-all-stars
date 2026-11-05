@@ -1,0 +1,70 @@
+/* Home page styles (plan/front-prototype/pages/home.page.css), in the shared "components" cascade layer. */
+@layer components {
+  .home-intro { padding: 72px 0 40px; border-bottom: 1px solid var(--border); box-shadow: 0 3px 0 -2px var(--border); margin-bottom: 40px; text-align: center; }
+  .home-intro .ornament { max-width: 420px; margin: 0 auto; color: var(--accent-text); }
+  .home-intro h1 { font-size: clamp(36px, 6.4vw, 76px); font-weight: 500; line-height: 1.04; max-width: 980px; margin: 22px auto 0; }
+  .home-intro h1 em { font-style: italic; color: var(--accent-text); }
+  .home-intro-sub { max-width: 600px; margin: 20px auto 0; font-size: 17px; }
+  .home-intro-actions { justify-content: center; margin-top: 32px; gap: 12px; }
+  .home-intro-note { min-height: 1.6em; margin-top: 12px; font-size: 13px; color: var(--muted); }
+  @media (max-width: 600px) { .home-intro { padding: 44px 0 28px; } .home-intro-actions .btn { width: 100%; white-space: normal; } }
+
+  /* Globe */
+  .globe-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: center; }
+  @media (max-width: 760px) { .globe-layout { grid-template-columns: minmax(0, 1fr); } }
+  .globe-stage { position: relative; width: 100%; max-width: 440px; margin: 0 auto; aspect-ratio: 400 / 448; touch-action: none; user-select: none; }
+  .globe-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .globe-svg { cursor: grab; outline: none; }
+  .globe-svg.dragging { cursor: grabbing; }
+  .globe-svg:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 50%; }
+  .country { stroke: var(--surface); stroke-width: .5; cursor: pointer; transition: fill var(--t-fast); }
+  .country:hover { fill: var(--primary-hover) !important; }
+  .country.sel { fill: var(--accent) !important; }
+  .globe-hint { text-align: center; color: var(--muted); font-size: 12px; margin-top: 4px; min-height: 1.6em; }
+  .globe-panel { display: grid; gap: 14px; min-width: 0; }
+  .globe-selected { padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .globe-bars { display: grid; gap: 8px; margin: 12px 0; }
+  .globe-bar { display: grid; grid-template-columns: 110px 1fr 30px; gap: 8px; align-items: center; font-size: 13px; }
+  .globe-bar .track { height: 6px; background: var(--surface-2); overflow: hidden; }
+  .globe-bar .fill { height: 100%; background: var(--primary); }
+  .globe-legend { display: flex; align-items: center; gap: 8px; justify-content: center; margin-top: 12px; font-size: 11px; color: var(--muted); }
+  .globe-legend-ramp { width: 96px; height: 8px; border-radius: var(--r-pill); border: 1px solid var(--border); background: linear-gradient(90deg, var(--land), var(--primary)); }
+
+  /* Today in history */
+  .otd-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; align-items: start; }
+  @media (max-width: 760px) { .otd-layout { grid-template-columns: minmax(0, 1fr); } }
+  .otd-date { font: 500 40px/1.1 var(--font-display); margin-bottom: 6px; }
+  .otd-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+  @media (max-width: 760px) { .otd-list { grid-template-columns: minmax(0, 1fr); } }
+  .otd-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
+  .otd-item b { display: block; font-weight: 600; }
+  .otd-item small { color: var(--muted); }
+  .otd-year { margin-left: auto; font: 600 20px var(--font-display); color: var(--accent-text); }
+  .observance { display: flex; gap: 10px; align-items: flex-start; background: var(--surface-2); border-radius: var(--r-md); padding: 10px 12px; margin-top: 12px; font-size: 14px; }
+  .observance .mark { color: var(--accent-text); }
+  .observance-empty { color: var(--muted); font-size: 13px; }
+
+  /* Hall of Greats band (always-dark stage, tokens from .theme-stage) */
+  .greats { border-radius: var(--r-lg); padding: 24px; border: 1px solid var(--border); box-shadow: inset 0 0 0 4px var(--midnight), inset 0 0 0 5px color-mix(in oklab, var(--accent) 35%, transparent); }
+  .greats-head { margin: 0 0 18px; align-items: center; flex-wrap: wrap; }
+  .greats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 960px) { .greats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .greats-grid { grid-template-columns: minmax(0, 1fr); } }
+  .greats-empty { position: relative; }
+  .greats-empty .empty-state { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; background: color-mix(in oklab, var(--midnight) 82%, transparent); backdrop-filter: blur(2px); }
+  .greats-pedestals { margin-top: -64px; }
+  .pedestal { aspect-ratio: 4 / 3; display: grid; place-items: end center; padding-bottom: 18px; border: 1px dashed var(--border-strong); border-radius: var(--r-lg); color: var(--border-strong); background: linear-gradient(180deg, transparent 40%, color-mix(in oklab, var(--accent) 7%, transparent)); }
+  @media (max-width: 520px) { .greats-pedestals { display: none; } }
+  .great-card { display: block; border-radius: var(--r-lg); overflow: hidden; border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box; color: var(--text); transition: border-color var(--t-fast); }
+  .great-card:hover { text-decoration: none; }
+  .great-card:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
+  .great-card-plain { background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(var(--accent), var(--accent)) border-box; }
+  .great-card .photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface-2); display: grid; place-items: center; font: 700 34px var(--font-display); color: var(--muted); }
+  .great-card .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
+  .great-card .body { padding: 14px; }
+  .great-card h3 { font-size: 18px; }
+  .great-card p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  /* Sports */
+  .sports-head { margin: 8px 0 14px; }
+}

@@ -1,0 +1,104 @@
+import './sports.page.css';
+
+import { countSports, filterSportsTree, GOVERNANCE_MODEL_VALUES, SportsFiltersSchema } from '@was/shared';
+
+import { governanceModelsQuery, organizationsQuery, sportsQuery } from '@/data/endpoints/sports.query';
+import { ButtonLink } from '@/shared-ui/button-link.component';
+import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
+import { EmptyState } from '@/shared-ui/empty-state.component';
+import { FilterBar } from '@/shared-ui/filter-bar.component';
+import { PageLayout } from '@/shared-ui/page-layout.component';
+import { QueryBoundary } from '@/shared-ui/query-boundary.component';
+import { SearchInput } from '@/shared-ui/search-input.component';
+import { Section } from '@/shared-ui/section.component';
+import { Skeleton, SkeletonList } from '@/shared-ui/skeleton.component';
+import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
+
+import { GovernanceModels } from './governance-models.component';
+import { OrgHierarchy } from './org-hierarchy.component';
+import { SportDirectory } from './sport-directory.component';
+import { GOVERNANCE_LABEL, SPORTS_TEXT } from './sports.const';
+
+const t = SPORTS_TEXT.list;
+const GOVERNANCE_OPTIONS = GOVERNANCE_MODEL_VALUES.map((value) => ({
+  value,
+  label: GOVERNANCE_LABEL[value],
+}));
+
+const sportGridSkeleton = (
+  <div className="sport-grid">
+    {Array.from({ length: 6 }, (_, i) => (
+      <Skeleton key={i} className="h-56 w-full rounded-(--r-lg)" />
+    ))}
+  </div>
+);
+
+/** P6 Sports + associations (doc 09/19): search + governance filter · groups › subgroups › cards · models · hierarchy. */
+export function SportsPage() {
+  const { filters, setFilter, setFilters } = useUrlFilters(SportsFiltersSchema);
+  const sports = sportsQuery.useQuery();
+  const models = governanceModelsQuery.useQuery();
+  const orgs = organizationsQuery.useQuery();
+  const sportFilterCount = (filters.q ? 1 : 0) + (filters.governance ? 1 : 0);
+
+  return (
+    <PageLayout title={t.title} eyebrow={t.eyebrow} lead={t.lead} breadcrumb={[{ label: t.breadcrumb }]}>
+      <QueryBoundary
+        query={sports}
+        loading={sportGridSkeleton}
+        isEmpty={(tree) => countSports(tree) === 0}
+        empty={
+          <EmptyState title={t.emptyTitle} action={<ButtonLink to="/contact">{t.emptyAction}</ButtonLink>}>
+            {t.emptyText}
+          </EmptyState>
+        }
+      >
+        {(tree) => {
+          const visible = filterSportsTree(tree, filters);
+          return (
+            <div>
+              <FilterBar
+                label={t.filtersLabel}
+                resultCount={countSports(visible)}
+                activeCount={sportFilterCount}
+                onReset={() => setFilters({ q: undefined, governance: undefined })}
+              >
+                <form role="search" className="sports-search" onSubmit={(e) => e.preventDefault()}>
+                  <SearchInput
+                    inline
+                    label={t.searchLabel}
+                    placeholder={t.searchPlaceholder}
+                    value={filters.q ?? ''}
+                    onChange={(e) => setFilter('q', e.target.value)}
+                  />
+                </form>
+                <div className="sports-chip-filter">
+                  <span className="label" aria-hidden="true">
+                    {t.governanceLabel}
+                  </span>
+                  <ChipToggleGroup
+                    label={t.governanceLabel}
+                    options={GOVERNANCE_OPTIONS}
+                    value={filters.governance}
+                    onChange={(v) => setFilter('governance', v)}
+                  />
+                </div>
+              </FilterBar>
+              {visible.length > 0 ? <SportDirectory groups={visible} /> : <EmptyState title={t.noMatchTitle}>{t.noMatchText}</EmptyState>}
+            </div>
+          );
+        }}
+      </QueryBoundary>
+
+      <Section variant="plain" title={SPORTS_TEXT.models.title} eyebrow={SPORTS_TEXT.models.eyebrow} className="mt-8">
+        <QueryBoundary query={models} loading={<SkeletonList rows={2} className="h-24 w-full" />}>
+          {(m) => <GovernanceModels models={m} />}
+        </QueryBoundary>
+      </Section>
+
+      <QueryBoundary query={orgs} loading={<Skeleton className="h-20 w-full" />}>
+        {(o) => <OrgHierarchy orgs={o} nature={filters.nature} onNatureChange={(v) => setFilter('nature', v)} />}
+      </QueryBoundary>
+    </PageLayout>
+  );
+}

@@ -1,0 +1,75 @@
+import type { SportPage } from '@was/shared';
+import { Fragment } from 'react';
+
+import { ORG_ROLE_LABEL } from '@/shared-ui/domain-labels.const';
+import { OrgName } from '@/shared-ui/org-name.component';
+import { Section } from '@/shared-ui/section.component';
+import { Tag } from '@/shared-ui/tag.component';
+
+import { ENVIRONMENT_LABEL, FORMAT_LABEL, PRIZE_FORM_LABEL, SPORTS_HASH, SPORTS_TEXT } from './sports.const';
+
+const t = SPORTS_TEXT.page;
+
+/** "Quem manda / O ápice / Ambiente" (doc 18/19): governance chains with Wikipedia links, pinnacle, prize forms. */
+export function SportGovernance({ sport }: { sport: SportPage }) {
+  const env = ENVIRONMENT_LABEL[sport.environment];
+  return (
+    <Section title={t.whoRules} className="sport-governance">
+      <div className="gov-grid">
+        <div>
+          <b className="gov-value">{sport.governanceInfo?.name ?? t.dash}</b>
+          {sport.governanceInfo && <p className="muted">{sport.governanceInfo.summary}</p>}
+          {sport.bodies.length > 0 && (
+            <ul className="gov-chains">
+              {sport.bodies.map((b) => {
+                const self = b.chain.at(-1);
+                return (
+                  <li key={`${b.role}-${b.name}`}>
+                    <span className="muted">{ORG_ROLE_LABEL[b.role] ?? b.role}:</span>{' '}
+                    {b.chain.map((c, i) => (
+                      <Fragment key={c.id}>
+                        {i > 0 && (
+                          <span className="rel" title={c.relationLabel ?? undefined} aria-hidden="true">
+                            ›
+                          </span>
+                        )}{' '}
+                        <span className={i === b.chain.length - 1 ? 'chain-self' : 'muted'}>
+                          <OrgName org={c} />
+                        </span>{' '}
+                      </Fragment>
+                    ))}
+                    {self && <Tag tone="soft">{self.natureLabel}</Tag>}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          <a className="label" href={`#${SPORTS_HASH.associations}`}>
+            {t.seeAssociations}
+          </a>
+        </div>
+        <div>
+          <span className="label">{t.pinnacle}</span>
+          <b className="gov-value pinnacle">{sport.pinnacle ?? t.dash}</b>
+          <span className="label mt-2.5 block">{t.prizeForms}</span>
+          <div className="row mt-1">
+            {sport.prizeForms.length > 0
+              ? sport.prizeForms.map((f) => (
+                  <Tag key={f} tone="soft">
+                    {PRIZE_FORM_LABEL[f] ?? f}
+                  </Tag>
+                ))
+              : t.dash}
+          </div>
+        </div>
+        <div>
+          <span className="label">{t.environment}</span>
+          <b className="gov-value">
+            {env?.name ?? t.dash} · {FORMAT_LABEL[sport.format] ?? t.dash}
+          </b>
+          {env && <p className="muted">{env.summary}</p>}
+        </div>
+      </div>
+    </Section>
+  );
+}
