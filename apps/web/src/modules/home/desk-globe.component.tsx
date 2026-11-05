@@ -27,8 +27,7 @@ export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: D
   const rimRef = useRef<SVGPathElement>(null);
   const landRef = useRef<SVGGElement>(null);
   const autoSpin = useRef(true);
-  const drag = useRef<{ x: number; y: number; rotate: [number, number, number]; moved: boolean } | null>(null);
-  const draggedRecently = useRef(false);
+  const drag = useRef<{ x: number; y: number; rotate: [number, number, number]; moved: boolean; countryId: string | null } | null>(null);
 
   const projection = useMemo(
     () =>
@@ -76,7 +75,9 @@ export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: D
 
   const onPointerDown = (event: PointerEvent<SVGSVGElement>) => {
     autoSpin.current = false;
-    drag.current = { x: event.clientX, y: event.clientY, rotate: projection.rotate(), moved: false };
+    // O país sob o ponteiro é lido AGORA: com setPointerCapture, o click iria para o <svg> e nunca para o <path>.
+    const countryId = (event.target as Element).closest('[data-country-id]')?.getAttribute('data-country-id') ?? null;
+    drag.current = { x: event.clientX, y: event.clientY, rotate: projection.rotate(), moved: false, countryId };
     event.currentTarget.setPointerCapture(event.pointerId);
     event.currentTarget.classList.add('dragging');
   };
@@ -93,8 +94,11 @@ export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: D
   };
   const onPointerEnd = (event: PointerEvent<SVGSVGElement>) => {
     event.currentTarget.classList.remove('dragging');
-    draggedRecently.current = drag.current?.moved ?? false;
+    const d = drag.current;
     drag.current = null;
+    if (!d || d.moved || !d.countryId || event.type === 'pointercancel') return;
+    const feature = features?.find((f, i) => String(f.id ?? i) === d.countryId);
+    if (feature) onSelect(feature);
   };
   const onKeyDown = (event: KeyboardEvent<SVGSVGElement>) => {
     const steps: Record<string, [number, number]> = {
@@ -110,13 +114,6 @@ export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: D
     const [l, p] = projection.rotate();
     projection.rotate([l + step[0], clampLatitude(p + step[1]), GLOBE.tilt]);
     draw();
-  };
-  const onCountryClick = (feature: CountryFeature) => {
-    if (draggedRecently.current) {
-      draggedRecently.current = false;
-      return;
-    }
-    onSelect(feature);
   };
 
   const viewBox = `0 0 ${GLOBE.width} ${GLOBE.height}`;
@@ -158,7 +155,7 @@ export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: D
                 key={id}
                 className={id === selectedId ? 'country sel' : 'country'}
                 style={{ fill: countryFill(titlesByCountry.get(id) ?? 0, maxTitles) }}
-                onClick={() => onCountryClick(f)}
+                data-country-id={id}
               >
                 <title>{countryNameFromNumeric(f.id, f.properties.name)}</title>
               </path>
