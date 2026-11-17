@@ -1,5 +1,7 @@
 import { type ApiContract, FixtureMode, accessDenial } from '@was/shared';
 
+import { IS_SERVER } from '@/app/request-scope';
+
 import { ApiError } from './api-error.error';
 import { FIXTURE_LATENCY_MS } from './data-layer.const';
 import { emptyOf } from './empty-response.helper';
@@ -37,7 +39,8 @@ export const runFixture = async <C extends ApiContract>(
 ): Promise<unknown> => {
   const effective = options.modeIndependent ? FixtureMode.Sample : mode;
   if (effective === FixtureMode.Loading) return never(signal);
-  await wait(FIXTURE_LATENCY_MS, signal);
+  // Latency only in the browser (keeps skeletons visible); the server render answers at once.
+  if (!IS_SERVER) await wait(FIXTURE_LATENCY_MS, signal);
   if (effective === FixtureMode.Error) throw new ApiError(503, { error: 'fixture_error', message: 'Falha simulada (?fixture=error).' });
 
   const session = await sessionSnapshot();

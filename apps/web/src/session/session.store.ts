@@ -1,37 +1,37 @@
 import { SESSION_KIND_VALUES, SessionKind } from '@was/shared';
 import { useSyncExternalStore } from 'react';
 
-import { SESSION_STORAGE_KEY, SESSION_URL_PARAM } from './session.const';
+import { getBoot } from '@/app/request-scope';
+import { readCookie, writeCookie } from '@/shared-ui/cookie.helper';
+
+import { SESSION_COOKIE, SESSION_STORAGE_KEY, SESSION_URL_PARAM } from './session.const';
 
 const isKind = (v: unknown): v is SessionKind => SESSION_KIND_VALUES.includes(v as SessionKind);
 const listeners = new Set<() => void>();
 
-const readInitial = (): SessionKind => {
-  const fromUrl = new URLSearchParams(window.location.search).get(SESSION_URL_PARAM);
-  if (isKind(fromUrl)) return fromUrl;
-  try {
-    const stored = localStorage.getItem(SESSION_STORAGE_KEY);
-    if (isKind(stored)) return stored;
-  } catch {
-    /* storage blocked */
-  }
-  return SessionKind.Anon;
-};
-
-let current: SessionKind = readInitial();
-
-/** Simulated session (no real auth yet, docs 17/20): anon · reader · admin, persisted in localStorage. */
+/**
+ * Simulated session (no real auth yet, docs 17/20): anon · reader · admin, kept in the `was_session` cookie so the
+ * server renders the same profile. `?as=` overrides it for one page load.
+ */
 export const sessionStore = {
-  get: (): SessionKind => current,
+  get: (): SessionKind => getBoot().sessionKind,
   set(kind: SessionKind): void {
-    if (kind === current) return;
-    current = kind;
+    const boot = getBoot();
+    if (kind === boot.sessionKind) return;
+    boot.sessionKind = kind;
+    writeCookie(SESSION_COOKIE, kind);
+    listeners.forEach((l) => l());
+  },
+  /** After hydration: moves a pre-SSR localStorage choice to the cookie (once). */
+  migrateLegacy(): void {
     try {
-      localStorage.setItem(SESSION_STORAGE_KEY, kind);
+      const legacy = localStorage.getItem(SESSION_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+      const url = new URL(window.location.href);
+      if (isKind(legacy) && !readCookie(document.cookie, SESSION_COOKIE) && !url.searchParams.has(SESSION_URL_PARAM)) sessionStore.set(legacy);
     } catch {
       /* storage blocked */
     }
-    listeners.forEach((l) => l());
   },
   subscribe(listener: () => void): () => void {
     listeners.add(listener);
@@ -39,4 +39,4 @@ export const sessionStore = {
   },
 };
 
-export const useSessionKind = (): SessionKind => useSyncExternalStore(sessionStore.subscribe, sessionStore.get);
+export const useSessionKind = (): SessionKind => useSyncExternalStore(sessionStore.subscribe, sessionStore.get, sessionStore.get);

@@ -45,6 +45,7 @@ export const SPORTS_TEXT = {
     eyebrow: 'Esporte',
     sports: 'Esportes',
     notFoundTitle: 'Esporte não encontrado',
+    metaDescription: (name: string) => `${name}: maiores campeões, competições, associações e próximos eventos no World All Stars.`,
     notFoundText: 'Este esporte não existe ou ainda não foi cadastrado.',
     backToSports: 'Ver todos os esportes',
     team: 'coletivo',

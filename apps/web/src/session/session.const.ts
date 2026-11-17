@@ -1,4 +1,6 @@
-/** localStorage key of the simulated session kind (doc 17: anon · reader · admin). `?as=` overrides it. */
+/** Cookie of the simulated session kind (doc 17: anon · reader · admin), also read by the API. `?as=` overrides it. */
+export const SESSION_COOKIE = 'was_session';
+/** Legacy localStorage key (before SSR): migrated to the cookie once, then removed. */
 export const SESSION_STORAGE_KEY = 'was-session';
 export const SESSION_URL_PARAM = 'as';
 

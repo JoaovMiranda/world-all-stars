@@ -1,47 +1,32 @@
-import { FIXTURE_MODE_VALUES, FixtureMode } from '@was/shared';
+import type { FixtureMode } from '@was/shared';
 import { useSyncExternalStore } from 'react';
 
-import { FIXTURE_MODE_PARAM, FIXTURE_MODE_STORAGE_KEY } from './data-layer.const';
+import { getBoot } from '@/app/request-scope';
+import { writeCookie } from '@/shared-ui/cookie.helper';
 
-const isMode = (v: unknown): v is FixtureMode => FIXTURE_MODE_VALUES.includes(v as FixtureMode);
+import { FIXTURE_MODE_COOKIE, FIXTURE_MODE_PARAM } from './data-layer.const';
+
 const listeners = new Set<() => void>();
 
-const readInitial = (): FixtureMode => {
-  const fromUrl = new URLSearchParams(window.location.search).get(FIXTURE_MODE_PARAM);
-  if (isMode(fromUrl)) {
-    try {
-      sessionStorage.setItem(FIXTURE_MODE_STORAGE_KEY, fromUrl);
-    } catch {
-      /* storage blocked */
-    }
-    return fromUrl;
-  }
-  try {
-    const stored = sessionStorage.getItem(FIXTURE_MODE_STORAGE_KEY);
-    if (isMode(stored)) return stored;
-  } catch {
-    /* storage blocked */
-  }
-  return FixtureMode.Sample;
-};
-
-let current: FixtureMode = readInitial();
-
-/** Global fixture mode (`?fixture=sample|empty|loading|error`, kept for the tab session). Default: sample. */
+/**
+ * Global fixture mode (`?fixture=sample|empty|loading|error`, kept in a cookie until the browser closes).
+ * The server resolves it per request (boot); the browser starts from the same value and switches it here.
+ */
 export const fixtureModeStore = {
-  get: (): FixtureMode => current,
+  get: (): FixtureMode => getBoot().fixtureMode,
   set(mode: FixtureMode): void {
-    if (mode === current) return;
-    current = mode;
-    try {
-      sessionStorage.setItem(FIXTURE_MODE_STORAGE_KEY, mode);
-    } catch {
-      /* storage blocked */
-    }
+    const boot = getBoot();
+    if (mode === boot.fixtureMode) return;
+    boot.fixtureMode = mode;
+    writeCookie(FIXTURE_MODE_COOKIE, mode, 'session');
     const url = new URL(window.location.href);
     url.searchParams.set(FIXTURE_MODE_PARAM, mode);
     window.history.replaceState(window.history.state, '', url);
     listeners.forEach((l) => l());
+  },
+  /** After hydration: a `?fixture=` in the URL becomes the cookie (survives SPA navigation and reloads). */
+  persist(): void {
+    writeCookie(FIXTURE_MODE_COOKIE, getBoot().fixtureMode, 'session');
   },
   subscribe(listener: () => void): () => void {
     listeners.add(listener);
@@ -49,4 +34,4 @@ export const fixtureModeStore = {
   },
 };
 
-export const useFixtureMode = (): FixtureMode => useSyncExternalStore(fixtureModeStore.subscribe, fixtureModeStore.get);
+export const useFixtureMode = (): FixtureMode => useSyncExternalStore(fixtureModeStore.subscribe, fixtureModeStore.get, fixtureModeStore.get);

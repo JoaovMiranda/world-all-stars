@@ -11,6 +11,8 @@ export const NAV_ITEMS = [
 
 export const LAYOUT_TEXT = {
   brand: 'World All Stars',
+  /** Default <meta name="description"> (pages override it in their route head). */
+  description: 'World All Stars: a enciclopédia dos maiores campeões de todos os esportes, com dados, fontes e história.',
   skipLink: 'Pular para o conteúdo',
   navLabel: 'Principal',
   language: 'PT',

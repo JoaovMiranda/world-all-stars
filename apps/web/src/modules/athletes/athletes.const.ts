@@ -34,6 +34,7 @@ export const ATHLETE_PROFILE_TEXT = {
   tabs: { 'visao-geral': 'Visão geral', conquistas: 'Conquistas', carreira: 'Carreira', analise: 'Análise', fontes: 'Fontes', comentarios: 'Comentários' },
   notFoundTitle: 'Atleta não encontrado',
   notFoundText: 'Confira o endereço ou procure pelo nome na busca.',
+  metaDescription: (name: string, sport: string) => `${name} (${sport}): carreira, conquistas, estatísticas e fontes de cada dado no World All Stars.`,
   errorTitle: 'Não foi possível carregar o perfil',
   dash: EM,
   noData: 'sem dado',

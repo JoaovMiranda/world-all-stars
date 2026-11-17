@@ -1,15 +1,14 @@
 import type { CollectionRun } from '@was/shared';
 
 import { DataTable, type DataColumn } from '@/shared-ui/data-table.component';
-import { formatNumber } from '@/shared-ui/format.helper';
+import { formatNumber, instantFormat } from '@/shared-ui/format.helper';
 
 import { SOURCES_TEXT } from './sources.const';
 
 const t = SOURCES_TEXT.runs;
-const dateTime = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
 const COLUMNS: readonly DataColumn<CollectionRun>[] = [
-  { key: 'startedAt', header: t.colStarted, sortValue: (r) => r.startedAt, cell: (r) => <span className="num">{dateTime.format(new Date(r.startedAt))}</span> },
+  { key: 'startedAt', header: t.colStarted, sortValue: (r) => r.startedAt, cell: (r) => <span className="num">{instantFormat({ dateStyle: 'short', timeStyle: 'short' }).format(new Date(r.startedAt))}</span> },
   { key: 'mode', header: t.colMode, cell: (r) => r.mode },
   { key: 'checked', header: t.colChecked, align: 'end', cell: (r) => formatNumber(r.checked) },
   { key: 'unchanged', header: t.colUnchanged, align: 'end', cell: (r) => <b>{formatNumber(r.unchanged)}</b> },

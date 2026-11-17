@@ -1,5 +1,7 @@
 import type { AthleteProfile, FieldProvenance } from '@was/shared';
 
+import { getBoot } from '@/app/request-scope';
+
 import { ATHLETE_PROFILE_TEXT } from './athletes.const';
 
 type CityRef = NonNullable<AthleteProfile['birth']['city']>;
@@ -13,5 +15,5 @@ export const fieldLabel = (field: string): string => ATHLETE_PROFILE_TEXT.fields
 /** "Três Corações, Minas Gerais · 🇧🇷" */
 export const formatPlace = (city: CityRef | null): string =>
   city ? `${city.name}${city.region ? `, ${city.region}` : ''}${city.country ? ` · ${city.country.flag}` : ''}` : ATHLETE_PROFILE_TEXT.dash;
-/** Current year: closes careers still running in charts and overlaps. */
-export const currentYear = (): number => new Date().getFullYear();
+/** Current year (of the page load, APP_TIME_ZONE): closes careers still running in charts and overlaps. */
+export const currentYear = (): number => Number(getBoot().today.slice(0, 4));

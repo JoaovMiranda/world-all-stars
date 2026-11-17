@@ -1,11 +1,12 @@
 import { useSyncExternalStore } from 'react';
 
 import type { ThemeName } from './theme.const';
-import { getEffectiveTheme } from './theme.helper';
+import { getEffectiveTheme, getServerTheme } from './theme.helper';
 
 /** Effective theme as an external store: notifies on manual toggle (<html data-theme>) and on OS changes. */
 export const themeStore = {
   get: getEffectiveTheme,
+  getServer: getServerTheme,
   subscribe(listener: () => void): () => void {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const observer = new MutationObserver(listener);
@@ -18,4 +19,4 @@ export const themeStore = {
   },
 };
 
-export const useEffectiveTheme = (): ThemeName => useSyncExternalStore(themeStore.subscribe, themeStore.get);
+export const useEffectiveTheme = (): ThemeName => useSyncExternalStore(themeStore.subscribe, themeStore.get, themeStore.getServer);

@@ -10,10 +10,10 @@ import {
   normalizeForSearch,
   type SportPage as SportPageData,
   SportPageFiltersSchema,
-  toIsoDate,
 } from '@was/shared';
 import { getRouteApi } from '@tanstack/react-router';
 
+import { useToday } from '@/app/use-boot.hook';
 import { sportPageQuery } from '@/data/endpoints/sports.query';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
@@ -32,6 +32,7 @@ import { SportChampions } from './sport-champions.component';
 import { SportCompetitions } from './sport-competitions.component';
 import { SportFilters } from './sport-filters.component';
 import { SportGovernance } from './sport-governance.component';
+import { sportPageInput } from './sports-query.helper';
 import { SPORTS_TEXT } from './sports.const';
 
 const route = getRouteApi('/sports/$slug');
@@ -69,7 +70,7 @@ function SportContent({ sport }: { sport: SportPageData }) {
   );
   const competitions = sport.competitions.filter((c) => matchesCompetitionFilters(c, filters));
   const categories = sport.categories.filter((c) => !q || normalizeForSearch([c.name, ...c.children].join(' ')).includes(q));
-  const today = toIsoDate(new Date());
+  const today = useToday();
   const observances: ObservanceEvent[] = sport.observances
     .map((o) => ({
       ...o,
@@ -171,7 +172,7 @@ function SportContent({ sport }: { sport: SportPageData }) {
  */
 export function SportPage() {
   const { slug } = route.useParams();
-  const sport = sportPageQuery.useQuery({ params: { slug } });
+  const sport = sportPageQuery.useQuery(sportPageInput(slug));
   return (
     <QueryBoundary
       query={sport}

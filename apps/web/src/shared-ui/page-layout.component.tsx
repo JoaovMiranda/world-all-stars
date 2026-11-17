@@ -1,11 +1,10 @@
-import { type ReactNode, useEffect } from 'react';
+import type { ReactNode } from 'react';
 
 import { Breadcrumb, type BreadcrumbItem } from './breadcrumb.component';
-import { LAYOUT_TEXT } from './layout.const';
 import { PageHeader } from './page-header.component';
 
 interface PageLayoutProps {
-  /** Text of the <title> (" · World All Stars" is appended) and of the h1 unless `heading` is given. */
+  /** Text of the h1 unless `heading` is given (the <title> comes from the route head, app/head.helper.ts). */
   title: string;
   /** Rich h1 content (defaults to `title`). */
   heading?: ReactNode;
@@ -25,10 +24,6 @@ interface PageLayoutProps {
 
 /** Skeleton of every public page: breadcrumb → header → content (8/12) + optional aside (4/12). */
 export function PageLayout({ title, heading, breadcrumb, eyebrow, lead, badges, actions, headerExtra, media, aside, children }: PageLayoutProps) {
-  useEffect(() => {
-    document.title = `${title} · ${LAYOUT_TEXT.brand}`;
-  }, [title]);
-
   return (
     <div className="page">
       {breadcrumb && <Breadcrumb items={breadcrumb} />}

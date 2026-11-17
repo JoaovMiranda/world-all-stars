@@ -8,13 +8,15 @@ Planejamento (somente leitura): `plan/docs/07` (convenções), `08` (design), `0
 ```
 packages/shared/src/            fonte única (BE + FE): enums · consts · schemas Zod · contracts (método+rota+schemas) · helpers puros (+ testes)
 apps/web/src/
-  app/                          main.tsx, router.tsx (todas as rotas, lazy por página), root-layout, styles.css
+  app/                          SSR: entry-server.tsx / entry-client.tsx, create-router.tsx (router + QueryClient por requisição),
+                                router.tsx (todas as rotas, lazy por página, loaders + head), root-document (o <html>), root-layout,
+                                request-scope.ts (boot da página), route-prefetch.helper.ts, head.helper.ts, styles.css
   data/                         camada de dados genérica
     define-endpoint.helper.ts   defineQuery / defineMutation  (substitui service+adapter+hook)
     endpoints/*.query.ts        UMA definição por endpoint (fixture embutida)
     fixtures/*.fixture.ts       lógica de fixture que precisa de regra (home, comentários, votos, me…)
     demo.store.ts               mutações da demo (memória + localStorage)
-    fixture-mode.store.ts       ?fixture=sample|empty|loading|error (padrão sample)
+    fixture-mode.store.ts       ?fixture=sample|empty|loading|error (padrão sample; cookie was_fixture)
   fixtures/sample/*.json        GERADO por `pnpm fixtures:export` (não edite à mão)
   session/                      sessão simulada (anon · reader · admin), useSession(), requireLogin()
   shared-ui/                    kit de componentes, hooks e helpers de UI genéricos
@@ -33,7 +35,7 @@ post.mutate({ params: { slug }, body: { body, parentId } });      // errors: Api
 ```
 Endpoints prontos (GET exporta `<nome>Query`, ex. `sportsQuery`; mutações pelo nome, ex. `castTierVote`): `home` · `athletes`, `athleteProfile`, `analysisDimensions`, `compare` · `sports`, `sportPage`, `governanceModels`, `organizations` · `hallOfGreats`, `sources`, `collectionRuns`, `calendar`, `onThisDay`, `validationContext` · `session`, `me`, `notifications`, `markNotificationRead` · `tierVotes`, `castTierVote`, `setOfficialTier` · `comments`, `postComment`, `reactToComment`, `deleteComment` · `submitSuggestion`, `submitContact` · conta (E6): `myData`, `updateConsent`, `exportMyData`, `deleteAccount` (`account.query.ts`) · admin (A1–A8, `admin.query.ts`, demo em `fixtures/admin.fixture.ts` com auditoria): `adminSummary`, `adminProposals` + `reviewProposal`, `adminTierSignals`, `adminIngestion` + `runIngestion`, `adminSources` + `updateSource`/`addCollectionLinks`, `adminUsers` + `updateUser`, `adminPrivacy` + `updatePrivacyRequest`, `adminDossiers` + `reviewDossier`, `adminComments` + `moderateComment`/`addBannedWord`/`removeBannedWord`, `adminInbox` + `reviewSuggestion`/`updateContactMessage`.
 
-Toda resposta é validada pelo schema do contrato (`contract.response.parse`): divergência quebra alto. Fonte: fixtures (padrão) ou API real com `VITE_DATA_SOURCE=http` (`pnpm dev:api`; proxy `/api` do Vite → `apps/server` em :8787, `API_PROXY_TARGET` para trocar; `VITE_API_BASE_URL` opcional). Em modo http a sessão simulada vai no header `x-was-session`. Regras e composições usadas pelas fixtures (`composeHome`, `buildCommentThreads`, `composeCompare`, `accessDenial`, `adminPendingCounts`, `officialTierChangeError`, `reviewDossierOutcome`) são as mesmas do servidor (`@was/shared`).
+Toda resposta é validada pelo schema do contrato (`contract.response.parse`): divergência quebra alto. Fonte: fixtures (padrão) ou API real com `VITE_DATA_SOURCE=http` (`pnpm dev:api`; mesma origem: o `apps/server` serve páginas e `/api` em :8787; no SSR a chamada é em processo, `app.fetch`; `VITE_API_BASE_URL` opcional). Em modo http a sessão simulada vai no header `x-was-session`. Regras e composições usadas pelas fixtures (`composeHome`, `buildCommentThreads`, `composeCompare`, `accessDenial`, `adminPendingCounts`, `officialTierChangeError`, `reviewDossierOutcome`) são as mesmas do servidor (`@was/shared`).
 
 ### Adicionar um endpoint
 1. `packages/shared/src/schemas/<assunto>.schema.ts`: schemas Zod + `z.infer`.
@@ -66,10 +68,20 @@ export function SportPage() {
 ```
 Troque o `StubPage` do módulo pela página real; a rota já existe em `app/router.tsx` (search params tipados pelos schemas de `@was/shared`).
 
+## SSR (doc 12)
+Toda página é renderizada pelo `apps/server` (Hono) com TanStack Router SSR (streaming) e hidratada no navegador. Uma porta: http://localhost:8787 (`pnpm dev` com fixtures, `pnpm dev:api` com a API; Vite roda em middleware dentro do servidor, com HMR).
+- **Loader só faz prefetch** e devolve o `PageMeta` do `<head>`: `prefetchQueries(context.queryClient, [xQuery.queryOptions(input)])`; a entidade principal usa `ensureOr404` (404 → `notFound()`, HTTP 404). Nunca espera `?fixture=loading`; fixtures sem latência no servidor.
+- **A query key do loader e da página vem do mesmo helper** (`home-query.helper.ts`, `athletes-query.helper.ts`, `sports-query.helper.ts`): se divergir, a hidratação mostra skeleton/erro. Página nova pública = loader + helper de input + `head`.
+- **Nada de `window`/`document`/`localStorage`/`new Date()` na renderização.** "Hoje" é `useToday()` (`app/use-boot.hook.ts`, `APP_TIME_ZONE` do servidor); instantes com hora usam `instantFormat()` (`format.helper.ts`). Efeitos (`useEffect`) podem usar o navegador.
+- Estado que o servidor precisa saber fica em cookie: `was_fixture`, `was_session`, `was-theme` (o `<html data-theme>` já sai certo, sem script inline). Lido no `boot` (`request-scope.ts`): `AsyncLocalStorage` no servidor, módulo no cliente.
+- Componente só de navegador: `<ClientOnly fallback={caixa do mesmo tamanho}>` (globo). `ChartContainer` já só desenha em efeito.
+- CSP com nonce por requisição: script inline só com `nonce` (o router e o React já põem).
+- Teste: `src/app/entry-server.test.ts` (200 + `<h1>` + estado desidratado + nonce; 404).
+
 ## Catálogo (`src/shared-ui`)
 | Componente | Uso |
 |---|---|
-| `PageLayout` | `<PageLayout title breadcrumb eyebrow lead badges actions headerExtra aside>` esqueleto de toda página (define `<title>`) |
+| `PageLayout` | `<PageLayout title breadcrumb eyebrow lead badges actions headerExtra aside>` esqueleto de toda página (o `<title>` vem do `head` da rota) |
 | `PageHeader`, `Breadcrumb` | usados pelo PageLayout; `breadcrumb: [{ label, link?: { to, params } }]` |
 | `Section` | `<Section title eyebrow actions variant="card|gold|mythic|plain" span={4|8|12}>` card + card-head |
 | `QueryBoundary` | `<QueryBoundary query isEmpty empty loading notFound>{(data) => …}</QueryBoundary>` (401 → entrar, 404, erro com retry) |
@@ -115,7 +127,7 @@ Helpers: `format.helper.ts` (formatDate, formatDayMonth, formatDateRange, format
 Shared (BE+FE): `matchesAthleteFilters`, `isCompetitionWin`/`competitionWins`/`winYearSpan`/`careerOverlapYears` + `WINNING_ACHIEVEMENT_TYPES`, `Football|Swimming|Boxing|CsStatsSchema` (stats por esporte), `normalizeForSearch`, `validateComment`, `validateSuggestion`, `validateContact`, `checkSourceUrl`, `eventsOnDay/eventsBetween/eventKey`, `addDaysIso`, `addDaysMonthDay`/`monthDayToIso`/`nextMonthDayOccurrence`, `featuredAssociations`/`filterSportsTree`/`countSports`/`filterOrgTree`/`countOrgTree`/`matchesSportSearch`/`matchesCompetitionFilters`, `createCommentInputSchema`, `createSuggestionInputSchema`, `createContactInputSchema`.
 
 ## Sessão e participação
-`const { isSignedIn, isAdmin, user, requireLogin } = useSession();` → antes de votar/comentar/responder/curtir: `if (!requireLogin('vote')) return;` (abre o popup). `tierVotesQuery` exige conta (use `enabled: isSignedIn`; visitante vê só o tier oficial e os 4 botões). As mutações na demo vão para `demoStore` (memória + localStorage); "Limpar … da demo" no menu de sessão zera.
+`const { isSignedIn, isAdmin, user, requireLogin } = useSession();` → antes de votar/comentar/responder/curtir: `if (!requireLogin('vote')) return;` (abre o popup). `tierVotesQuery` exige conta (use `enabled: isSignedIn`; visitante vê só o tier oficial e os 4 botões). As mutações na demo vão para `demoStore` (memória + localStorage; o SSR não as vê, e o cliente invalida as queries depois da hidratação se houver algo salvo); "Limpar … da demo" no menu de sessão zera.
 
 ## Regras
 - **Nunca** redefina algo do catálogo. Precisa de variação genérica? Estenda o componente em `shared-ui` (com props), não copie.
@@ -126,4 +138,4 @@ Shared (BE+FE): `matchesAthleteFilters`, `isCompetitionWin`/`competitionWins`/`w
 - Filtros e abas na URL (`useUrlFilters`), nunca em estado solto.
 - A11y (WCAG 2.2 AA, doc 14): um `h1` por página (PageLayout); ícones decorativos `aria-hidden`; botões sem texto com `aria-label`; foco visível; erros de formulário via `FormField` (aria-describedby) e foco no primeiro inválido; 375 px sem rolagem horizontal; respeite `prefers-reduced-motion`.
 - Imagens só por link, `referrerPolicy="no-referrer"`, `loading="lazy"`.
-- Verifique: `pnpm test`, `pnpm typecheck`, `pnpm --filter web build`, light/dark, `?fixture=empty|loading|error`.
+- Verifique: `pnpm test`, `pnpm typecheck`, `pnpm --filter web build`, light/dark, `?fixture=empty|loading|error`, console sem erro de hidratação.

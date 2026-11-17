@@ -1,13 +1,13 @@
 import { type ApiContract, type ContractInput, type ContractResponse, FixtureMode, type SessionKind } from '@was/shared';
 import { queryOptions, type UseMutationOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { getScope } from '@/app/request-scope';
 import { sessionStore, useSessionKind } from '@/session/session.store';
 
 import type { FixtureHandler } from './fixture-context.type';
 import { DATA_SOURCE } from './data-layer.const';
 import { fixtureModeStore, useFixtureMode } from './fixture-mode.store';
 import { httpRequest } from './http-client.helper';
-import { queryClient } from './query-client';
 import { type FixtureOptions, runFixture } from './run-fixture.helper';
 
 /** Input argument: optional when the contract has no params/query/body. */
@@ -47,8 +47,12 @@ export function defineQuery<C extends ApiContract>(contract: C, fixture: Fixture
     contract,
     baseKey,
     queryOptions: (...[input]: InputArgs<C>) => options(input),
-    /** Imperative fetch through the cache (route loaders, prefetch on hover). */
-    fetch: (...[input]: InputArgs<C>) => queryClient.fetchQuery(options(input)),
+    /** Imperative fetch through the cache of the current request (server) or of the browser. */
+    fetch(...[input]: InputArgs<C>) {
+      const client = getScope().queryClient;
+      if (!client) throw new Error('No QueryClient in the request scope');
+      return client.fetchQuery(options(input));
+    },
     /** React hook. Re-runs when the fixture mode or the simulated session changes. */
     useQuery(...[input, extra]: HookArgs<C>) {
       const mode = useFixtureMode();

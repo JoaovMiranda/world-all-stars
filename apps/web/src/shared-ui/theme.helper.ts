@@ -1,20 +1,31 @@
-import { THEME_STORAGE_KEY, THEMES, type ThemeName } from './theme.const';
+import { getBoot } from '@/app/request-scope';
 
-const isThemeName = (value: unknown): value is ThemeName => THEMES.includes(value as ThemeName);
+import { readCookie, writeCookie } from './cookie.helper';
+import { THEME_COOKIE, THEME_STORAGE_KEY, type ThemeName, isThemeName } from './theme.const';
 
-/** Theme in effect: manual override on <html data-theme>, otherwise the OS preference. */
+/** Theme in effect (browser): manual override on <html data-theme>, otherwise the OS preference. */
 export const getEffectiveTheme = (): ThemeName => {
   const forced = document.documentElement.dataset.theme;
   if (isThemeName(forced)) return forced;
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
-/** Applies a manual theme and persists it (storage may be blocked: ignore). */
+/** Theme the server rendered with (cookie), used while hydrating so markup matches; light when unknown. */
+export const getServerTheme = (): ThemeName => getBoot().theme ?? 'light';
+
+/** Applies a manual theme and persists it in the cookie the server reads (first paint already themed). */
 export const setManualTheme = (theme: ThemeName): void => {
   document.documentElement.dataset.theme = theme;
+  writeCookie(THEME_COOKIE, theme);
+};
+
+/** After hydration: moves a pre-SSR localStorage theme to the cookie (once). */
+export const migrateLegacyTheme = (): void => {
   try {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    const legacy = localStorage.getItem(THEME_STORAGE_KEY);
+    localStorage.removeItem(THEME_STORAGE_KEY);
+    if (isThemeName(legacy) && !readCookie(document.cookie, THEME_COOKIE)) setManualTheme(legacy);
   } catch {
-    /* private mode / blocked storage */
+    /* storage blocked */
   }
 };

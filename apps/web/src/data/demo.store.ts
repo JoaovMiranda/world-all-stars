@@ -1,5 +1,7 @@
 import { type AdminContactMessage, type AdminSuggestion, type CommentReaction, type SuggestionStatus, type Tier, submissionProtocol } from '@was/shared';
 
+import { IS_SERVER } from '@/app/request-scope';
+
 import { type AdminDemoState, initialAdminDemo } from './fixtures/admin-demo.type';
 
 const STORAGE_KEY = 'was-demo';
@@ -47,6 +49,9 @@ const initial = (): DemoState => ({
 });
 
 const read = (): DemoState => {
+  // The server render never sees the tester's demo changes (they live in this browser); the client overlays them
+  // after hydration (entry-client invalidates the queries when there is something stored).
+  if (IS_SERVER) return initial();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? { ...initial(), ...(JSON.parse(raw) as Partial<DemoState>) } : initial();
@@ -55,16 +60,26 @@ const read = (): DemoState => {
   }
 };
 
-let state: DemoState = read();
+let state: DemoState | null = null;
+const current = (): DemoState => (state ??= read());
 
 /**
  * In-memory + localStorage store of the fixture-mode mutations (same idea as the prototype's session.helper.js).
  * Fixture handlers read it to overlay the sample data; "Limpar … da demo" resets it.
  */
 export const demoStore = {
-  get: (): DemoState => state,
+  get: (): DemoState => current(),
+  /** True when this browser has demo changes stored (fixture mode overlays them after hydration). */
+  hasStored(): boolean {
+    if (IS_SERVER) return false;
+    try {
+      return localStorage.getItem(STORAGE_KEY) !== null;
+    } catch {
+      return false;
+    }
+  },
   update(recipe: (draft: DemoState) => void): void {
-    const draft = structuredClone(state);
+    const draft = structuredClone(current());
     recipe(draft);
     state = draft;
     try {

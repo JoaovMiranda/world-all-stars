@@ -26,6 +26,7 @@ import { barsOption } from '@/shared-ui/chart-presets.helper';
 
 import { bestFlags, commonCompetitions, seriesToken, sharedClubs, titlesByAge, titlesPerLevel, topLongevity } from './analysis.helper';
 import { currentYear } from './athlete-profile.helper';
+import { ALL_ATHLETES_INPUT } from './athletes-query.helper';
 import { ATHLETE_PROFILE_TEXT } from './athletes.const';
 import { CompareMatrix, type MatrixRow } from './compare-matrix.component';
 import { ComparePicker } from './compare-picker.component';
@@ -274,7 +275,7 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
 
 /** Análise (docs 09/16): starts with nobody, up to 5 athletes, radar + normalized reading, same-sport metrics. */
 export function AnalysisTab({ profile, compare, onCompareChange }: AnalysisTabProps) {
-  const all = athletesQuery.useQuery({ query: {} });
+  const all = athletesQuery.useQuery(ALL_ATHLETES_INPUT);
   const dims = analysisDimensionsQuery.useQuery();
   const candidates: AthleteSummary[] = all.data?.items ?? [];
   const valid = compare.filter((s) => s !== profile.slug && (!all.data || candidates.some((a) => a.slug === s))).slice(0, ANALYSIS_MAX_ATHLETES);

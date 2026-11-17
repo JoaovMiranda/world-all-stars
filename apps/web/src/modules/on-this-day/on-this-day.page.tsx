@@ -1,6 +1,7 @@
-import { addDaysMonthDay, monthDayToIso, nextMonthDayOccurrence, toIsoDate } from '@was/shared';
+import { addDaysMonthDay, monthDayToIso, nextMonthDayOccurrence } from '@was/shared';
 import { getRouteApi, Link } from '@tanstack/react-router';
 
+import { useToday } from '@/app/use-boot.hook';
 import { onThisDayQuery } from '@/data/endpoints/discovery.query';
 import { Avatar } from '@/shared-ui/avatar.component';
 import { ButtonLink } from '@/shared-ui/button-link.component';
@@ -29,7 +30,7 @@ export function OnThisDayPage() {
   const prevLabel = formatDayMonth(monthDayToIso(prev));
   const nextLabel = formatDayMonth(monthDayToIso(next));
   const day = onThisDayQuery.useQuery({ params: { md } });
-  const calendarDate = nextMonthDayOccurrence(md, toIsoDate(new Date()));
+  const calendarDate = nextMonthDayOccurrence(md, useToday());
 
   return (
     <PageLayout

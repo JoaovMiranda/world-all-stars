@@ -17,6 +17,7 @@ import { UI_TEXT } from '@/shared-ui/ui-text.const';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 import { useUrlSearchText } from '@/shared-ui/use-url-search-text.hook';
 
+import { ALL_ATHLETES_INPUT, athletesListInput } from './athletes-query.helper';
 import { ATHLETES_TEXT } from './athletes.const';
 
 const t = ATHLETES_TEXT.list;
@@ -27,8 +28,8 @@ const TIER_OPTIONS: SelectOption[] = TIER_ORDER.map((v) => ({ value: v, label: T
 export function AthletesPage() {
   const { filters, setFilter, reset, activeCount } = useUrlFilters(AthleteFiltersSchema);
   const [q, setQ] = useUrlSearchText(filters.q, (v) => setFilter('q', v));
-  const all = athletesQuery.useQuery({ query: {} });
-  const list = athletesQuery.useQuery({ query: filters });
+  const all = athletesQuery.useQuery(ALL_ATHLETES_INPUT);
+  const list = athletesQuery.useQuery(athletesListInput(filters));
 
   const options = useMemo(() => {
     const items = all.data?.items ?? [];

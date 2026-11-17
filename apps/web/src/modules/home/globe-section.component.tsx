@@ -1,4 +1,5 @@
 import type { GlobeCountry } from '@was/shared';
+import { ClientOnly } from '@tanstack/react-router';
 import { lazy, Suspense, useMemo, useState } from 'react';
 
 import { countryNameFromNumeric } from './country-name.helper';
@@ -12,7 +13,9 @@ interface GlobeSectionProps {
 
 const t = HOME_TEXT.globe;
 
-// d3-geo + the globe live in their own chunk (doc 04: lazy-load); the fallback keeps the same box (no layout shift).
+// d3-geo + the globe live in their own chunk (doc 04: lazy-load) and only render in the browser (SSR prints the empty
+// stage); the fallback keeps the same box (no layout shift).
+const stage = <div className="globe-stage" aria-hidden="true" />;
 const DeskGlobe = lazy(() => import('./desk-globe.component').then((m) => ({ default: m.DeskGlobe })));
 
 /** "Campeões pelo mundo": the globe always renders (neutral countries when there are no titles). */
@@ -35,17 +38,19 @@ export function GlobeSection({ countries }: GlobeSectionProps) {
       </div>
       <div className="globe-layout">
         <div>
-          <Suspense fallback={<div className="globe-stage" aria-hidden="true" />}>
-            <DeskGlobe
-              features={atlas.data}
-              titlesByCountry={titlesByCountry}
-              selectedId={selected?.id ?? null}
-              onSelect={(f) => {
-                const id = String(f.id ?? '');
-                setSelected({ id, name: countryNameFromNumeric(f.id, f.properties.name) });
-              }}
-            />
-          </Suspense>
+          <ClientOnly fallback={stage}>
+            <Suspense fallback={stage}>
+              <DeskGlobe
+                features={atlas.data}
+                titlesByCountry={titlesByCountry}
+                selectedId={selected?.id ?? null}
+                onSelect={(f) => {
+                  const id = String(f.id ?? '');
+                  setSelected({ id, name: countryNameFromNumeric(f.id, f.properties.name) });
+                }}
+              />
+            </Suspense>
+          </ClientOnly>
           <p className="globe-hint">{hint}</p>
         </div>
         <GlobePanel

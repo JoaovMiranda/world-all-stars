@@ -21,6 +21,7 @@ import { AthleteBadges, AthleteHeroActions, AthleteHeroDetails, AthleteNames } f
 import { AthleteInfobox } from './athlete-infobox.component';
 import { AthleteKpis } from './athlete-kpis.component';
 import { AthleteProfileSkeleton } from './athlete-profile-skeleton.component';
+import { athleteProfileInput, commentsInput } from './athletes-query.helper';
 import { ATHLETE_PROFILE_TEXT } from './athletes.const';
 import { CareerTab } from './career-tab.component';
 import { CommentsTab } from './comments-tab.component';
@@ -38,7 +39,7 @@ function Profile({ athlete, slug }: { athlete: AthleteProfile; slug: string }) {
   const { filters, setFilter, setFilters } = useUrlFilters(AthleteProfileSearchSchema);
   const tab = filters.tab ?? AthleteProfileTab.Overview;
   const sort = filters.sort ?? CommentSort.Top;
-  const comments = commentsQuery.useQuery({ params: { slug }, query: { sort } });
+  const comments = commentsQuery.useQuery(commentsInput(slug, filters.sort));
   const panel = useMemo(() => resolveSportPanel(athlete), [athlete]);
   const compare = useMemo(() => splitSlugs(filters.compare).filter((s) => s !== athlete.slug), [filters.compare, athlete.slug]);
 
@@ -122,7 +123,7 @@ function Profile({ athlete, slug }: { athlete: AthleteProfile; slug: string }) {
 /** P2 Athlete profile (doc 09): hero, sport KPIs and the six URL-synced tabs (?tab=, ?compare=, ?sort=). */
 export function AthleteProfilePage() {
   const { slug } = route.useParams();
-  const profile = athleteProfileQuery.useQuery({ params: { slug } });
+  const profile = athleteProfileQuery.useQuery(athleteProfileInput(slug));
   return (
     <QueryBoundary
       query={profile}
