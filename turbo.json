@@ -22,7 +22,6 @@
       "persistent": true,
       "passThroughEnv": [
         "VITE_*",
-        "API_PROXY_TARGET",
         "DATABASE_URL",
         "PGLITE_DATA_DIR",
         "PORT",
@@ -31,7 +30,10 @@
         "IP_HASH_SALT",
         "RATE_LIMIT_ENABLED",
         "LOG_REQUESTS",
-        "MIGRATE_ON_BOOT"
+        "MIGRATE_ON_BOOT",
+        "WEB_DIST_DIR",
+        "APP_TIME_ZONE",
+        "PUBLIC_URL"
       ]
     },
     "test": {

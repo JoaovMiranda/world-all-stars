@@ -12,7 +12,7 @@
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
-    "start": "node apps/server/dist/main.js",
+    "start": "NODE_ENV=production node apps/server/dist/main.js",
     "db:generate": "pnpm --filter @was/db generate",
     "db:migrate": "pnpm --filter @was/db migrate",
     "db:seed": "pnpm --filter @was/db seed",
