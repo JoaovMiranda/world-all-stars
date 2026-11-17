@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --clear-screen=false src/main.ts",
-    "start": "node dist/main.js",
+    "dev": "WEB_DEV=1 tsx watch --clear-screen=false --exclude '../web/**' src/main.ts",
+    "start": "NODE_ENV=production node dist/main.js",
     "build": "node build.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run"

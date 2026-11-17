@@ -23,6 +23,9 @@ apps/server/src/
   routes.ts                          ALL_ROUTES (um teste garante: todo contrato servido exatamente uma vez)
 ```
 Fluxo de uma requisição: `requestLog → secureHeaders → cors → session (AuthProvider) → rota gerada do contrato`.
+
+**Páginas (SSR, doc 12)** no mesmo servidor e porta: `createApp({ web })` monta `src/web/web-handler.ts` depois da API. Produção: `/assets/*` de `apps/web/dist/client` com `Cache-Control: immutable`, arquivos públicos, e todo outro GET vai ao `render()` de `dist/server/entry-server.js` (assets do `.vite/manifest.json`, `web-assets.helper.ts`). Dev (`WEB_DEV=1`, `src/web/vite-dev.ts`): um `http.Server` com os middlewares do Vite (módulos, HMR) antes do Hono; o `entry-server.tsx` é carregado por `ssrLoadModule` a cada requisição (edição sem restart). O renderer chama a API **em processo** (`app.fetch`), com os cookies da página. `/api/*` nunca cai no SSR (404 JSON).
+**CSP dividida** (`middlewares/secure-headers.middleware.ts`): `/api` com `default-src 'none'`; páginas com nonce por requisição (`script-src 'self' 'nonce-…'`, `style-src 'self' fonts.googleapis.com 'nonce-…'`, `style-src-attr 'unsafe-inline'`, `img-src` Wikimedia, `font-src` gstatic, `frame-ancestors 'none'`, `base-uri`/`form-action 'self'`); em dev soma `'unsafe-inline'` em estilos, `ws:` e `worker-src blob:` (HMR do Vite).
 A rota gerada faz, para qualquer endpoint: regra de acesso (`accessDenial` do shared: 401/403/banido) → rate limit (`RATE_LIMITS` do shared) → `params/query/body` validados pelos schemas do contrato (422 `{ error, message, errors: { 'campo': msg } }`) → handler → `contract.response.safeParse` (deriva do contrato = 500 + log, nunca payload errado).
 
 Leituras do catálogo (atletas, esportes, organizações, calendário…) usam um **snapshot em memória** (`CatalogCache`), invalidado **automaticamente** pelo `BaseRepository` (hook `onWrite`, disparado após o commit) quando qualquer tabela do catálogo é escrita. Participação (votos, comentários, notificações, inbox, auditoria) é sempre consultada ao vivo. Futuro: materialized views (`mv_athlete_summary`, doc 03).
@@ -54,14 +57,18 @@ Hoje `createSimulatedAuthProvider` lê `x-was-session: anon|reader|admin` (ou co
 | `PORT` / `HOST` | `8787` / `127.0.0.1` | servidor |
 | `DATABASE_URL` | — | Postgres (node-postgres); sem ela, PGlite |
 | `PGLITE_DATA_DIR` | `.data/pglite` | dir do PGlite (relativo à raiz) ou `memory://` |
-| `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | origens do Vite |
+| `CORS_ORIGINS` | `http://localhost:8787,http://127.0.0.1:8787` | origens aceitas em `/api` (as páginas são da mesma origem) |
 | `IP_HASH_SALT` | `dev-only-salt` | sal do `ip_hash` (segredo em produção) |
 | `RATE_LIMIT_ENABLED` / `LOG_REQUESTS` / `MIGRATE_ON_BOOT` | `1` | liga/desliga |
 | `MIGRATIONS_DIR` | ao lado do módulo | pasta das migrations (o build copia para `dist/migrations`) |
-| Web: `VITE_DATA_SOURCE=http`, `API_PROXY_TARGET` | fixtures, `http://localhost:8787` | front lê a API real via proxy `/api` |
+| `WEB_DEV` | `0` (`pnpm dev` põe `1`) | Vite em middleware mode no mesmo processo (SSR + HMR) |
+| `WEB_DIST_DIR` | `apps/web/dist` | build do web (`client/` + `server/entry-server.js`); sem ele, só a API (aviso no boot) |
+| `APP_TIME_ZONE` | `America/Sao_Paulo` | "hoje" das páginas (calendário, hoje na história, idades) |
+| `PUBLIC_URL` | `http://localhost:<PORT>` | origem dos links canonical/og |
+| Web: `VITE_DATA_SOURCE=http` | fixtures | páginas leem a API real (vale no dev e no build) |
 
 ## Rodar e testar
-`pnpm dev:api` (web em modo http + servidor) · `pnpm dev` (web com fixtures + servidor) · `pnpm --filter server test` (PGlite em memória: conformidade de todo GET + regras das mutações) · `pnpm build && pnpm start` (`node apps/server/dist/main.js`).
+Tudo em http://localhost:8787: `pnpm dev:api` (páginas com a API real) · `pnpm dev` (páginas com fixtures) · `pnpm --filter server test` (PGlite em memória: conformidade de todo GET + regras das mutações + páginas/CSP em `test/web.test.ts`) · `pnpm build && pnpm start` (`NODE_ENV=production node apps/server/dist/main.js`; para dados reais: `VITE_DATA_SOURCE=http pnpm build`).
 
 ## Desvios dos docs (fase 1)
 - Uma tabela por agregado em `tables/*.table.ts` (tabela + traduções), não um arquivo por tabela.
@@ -69,4 +76,5 @@ Hoje `createSimulatedAuthProvider` lê `x-was-session: anon|reader|admin` (ou co
 - Sem `change_requests` ainda: as propostas do A1 são `field_conflicts` + `ai_extraction_queue` (+ valores extraídos por IA em `field_provenance`).
 - `legal_acceptances(document_kind, version)` no lugar de `user_consents.document_id` (os textos legais vivem no shared); `user_consents` guarda as finalidades opcionais.
 - Contadores (likes, respostas, votos do usuário) sobem `version` mas não geram snapshot/auditoria (dado derivado).
-- "Rodar agora" (A2) é simulado até existir `packages/ingest`. Sem SSR ainda (doc 12).
+- "Rodar agora" (A2) é simulado até existir `packages/ingest`.
+- SSR sem cache de CDN ainda (HTML `Cache-Control: private, no-cache`, porque depende dos cookies de sessão/tema).

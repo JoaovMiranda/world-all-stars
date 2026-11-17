@@ -1,8 +1,16 @@
-import { serve } from '@hono/node-server';
-import { createDatabase } from '@was/db';
+import fs from 'node:fs';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+import { getRequestListener } from '@hono/node-server';
+import { createDatabase, findRepoRoot } from '@was/db';
 
 import { createApp } from './app';
-import { loadConfig } from './config/env.config';
+import { loadConfig, type ServerConfig } from './config/env.config';
+import { readProdAssets, type WebRenderModule } from './web/web-assets.helper';
+import type { WebRuntime } from './web/web-handler';
+import { createViteDev, type ViteDev } from './web/vite-dev';
 
 const config = loadConfig();
 const handle = await createDatabase({
@@ -11,14 +19,49 @@ const handle = await createDatabase({
   ...(process.env.MIGRATIONS_DIR ? { migrationsFolder: process.env.MIGRATIONS_DIR } : {}),
 });
 if (config.migrateOnBoot) await handle.migrate();
-const { app, deps } = createApp({ db: handle.db, config });
 
-const server = serve({ fetch: app.fetch, port: config.port, hostname: config.host }, (info) => {
-  console.log(`[server] World All Stars API on http://${info.address}:${info.port}/api (db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name})`);
+/** Production web build (vite build): dist/server/entry-server.js renders, dist/client is served. */
+const prodWeb = async ({ webDistDir }: ServerConfig): Promise<WebRuntime | undefined> => {
+  const entry = path.join(webDistDir, 'server/entry-server.js');
+  const clientDir = path.join(webDistDir, 'client');
+  if (!fs.existsSync(entry) || !fs.existsSync(path.join(clientDir, '.vite/manifest.json'))) {
+    console.warn(`[server] no web build in ${webDistDir}: serving the API only (run \`pnpm build\`).`);
+    return undefined;
+  }
+  const renderer = (await import(pathToFileURL(entry).href)) as WebRenderModule;
+  const assets = readProdAssets(clientDir);
+  return { dev: false, clientDir, loadRenderer: async () => renderer, assets: async () => assets };
+};
+
+// One HTTP server: in dev, Vite's middlewares (modules, HMR websocket) run first and hand everything else to Hono.
+// The server is created first because Vite's HMR websocket attaches to it.
+let vite: ViteDev | undefined;
+let listener: ReturnType<typeof getRequestListener> | undefined;
+const toHono = (req: IncomingMessage, res: ServerResponse) => void listener?.(req, res);
+const httpServer = createServer((req, res) => {
+  if (vite && !req.url?.startsWith('/api/')) vite.middlewares(req, res, () => toHono(req, res));
+  else toHono(req, res);
+});
+
+let web: WebRuntime | undefined;
+if (config.webDev) {
+  vite = await createViteDev({ webRoot: path.join(findRepoRoot(), 'apps/web'), httpServer });
+  const dev = vite;
+  web = { dev: true, loadRenderer: dev.loadRenderer, assets: dev.assets, fixStacktrace: dev.fixStacktrace };
+} else {
+  web = await prodWeb(config);
+}
+const { app, deps } = createApp({ db: handle.db, config, ...(web ? { web } : {}) });
+listener = getRequestListener(app.fetch);
+
+httpServer.listen(config.port, config.host, () => {
+  const mode = config.webDev ? 'pages: SSR + Vite HMR' : web ? 'pages: SSR (build)' : 'API only';
+  console.log(`[server] World All Stars on http://${config.host === '127.0.0.1' ? 'localhost' : config.host}:${config.port} (${mode}; db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name})`);
 });
 
 const shutdown = async () => {
-  server.close();
+  httpServer.close();
+  await vite?.close();
   await handle.close();
   process.exit(0);
 };

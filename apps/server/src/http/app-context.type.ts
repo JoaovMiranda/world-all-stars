@@ -28,4 +28,4 @@ export interface RequestContext {
 /** Same as RequestContext, with the signed-in user guaranteed (contracts with access reader/admin). */
 export type SignedInContext = RequestContext & { user: AuthUser };
 
-export type HonoEnv = { Variables: { request: RequestContext; requestId: string } };
+export type HonoEnv = { Variables: { request: RequestContext; requestId: string; /** Pages only: CSP nonce of this response. */ cspNonce: string } };
