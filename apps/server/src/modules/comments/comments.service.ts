@@ -1,6 +1,5 @@
 import { commentReactions, comments, notifications, users } from '@was/db';
 import {
-  API_ERROR_MESSAGES,
   ApiErrorCode,
   type Comment,
   type CommentReaction,
@@ -15,7 +14,7 @@ import {
 
 import type { AuthUser } from '../../auth/auth-provider.type';
 import type { RequestContext } from '../../http/app-context.type';
-import { forbidden, notFound, unprocessable } from '../../http/http-error.error';
+import { forbidden, notFound, unprocessable, unprocessableKey } from '../../http/http-error.error';
 import { loadBannedWords } from '../moderation/moderation.repository';
 import { findComment, findReaction, reactionsOf, visibleComments } from './comments.repository';
 
@@ -49,11 +48,11 @@ export const listComments = async (ctx: RequestContext, slug: string, sort: Comm
 /** POST comment/reply: shared validateComment (422), reply to a reply goes to the top comment, notifies the parent author. */
 export const postComment = async (ctx: RequestContext, user: AuthUser, slug: string, body: string, parentId: string | null | undefined) => {
   const athleteId = await athleteIdOf(ctx, slug);
-  const result = validateComment(body, await loadBannedWords(ctx.deps.db));
+  const result = validateComment(body, await loadBannedWords(ctx.deps.db), ctx.locale);
   if (!result.ok) throw unprocessable(result.error, result.message, { body: result.message });
   let parent = parentId ? await findComment(ctx.deps.db, parentId) : null;
   if (parentId && (!parent || parent.athleteId !== athleteId || parent.status !== CommentStatus.Visible)) {
-    throw unprocessable(ApiErrorCode.Parent, API_ERROR_MESSAGES.parentGone);
+    throw unprocessableKey(ApiErrorCode.Parent, 'parentGone');
   }
   if (parent?.parentCommentId) parent = await findComment(ctx.deps.db, parent.parentCommentId);
   return ctx.deps.repo.transaction(async (repo) => {
@@ -77,7 +76,7 @@ export const postComment = async (ctx: RequestContext, user: AuthUser, slug: str
 export const reactToComment = async (ctx: RequestContext, user: AuthUser, id: string, reaction: CommentReaction | null): Promise<ReactToCommentResponse> => {
   const target = await findComment(ctx.deps.db, id);
   if (!target || target.status !== CommentStatus.Visible) throw notFound();
-  if (target.userId === user.id) throw forbidden(ApiErrorCode.Own, API_ERROR_MESSAGES.ownComment);
+  if (target.userId === user.id) throw forbidden(ApiErrorCode.Own, 'ownComment');
   return ctx.deps.repo.transaction(async (repo) => {
     const existing = await findReaction(repo.db, id, user.id);
     if (existing && existing.reaction !== reaction) {

@@ -4,6 +4,8 @@ import { findRepoRoot } from '@was/db';
 import { z } from 'zod';
 
 const flag = z.enum(['0', '1', 'true', 'false']).transform((v) => v === '1' || v === 'true');
+/** `VAR=` (empty, as in .env.example) means unset. */
+const unsetIfEmpty = <T extends z.ZodType>(schema: T) => z.preprocess((v) => (v === '' ? undefined : v), schema.optional());
 
 /** Environment of the server (see BACKEND.md). Everything has a dev default: `pnpm dev` needs no .env. */
 const EnvSchema = z.object({
@@ -15,8 +17,8 @@ const EnvSchema = z.object({
   PGLITE_DATA_DIR: z.string().optional(),
   /** Comma-separated origins allowed by CORS on /api (pages are same-origin: the server itself). */
   CORS_ORIGINS: z.string().default('http://localhost:8787,http://127.0.0.1:8787'),
-  /** Salt of ip_hash (suggestions, contact, audit). Set a secret in production. */
-  IP_HASH_SALT: z.string().default('dev-only-salt'),
+  /** Salt of ip_hash (suggestions, contact, audit). Required in production (16+ characters); dev uses a fixed value. */
+  IP_HASH_SALT: unsetIfEmpty(z.string()),
   RATE_LIMIT_ENABLED: flag.default(true),
   LOG_REQUESTS: flag.default(true),
   /** Apply pending migrations on boot (the app starts on an empty database). */
@@ -37,9 +39,27 @@ const EnvSchema = z.object({
         return false;
       }
     }, 'invalid IANA time zone'),
+  /** Production: seconds an anonymous page stays in the in-process HTML cache (0 = off). Dropped on any DB write. */
+  SSR_CACHE_TTL_SECONDS: z.coerce.number().int().nonnegative().default(60),
   /** Public origin of the site (canonical and Open Graph URLs). Default http://localhost:<PORT>. */
   PUBLIC_URL: z.url().optional(),
+  NODE_ENV: z.string().optional(),
+  /** Origin Better Auth builds its URLs from (Google callback = <this>/api/auth/callback/google). Default PUBLIC_URL. */
+  BETTER_AUTH_URL: unsetIfEmpty(z.url()),
+  /** Signs/encrypts the session cookies and OAuth tokens. Required in production (dev uses a fixed dev-only value). */
+  BETTER_AUTH_SECRET: unsetIfEmpty(z.string().min(32, 'BETTER_AUTH_SECRET must have at least 32 characters')),
+  /** Google OAuth client ("Web application"). Both unset = Google sign-in disabled (the app still boots). */
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  /** Comma-separated e-mails promoted to admin on boot and on sign-up (audited). */
+  ADMIN_EMAILS: z.string().default(''),
+  /** Dev session switcher (anon/reader/admin demo accounts). Default on outside production; forbidden in production. */
+  AUTH_SIMULATED: unsetIfEmpty(flag),
 });
+
+/** Dev-only values (never used in production: loadConfig requires BETTER_AUTH_SECRET and IP_HASH_SALT there). */
+const DEV_IP_HASH_SALT = 'dev-only-salt';
+const DEV_AUTH_SECRET = 'dev-only-better-auth-secret-not-for-production-0000';
 
 export type ServerConfig = {
   port: number;
@@ -56,24 +76,50 @@ export type ServerConfig = {
   webDistDir: string;
   appTimeZone: string;
   publicUrl: string;
+  ssrCacheTtlSeconds: number;
+  /** NODE_ENV=production. */
+  production: boolean;
+  /** Simulated sessions accepted (AUTH_SIMULATED; never in production). */
+  authSimulated: boolean;
+  betterAuthUrl: string;
+  betterAuthSecret: string;
+  /** Google OAuth client; null = Google sign-in not configured. */
+  google: { clientId: string; clientSecret: string } | null;
+  /** Lower-cased. */
+  adminEmails: string[];
 };
 
 export const loadConfig = (env: NodeJS.ProcessEnv = process.env): ServerConfig => {
   const e = EnvSchema.parse(env);
   const dir = e.PGLITE_DATA_DIR;
+  const production = e.NODE_ENV === 'production';
+  if (production && e.AUTH_SIMULATED) throw new Error('AUTH_SIMULATED is forbidden in production (NODE_ENV=production): it lets anyone act as the demo admin.');
+  const google = e.GOOGLE_CLIENT_ID && e.GOOGLE_CLIENT_SECRET ? { clientId: e.GOOGLE_CLIENT_ID, clientSecret: e.GOOGLE_CLIENT_SECRET } : null;
+  if (production && !e.BETTER_AUTH_SECRET) throw new Error('BETTER_AUTH_SECRET is required in production (NODE_ENV=production): 32+ random characters (openssl rand -base64 32).');
+  if (production && (!e.IP_HASH_SALT || e.IP_HASH_SALT.length < 16 || e.IP_HASH_SALT === DEV_IP_HASH_SALT)) {
+    throw new Error('IP_HASH_SALT is required in production (NODE_ENV=production): 16+ random characters, not the dev value.');
+  }
+  const publicUrl = (e.PUBLIC_URL ?? `http://localhost:${e.PORT}`).replace(/\/+$/, '');
   return {
     port: e.PORT,
     host: e.HOST,
     databaseUrl: e.DATABASE_URL || undefined,
     pgliteDataDir: dir ? (dir.startsWith('memory://') ? dir : path.resolve(findRepoRoot(), dir)) : undefined,
     corsOrigins: e.CORS_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean),
-    ipHashSalt: e.IP_HASH_SALT,
+    ipHashSalt: e.IP_HASH_SALT ?? DEV_IP_HASH_SALT,
     rateLimitEnabled: e.RATE_LIMIT_ENABLED,
     logRequests: e.LOG_REQUESTS,
     migrateOnBoot: e.MIGRATE_ON_BOOT,
     webDev: e.WEB_DEV,
     webDistDir: path.resolve(findRepoRoot(), e.WEB_DIST_DIR),
     appTimeZone: e.APP_TIME_ZONE,
-    publicUrl: (e.PUBLIC_URL ?? `http://localhost:${e.PORT}`).replace(/\/+$/, ''),
+    ssrCacheTtlSeconds: e.SSR_CACHE_TTL_SECONDS,
+    publicUrl,
+    production,
+    authSimulated: e.AUTH_SIMULATED ?? !production,
+    betterAuthUrl: (e.BETTER_AUTH_URL ?? publicUrl).replace(/\/+$/, ''),
+    betterAuthSecret: e.BETTER_AUTH_SECRET ?? DEV_AUTH_SECRET,
+    google,
+    adminEmails: e.ADMIN_EMAILS.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
   };
 };

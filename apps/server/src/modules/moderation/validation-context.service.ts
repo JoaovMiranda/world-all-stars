@@ -1,11 +1,11 @@
-import type { SuggestionContext, ValidationContext } from '@was/shared';
+import { DEFAULT_LOCALE, type Locale, type SuggestionContext, type ValidationContext } from '@was/shared';
 
 import type { AppDeps } from '../../http/app-context.type';
 import { loadBannedWords, loadSourceRules } from './moderation.repository';
 
 /** GET /api/validation-context: the exact inputs the server validates with, so forms warn with the same rules. */
-export const getValidationContext = async (deps: AppDeps): Promise<ValidationContext> => {
-  const [words, rules, view] = await Promise.all([loadBannedWords(deps.db), loadSourceRules(deps.db), deps.catalog.get()]);
+export const getValidationContext = async (deps: AppDeps, locale: Locale = DEFAULT_LOCALE): Promise<ValidationContext> => {
+  const [words, rules, view] = await Promise.all([loadBannedWords(deps.db), loadSourceRules(deps.db), deps.catalog.get(locale)]);
   return {
     bannedWords: words,
     sources: rules,

@@ -4,8 +4,8 @@ import { defineRoute } from '../../http/contract-route.helper';
 
 /** P1: one round trip, composed by the same shared function as the web fixtures (composeHome). */
 export const homeRoutes = [
-  defineRoute(PublicApi.home, async ({ query }, { deps }) => {
-    const view = await deps.catalog.get();
+  defineRoute(PublicApi.home, async ({ query }, { deps, locale }) => {
+    const view = await deps.catalog.get(locale);
     const window = homeCalendarWindow(query.date);
     return composeHome(query.date, {
       athleteSlugs: view.athletes().map((a) => a.slug),

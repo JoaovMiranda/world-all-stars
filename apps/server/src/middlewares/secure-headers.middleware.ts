@@ -12,7 +12,7 @@ export const apiSecureHeaders = (): MiddlewareHandler<HonoEnv> =>
   secureHeaders({ ...COMMON, contentSecurityPolicy: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } });
 
 /** Images are links to Wikimedia (doc 02: never copied); fonts from Google Fonts. */
-const IMG_SRC = ["'self'", 'data:', 'https://upload.wikimedia.org', 'https://thumb.wikimedia.org', 'https://commons.wikimedia.org'];
+const IMG_SRC = ["'self'", 'data:', 'https://upload.wikimedia.org', 'https://thumb.wikimedia.org', 'https://commons.wikimedia.org', 'https://lh3.googleusercontent.com' /* Google profile photos */];
 
 /**
  * Pages (SSR): a fresh nonce per response (`c.var.cspNonce`) that the renderer puts on every <script>/<style> it emits.
@@ -20,8 +20,10 @@ const IMG_SRC = ["'self'", 'data:', 'https://upload.wikimedia.org', 'https://thu
  * runs without the nonce. Dev adds what Vite needs: injected <style> tags (HMR), the websocket and its blob ping worker.
  */
 export const pageSecureHeaders = ({ dev }: { dev: boolean }): MiddlewareHandler<HonoEnv> => async (c, next) => {
-  const nonce = randomBytes(16).toString('base64');
-  c.set('cspNonce', nonce);
+  c.set('cspNonce', randomBytes(16).toString('base64'));
+  await next();
+  // Read after the handler: a page served from the HTML cache swaps in the nonce baked into its body.
+  const nonce = c.var.cspNonce;
   const directives = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'`,
@@ -37,7 +39,6 @@ export const pageSecureHeaders = ({ dev }: { dev: boolean }): MiddlewareHandler<
     "base-uri 'self'",
     "form-action 'self'",
   ];
-  await next();
   const h = c.res.headers;
   h.set('Content-Security-Policy', directives.join('; '));
   h.set('Referrer-Policy', COMMON.referrerPolicy);

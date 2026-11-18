@@ -1,4 +1,5 @@
 import type { Actor, BaseRepository, Database } from '@was/db';
+import type { Locale } from '@was/shared';
 
 import type { AuthProvider, AuthUser, SessionContext } from '../auth/auth-provider.type';
 import type { ServerConfig } from '../config/env.config';
@@ -23,9 +24,20 @@ export interface RequestContext {
   /** Writer identity for the BaseRepository (user id + name, ip hash, user agent). */
   actor: Actor;
   ipHash: string;
+  /** Language of the request (localeMiddleware): messages, labels and catalog content. */
+  locale: Locale;
 }
 
 /** Same as RequestContext, with the signed-in user guaranteed (contracts with access reader/admin). */
 export type SignedInContext = RequestContext & { user: AuthUser };
 
-export type HonoEnv = { Variables: { request: RequestContext; requestId: string; /** Pages only: CSP nonce of this response. */ cspNonce: string } };
+export type HonoEnv = {
+  Variables: {
+    request: RequestContext;
+    requestId: string;
+    /** Pages only: CSP nonce of this response. */
+    cspNonce: string;
+    /** Request language (API: localeMiddleware; pages: web-handler). */
+    locale: Locale;
+  };
+};

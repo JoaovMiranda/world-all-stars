@@ -1,6 +1,6 @@
-import { API_ERROR_MESSAGES, ApiErrorCode, RATE_LIMITS, type RateLimitKey } from '@was/shared';
+import { ApiErrorCode, RATE_LIMITS, type RateLimitKey } from '@was/shared';
 
-import { HttpError } from '../http/http-error.error';
+import { httpError } from '../http/http-error.error';
 
 export interface RateLimiter {
   /** Counts a hit of `subject` (user id or ip hash) in the bucket; throws 429 over the limit. */
@@ -25,7 +25,7 @@ export const createRateLimiter = (enabled: boolean, now: () => number = Date.now
         return;
       }
       w.count += 1;
-      if (w.count > max) throw new HttpError(429, { error: ApiErrorCode.RateLimited, message: API_ERROR_MESSAGES.rateLimited });
+      if (w.count > max) throw httpError(429, ApiErrorCode.RateLimited, 'rateLimited');
     },
   };
 };

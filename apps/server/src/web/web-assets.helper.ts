@@ -6,6 +6,7 @@ export interface DocumentAssets {
   scripts: { attrs?: Record<string, string | boolean>; children?: string }[];
   css: string[];
   preloads: string[];
+  routeChunks?: Record<string, string[]>;
 }
 
 /** What apps/web/src/app/entry-server.tsx exports (the server never compiles web code, so the contract is restated). */
@@ -22,7 +23,9 @@ export interface WebRenderModule {
 
 interface ManifestChunk {
   file: string;
+  src?: string;
   isEntry?: boolean;
+  isDynamicEntry?: boolean;
   imports?: string[];
   css?: string[];
 }
@@ -37,18 +40,29 @@ export const readProdAssets = (clientDir: string): DocumentAssets => {
   const manifest = JSON.parse(fs.readFileSync(path.join(clientDir, '.vite/manifest.json'), 'utf8')) as Record<string, ManifestChunk>;
   const entry = manifest[CLIENT_ENTRY];
   if (!entry) throw new Error(`${CLIENT_ENTRY} missing from the web manifest`);
-  const preloads = new Set<string>();
-  const visit = (key: string) => {
-    const chunk = manifest[key];
-    if (!chunk || preloads.has(`/${chunk.file}`)) return;
-    preloads.add(`/${chunk.file}`);
-    chunk.imports?.forEach(visit);
+  /** A chunk and its static imports, as absolute URLs. */
+  const closure = (keys: readonly string[], into = new Set<string>()) => {
+    const visit = (key: string) => {
+      const chunk = manifest[key];
+      if (!chunk || into.has(`/${chunk.file}`)) return;
+      into.add(`/${chunk.file}`);
+      chunk.imports?.forEach(visit);
+    };
+    keys.forEach(visit);
+    return into;
   };
-  entry.imports?.forEach(visit);
+  const preloads = closure(entry.imports ?? []);
+  // Page chunks (lazy routes): preloaded only on the pages of their route, minus what the entry already loads.
+  const routeChunks = Object.fromEntries(
+    Object.entries(manifest)
+      .filter(([key, c]) => c.isDynamicEntry && /^src\/modules\/.+\.page\.tsx$/.test(key))
+      .map(([key]) => [key, [...closure([key])].filter((f) => !preloads.has(f) && f !== `/${entry.file}`)]),
+  );
   const css = new Set([...(entry.css ?? []), ...Object.values(manifest).filter((c) => c.file.endsWith('.css')).map((c) => c.file)]);
   return {
     scripts: [{ attrs: { type: 'module', src: `/${entry.file}` } }],
     css: [...css].map((f) => `/${f}`),
     preloads: [...preloads],
+    routeChunks,
   };
 };

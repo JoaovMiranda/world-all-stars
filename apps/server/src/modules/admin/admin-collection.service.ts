@@ -1,7 +1,6 @@
 // A2 (ingestion runs + AI queue) and A3 (source registry + links queued for the next collection).
 import { active, aiExtractionQueue, ingestionLogs, ingestionRuns, sourceLinks, sources } from '@was/db';
 import {
-  API_ERROR_MESSAGES,
   type AddCollectionLinksRequest,
   AdminAuditAction,
   type AdminIngestionResponse,
@@ -156,7 +155,7 @@ export const prepareCollectionLinks = async (
     if (!r.ok) errors[`urls.${i}`] = r.message;
     return r;
   });
-  if (Object.keys(errors).length) throw invalidFields(errors, API_ERROR_MESSAGES.invalidLinks);
+  if (Object.keys(errors).length) throw invalidFields(errors, 'invalidLinks');
   return checked.flatMap((r) =>
     r.ok
       ? [{

@@ -1,10 +1,10 @@
-import { type ApiContract, ApiErrorCode, API_ERROR_MESSAGES, ApiAccess, type RateLimitKey, accessDenial } from '@was/shared';
+import { type ApiContract, ApiErrorCode, ApiAccess, type RateLimitKey, accessDenial } from '@was/shared';
 import type { Context, Hono } from 'hono';
 import type { z } from 'zod';
 
 import type { AuthUser } from '../auth/auth-provider.type';
 import type { HonoEnv, RequestContext } from './app-context.type';
-import { HttpError, invalidFields } from './http-error.error';
+import { HttpError, forbidden, httpError, invalidFields } from './http-error.error';
 import { fieldErrorsOf } from './zod-errors.helper';
 
 type Parsed<S> = S extends z.ZodType ? z.output<S> : undefined;
@@ -50,7 +50,7 @@ const readBody = async (c: Context): Promise<unknown> => {
   try {
     return JSON.parse(text) as unknown;
   } catch {
-    throw new HttpError(400, { error: ApiErrorCode.Validation, message: 'JSON inválido.' });
+    throw httpError(400, ApiErrorCode.Validation, 'invalidJson');
   }
 };
 
@@ -63,8 +63,10 @@ export const registerRoutes = (app: Hono<HonoEnv>, routes: readonly RouteDefinit
   for (const { contract, handler, options } of routes) {
     app.on(contract.method, contract.path, async (c) => {
       const request = c.get('request');
-      const denial = accessDenial(contract.access, request.session.kind, !!request.session.user?.bannedAt);
+      const denial = accessDenial(contract.access, request.session.kind, !!request.session.user?.bannedAt, request.locale);
       if (denial) throw new HttpError(denial.status, denial.body);
+      // Accounts must come with an e-mail the identity provider verified (Google always does; doc 05).
+      if (contract.access !== ApiAccess.Public && request.session.user && !request.session.user.emailVerified) throw forbidden(ApiErrorCode.EmailUnverified, 'emailUnverified');
       if (options.rateLimit) request.deps.rateLimiter.hit(options.rateLimit, request.session.user?.id ?? request.ipHash);
 
       const input = {
@@ -77,7 +79,7 @@ export const registerRoutes = (app: Hono<HonoEnv>, routes: readonly RouteDefinit
       const parsed = contract.response.safeParse(result);
       if (!parsed.success) {
         console.error(`[contract] ${contract.method} ${contract.path} response drift`, parsed.error.issues.slice(0, 5));
-        throw new HttpError(500, { error: ApiErrorCode.Internal, message: API_ERROR_MESSAGES.internal });
+        throw httpError(500, ApiErrorCode.Internal, 'internal');
       }
       return c.json(parsed.data as object, 200);
     });

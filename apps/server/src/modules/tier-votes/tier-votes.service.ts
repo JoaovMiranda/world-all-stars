@@ -50,11 +50,11 @@ export const castTierVote = async ({ deps, actor }: RequestContext, user: AuthUs
 };
 
 /** PATCH official tier (admin): shared rule (Mythic needs an approved dossier, same tier refused) + history + audit. */
-export const setOfficialTier = async ({ deps, actor }: RequestContext, slug: string, body: SetOfficialTierRequest): Promise<{ official: Tier }> => {
+export const setOfficialTier = async ({ deps, actor, locale }: RequestContext, slug: string, body: SetOfficialTierRequest): Promise<{ official: Tier }> => {
   const view = await deps.catalog.get();
   const a = athleteOrThrow(view, slug);
   const current = view.tierOf(a.championTierId);
-  const refusal = officialTierChangeError({ current, target: body.tier, dossierStatus: view.dossierOf(a.id)?.status ?? null });
+  const refusal = officialTierChangeError({ current, target: body.tier, dossierStatus: view.dossierOf(a.id)?.status ?? null }, locale);
   if (refusal) throw unprocessable(refusal.error, refusal.message);
   await deps.repo.transaction(async (repo) => {
     await repo.update(athletes, a.id, { championTierId: tierId(view, body.tier) }, actor, { summary: `Tier: ${current} → ${body.tier} (${body.reason})`, reason: body.reason });

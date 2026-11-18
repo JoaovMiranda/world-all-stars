@@ -1,7 +1,6 @@
 // A1 (proposals + tier signals) and A6 (dossiers).
 import { active, aiExtractionQueue, fieldConflicts, greatsDossierApprovals, greatsDossiers, users } from '@was/db';
 import {
-  API_ERROR_MESSAGES,
   type AdminDecision,
   AdminAuditAction,
   AdminDecision as Decision,
@@ -17,7 +16,7 @@ import {
 import { eq, inArray } from 'drizzle-orm';
 
 import type { RequestContext } from '../../http/app-context.type';
-import { notFound, unprocessable } from '../../http/http-error.error';
+import { notFound, unprocessable, unprocessableKey } from '../../http/http-error.error';
 import { isoOf } from '../catalog/catalog.mapper';
 import { allVotes } from '../tier-votes/tier-votes.repository';
 
@@ -109,7 +108,7 @@ export const listProposals = async ({ deps }: RequestContext): Promise<{ items: 
 export const reviewProposal = async (ctx: RequestContext, id: string, decision: AdminDecision, reason: string) => {
   const item = (await listProposals(ctx)).items.find((p) => p.id === id);
   if (!item) throw notFound();
-  if (item.status !== ReviewStatus.Pending) throw unprocessable(ApiErrorCode.AlreadyDecided, API_ERROR_MESSAGES.proposalDecided);
+  if (item.status !== ReviewStatus.Pending) throw unprocessableKey(ApiErrorCode.AlreadyDecided, 'proposalDecided');
   const approve = decision === Decision.Approve;
   const review = { reviewNote: reason, reviewedBy: ctx.actor.userId, reviewedAt: new Date() };
   await ctx.deps.repo.transaction(async (repo) => {
@@ -165,6 +164,7 @@ export const reviewDossier = async (ctx: RequestContext, id: string, decision: A
     { status: dossier.status, approvedBy: approvers.map((a) => a.adminUserId), approvalsRequired: dossier.approvalsRequired },
     decision,
     ctx.actor.userId!,
+    ctx.locale,
   );
   if (!outcome.ok) throw unprocessable(outcome.error, outcome.message);
   await ctx.deps.repo.transaction(async (repo) => {

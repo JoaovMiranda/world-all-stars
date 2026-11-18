@@ -5,11 +5,19 @@ import { and, desc, eq, inArray } from 'drizzle-orm';
 import type { AuthUser, SessionContext } from '../../auth/auth-provider.type';
 import type { AppDeps } from '../../http/app-context.type';
 import { notFound } from '../../http/http-error.error';
-import { loadAuthUser } from '../../auth/simulated-auth.provider';
+import { loadAuthUser } from '../../auth/auth-user.helper';
+import type { ServerConfig } from '../../config/env.config';
 
-export const sessionUserOf = (u: AuthUser): SessionUser => ({ email: u.email, name: u.name, role: u.role, tierVotesCount: u.tierVotesCount, commentsCount: u.commentsCount });
+export const sessionUserOf = (u: AuthUser): SessionUser => ({ email: u.email, name: u.name, avatarUrl: u.avatarUrl, role: u.role, tierVotesCount: u.tierVotesCount, commentsCount: u.commentsCount });
 
-export const getSession = (session: SessionContext): SessionResponse => ({ kind: session.kind, user: session.user ? sessionUserOf(session.user) : null });
+/** GET /api/session: who is browsing + what the login dialog can offer (Google configured, dev switcher). */
+export const getSession = (session: SessionContext, config: ServerConfig): SessionResponse => ({
+  kind: session.kind,
+  user: session.user ? sessionUserOf(session.user) : null,
+  pendingConsent: session.pending ? { email: session.pending.email, name: session.pending.name } : null,
+  simulated: config.authSimulated,
+  googleEnabled: config.google !== null,
+});
 
 /** Fresh counters (the session was resolved before the handler wrote). */
 export const freshSessionUser = async (db: Database, user: AuthUser): Promise<SessionUser> => sessionUserOf((await loadAuthUser(db, { id: user.id })) ?? user);

@@ -18,8 +18,6 @@ import {
   type MediaLink,
   type Observance,
   type OnThisDayResponse,
-  ORG_NATURE_LABELS,
-  ORG_RELATION_LABELS,
   type Organization,
   type OrgTreeNode,
   type SourceOverview,
@@ -34,12 +32,17 @@ import {
   matchesAthleteFilters,
   normalizeAnalysis,
   type AnalysisDimensionsResponse,
+  DEFAULT_LOCALE,
+  isLocale,
+  type Locale,
+  ORG_LABELS_MESSAGES,
+  textFor,
 } from '@was/shared';
 
 import type { CatalogRows } from './catalog.repository';
 
-const LOCALE = 'pt-BR';
-const FALLBACK_LOCALE = 'en';
+/** Content fallback after the requested locale: the source language, then English, then whatever exists. */
+const FALLBACK_CHAIN: readonly Locale[] = [DEFAULT_LOCALE, 'en'];
 /** Placeholder organizer of the prototype: never shown as an association. */
 const UNKNOWN_ORGANIZER_SLUG = 'organizador-nao-informado';
 const WINNING = new Set<string>(WINNING_ACHIEVEMENT_TYPES);
@@ -68,16 +71,33 @@ const memo = <K, V>(fn: (k: K) => V) => {
   };
 };
 
-/** Translation lookup: pt-BR, then en, then any locale. */
-const translator = <X extends Translated>(rows: X[], parentKey: keyof X) => {
+/**
+ * Translation lookup of one translation table: requested locale, then pt-BR, then en, then any locale. `localeOf`
+ * tells which language a record's text actually came in (the `contentLocale` of detail responses).
+ */
+const translator = <X extends Translated>(rows: X[], parentKey: keyof X, locale: Locale) => {
   const index = groupBy(rows, (r) => r[parentKey] as string);
-  return (id: string | null | undefined, field: keyof X): string | null => {
-    if (!id) return null;
+  const order = [locale, ...FALLBACK_CHAIN.filter((l) => l !== locale)];
+  const pick = (id: string | null | undefined): X | undefined => {
+    if (!id) return undefined;
     const list = index.get(id) ?? [];
-    const hit = list.find((r) => r.locale === LOCALE) ?? list.find((r) => r.locale === FALLBACK_LOCALE) ?? list[0];
-    return (hit?.[field] as string | null | undefined) ?? null;
+    for (const l of order) {
+      const hit = list.find((r) => r.locale === l);
+      if (hit) return hit;
+    }
+    return list[0];
   };
+  const text = (id: string | null | undefined, field: keyof X): string | null => (pick(id)?.[field] as string | null | undefined) ?? null;
+  return Object.assign(text, {
+    localeOf: (id: string | null | undefined): Locale | null => {
+      const hit = pick(id)?.locale;
+      return isLocale(hit) ? hit : null;
+    },
+  });
 };
+
+/** Language the content of a response came in: the first record not in the requested locale wins (else the requested one). */
+const contentLocaleOf = (requested: Locale, found: readonly (Locale | null)[]): Locale => found.find((l) => l && l !== requested) ?? requested;
 
 /** Read model over one catalog snapshot (built once per snapshot by the CatalogCache, memoized inside). */
 export class CatalogView {
@@ -89,8 +109,13 @@ export class CatalogView {
   private readonly orgViewById: (id: string) => Organization;
   private readonly maps;
   private readonly t;
+  private readonly orgLabels;
 
-  constructor(readonly rows: R) {
+  constructor(
+    readonly rows: R,
+    readonly locale: Locale = DEFAULT_LOCALE,
+  ) {
+    this.orgLabels = textFor(ORG_LABELS_MESSAGES, locale);
     const m = {
       days: byId(rows.calendarDays),
       countries: byId(rows.countries),
@@ -122,21 +147,21 @@ export class CatalogView {
     };
     this.maps = m;
     this.t = {
-      country: translator(rows.countryTr, 'countryId'),
-      city: translator(rows.cityTr, 'cityId'),
-      governance: translator(rows.governanceTr, 'governanceModelId'),
-      orgKind: translator(rows.orgKindTr, 'organizationKindId'),
-      group: translator(rows.groupTr, 'groupId'),
-      subgroup: translator(rows.subgroupTr, 'subgroupId'),
-      sport: translator(rows.sportTr, 'sportId'),
-      category: translator(rows.categoryTr, 'categoryId'),
-      competition: translator(rows.competitionTr, 'competitionId'),
-      award: translator(rows.awardTr, 'awardId'),
-      observance: translator(rows.observanceTr, 'observanceDayId'),
-      athlete: translator(rows.athleteTr, 'athleteId'),
-      milestone: translator(rows.milestoneTr, 'milestoneId'),
-      dossier: translator(rows.dossierTr, 'dossierId'),
-      evidence: translator(rows.evidenceTr, 'evidenceId'),
+      country: translator(rows.countryTr, 'countryId', locale),
+      city: translator(rows.cityTr, 'cityId', locale),
+      governance: translator(rows.governanceTr, 'governanceModelId', locale),
+      orgKind: translator(rows.orgKindTr, 'organizationKindId', locale),
+      group: translator(rows.groupTr, 'groupId', locale),
+      subgroup: translator(rows.subgroupTr, 'subgroupId', locale),
+      sport: translator(rows.sportTr, 'sportId', locale),
+      category: translator(rows.categoryTr, 'categoryId', locale),
+      competition: translator(rows.competitionTr, 'competitionId', locale),
+      award: translator(rows.awardTr, 'awardId', locale),
+      observance: translator(rows.observanceTr, 'observanceDayId', locale),
+      athlete: translator(rows.athleteTr, 'athleteId', locale),
+      milestone: translator(rows.milestoneTr, 'milestoneId', locale),
+      dossier: translator(rows.dossierTr, 'dossierId', locale),
+      evidence: translator(rows.evidenceTr, 'evidenceId', locale),
     };
     this.tierOf = (id) => m.tiers.get(id)!.slug;
     this.country = (id) => {
@@ -293,6 +318,13 @@ export class CatalogView {
   private listable() {
     return this.rows.athletes.filter((a) => this.maps.athleteSportsByAthlete.has(a.id));
   }
+  /** Indexable entity pages with their last change (sitemaps, doc 12): listable athletes and every sport. */
+  sitemapEntries(): { athletes: { slug: string; updatedAt: Date }[]; sports: { slug: string; updatedAt: Date }[] } {
+    return {
+      athletes: this.listable().map((a) => ({ slug: a.slug, updatedAt: a.updatedAt })),
+      sports: this.rows.sports.map((s) => ({ slug: s.slug, updatedAt: s.updatedAt })),
+    };
+  }
   athletes(filters: AthleteFilters = {}): AthleteSummary[] {
     return this.listable()
       .filter((a) => matchesAthleteFilters(this.summaryById(a.id), filters, this.athleteNames(a.id)))
@@ -313,6 +345,7 @@ export class CatalogView {
     const dossier = this.dossierOf(a.id);
     return {
       ...this.summaryById(a.id),
+      contentLocale: contentLocaleOf(this.locale, [this.t.athlete.localeOf(a.id)]),
       wikidataQid: a.wikidataQid,
       fullName: a.fullName,
       nicknames: a.nicknames,
@@ -414,9 +447,9 @@ export class CatalogView {
       kind: k.slug,
       kindLabel: this.t.orgKind(k.id, 'name') ?? k.slug,
       nature: k.nature,
-      natureLabel: ORG_NATURE_LABELS[k.nature],
+      natureLabel: this.orgLabels.nature[k.nature],
       relation: o.parentRelation,
-      relationLabel: o.parentRelation ? ORG_RELATION_LABELS[o.parentRelation] : null,
+      relationLabel: o.parentRelation ? this.orgLabels.relation[o.parentRelation] : null,
       scope: this.maps.levels.get(o.scopeLevelId)!.slug,
       country: this.country(o.countryId),
       competitions: this.rows.competitions
@@ -513,6 +546,7 @@ export class CatalogView {
     const prizeFormIds = [...this.rows.competitions.filter((c) => c.sportId === s.id).map((c) => c.prizeFormId), ...this.rows.awards.filter((a) => a.sportId === s.id).map((a) => a.prizeFormId)];
     return {
       ...info,
+      contentLocale: contentLocaleOf(this.locale, [this.t.sport.localeOf(s.id)]),
       description: this.t.sport(s.id, 'description'),
       rules: this.t.sport(s.id, 'rulesSummary'),
       wikipedia: s.wikipediaUrl,
@@ -612,7 +646,8 @@ export class CatalogView {
       .map((x) => ({ year: x.year, kind: x.kind, title: this.t.milestone(x.id, 'title') ?? x.kind, athlete: this.summaryById(x.athleteId) }))
       .sort((a, b) => a.year - b.year);
     const obs = this.rows.observances.find((o) => o.calendarDayId === cd.id);
-    return { md, items, observance: obs ? this.observanceView(obs) : null };
+    const found = this.rows.milestones.filter((x) => x.calendarDayId === cd.id).map((x) => this.t.milestone.localeOf(x.id));
+    return { md, items, observance: obs ? this.observanceView(obs) : null, contentLocale: contentLocaleOf(this.locale, found) };
   }
 
   // ── hall of greats, globe, sources ──
@@ -626,6 +661,14 @@ export class CatalogView {
         approvals: d ? d.approvalsCount : null,
       };
     });
+  }
+  /** Language of the Hall's texts (dossier headlines). */
+  hallContentLocale(): Locale {
+    const found = this.athletes({ tier: Tier.Mythic }).map((a) => {
+      const d = this.dossierOf(a.id);
+      return d ? this.t.dossier.localeOf(d.id) : null;
+    });
+    return contentLocaleOf(this.locale, found);
   }
   candidates(): AthleteSummary[] {
     return this.athletes({ tier: Tier.Legendary });

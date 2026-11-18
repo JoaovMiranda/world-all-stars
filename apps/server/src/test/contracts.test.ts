@@ -74,6 +74,6 @@ describe('empty database (no seed)', () => {
       if (contract === PublicApi.athleteProfile || contract === PublicApi.sportPage) expect(res.status).toBe(404);
       else expect(res.status, contract.path).toBe(200);
     }
-    expect((await t.call(ParticipationApi.session, {}, 'reader')).json).toEqual({ kind: 'anon', user: null });
+    expect((await t.call(ParticipationApi.session, {}, 'reader')).json).toMatchObject({ kind: 'anon', user: null, pendingConsent: null, simulated: true, googleEnabled: false });
   });
 });

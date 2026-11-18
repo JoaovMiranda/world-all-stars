@@ -17,9 +17,9 @@ import { getSuggestionContext } from '../moderation/validation-context.service';
 
 /** POST /api/suggestions (doc 21): shared validateSuggestion (https, anti-SSRF, rejected sources, duplicates) → 422. */
 export const submitSuggestion = async (ctx: RequestContext, body: SuggestionRequest): Promise<SubmissionResponse> => {
-  const result = validateSuggestion(body, await getSuggestionContext(ctx.deps));
+  const result = validateSuggestion(body, await getSuggestionContext(ctx.deps), ctx.locale);
   if (!result.ok) throw invalidFields(result.errors);
-  const view = await ctx.deps.catalog.get();
+  const view = await ctx.deps.catalog.get(ctx.locale);
   const sport = body.sport && body.sport !== 'outro' ? view.sportBySlug(body.sport) : null;
   const protocol = submissionProtocol('SUG');
   await ctx.deps.repo.insert(
@@ -42,7 +42,7 @@ export const submitSuggestion = async (ctx: RequestContext, body: SuggestionRequ
 
 /** POST /api/contact (doc 21): shared validateContact → 422. */
 export const submitContact = async (ctx: RequestContext, body: ContactRequest): Promise<SubmissionResponse> => {
-  const result = validateContact(body, await loadBannedWords(ctx.deps.db));
+  const result = validateContact(body, await loadBannedWords(ctx.deps.db), ctx.locale);
   if (!result.ok) throw invalidFields(result.errors);
   const protocol = submissionProtocol('CTT');
   await ctx.deps.repo.insert(

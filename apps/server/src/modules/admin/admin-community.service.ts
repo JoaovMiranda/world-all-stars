@@ -13,6 +13,7 @@ import {
 import {
   ADMIN_AUDIT_ACTION_VALUES,
   API_ERROR_MESSAGES,
+  textFor,
   type AdminAuditAction as AuditAction,
   AdminAuditAction,
   type AdminCommentsResponse,
@@ -30,7 +31,7 @@ import {
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 
 import type { RequestContext } from '../../http/app-context.type';
-import { notFound, unprocessable } from '../../http/http-error.error';
+import { notFound, unprocessableKey } from '../../http/http-error.error';
 import { ApiErrorCode } from '@was/shared';
 import { isoOf } from '../catalog/catalog.mapper';
 import { loadBannedWords } from '../moderation/moderation.repository';
@@ -68,7 +69,7 @@ export const listUsers = async ({ deps }: RequestContext): Promise<AdminUsersRes
 export const updateUser = async (ctx: RequestContext, id: string, body: UpdateUserRequest) => {
   const [target] = await ctx.deps.db.select().from(users).where(active(users, eq(users.id, id)));
   if (!target) throw notFound();
-  if (target.id === ctx.actor.userId) throw unprocessable(ApiErrorCode.Validation, API_ERROR_MESSAGES.ownAccount);
+  if (target.id === ctx.actor.userId) throw unprocessableKey(ApiErrorCode.Validation, 'ownAccount');
   const action = body.role ? AdminAuditAction.RoleChanged : body.banned ? AdminAuditAction.UserBanned : AdminAuditAction.UserUnbanned;
   await ctx.deps.repo.transaction(async (repo) => {
     await repo.update(
@@ -158,7 +159,7 @@ const findWord = async (ctx: RequestContext, w: Pick<BannedWord, 'term' | 'local
   (await ctx.deps.db.select().from(bannedWords).where(active(bannedWords, and(sql`lower(${bannedWords.term}) = ${w.term.toLowerCase()}`, eq(bannedWords.locale, w.locale))))).at(0);
 
 export const addBannedWord = async (ctx: RequestContext, word: BannedWord) => {
-  if (await findWord(ctx, word)) throw unprocessable(ApiErrorCode.Validation, API_ERROR_MESSAGES.bannedWordExists, { term: API_ERROR_MESSAGES.bannedWordExistsField });
+  if (await findWord(ctx, word)) throw unprocessableKey(ApiErrorCode.Validation, 'bannedWordExists', { term: textFor(API_ERROR_MESSAGES, ctx.locale).bannedWordExistsField });
   await ctx.deps.repo.transaction(async (repo) => {
     const row = await repo.insert(bannedWords, { term: word.term.trim(), matchMode: word.matchMode, locale: word.locale }, ctx.actor);
     await repo.audit(ctx.actor, AdminAuditAction.BannedWordAdded, { type: 'banned_words', id: row.id }, { target: `${word.term} (${word.locale})`, reason: null });

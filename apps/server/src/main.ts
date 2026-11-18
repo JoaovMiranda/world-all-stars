@@ -4,14 +4,17 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { getRequestListener } from '@hono/node-server';
-import { createDatabase, findRepoRoot } from '@was/db';
+import { createDatabase, findRepoRoot, loadRootEnv } from '@was/db';
 
 import { createApp } from './app';
+import { promoteAdminEmails } from './auth/admin-bootstrap.helper';
 import { loadConfig, type ServerConfig } from './config/env.config';
 import { readProdAssets, type WebRenderModule } from './web/web-assets.helper';
 import type { WebRuntime } from './web/web-handler';
 import { createViteDev, type ViteDev } from './web/vite-dev';
 
+// Root .env (Google + Better Auth secrets, ADMIN_EMAILS…), never overriding the shell. See .env.example.
+const envLoaded = loadRootEnv();
 const config = loadConfig();
 const handle = await createDatabase({
   databaseUrl: config.databaseUrl,
@@ -54,9 +57,14 @@ if (config.webDev) {
 const { app, deps } = createApp({ db: handle.db, config, ...(web ? { web } : {}) });
 listener = getRequestListener(app.fetch);
 
+if (!config.google) console.warn('[auth] Google sign-in not configured (GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET missing in .env): the login dialog says so.');
+if (config.authSimulated) console.warn('[auth] AUTH_SIMULATED on: the dev session switcher (demo reader/admin) is accepted. Never in production.');
+const promoted = await promoteAdminEmails(deps.repo, config.adminEmails);
+if (promoted) console.log(`[auth] ADMIN_EMAILS: ${promoted} account(s) promoted to admin`);
+
 httpServer.listen(config.port, config.host, () => {
   const mode = config.webDev ? 'pages: SSR + Vite HMR' : web ? 'pages: SSR (build)' : 'API only';
-  console.log(`[server] World All Stars on http://${config.host === '127.0.0.1' ? 'localhost' : config.host}:${config.port} (${mode}; db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name})`);
+  console.log(`[server] World All Stars on http://${config.host === '127.0.0.1' ? 'localhost' : config.host}:${config.port} (${mode}; db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name}${config.google ? ' (Google on)' : ''}${envLoaded ? ', .env loaded' : ''})`);
 });
 
 const shutdown = async () => {
