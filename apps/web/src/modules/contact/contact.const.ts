@@ -1,6 +1,12 @@
-import { CONTACT_RETENTION_MONTHS, SUGGESTION_URLS_MAX } from '@was/shared';
+import { CONTACT_RETENTION_MONTHS, SUGGESTION_URLS_MAX, defineMessages } from '@was/shared';
 
-// UI strings of the contact module (pt-BR, ready to become an i18n namespace). Source: plan/docs/21, prototype contact.html.
+import { CONTACT_TEXT_EN } from './contact.const.en';
+import { CONTACT_TEXT_ES } from './contact.const.es';
+
+/** Select value for "Outro esporte" (the server stores `sportOther`). */
+export const SPORT_OTHER_VALUE = 'outro';
+
+// UI strings of the contact module (pt-BR source; en/es next to it). Source: plan/docs/21, prototype contact.html.
 export const CONTACT_TEXT = {
   page: {
     title: 'Contato',
@@ -9,8 +15,6 @@ export const CONTACT_TEXT = {
   },
   tabsLabel: 'Tipo de contato',
   tabs: { sugestao: 'Sugerir atleta', mensagem: 'Mensagem' },
-  /** Select value for "Outro esporte" (the server stores `sportOther`). */
-  sportOtherValue: 'outro',
   suggestion: {
     name: 'Nome do atleta',
     sport: 'Esporte',
@@ -68,3 +72,5 @@ export const CONTACT_TEXT = {
     privacyLink: 'Veja o Aviso de privacidade',
   },
 } as const;
+
+export const CONTACT_MESSAGES = defineMessages(CONTACT_TEXT, { en: CONTACT_TEXT_EN, es: CONTACT_TEXT_ES });

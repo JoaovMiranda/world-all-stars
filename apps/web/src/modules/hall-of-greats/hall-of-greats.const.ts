@@ -1,4 +1,9 @@
-// UI strings of the hall-of-greats module (pt-BR, ready to become an i18n namespace).
+import { defineMessages } from '@was/shared';
+
+import { HALL_OF_GREATS_TEXT_EN } from './hall-of-greats.const.en';
+import { HALL_OF_GREATS_TEXT_ES } from './hall-of-greats.const.es';
+
+// UI strings of the hall-of-greats module (pt-BR source; en/es next to it).
 export const HALL_OF_GREATS_TEXT = {
   page: {
     title: 'Hall of Greats',
@@ -29,3 +34,5 @@ export const HALL_OF_GREATS_TEXT = {
     emptyText: 'Quando um Lendário for indicado ao Hall, ele aparece aqui enquanto a curadoria prepara o dossiê.',
   },
 } as const;
+
+export const HALL_OF_GREATS_MESSAGES = defineMessages(HALL_OF_GREATS_TEXT, { en: HALL_OF_GREATS_TEXT_EN, es: HALL_OF_GREATS_TEXT_ES });

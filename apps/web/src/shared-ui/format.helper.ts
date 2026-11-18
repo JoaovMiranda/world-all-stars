@@ -1,32 +1,24 @@
 import { type IsoDate, fromIsoDate } from '@was/shared';
 
 import { getBoot } from '@/app/request-scope';
+import { currentFormat } from '@/i18n/use-format.hook';
 
-const LOCALE = 'pt-BR';
-const dateFmt = new Intl.DateTimeFormat(LOCALE, { day: '2-digit', month: '2-digit', year: 'numeric' });
-const dayMonthFmt = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'long' });
-const numberFmt = new Intl.NumberFormat(LOCALE);
+// Thin wrappers over the formatters of the CURRENT language (`createFormatters`, @was/shared). Components prefer
+// `useFormat()` (re-renders on a language switch); these read the locale at call time.
 
-/** 23/10/1940 */
-export const formatDate = (iso: IsoDate): string => dateFmt.format(fromIsoDate(iso));
-/** 23 de outubro */
-export const formatDayMonth = (iso: IsoDate): string => dayMonthFmt.format(fromIsoDate(iso));
-const instantFormats = new Map<string, Intl.DateTimeFormat>();
+/** 23/10/1940 · 10/23/1940 */
+export const formatDate = (iso: IsoDate): string => currentFormat().date(iso);
+/** 23 de outubro · October 23 */
+export const formatDayMonth = (iso: IsoDate): string => currentFormat().dayMonth(iso);
 /**
  * Formatter of INSTANTS (ISO datetimes) in the app time zone of the page load, so the server and the browser print
  * the same hour. Plain dates (YYYY-MM-DD) use `formatDate` and need no zone.
  */
-export const instantFormat = (options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat => {
-  const timeZone = getBoot().timeZone;
-  const key = `${timeZone}|${JSON.stringify(options)}`;
-  let fmt = instantFormats.get(key);
-  if (!fmt) instantFormats.set(key, (fmt = new Intl.DateTimeFormat(LOCALE, { ...options, timeZone })));
-  return fmt;
-};
-/** 1.279 */
-export const formatNumber = (n: number): string => numberFmt.format(n);
+export const instantFormat = (options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat => currentFormat().instant(options);
+/** 1.279 · 1,279 */
+export const formatNumber = (n: number): string => currentFormat().number(n);
 /** 11/06/2026 – 19/07/2026 (single date when equal). */
-export const formatDateRange = (start: IsoDate, end: IsoDate): string => (start === end ? formatDate(start) : `${formatDate(start)} – ${formatDate(end)}`);
+export const formatDateRange = (start: IsoDate, end: IsoDate): string => currentFormat().dateRange(start, end);
 /** 1956–1977 or 2003–hoje. */
 export const formatYears = (from: number | null, to: number | null, untilNow: string): string => `${from ?? '?'}–${to ?? untilNow}`;
 /** Age in full years between two dates (to = today of the page load, APP_TIME_ZONE, by default). */

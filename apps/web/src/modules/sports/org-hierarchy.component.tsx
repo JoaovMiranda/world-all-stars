@@ -1,7 +1,9 @@
-import { countOrgTree, filterOrgTree, ORG_NATURE_VALUES, type OrgNature, type OrgTreeNode } from '@was/shared';
+import { countOrgTree, filterOrgTree, ORG_NATURE_VALUES, type OrgNature, type OrgTreeNode, ORG_LABELS_MESSAGES } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 import { Fragment, useEffect, useState } from 'react';
 
+import { currentText } from '@/i18n/text-for.helper';
+import { useText } from '@/i18n/use-text.hook';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { LevelTag } from '@/shared-ui/level-tag.component';
@@ -9,16 +11,19 @@ import { OrgRow } from '@/shared-ui/org-row.component';
 import { Tag } from '@/shared-ui/tag.component';
 import { useHashScroll } from '@/shared-ui/use-hash-scroll.hook';
 
-import { ORG_NATURE_LABEL, SPORTS_HASH, SPORTS_TEXT } from './sports.const';
+import { SPORTS_HASH, SPORTS_MESSAGES } from './sports.const';
 
-const t = SPORTS_TEXT.hierarchy;
 const HIERARCHY_HASH = SPORTS_HASH.hierarchy;
-const NATURE_OPTIONS = ORG_NATURE_VALUES.map((value) => ({
-  value,
-  label: ORG_NATURE_LABEL[value],
-}));
+const NATURE_OPTIONS = () => {
+  const orgLabels = currentText(ORG_LABELS_MESSAGES);
+  return ORG_NATURE_VALUES.map((value) => ({
+    value,
+    label: orgLabels.nature[value],
+  }));
+};
 
 function OrgTreeItem({ node }: { node: OrgTreeNode }) {
+  const t = useText(SPORTS_MESSAGES).hierarchy;
   return (
     <OrgRow
       org={node}
@@ -63,6 +68,7 @@ interface OrgHierarchyProps {
 
 /** Collapsible "Hierarquia completa" (#hierarquia, old Organizations page): full org tree + nature filter + ⓘ. */
 export function OrgHierarchy({ orgs, nature, onNatureChange }: OrgHierarchyProps) {
+  const t = useText(SPORTS_MESSAGES).hierarchy;
   const targeted = useHashScroll() === HIERARCHY_HASH;
   const [open, setOpen] = useState(targeted || nature !== undefined);
   useEffect(() => {
@@ -83,7 +89,7 @@ export function OrgHierarchy({ orgs, nature, onNatureChange }: OrgHierarchyProps
       ) : (
         <>
           <p className="muted my-3">{t.intro}</p>
-          <ChipToggleGroup label={t.natureLabel} options={NATURE_OPTIONS} value={nature} onChange={onNatureChange} />
+          <ChipToggleGroup label={t.natureLabel} options={NATURE_OPTIONS()} value={nature} onChange={onNatureChange} />
           {visible.length > 0 ? (
             <ul className="org-tree mt-3.5">
               {visible.map((n) => (

@@ -1,14 +1,26 @@
+import { defineMessages } from '@was/shared';
+import { ERRORS_TEXT_EN } from './errors.const.en';
+import { ERRORS_TEXT_ES } from './errors.const.es';
 
-// UI strings of the error pages (pt-BR, ready to become an i18n namespace). Doc 09 P20: search + shortcuts.
+
+/** Shortcuts of the error pages (routes are data; texts in ERRORS_TEXT.shortcuts). */
+export const ERROR_SHORTCUTS = [
+  { to: '/', key: 'home' },
+  { to: '/athletes', key: 'athletes' },
+  { to: '/sports', key: 'sports' },
+  { to: '/hall-of-greats', key: 'hallOfGreats' },
+] as const;
+
+// UI strings of the error pages (pt-BR source; en/es next to it). Doc 09 P20: search + shortcuts.
 export const ERRORS_TEXT = {
   shortcutsLabel: 'Atalhos',
   searchHint: 'Use a busca no topo da página (atalho: tecla /) para achar um campeão pelo nome.',
-  shortcuts: [
-    { to: '/', label: 'Início', hint: 'Globo, hoje na história e calendário' },
-    { to: '/athletes', label: 'Atletas', hint: 'Todos os campeões, com filtros' },
-    { to: '/sports', label: 'Esportes', hint: 'Esportes, ligas e federações' },
-    { to: '/hall-of-greats', label: 'Hall of Greats', hint: 'Os Míticos que mudaram o jogo' },
-  ] as const,
+  shortcuts: {
+    home: { label: 'Início', hint: 'Globo, hoje na história e calendário' },
+    athletes: { label: 'Atletas', hint: 'Todos os campeões, com filtros' },
+    sports: { label: 'Esportes', hint: 'Esportes, ligas e federações' },
+    hallOfGreats: { label: 'Hall of Greats', hint: 'Os Míticos que mudaram o jogo' },
+  },
   notFound: {
     code: '404',
     eyebrow: 'Erro 404',
@@ -29,3 +41,5 @@ export const ERRORS_TEXT = {
     report: 'Avisar a curadoria',
   },
 } as const;
+
+export const ERRORS_MESSAGES = defineMessages(ERRORS_TEXT, { en: ERRORS_TEXT_EN, es: ERRORS_TEXT_ES });

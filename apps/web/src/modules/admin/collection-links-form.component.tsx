@@ -4,6 +4,8 @@ import { type FormEvent, useRef, useState } from 'react';
 import { isApiError } from '@/data/api-error.error';
 import { addCollectionLinks } from '@/data/endpoints/admin.query';
 import { validationContextQuery } from '@/data/endpoints/discovery.query';
+import { useLocale } from '@/i18n/locale.store';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Input } from '@/shared-ui/input.component';
@@ -11,12 +13,12 @@ import { Notice } from '@/shared-ui/notice.component';
 import { Section } from '@/shared-ui/section.component';
 import { Select } from '@/shared-ui/select.component';
 
-import { ADMIN_TEXT } from './admin.const';
-
-const T = ADMIN_TEXT.sources;
+import { ADMIN_MESSAGES } from './admin.const';
 
 /** A3 · add an athlete + 1–3 links to the collection; every link is checked live with the shared checkSourceUrl. */
 export function CollectionLinksForm() {
+  const locale = useLocale();
+  const T = useText(ADMIN_MESSAGES).sources;
   const ctx = validationContextQuery.useQuery();
   const add = addCollectionLinks.useMutation();
   const formRef = useRef<HTMLFormElement>(null);
@@ -33,7 +35,7 @@ export function CollectionLinksForm() {
     if (!parsed.success) for (const i of parsed.error.issues) out[i.path.map(String).join('.') || '_form'] ??= i.message;
     urls.forEach((u, i) => {
       if (!u.trim()) return;
-      const r = checkSourceUrl(u, sources);
+      const r = checkSourceUrl(u, sources, locale);
       if (!r.ok) out[`urls.${i}`] = r.message;
     });
     if (!urls.some((u) => u.trim())) out['urls.0'] ??= out.urls ?? T.urlHint;
@@ -63,7 +65,7 @@ export function CollectionLinksForm() {
 
   const hintFor = (u: string) => {
     if (!u.trim() || !sources.length) return T.urlHint;
-    const r = checkSourceUrl(u, sources);
+    const r = checkSourceUrl(u, sources, locale);
     if (!r.ok) return T.urlHint;
     return r.note ?? (r.source ? T.knownSource(r.source.name) : T.unknownSource);
   };

@@ -3,8 +3,10 @@ import './document-page-layout.css';
 import type { IsoDate } from '@was/shared';
 import { type ReactNode, useId } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import type { BreadcrumbItem } from './breadcrumb.component';
-import { DOCUMENT_PAGE_TEXT } from './document-page.const';
+import { DOCUMENT_PAGE_MESSAGES } from './document-page.const';
 import { formatDate } from './format.helper';
 import { Notice, type NoticeTone } from './notice.component';
 import { PageLayout } from './page-layout.component';
@@ -140,11 +142,12 @@ function DocSectionCard({ section, index }: { section: DocSection; index: number
  * dates, optional notice, numbered sections and a sticky table of contents (first on phones).
  */
 export function DocumentPageLayout({ title, eyebrow, lead, sections, breadcrumb = [{ label: title }], version, effectiveAt, updatedAt, notice, noticeTone = 'warning' }: DocumentPageLayoutProps) {
+  const docText = useText(DOCUMENT_PAGE_MESSAGES);
   const tocId = useId();
   const meta = [
-    version && DOCUMENT_PAGE_TEXT.version(version),
-    effectiveAt && DOCUMENT_PAGE_TEXT.effectiveSince(formatDate(effectiveAt)),
-    updatedAt && DOCUMENT_PAGE_TEXT.updatedAt(formatDate(updatedAt)),
+    version && docText.version(version),
+    effectiveAt && docText.effectiveSince(formatDate(effectiveAt)),
+    updatedAt && docText.updatedAt(formatDate(updatedAt)),
   ].filter((m): m is string => Boolean(m));
   return (
     <PageLayout
@@ -167,7 +170,7 @@ export function DocumentPageLayout({ title, eyebrow, lead, sections, breadcrumb 
       <div className="doc-layout">
         <nav className="doc-toc" aria-labelledby={tocId}>
           <span id={tocId} className="label">
-            {DOCUMENT_PAGE_TEXT.toc}
+            {docText.toc}
           </span>
           <ol>
             {sections.map((s) => (

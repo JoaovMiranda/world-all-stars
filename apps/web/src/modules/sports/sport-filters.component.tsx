@@ -1,19 +1,15 @@
 import { COMPETITION_LEVEL_VALUES, type SportPage, type SportPageFilters, TIER_VALUES } from '@was/shared';
 import { useMemo } from 'react';
 
-import { LEVEL_LABEL, TIER_LABEL } from '@/shared-ui/domain-labels.const';
+import { useFormat } from '@/i18n/use-format.hook';
+import { useText } from '@/i18n/use-text.hook';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { FilterBar } from '@/shared-ui/filter-bar.component';
 import { FormField } from '@/shared-ui/form-field.component';
 import { SearchInput } from '@/shared-ui/search-input.component';
 import { Select } from '@/shared-ui/select.component';
 
-import { SPORTS_TEXT } from './sports.const';
-
-const t = SPORTS_TEXT.page;
-const TIER_OPTIONS = TIER_VALUES.map((value) => ({
-  value,
-  label: TIER_LABEL[value],
-}));
+import { SPORTS_MESSAGES } from './sports.const';
 
 interface SportFiltersProps {
   sport: SportPage;
@@ -27,14 +23,18 @@ interface SportFiltersProps {
 
 /** Search + country / athlete tier / competition level, synced to the URL (SportPageFiltersSchema). */
 export function SportFilters({ sport, filters, setFilter, reset, activeCount, summary }: SportFiltersProps) {
+  const t = useText(SPORTS_MESSAGES).page;
+  const fmt = useFormat();
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const TIER_OPTIONS = TIER_VALUES.map((value) => ({ value, label: labels.tier[value] }));
   const countries = useMemo(
     () =>
       [...new Map(sport.athletes.flatMap((a) => a.nationalities.map((n) => [n.iso2, `${n.flag} ${n.name}`] as const))).entries()]
         .map(([value, label]) => ({ value, label }))
-        .sort((a, b) => a.label.localeCompare(b.label, 'pt-BR')),
-    [sport.athletes],
+        .sort((a, b) => fmt.compare(a.label, b.label)),
+    [sport.athletes, fmt],
   );
-  const levels = COMPETITION_LEVEL_VALUES.filter((l) => sport.competitions.some((c) => c.level === l)).map((value) => ({ value, label: LEVEL_LABEL[value] }));
+  const levels = COMPETITION_LEVEL_VALUES.filter((l) => sport.competitions.some((c) => c.level === l)).map((value) => ({ value, label: labels.level[value] }));
 
   return (
     <FilterBar label={t.filtersLabel} activeCount={activeCount} onReset={reset}>

@@ -1,7 +1,9 @@
 import './review-kit.css';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { ChipToggleGroup } from './chip-toggle-group.component';
-import { REVIEW_KIT_TEXT } from './review-kit.const';
+import { REVIEW_KIT_MESSAGES } from './review-kit.const';
 
 export interface StatusFilterOption<V extends string> {
   value: V;
@@ -30,7 +32,9 @@ const withCount = (label: string, count?: number) => (
 );
 
 /** Status chips with counters + "Todos" (admin queues, lists). */
-export function StatusFilter<V extends string>({ label, options, value, onChange, total, allLabel = REVIEW_KIT_TEXT.all }: StatusFilterProps<V>) {
+export function StatusFilter<V extends string>({ label, options, value, onChange, total, allLabel: allLabelProp }: StatusFilterProps<V>) {
+  const kit = useText(REVIEW_KIT_MESSAGES);
+  const allLabel = allLabelProp ?? kit.all;
   return (
     <ChipToggleGroup<V | typeof ALL>
       label={label}

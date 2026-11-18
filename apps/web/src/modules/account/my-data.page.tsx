@@ -2,6 +2,8 @@ import { ACCOUNT_DELETE_CONFIRMATION, CONSENT_PURPOSE_VALUES, LEGAL_DOCUMENT_VER
 import { useState } from 'react';
 
 import { deleteAccount, exportMyData, myDataQuery, updateConsent } from '@/data/endpoints/account.query';
+import { currentText } from '@/i18n/text-for.helper';
+import { useText } from '@/i18n/use-text.hook';
 import { useSession } from '@/session/use-session.hook';
 import { Button } from '@/shared-ui/button.component';
 import { ButtonLink } from '@/shared-ui/button-link.component';
@@ -21,38 +23,42 @@ import { Switch } from '@/shared-ui/switch.component';
 import { Tag } from '@/shared-ui/tag.component';
 
 import { AccountLayout } from './account-layout.component';
-import { ACCOUNT_TEXT } from './account.const';
+import { ACCOUNT_MESSAGES } from './account.const';
 
-const t = ACCOUNT_TEXT.data;
-const DOC_ROUTE = { privacy: '/legal/privacy', terms: '/legal/terms', cookies: '/legal/cookies' } as const;
+// The 18+ declaration is a requirement of the Terms (doc 13): its row links there.
+const DOC_ROUTE = { privacy: '/legal/privacy', terms: '/legal/terms', cookies: '/legal/cookies', age_declaration: '/legal/terms' } as const;
 
-const ACCEPTANCE_COLUMNS = [
-  {
-    key: 'document',
-    header: t.colDocument,
-    cell: (a: LegalAcceptance) => (
-      <ButtonLink to={DOC_ROUTE[a.document]} variant="link" size="sm">
-        {t.documents[a.document]}
-      </ButtonLink>
-    ),
-  },
-  { key: 'version', header: t.colAccepted, cell: (a: LegalAcceptance) => a.version },
-  { key: 'at', header: t.colAcceptedAt, cell: (a: LegalAcceptance) => formatDate(a.acceptedAt.slice(0, 10)) },
-  {
-    key: 'current',
-    header: t.colCurrent,
-    cell: (a: LegalAcceptance) => {
-      const current = LEGAL_DOCUMENT_VERSIONS[a.document].version;
-      return (
-        <span className="row">
-          {current} <Tag tone={current === a.version ? 'success' : 'gold'}>{current === a.version ? t.upToDate : t.outdated}</Tag>
-        </span>
-      );
+const ACCEPTANCE_COLUMNS = () => {
+  const t = currentText(ACCOUNT_MESSAGES).data;
+  return [
+    {
+      key: 'document',
+      header: t.colDocument,
+      cell: (a: LegalAcceptance) => (
+        <ButtonLink to={DOC_ROUTE[a.document]} variant="link" size="sm">
+          {t.documents[a.document]}
+        </ButtonLink>
+      ),
     },
-  },
-];
+    { key: 'version', header: t.colAccepted, cell: (a: LegalAcceptance) => a.version },
+    { key: 'at', header: t.colAcceptedAt, cell: (a: LegalAcceptance) => formatDate(a.acceptedAt.slice(0, 10)) },
+    {
+      key: 'current',
+      header: t.colCurrent,
+      cell: (a: LegalAcceptance) => {
+        const current = LEGAL_DOCUMENT_VERSIONS[a.document].version;
+        return (
+          <span className="row">
+            {current} <Tag tone={current === a.version ? 'success' : 'gold'}>{current === a.version ? t.upToDate : t.outdated}</Tag>
+          </span>
+        );
+      },
+    },
+  ];
+};
 
 function AccountInfo() {
+  const t = useText(ACCOUNT_MESSAGES).data;
   const { user } = useSession();
   if (!user) return null;
   return (
@@ -74,6 +80,7 @@ function AccountInfo() {
 }
 
 function ExportSection() {
+  const t = useText(ACCOUNT_MESSAGES).data;
   const run = exportMyData.useMutation({ onSuccess: (data) => downloadJson(t.exportFileName(toIsoDate(new Date())), data) });
   return (
     <Section title={t.exportTitle}>
@@ -98,6 +105,7 @@ function ExportSection() {
 }
 
 function ConsentsAndAcceptances() {
+  const t = useText(ACCOUNT_MESSAGES).data;
   const data = myDataQuery.useQuery();
   const save = updateConsent.useMutation();
   return (
@@ -134,7 +142,7 @@ function ConsentsAndAcceptances() {
             )}
           </Section>
           <Section title={t.acceptancesTitle}>
-            <DataTable columns={ACCEPTANCE_COLUMNS} rows={acceptances} rowKey={(a) => a.document} caption={t.acceptancesCaption} captionHidden emptyText={t.noAcceptances} />
+            <DataTable columns={ACCEPTANCE_COLUMNS()} rows={acceptances} rowKey={(a) => a.document} caption={t.acceptancesCaption} captionHidden emptyText={t.noAcceptances} />
           </Section>
         </>
       )}
@@ -143,7 +151,8 @@ function ConsentsAndAcceptances() {
 }
 
 function DeleteSection({ onDeleted }: { onDeleted: (pseudonym: string) => void }) {
-  const { setKind } = useSession();
+  const t = useText(ACCOUNT_MESSAGES).data;
+  const { signOut } = useSession();
   const [open, setOpen] = useState(false);
   const [word, setWord] = useState('');
   const [error, setError] = useState<string | undefined>();
@@ -151,7 +160,7 @@ function DeleteSection({ onDeleted }: { onDeleted: (pseudonym: string) => void }
     onSuccess: ({ pseudonym }) => {
       setOpen(false);
       onDeleted(pseudonym);
-      setKind('anon');
+      void signOut();
     },
     onError: (e) => setError(e.message || t.deleteError),
   });
@@ -211,6 +220,7 @@ function DeleteSection({ onDeleted }: { onDeleted: (pseudonym: string) => void }
 
 /** E6 My data (doc 13): export (JSON), consents, Terms acceptances and account deletion (anonymization). */
 export function MyDataPage() {
+  const t = useText(ACCOUNT_MESSAGES).data;
   const [deletedAs, setDeletedAs] = useState<string | null>(null);
   return (
     <AccountLayout title={t.title} lead={t.lead} skipGate={deletedAs !== null}>

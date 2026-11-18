@@ -1,5 +1,8 @@
-// UI strings of the athletes module (pt-BR, ready to become an i18n namespace).
-import type { AnalysisDimension } from '@was/shared';
+// UI strings of the athletes module (pt-BR source; en/es next to it).
+import { type AnalysisDimension, defineMessages } from '@was/shared';
+
+import { ATHLETE_PROFILE_TEXT_EN, ATHLETES_TEXT_EN } from './athletes.const.en';
+import { ATHLETE_PROFILE_TEXT_ES, ATHLETES_TEXT_ES } from './athletes.const.es';
 
 export const ATHLETES_TEXT = {
   list: {
@@ -24,6 +27,8 @@ export const ATHLETES_TEXT = {
     errorTitle: 'Não foi possível carregar os atletas',
   },
 } as const;
+
+export const ATHLETES_MESSAGES = defineMessages(ATHLETES_TEXT, { en: ATHLETES_TEXT_EN, es: ATHLETES_TEXT_ES });
 
 const EM = '—';
 
@@ -395,6 +400,8 @@ export const ATHLETE_PROFILE_TEXT = {
     reactError: 'Não foi possível registrar sua reação.',
   },
 } as const;
+
+export const ATHLETE_PROFILE_MESSAGES = defineMessages(ATHLETE_PROFILE_TEXT, { en: ATHLETE_PROFILE_TEXT_EN, es: ATHLETE_PROFILE_TEXT_ES });
 
 /** Color tokens of the comparison series (main athlete first). */
 export const COMPARE_SERIES_TOKENS = ['--primary', '--info', '--success', '--c-orange', '--danger', '--c-pink'] as const;

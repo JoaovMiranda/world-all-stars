@@ -1,10 +1,11 @@
-import { type ApiContract, ApiErrorSchema, buildApiPath, buildQueryString } from '@was/shared';
+import { type ApiContract, ApiErrorSchema, HTTP_HEADER, LOCALE_HEADER, SessionKind, buildApiPath, buildQueryString } from '@was/shared';
 
 import { getScope } from '@/app/request-scope';
+import { localeStore } from '@/i18n/locale.store';
 import { sessionStore } from '@/session/session.store';
 
 import { ApiError } from './api-error.error';
-import { API_BASE_URL, SESSION_HEADER } from './data-layer.const';
+import { API_BASE_URL } from './data-layer.const';
 
 interface HttpInput {
   params?: Record<string, unknown>;
@@ -26,12 +27,15 @@ export const httpRequest = async (contract: ApiContract, input: HttpInput, signa
   const init: RequestInit = {
     method: contract.method,
     credentials: 'include',
-    // Simulated session (dev): the server maps it to the demo accounts. Better Auth will use its cookie instead.
+    // Real sign-in = the Better Auth cookie (credentials). The simulated profile header only goes when a dev profile
+    // is picked (the server honours it only with AUTH_SIMULATED, and a real session always wins).
     headers: {
       accept: 'application/json',
-      [SESSION_HEADER]: sessionStore.get(),
+      ...(sessionStore.get() !== SessionKind.Anon ? { [HTTP_HEADER.session]: sessionStore.get() } : {}),
+      // Current interface language: labels, validation errors and translated content come back in it.
+      [LOCALE_HEADER]: localeStore.get(),
       ...(hasBody ? { 'content-type': 'application/json' } : {}),
-      ...(scope.apiFetch && scope.cookie ? { cookie: scope.cookie } : {}),
+      ...(scope.apiFetch ? { [HTTP_HEADER.ssr]: '1', ...(scope.cookie ? { cookie: scope.cookie } : {}) } : {}),
     },
     ...(hasBody ? { body: JSON.stringify(input.body) } : {}),
     ...(signal ? { signal } : {}),

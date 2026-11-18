@@ -1,19 +1,19 @@
 import { AthleteProfileTab, type AthleteProfile, AthleteStatus } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { DateLink } from '@/shared-ui/date-link.component';
 import { ageAt, formatYears } from '@/shared-ui/format.helper';
 import { Tag } from '@/shared-ui/tag.component';
-import { UI_TEXT } from '@/shared-ui/ui-text.const';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 import { FieldSource } from './field-source.component';
-
-const T = ATHLETE_PROFILE_TEXT.hero;
 
 /** Names line under the h1: full name (with source) and nicknames. */
 export function AthleteNames({ profile: p }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).hero;
   if (!p.fullName && !p.nicknames.length) return null;
   return (
     <span className="athlete-full-name">
@@ -27,6 +27,8 @@ export function AthleteNames({ profile: p }: { profile: AthleteProfile }) {
 
 /** Nationalities · sport/position · taxonomy, then vitals (dates link to "Hoje na história"). */
 export function AthleteHeroDetails({ profile: p }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).hero;
+  const ui = useText(UI_MESSAGES);
   const age = p.birth.date ? ageAt(p.birth.date, p.death?.date ?? null) : null;
   return (
     <>
@@ -67,7 +69,7 @@ export function AthleteHeroDetails({ profile: p }: { profile: AthleteProfile }) 
           )
         )}
         <span>
-          <span className="muted">{T.career}</span> <b>{formatYears(p.careerFrom, p.careerTo, UI_TEXT.untilNow)}</b>
+          <span className="muted">{T.career}</span> <b>{formatYears(p.careerFrom, p.careerTo, ui.untilNow)}</b>
         </span>
       </div>
     </>
@@ -76,6 +78,7 @@ export function AthleteHeroDetails({ profile: p }: { profile: AthleteProfile }) 
 
 /** Tier, Hall of Greats and status badges next to the eyebrow. */
 export function AthleteBadges({ profile: p }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).hero;
   return (
     <>
       {p.isHallOfGreats && (
@@ -90,6 +93,7 @@ export function AthleteBadges({ profile: p }: { profile: AthleteProfile }) {
 
 /** Hero buttons: jump to Analysis, Comments or Sources tabs. */
 export function AthleteHeroActions({ version, onGo }: { version: number; onGo: (tab: AthleteProfileTab) => void }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).hero;
   return (
     <>
       <Button variant="secondary" onClick={() => onGo(AthleteProfileTab.Analysis)}>

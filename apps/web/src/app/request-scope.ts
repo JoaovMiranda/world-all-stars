@@ -1,4 +1,4 @@
-import { FixtureMode, type IsoDate, SessionKind, toIsoDate } from '@was/shared';
+import { DEFAULT_LOCALE, FixtureMode, type IsoDate, type Locale, SessionKind, toIsoDate } from '@was/shared';
 import type { QueryClient } from '@tanstack/react-query';
 
 import type { ThemeName } from '@/shared-ui/theme.const';
@@ -19,6 +19,8 @@ export interface Boot {
   publicUrl: string;
   /** Manual theme from the `was-theme` cookie (null = follow the OS). */
   theme: ThemeName | null;
+  /** Interface language: `was_locale` cookie → Accept-Language → pt-BR (switchable in place: locale.store). */
+  locale: Locale;
 }
 
 /** Per-request state: AsyncLocalStorage on the server (entry-server), one module-level scope in the browser. */
@@ -44,6 +46,7 @@ const localBoot = (): Boot => {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     publicUrl: IS_SERVER ? 'http://localhost:8787' : window.location.origin,
     theme: null,
+    locale: DEFAULT_LOCALE,
   };
 };
 

@@ -77,7 +77,7 @@
   .search input { border: 0; outline: 0; background: transparent; color: var(--text); font: 400 15px var(--font-ui); width: 100%; min-width: 0; min-height: 28px; }
   .search input::placeholder { color: var(--muted); opacity: 1; }
   .search kbd { font: 600 11px var(--font-ui); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 0 6px; }
-  @media (max-width: 960px) { .main-nav { display: none; } .site-header .bar > .header-lang { margin-left: auto; } }
+  @media (max-width: 960px) { .main-nav { display: none; } .site-header .bar > .lang-switch { margin-left: auto; } }
 
   /* Buttons */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 12.5px var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; border: 1px solid transparent; cursor: pointer; border-radius: var(--r-md); padding: 11px 20px; min-height: 40px; color: var(--text); white-space: nowrap; transition: background-color var(--t-fast), color var(--t-fast), border-color var(--t-fast); }

@@ -1,17 +1,17 @@
 import { type CalendarEvent, CalendarEventType, type IsoDate, eventKey, eventsOnDay, fromIsoDate } from '@was/shared';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { useMemo, useState } from 'react';
 
+import { useFormat } from '@/i18n/use-format.hook';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { Chip } from '@/shared-ui/chip.component';
 import { EventList } from '@/shared-ui/event-list.component';
 import { capitalize, tokenColor } from '@/shared-ui/format.helper';
 import { Notice } from '@/shared-ui/notice.component';
-import { UI_TEXT } from '@/shared-ui/ui-text.const';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 
 import { buildMonthGrid } from './calendar.helper';
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 import { useMonthCalendar } from './use-month-calendar.hook';
 
 interface MonthCalendarProps {
@@ -20,10 +20,11 @@ interface MonthCalendarProps {
   events: CalendarEvent[] | undefined;
 }
 
-const t = HOME_TEXT.calendar;
-
 /** Month grid (Monday first) with competitions as sport-colored bars and observances as ◆. */
 export function MonthCalendar({ today, events }: MonthCalendarProps) {
+  const t = useText(HOME_MESSAGES).calendar;
+  const ui = useText(UI_MESSAGES);
+  const fmt = useFormat();
   const { month, selected, goToMonth, goToToday, selectDay } = useMonthCalendar(today);
   const [hiddenSports, setHiddenSports] = useState<ReadonlySet<string>>(new Set());
   const [showObservances, setShowObservances] = useState(true);
@@ -61,7 +62,7 @@ export function MonthCalendar({ today, events }: MonthCalendarProps) {
             ‹
           </Button>
           <h3 className="cal-title" aria-live="polite">
-            {capitalize(format(month, 'MMMM yyyy', { locale: ptBR }))}
+            {capitalize(fmt.monthYear(month))}
           </h3>
           <Button size="icon" aria-label={t.nextMonth} onClick={() => goToMonth(1)}>
             ›
@@ -79,7 +80,7 @@ export function MonthCalendar({ today, events }: MonthCalendarProps) {
             ))}
             <Chip toggle pressed={showObservances} onClick={() => setShowObservances((v) => !v)}>
               <span className="mr-1.5 text-(--accent-text)" aria-hidden="true">◆</span>
-              {UI_TEXT.observances}
+              {ui.observances}
             </Chip>
           </div>
         )}
@@ -111,10 +112,7 @@ export function MonthCalendar({ today, events }: MonthCalendarProps) {
             >
               <span className="n">
                 {cell.date.getDate()}
-                <span className="sr-only">
-                  {' '}
-                  de {format(cell.date, 'MMMM', { locale: ptBR })}: {t.events(evs.length)}
-                </span>
+                <span className="sr-only">{t.cellSuffix(fmt.month(cell.date), t.events(evs.length))}</span>
               </span>
               {evs.map((e) =>
                 e.type === CalendarEventType.Competition ? (
@@ -138,7 +136,7 @@ export function MonthCalendar({ today, events }: MonthCalendarProps) {
       </div>
 
       <div className="cal-day" aria-live="polite">
-        <span className="label">{format(fromIsoDate(selected), "EEEE, d 'de' MMMM", { locale: ptBR })}</span>
+        <span className="label">{fmt.weekdayDayMonth(fromIsoDate(selected))}</span>
         {dayEvents.length > 0 ? <EventList events={dayEvents} emptyTitle={t.emptyDay} /> : <p className="empty">{t.emptyDay}</p>}
       </div>
     </section>

@@ -2,13 +2,14 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
 import { isNotFound, isUnauthorized } from '@/data/api-error.error';
+import { useText } from '@/i18n/use-text.hook';
 import { useSession } from '@/session/use-session.hook';
 
 import { Button } from './button.component';
 import { EmptyState } from './empty-state.component';
 import { ErrorState } from './error-state.component';
 import { SkeletonList } from './skeleton.component';
-import { UI_TEXT } from './ui-text.const';
+import { UI_MESSAGES } from './ui-text.const';
 
 interface QueryBoundaryProps<T> {
   query: UseQueryResult<T>;
@@ -29,25 +30,26 @@ interface QueryBoundaryProps<T> {
  * found) · empty state · data. `<QueryBoundary query={q} isEmpty={(d) => !d.items.length} empty={…}>{(d) => …}`
  */
 export function QueryBoundary<T>({ query, children, loading, isEmpty, empty, notFound, errorTitle }: QueryBoundaryProps<T>) {
+  const ui = useText(UI_MESSAGES);
   const { requireLogin } = useSession();
   if (query.isPending) {
     return (
-      <div aria-busy="true" aria-label={UI_TEXT.loadingLabel}>
+      <div aria-busy="true" aria-label={ui.loadingLabel}>
         {loading ?? <SkeletonList />}
       </div>
     );
   }
   if (query.isError) {
-    if (isNotFound(query.error)) return <>{notFound ?? <EmptyState title={UI_TEXT.notFoundTitle} mark="?">{UI_TEXT.notFoundText}</EmptyState>}</>;
+    if (isNotFound(query.error)) return <>{notFound ?? <EmptyState title={ui.notFoundTitle} mark="?">{ui.notFoundText}</EmptyState>}</>;
     if (isUnauthorized(query.error)) {
       return (
-        <EmptyState title={UI_TEXT.signInTitle} action={<Button variant="primary" onClick={() => requireLogin('account')}>{UI_TEXT.signInAction}</Button>}>
-          {UI_TEXT.signInText}
+        <EmptyState title={ui.signInTitle} action={<Button variant="primary" onClick={() => requireLogin('account')}>{ui.signInAction}</Button>}>
+          {ui.signInText}
         </EmptyState>
       );
     }
     return <ErrorState {...(errorTitle ? { title: errorTitle } : {})} onRetry={() => void query.refetch()} isRetrying={query.isFetching} />;
   }
-  if (isEmpty?.(query.data)) return <>{empty ?? <EmptyState title={UI_TEXT.emptyTitle} />}</>;
+  if (isEmpty?.(query.data)) return <>{empty ?? <EmptyState title={ui.emptyTitle} />}</>;
   return <>{children(query.data)}</>;
 }

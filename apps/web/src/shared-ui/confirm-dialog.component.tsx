@@ -2,12 +2,14 @@ import './review-kit.css';
 
 import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { Button } from './button.component';
 import type { ButtonVariant } from './button.helper';
 import { Dialog } from './dialog.component';
 import { FormField } from './form-field.component';
 import { Notice } from './notice.component';
-import { REVIEW_KIT_TEXT } from './review-kit.const';
+import { REVIEW_KIT_MESSAGES } from './review-kit.const';
 import { Textarea } from './textarea.component';
 
 export interface ReasonConfig {
@@ -33,7 +35,9 @@ interface ConfirmDialogProps {
 }
 
 /** Confirmation modal (native Dialog) with optional required reason, pending state and inline error. */
-export function ConfirmDialog({ open, onClose, title, kicker, children, confirmLabel = REVIEW_KIT_TEXT.confirm, confirmVariant = 'primary', reason, onConfirm }: ConfirmDialogProps) {
+export function ConfirmDialog({ open, onClose, title, kicker, children, confirmLabel: confirmLabelProp, confirmVariant = 'primary', reason, onConfirm }: ConfirmDialogProps) {
+  const kit = useText(REVIEW_KIT_MESSAGES);
+  const confirmLabel = confirmLabelProp ?? kit.confirm;
   const [text, setText] = useState('');
   const [fieldError, setFieldError] = useState<string>();
   const [error, setError] = useState<string>();
@@ -50,7 +54,7 @@ export function ConfirmDialog({ open, onClose, title, kicker, children, confirmL
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (reason && text.trim().length < reason.minLength) {
-      setFieldError(REVIEW_KIT_TEXT.reasonTooShort(reason.minLength));
+      setFieldError(kit.reasonTooShort(reason.minLength));
       (event.currentTarget as HTMLFormElement).querySelector('textarea')?.focus();
       return;
     }
@@ -60,7 +64,7 @@ export function ConfirmDialog({ open, onClose, title, kicker, children, confirmL
       await onConfirm(text.trim());
       onClose();
     } catch (e) {
-      setError(e instanceof Error && e.message ? e.message : REVIEW_KIT_TEXT.genericError);
+      setError(e instanceof Error && e.message ? e.message : kit.genericError);
     } finally {
       setPending(false);
     }
@@ -71,7 +75,7 @@ export function ConfirmDialog({ open, onClose, title, kicker, children, confirmL
       <form className="dialog-form" onSubmit={(e) => void submit(e)} noValidate>
         {children}
         {reason && (
-          <FormField label={reason.label ?? REVIEW_KIT_TEXT.reasonLabel} hint={reason.hint ?? REVIEW_KIT_TEXT.reasonHint} error={fieldError} required>
+          <FormField label={reason.label ?? kit.reasonLabel} hint={reason.hint ?? kit.reasonHint} error={fieldError} required>
             {(p) => <Textarea {...p} autoFocus rows={3} value={text} onChange={(e) => (setText(e.target.value), fieldError && setFieldError(undefined))} maxLength={500} />}
           </FormField>
         )}
@@ -82,10 +86,10 @@ export function ConfirmDialog({ open, onClose, title, kicker, children, confirmL
         )}
         <div className="dialog-actions">
           <Button variant="ghost" onClick={onClose}>
-            {REVIEW_KIT_TEXT.cancel}
+            {kit.cancel}
           </Button>
           <Button type="submit" variant={confirmVariant} disabled={pending} aria-busy={pending || undefined}>
-            {pending ? REVIEW_KIT_TEXT.working : confirmLabel}
+            {pending ? kit.working : confirmLabel}
           </Button>
         </div>
       </form>

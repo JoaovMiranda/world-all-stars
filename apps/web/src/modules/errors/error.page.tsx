@@ -1,16 +1,16 @@
 import { ContactTab } from '@was/shared';
 import { type ErrorComponentProps, useRouter } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 
 import { ErrorScreen } from './error-screen.component';
-import { ERRORS_TEXT } from './errors.const';
-
-const t = ERRORS_TEXT.generic;
+import { ERRORS_MESSAGES } from './errors.const';
 
 /** Generic error page (router `defaultErrorComponent`): retry re-runs the route; details only in dev builds. */
 export function ErrorPage({ error, reset }: ErrorComponentProps) {
+  const t = useText(ERRORS_MESSAGES).generic;
   const router = useRouter();
   return (
     <ErrorScreen

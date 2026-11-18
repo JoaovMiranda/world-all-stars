@@ -1,6 +1,9 @@
-import { ACCOUNT_DELETE_CONFIRMATION, type ConsentPurpose, type LegalDocumentKind, type NotificationKind } from '@was/shared';
+import { ACCOUNT_DELETE_CONFIRMATION, type ConsentPurpose, type LegalDocumentKind, type NotificationKind, defineMessages } from '@was/shared';
 
-// UI strings of the account module (pt-BR, ready to become an i18n namespace). Source: plan/docs/09, 13, 17, 20.
+import { ACCOUNT_TEXT_EN } from './account.const.en';
+import { ACCOUNT_TEXT_ES } from './account.const.es';
+
+// UI strings of the account module (pt-BR source; en/es next to it). Source: plan/docs/09, 13, 17, 20.
 export const ACCOUNT_TEXT = {
   eyebrow: 'Conta',
   navLabel: 'Seções da conta',
@@ -83,7 +86,7 @@ export const ACCOUNT_TEXT = {
     upToDate: 'Em dia',
     outdated: 'Nova versão',
     noAcceptances: 'Nenhum aceite registrado.',
-    documents: { privacy: 'Aviso de privacidade', terms: 'Termos de uso', cookies: 'Política de cookies' } satisfies Record<LegalDocumentKind, string>,
+    documents: { privacy: 'Aviso de privacidade', terms: 'Termos de uso', cookies: 'Política de cookies', age_declaration: 'Declaração de maioridade (18+)' } satisfies Record<LegalDocumentKind, string>,
     deleteTitle: 'Excluir conta',
     deleteText:
       'A exclusão anonimiza a conta: seu nome vira um pseudônimo (“Usuário removido #1234”) e o e-mail é apagado. Seus comentários e votos continuam no site sob esse pseudônimo. Não dá para desfazer.',
@@ -102,3 +105,5 @@ export const ACCOUNT_TEXT = {
     privacyLink: 'Ler o Aviso de privacidade',
   },
 } as const;
+
+export const ACCOUNT_MESSAGES = defineMessages(ACCOUNT_TEXT, { en: ACCOUNT_TEXT_EN, es: ACCOUNT_TEXT_ES });

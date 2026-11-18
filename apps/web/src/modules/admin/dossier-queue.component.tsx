@@ -2,6 +2,7 @@ import { AdminDecision, type AdminDossier, DossierStatus } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
 import { adminDossiersQuery, reviewDossier } from '@/data/endpoints/admin.query';
+import { useText } from '@/i18n/use-text.hook';
 import { useSession } from '@/session/use-session.hook';
 import { DecisionBar } from '@/shared-ui/decision-bar.component';
 import { FactList } from '@/shared-ui/fact-list.component';
@@ -14,18 +15,20 @@ import { StatusFilter } from '@/shared-ui/status-filter.component';
 import { Tag } from '@/shared-ui/tag.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
 
-import { ADMIN_TEXT } from './admin.const';
+import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import { DOSSIER_STATUS_META, EVIDENCE_TYPE_LABEL } from './admin-labels.const';
 import { ADMIN_REASON, filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import type { QueueState } from './queue-state.type';
 import { SourceLink } from './source-link.component';
 import { StatusTag } from './status-tag.component';
+import { useAdminMeta } from './use-admin-meta.hook';
 
-const T = ADMIN_TEXT.dossiers;
 const statusOf = (d: AdminDossier) => d.status;
 
 function DossierDetail({ d }: { d: AdminDossier }) {
+  const T = useText(ADMIN_MESSAGES).dossiers;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const { user } = useSession();
   const review = reviewDossier.useMutation();
   const decide = (decision: AdminDecision) => (reason: string) => review.mutateAsync({ params: { id: d.id }, body: { decision, reason } });
@@ -35,7 +38,7 @@ function DossierDetail({ d }: { d: AdminDossier }) {
   return (
     <div className="admin-detail">
       <div className="admin-detail-head">
-        <StatusTag meta={DOSSIER_STATUS_META[d.status]} />
+        <StatusTag meta={meta.dossierStatus[d.status]} />
         <TierTag tier={d.athlete.tier} />
       </div>
       <h2>{d.athlete.knownAs}</h2>
@@ -48,8 +51,8 @@ function DossierDetail({ d }: { d: AdminDossier }) {
         variant="split"
         items={[
           { key: 'by', term: T.approvedBy, detail: d.approvedBy.length ? d.approvedBy.join(', ') : T.nobody },
-          { key: 'updated', term: ADMIN_TEXT.common.updated, detail: formatDateTime(d.updatedAt) },
-          { key: 'profile', term: ADMIN_TEXT.common.athlete, detail: <Link to="/athletes/$slug" params={{ slug: d.athlete.slug }}>{T.profile}</Link> },
+          { key: 'updated', term: adminText.common.updated, detail: formatDateTime(d.updatedAt) },
+          { key: 'profile', term: adminText.common.athlete, detail: <Link to="/athletes/$slug" params={{ slug: d.athlete.slug }}>{T.profile}</Link> },
         ]}
       />
       <div>
@@ -58,7 +61,7 @@ function DossierDetail({ d }: { d: AdminDossier }) {
           <ol className="admin-list">
             {d.evidences.map((e) => (
               <li key={e.id}>
-                <Tag tone="soft">{EVIDENCE_TYPE_LABEL[e.type]}</Tag>
+                <Tag tone="soft">{meta.evidenceType[e.type]}</Tag>
                 {e.description && <p className="mb-1 mt-2">{e.description}</p>}
                 <SourceLink source={e.source} />
               </li>
@@ -70,7 +73,7 @@ function DossierDetail({ d }: { d: AdminDossier }) {
       </div>
       {d.reviewNote && (
         <Notice>
-          <b>{ADMIN_TEXT.common.reviewNote}:</b> {d.reviewNote}
+          <b>{adminText.common.reviewNote}:</b> {d.reviewNote}
         </Notice>
       )}
       {open && (
@@ -91,14 +94,17 @@ function DossierDetail({ d }: { d: AdminDossier }) {
 
 /** A6 (also the "Dossiês" tab of A1): headline, evidences with source, 2-admin approval. */
 export function DossierQueue({ state }: { state: QueueState }) {
+  const T = useText(ADMIN_MESSAGES).dossiers;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const query = adminDossiersQuery.useQuery();
   return (
     <QueryBoundary query={query} loading={<SkeletonList rows={6} />}>
       {({ items }) => {
-        const status = pickStatus(DOSSIER_STATUS_META, state.status);
+        const status = pickStatus(meta.dossierStatus, state.status);
         return (
           <div className="stack">
-            <StatusFilter label={ADMIN_TEXT.common.statusFilter} options={statusOptions(DOSSIER_STATUS_META, items, statusOf)} value={status} total={items.length} onChange={state.setStatus} />
+            <StatusFilter label={adminText.common.statusFilter} options={statusOptions(meta.dossierStatus, items, statusOf)} value={status} total={items.length} onChange={state.setStatus} />
             <ReviewQueue
               label={T.queueLabel}
               items={filterByStatus(items, status, statusOf)}
@@ -111,7 +117,7 @@ export function DossierQueue({ state }: { state: QueueState }) {
                 <>
                   <span className="review-queue-item-head">
                     <b>{d.athlete.knownAs}</b>
-                    <StatusTag meta={DOSSIER_STATUS_META[d.status]} />
+                    <StatusTag meta={meta.dossierStatus[d.status]} />
                   </span>
                   <small>{T.approvals(d.approvedBy.length, d.approvalsRequired)}</small>
                 </>

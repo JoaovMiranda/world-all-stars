@@ -3,15 +3,16 @@ import './account.css';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
 import { PageLayout } from '@/shared-ui/page-layout.component';
 import { RequireSession } from '@/shared-ui/require-session.component';
 
-import { ACCOUNT_TEXT } from './account.const';
+import { ACCOUNT_MESSAGES } from './account.const';
 
 const NAV = [
-  { to: '/me', label: ACCOUNT_TEXT.nav.me },
-  { to: '/me/notifications', label: ACCOUNT_TEXT.nav.notifications },
-  { to: '/me/data', label: ACCOUNT_TEXT.nav.data },
+  { to: '/me', key: 'me' },
+  { to: '/me/notifications', key: 'notifications' },
+  { to: '/me/data', key: 'data' },
 ] as const;
 
 interface AccountLayoutProps {
@@ -25,12 +26,13 @@ interface AccountLayoutProps {
 
 /** Shell of the account pages: header, sub-navigation and the sign-in gate (anon sees the login prompt). */
 export function AccountLayout({ title, lead, actions, skipGate = false, children }: AccountLayoutProps) {
+  const accountText = useText(ACCOUNT_MESSAGES);
   return (
-    <PageLayout title={title} eyebrow={ACCOUNT_TEXT.eyebrow} lead={lead} actions={actions} breadcrumb={[{ label: ACCOUNT_TEXT.eyebrow, link: { to: '/me' } }, { label: title }]}>
-      <nav className="account-nav" aria-label={ACCOUNT_TEXT.navLabel}>
+    <PageLayout title={title} eyebrow={accountText.eyebrow} lead={lead} actions={actions} breadcrumb={[{ label: accountText.eyebrow, link: { to: '/me' } }, { label: title }]}>
+      <nav className="account-nav" aria-label={accountText.navLabel}>
         {NAV.map((item) => (
           <Link key={item.to} to={item.to} activeOptions={{ exact: true, includeSearch: false }} activeProps={{ 'aria-current': 'page' }}>
-            {item.label}
+            {accountText.nav[item.key]}
           </Link>
         ))}
       </nav>

@@ -5,9 +5,9 @@ import { defineMutation, defineQuery } from '../define-endpoint.helper';
 import { buildMe, buildNotifications } from '../fixtures/me.fixture';
 import { requireUser } from '../fixtures/require-user.fixture';
 
-/** GET /api/session: the simulated session (same in every fixture mode). */
+/** GET /api/session: the simulated session (same in every fixture mode). Fixtures have no Google and no consent step. */
 export const sessionQuery = defineQuery(ParticipationApi.session, {
-  sample: ({ session }) => session,
+  sample: ({ session }) => ({ ...session, pendingConsent: null, simulated: true, googleEnabled: false }),
   modeIndependent: true,
 });
 

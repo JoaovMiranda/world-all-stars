@@ -1,15 +1,14 @@
 import { HOME_GREATS_LIMIT, type HallOfGreatsEntry, Tier } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { initials } from '@/shared-ui/format.helper';
 import { Skeleton } from '@/shared-ui/skeleton.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
 
-import { HOME_TEXT } from './home.const';
-
-const t = HOME_TEXT.greats;
+import { HOME_MESSAGES } from './home.const';
 
 function GreatCard({ athlete }: { athlete: HallOfGreatsEntry }) {
   return (
@@ -40,6 +39,7 @@ function GreatCard({ athlete }: { athlete: HallOfGreatsEntry }) {
 
 /** Always-dark "stage" band with the Míticos. Empty: message + empty pedestals waiting for the first names. */
 export function HallOfGreatsBand({ greats }: { greats: HallOfGreatsEntry[] | undefined }) {
+  const t = useText(HOME_MESSAGES).greats;
   return (
     <section className="c-12 greats theme-stage" aria-labelledby="greats-title">
       <div className="card-head greats-head">

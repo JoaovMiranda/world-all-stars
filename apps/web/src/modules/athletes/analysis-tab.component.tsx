@@ -1,19 +1,15 @@
-import {
-  ANALYSIS_MAX_ATHLETES,
-  type AnalysisDimensionsResponse,
-  type AthleteProfile,
-  type AthleteSummary,
-  careerOverlapYears,
-  COMPETITION_LEVEL_ORDER,
-} from '@was/shared';
+import { ANALYSIS_MAX_ATHLETES, type AnalysisDimensionsResponse, type AthleteProfile, type AthleteSummary, careerOverlapYears, COMPETITION_LEVEL_ORDER } from '@was/shared';
 import { useQueries } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 
 import { analysisDimensionsQuery, athleteProfileQuery, athletesQuery } from '@/data/endpoints/athletes.query';
+import { currentText } from '@/i18n/text-for.helper';
+import { useLocale } from '@/i18n/locale.store';
+import { useText } from '@/i18n/use-text.hook';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
 import { DataTable } from '@/shared-ui/data-table.component';
-import { LEVEL_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { formatNumber } from '@/shared-ui/format.helper';
 import { LevelTag } from '@/shared-ui/level-tag.component';
@@ -27,13 +23,12 @@ import { barsOption } from '@/shared-ui/chart-presets.helper';
 import { bestFlags, commonCompetitions, seriesToken, sharedClubs, titlesByAge, titlesPerLevel, topLongevity } from './analysis.helper';
 import { currentYear } from './athlete-profile.helper';
 import { ALL_ATHLETES_INPUT } from './athletes-query.helper';
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 import { CompareMatrix, type MatrixRow } from './compare-matrix.component';
 import { ComparePicker } from './compare-picker.component';
 import { resolveSportPanel } from './sport-panels/sport-panel.registry';
 import { formatValue } from './sport-panels/sport-panel.helper';
 
-const T = ATHLETE_PROFILE_TEXT.analysis;
 const CS_SCHEMA = 'cs';
 const NATIONAL_TEAM = 'national';
 const AGE_AXIS_MIN = 15;
@@ -47,10 +42,12 @@ interface AnalysisTabProps {
 }
 
 const peak = (p: AthleteProfile): string | null => {
+  const T = currentText(ATHLETE_PROFILE_MESSAGES).analysis;
   const k = resolveSportPanel(p).kpis[0];
   return k ? T.peakValue(k.label, formatValue(k.value)) : null;
 };
 const pressure = (p: AthleteProfile): string => {
+  const T = currentText(ATHLETE_PROFILE_MESSAGES).analysis;
   const raw = p.stats as Record<string, unknown> | null;
   const record = (raw?.record ?? raw?.pro_record) as { wins?: number; wins_ko?: number } | undefined;
   if (record?.wins && record.wins_ko != null) return T.koPressure(Math.round((record.wins_ko / record.wins) * 100));
@@ -58,15 +55,17 @@ const pressure = (p: AthleteProfile): string => {
 };
 
 function Charts({ profiles }: { profiles: readonly AthleteProfile[] }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   const levelsOption = useCallback(
     (theme: ChartTheme) =>
       barsOption(
         theme,
-        LEVELS_ASC.map((l) => LEVEL_LABEL[l]),
+        LEVELS_ASC.map((l) => labels.level[l]),
         profiles.map((p, i) => ({ name: p.knownAs, data: titlesPerLevel(p, LEVELS_ASC), color: seriesToken(i) })),
         { barMaxWidth: 18 },
       ),
-    [profiles],
+    [profiles, labels],
   );
   const ageOption = useCallback(
     ({ cssVar, axis }: ChartTheme) => ({
@@ -83,7 +82,7 @@ function Charts({ profiles }: { profiles: readonly AthleteProfile[] }) {
         lineStyle: { color: cssVar(seriesToken(i)), width: i ? 1.5 : 2.5 },
       })),
     }),
-    [profiles],
+    [profiles, T],
   );
   return (
     <>
@@ -98,8 +97,11 @@ function Charts({ profiles }: { profiles: readonly AthleteProfile[] }) {
 }
 
 function SameSport({ group }: { group: readonly AthleteProfile[] }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
+  const profileText = useText(ATHLETE_PROFILE_MESSAGES);
   const main = group[0];
-  const metrics = useMemo(() => group.map((p) => resolveSportPanel(p).compare), [group]);
+  const locale = useLocale();
+  const metrics = useMemo(() => group.map((p) => resolveSportPanel(p).compare), [group, locale]);
   if (!main || group.length < 2) return null;
   const rows: MatrixRow[] = (metrics[0] ?? []).map((m, r) => ({
     key: `${r}-${m.label}`,
@@ -136,7 +138,7 @@ function SameSport({ group }: { group: readonly AthleteProfile[] }) {
                 cell: (o) => {
                   const a = born(main);
                   const b = born(o);
-                  return a !== null && b !== null ? T.yearsValue(Math.abs(a - b)) : ATHLETE_PROFILE_TEXT.dash;
+                  return a !== null && b !== null ? T.yearsValue(Math.abs(a - b)) : profileText.dash;
                 },
               },
               {
@@ -155,7 +157,7 @@ function SameSport({ group }: { group: readonly AthleteProfile[] }) {
         <Section title={T.commonTitle} eyebrow={T.commonLabel}>
           <CompareMatrix
             caption={T.commonCaption}
-            rowHeader={ATHLETE_PROFILE_TEXT.achievements.competition}
+            rowHeader={profileText.achievements.competition}
             athletes={group}
             rows={common.map((c) => {
               const winners = c.counts.filter(Boolean).length;
@@ -169,7 +171,7 @@ function SameSport({ group }: { group: readonly AthleteProfile[] }) {
                 ),
                 values: c.counts.map((n) => n || null),
                 higher: winners > 1 ? true : null,
-                render: (v) => v ?? ATHLETE_PROFILE_TEXT.dash,
+                render: (v) => v ?? profileText.dash,
               };
             })}
           />
@@ -180,6 +182,8 @@ function SameSport({ group }: { group: readonly AthleteProfile[] }) {
 }
 
 function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteProfile; profiles: AthleteProfile[]; dims: AnalysisDimensionsResponse; total: number }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
+  const profileText = useText(ATHLETE_PROFILE_MESSAGES);
   const others = profiles.slice(1);
   const mixed = others.some((o) => o.sport.slug !== profile.sport.slug);
   const sameGroup = [profile, ...others.filter((o) => o.sport.slug === profile.sport.slug)];
@@ -213,7 +217,7 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
         },
       ],
     }),
-    [dims, scored, profiles],
+    [dims, scored, profiles, T],
   );
   const raw = (p: AthleteProfile, k: (typeof dims.keys)[number]) => dims.bySlug[p.slug]?.raw[k] ?? null;
   const tierRow: MatrixRow = { key: 'tier', label: T.tier, values: profiles.map((p) => p.tier), higher: null, render: (_v, i) => {
@@ -227,9 +231,9 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
     { key: 'legacyRaw', label: T.legacyRaw, values: profiles.map((p) => p.legacy.total) },
   ];
   const conceptRows: MatrixRow[] = [
-    { key: 'env', label: T.environment, higher: null, values: profiles.map((p) => T.envValue(T.env[p.sport.environment] ?? ATHLETE_PROFILE_TEXT.dash, T.format[p.sport.format] ?? ATHLETE_PROFILE_TEXT.dash)) },
+    { key: 'env', label: T.environment, higher: null, values: profiles.map((p) => T.envValue(T.env[p.sport.environment] ?? profileText.dash, T.format[p.sport.format] ?? profileText.dash)) },
     { key: 'dom', label: T.dominanceRow, values: profiles.map((p) => p.percentile) },
-    { key: 'long', label: T.longevityRow, values: profiles.map(topLongevity), render: (v) => (v === null ? <span className="muted">{ATHLETE_PROFILE_TEXT.noData}</span> : T.yearsValue(Number(v))) },
+    { key: 'long', label: T.longevityRow, values: profiles.map(topLongevity), render: (v) => (v === null ? <span className="muted">{profileText.noData}</span> : T.yearsValue(Number(v))) },
     { key: 'peak', label: T.peakRow, higher: null, values: profiles.map(peak) },
     { key: 'pressure', label: T.pressureRow, higher: null, values: profiles.map(pressure) },
     { key: 'consistency', label: T.consistencyRow, higher: null, values: profiles.map(() => T.matchData) },
@@ -261,7 +265,7 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
           rowKey={(r) => `${r.level}-${r.type}`}
           emptyText={T.legacyEmpty}
           columns={[
-            { key: 'level', header: ATHLETE_PROFILE_TEXT.achievements.level, cell: (r) => <LevelTag level={r.level} /> },
+            { key: 'level', header: profileText.achievements.level, cell: (r) => <LevelTag level={r.level} /> },
             { key: 'type', header: T.type, cell: (r) => T.resultType[r.type] ?? r.type },
             { key: 'count', header: T.quantity, align: 'end', cell: (r) => r.count },
             { key: 'unit', header: T.weight, align: 'end', cell: (r) => r.unit },
@@ -275,6 +279,8 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
 
 /** Análise (docs 09/16): starts with nobody, up to 5 athletes, radar + normalized reading, same-sport metrics. */
 export function AnalysisTab({ profile, compare, onCompareChange }: AnalysisTabProps) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
+  const profileText = useText(ATHLETE_PROFILE_MESSAGES);
   const all = athletesQuery.useQuery(ALL_ATHLETES_INPUT);
   const dims = analysisDimensionsQuery.useQuery();
   const candidates: AthleteSummary[] = all.data?.items ?? [];
@@ -297,7 +303,7 @@ export function AnalysisTab({ profile, compare, onCompareChange }: AnalysisTabPr
       ) : dims.data ? (
         <AnalysisContent profile={profile} profiles={profiles} dims={dims.data} total={Object.keys(dims.data.bySlug).length} />
       ) : (
-        <EmptyState compact title={ATHLETE_PROFILE_TEXT.errorTitle} mark="!" />
+        <EmptyState compact title={profileText.errorTitle} mark="!" />
       )}
     </div>
   );

@@ -3,6 +3,7 @@ import { type FormEvent, useState } from 'react';
 
 import { isApiError } from '@/data/api-error.error';
 import { addBannedWord, removeBannedWord } from '@/data/endpoints/admin.query';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { DataTable } from '@/shared-ui/data-table.component';
 import { DecisionBar } from '@/shared-ui/decision-bar.component';
@@ -14,15 +15,17 @@ import { Select } from '@/shared-ui/select.component';
 import { StatusFilter } from '@/shared-ui/status-filter.component';
 import { Textarea } from '@/shared-ui/textarea.component';
 
-import { ADMIN_TEXT } from './admin.const';
-import { LOCALE_LABEL, MATCH_MODE_LABEL } from './admin-labels.const';
+import { ADMIN_MESSAGES } from './admin.const';
 import type { QueueState } from './queue-state.type';
+import { currentAdminMeta, useAdminMeta } from './use-admin-meta.hook';
 
-const T = ADMIN_TEXT.comments;
-const localeLabel = (l: string) => LOCALE_LABEL[l] ?? l;
+const localeLabel = (l: string) => currentAdminMeta().locale[l] ?? l;
 const canonicalText = (text: string) => cleanText(text).split(WORD_SPLIT_REGEX).filter(Boolean).map(canonicalizeForModeration).join(' ');
 
 function AddWordForm({ locales }: { locales: string[] }) {
+  const T = useText(ADMIN_MESSAGES).comments;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const add = addBannedWord.useMutation();
   const [term, setTerm] = useState('');
   const [matchMode, setMatchMode] = useState<BannedWordMatchMode>('word');
@@ -33,7 +36,7 @@ function AddWordForm({ locales }: { locales: string[] }) {
     e.preventDefault();
     setDone(undefined);
     const value = term.trim();
-    if (!value) return setError(ADMIN_TEXT.comments.term);
+    if (!value) return setError(adminText.comments.term);
     try {
       await add.mutateAsync({ body: { term: value, matchMode, locale } });
       setTerm('');
@@ -49,7 +52,7 @@ function AddWordForm({ locales }: { locales: string[] }) {
         {(p) => <Input {...p} value={term} onChange={(e) => setTerm(e.target.value)} maxLength={60} autoComplete="off" />}
       </FormField>
       <FormField label={T.mode}>
-        {(p) => <Select {...p} value={matchMode} onChange={(e) => setMatchMode(e.target.value as BannedWordMatchMode)} options={BANNED_WORD_MATCH_MODE_VALUES.map((m) => ({ value: m, label: MATCH_MODE_LABEL[m] }))} />}
+        {(p) => <Select {...p} value={matchMode} onChange={(e) => setMatchMode(e.target.value as BannedWordMatchMode)} options={BANNED_WORD_MATCH_MODE_VALUES.map((m) => ({ value: m, label: meta.matchMode[m] }))} />}
       </FormField>
       <FormField label={T.locale}>
         {(p) => <Select {...p} value={locale} onChange={(e) => setLocale(e.target.value)} options={locales.map((l) => ({ value: l, label: localeLabel(l) }))} />}
@@ -65,6 +68,7 @@ function AddWordForm({ locales }: { locales: string[] }) {
 }
 
 function MatchPreview({ words }: { words: readonly BannedWord[] }) {
+  const T = useText(ADMIN_MESSAGES).comments;
   const [text, setText] = useState('');
   const hits = text.trim() ? words.filter((w) => hasBannedWord(text, [w])) : [];
   return (
@@ -92,6 +96,9 @@ function MatchPreview({ words }: { words: readonly BannedWord[] }) {
 
 /** A7 · banned words per locale: list, add/remove, and a live preview with the shared normalization (doc 20). */
 export function BannedWords({ words, state }: { words: readonly BannedWord[]; state: QueueState }) {
+  const T = useText(ADMIN_MESSAGES).comments;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const remove = removeBannedWord.useMutation();
   const locales = [...new Set(['pt-BR', 'en', 'es', ...words.map((w) => w.locale)])];
   const locale = state.status && locales.includes(state.status) ? state.status : undefined;
@@ -116,11 +123,11 @@ export function BannedWords({ words, state }: { words: readonly BannedWord[]; st
             columns={[
               { key: 'term', header: T.term, cell: (w) => <b>{w.term}</b>, sortValue: (w) => w.term },
               { key: 'canonical', header: T.canonical, cell: (w) => <code>{canonicalizeForModeration(w.term)}</code> },
-              { key: 'mode', header: T.mode, cell: (w) => MATCH_MODE_LABEL[w.matchMode] },
+              { key: 'mode', header: T.mode, cell: (w) => meta.matchMode[w.matchMode] },
               { key: 'locale', header: T.locale, cell: (w) => localeLabel(w.locale), sortValue: (w) => w.locale },
               {
                 key: 'remove',
-                header: ADMIN_TEXT.common.actions,
+                header: adminText.common.actions,
                 cell: (w) => (
                   <DecisionBar
                     label={T.removeLabel(w.term)}

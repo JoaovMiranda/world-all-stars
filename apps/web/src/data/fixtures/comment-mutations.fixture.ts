@@ -1,4 +1,6 @@
 import { API_ERROR_MESSAGES, ApiErrorCode, type ReactToCommentResponse, type SessionUser, validateComment } from '@was/shared';
+import { currentText } from '@/i18n/text-for.helper';
+import { localeStore } from '@/i18n/locale.store';
 
 import { ApiError } from '../api-error.error';
 import { demoId, demoStore } from '../demo.store';
@@ -8,12 +10,12 @@ import { commentRows } from './comments.fixture';
 /** POST comment in fixture mode: shared validation (422 like the server), replies attach to the top comment. */
 export const postDemoComment = async (sample: typeof loadSample, user: SessionUser, slug: string, body: string, parentId: string | null | undefined) => {
   const { bannedWords } = await sample('validation-context.json');
-  const result = validateComment(body, bannedWords);
+  const result = validateComment(body, bannedWords, localeStore.get());
   if (!result.ok) throw new ApiError(422, { error: result.error, message: result.message });
   let parent: string | null = null;
   if (parentId) {
     const target = (await commentRows(sample, user)).find((c) => c.id === parentId && c.slug === slug);
-    if (!target) throw new ApiError(422, { error: ApiErrorCode.Parent, message: API_ERROR_MESSAGES.parentGone });
+    if (!target) throw new ApiError(422, { error: ApiErrorCode.Parent, message: currentText(API_ERROR_MESSAGES).parentGone });
     parent = target.parentId ?? target.id;
   }
   const id = demoId();
@@ -27,7 +29,7 @@ export const postDemoComment = async (sample: typeof loadSample, user: SessionUs
 export const reactDemoComment = async (sample: typeof loadSample, user: SessionUser, id: string, reaction: 'like' | 'dislike' | null): Promise<ReactToCommentResponse> => {
   const target = (await commentRows(sample, user)).find((c) => c.id === id);
   if (!target) throw new ApiError(404, { error: 'not_found' });
-  if (target.isMine) throw new ApiError(403, { error: ApiErrorCode.Own, message: API_ERROR_MESSAGES.ownComment });
+  if (target.isMine) throw new ApiError(403, { error: ApiErrorCode.Own, message: currentText(API_ERROR_MESSAGES).ownComment });
   demoStore.update((d) => {
     if (reaction) d.reactions[id] = reaction;
     else delete d.reactions[id];

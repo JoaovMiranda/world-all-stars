@@ -1,3 +1,7 @@
+import { defineMessages } from '@was/shared';
+import { UI_TEXT_EN } from './ui-text.const.en';
+import { UI_TEXT_ES } from './ui-text.const.es';
+
 // pt-BR strings of the component kit (ready for i18n). Module strings live in modules/<name>/<name>.const.ts.
 export const UI_TEXT = {
   breadcrumbLabel: 'Você está em',
@@ -50,4 +54,8 @@ export const UI_TEXT = {
   devFixture: 'Dados',
   devFixtureLabel: 'Modo dos dados de desenvolvimento',
   devFixtureModes: { sample: 'amostra', empty: 'vazio', loading: 'carregando', error: 'erro' },
+  /** Content (bio, sport texts…) not yet available in the interface language. */
+  untranslated: (contentLanguage: string) => `Este conteúdo ainda não tem versão em português; ele aparece em ${contentLanguage}.`,
 } as const;
+
+export const UI_MESSAGES = defineMessages(UI_TEXT, { en: UI_TEXT_EN, es: UI_TEXT_ES });

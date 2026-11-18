@@ -1,12 +1,14 @@
 import type { ReactNode } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { Tag } from './tag.component';
-import { ORG_ROLE_LABEL } from './domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from './domain-labels.const';
 import { OrgInfo } from './org-info.component';
 import { OrgLogo } from './org-logo.component';
 import { OrgName } from './org-name.component';
 import type { OrgLike } from './org.type';
-import { UI_TEXT } from './ui-text.const';
+import { UI_MESSAGES } from './ui-text.const';
 import { useDisclosure } from './use-disclosure.hook';
 
 /** Full org line (sport page, hierarchy): logo · flag · name · ⓘ · roles · nature, with the ⓘ summary panel. */
@@ -22,6 +24,8 @@ interface OrgRowProps {
 }
 
 export function OrgRow({ org, lead, tags, children, className }: OrgRowProps) {
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const ui = useText(UI_MESSAGES);
   const info = useDisclosure();
   return (
     <li className={className ?? 'org-row'}>
@@ -30,12 +34,12 @@ export function OrgRow({ org, lead, tags, children, className }: OrgRowProps) {
         <OrgLogo org={org} />
         {org.country && <span aria-hidden="true">{org.country.flag}</span>}
         <OrgName org={org} />
-        <button type="button" className="info-btn" aria-label={UI_TEXT.moreInfoAbout(org.name)} {...info.buttonProps}>
+        <button type="button" className="info-btn" aria-label={ui.moreInfoAbout(org.name)} {...info.buttonProps}>
           i
         </button>
         {org.roles?.map((r) => (
           <Tag key={r} tone="soft">
-            {ORG_ROLE_LABEL[r] ?? r}
+            {labels.orgRole[r] ?? r}
           </Tag>
         ))}
         <Tag className={`nat-${org.nature}`}>{org.natureLabel}</Tag>

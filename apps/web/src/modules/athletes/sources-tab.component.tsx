@@ -1,5 +1,6 @@
 import type { AthleteProfile, FieldConflict, FieldProvenance } from '@was/shared';
 
+import { useText } from '@/i18n/use-text.hook';
 import { DataTable } from '@/shared-ui/data-table.component';
 import { formatDate } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
@@ -7,15 +8,16 @@ import { Tag } from '@/shared-ui/tag.component';
 import { Timeline } from '@/shared-ui/timeline.component';
 
 import { fieldLabel } from './athlete-profile.helper';
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
-const T = ATHLETE_PROFILE_TEXT.sources;
-const D = ATHLETE_PROFILE_TEXT.dash;
 const SYSTEM_AUTHOR = 'system';
 const PENDING = 'pending';
 
 /** Fontes: conflicts between sources, provenance of each field and the version history. */
 export function SourcesTab({ profile: p }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).sources;
+  const D = useText(ATHLETE_PROFILE_MESSAGES).dash;
+  const profileText = useText(ATHLETE_PROFILE_MESSAGES);
   return (
     <div className="stack">
       {p.conflicts.length > 0 && (
@@ -51,7 +53,7 @@ export function SourcesTab({ profile: p }: { profile: AthleteProfile }) {
                 x.source ? (
                   <a href={x.source.url} target="_blank" rel="noopener noreferrer">
                     {x.source.name}
-                    <span className="sr-only"> {ATHLETE_PROFILE_TEXT.infobox.external}</span>
+                    <span className="sr-only"> {profileText.infobox.external}</span>
                   </a>
                 ) : (
                   D

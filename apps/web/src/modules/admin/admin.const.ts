@@ -1,6 +1,9 @@
-import type { AdminSection } from '@was/shared';
+import { type AdminSection, defineMessages } from '@was/shared';
 
-// UI strings of the admin module (pt-BR, ready to become an i18n namespace).
+import { ADMIN_TEXT_EN } from './admin.const.en';
+import { ADMIN_TEXT_ES } from './admin.const.es';
+
+// UI strings of the admin module (pt-BR source; en/es next to it).
 export const ADMIN_TEXT = {
   title: 'Painel da curadoria',
   eyebrow: 'Admin',
@@ -301,3 +304,5 @@ export const ADMIN_TEXT = {
     reopenTitle: 'Reabrir a mensagem',
   },
 } as const;
+
+export const ADMIN_MESSAGES = defineMessages(ADMIN_TEXT, { en: ADMIN_TEXT_EN, es: ADMIN_TEXT_ES });

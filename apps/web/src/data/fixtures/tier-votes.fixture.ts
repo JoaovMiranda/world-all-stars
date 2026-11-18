@@ -1,5 +1,7 @@
 import { type SessionUser, type Tier, type TierVotesResponse, officialTierChangeError } from '@was/shared';
 
+import { localeStore } from '@/i18n/locale.store';
+
 import { ApiError } from '../api-error.error';
 import { demoStore } from '../demo.store';
 import type { loadSample } from '../sample-fixtures.helper';
@@ -30,7 +32,7 @@ export const setDemoOfficialTier = async (sample: typeof loadSample, slug: strin
   const profile = (await sample('athlete-profiles.json'))[slug];
   if (!profile) throw new ApiError(404, { error: 'not_found' });
   const current = demoStore.get().officialTiers[slug]?.tier ?? profile.tier;
-  const refusal = officialTierChangeError({ current, target: tier, dossierStatus: profile.dossier?.status ?? null });
+  const refusal = officialTierChangeError({ current, target: tier, dossierStatus: profile.dossier?.status ?? null }, localeStore.get());
   if (refusal) throw new ApiError(422, refusal);
   demoStore.update((d) => {
     d.officialTiers[slug] = { tier, reason, at: new Date().toISOString() };

@@ -1,14 +1,13 @@
 import { type Comment, CommentReaction } from '@was/shared';
 
 import { reactToComment } from '@/data/endpoints/comments.query';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { formatRelativeDay } from '@/shared-ui/relative-time.helper';
 import { Tag } from '@/shared-ui/tag.component';
 import { useSession } from '@/session/use-session.hook';
 
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
-
-const T = ATHLETE_PROFILE_TEXT.comments;
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
 interface CommentItemProps {
   comment: Comment;
@@ -18,6 +17,7 @@ interface CommentItemProps {
 
 /** One comment: author, relative date, body (escaped, pre-wrap), like/dislike toggle (not on your own) and reply. */
 export function CommentItem({ comment: c, onReply }: CommentItemProps) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).comments;
   const { requireLogin } = useSession();
   const react = reactToComment.useMutation();
   const toggle = (r: CommentReaction) => {

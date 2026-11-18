@@ -2,10 +2,12 @@ import type { SportCard as SportCardData } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 import type { CSSProperties, ReactNode } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { tokenColor } from './format.helper';
 import { OrgMini } from './org-mini.component';
 import type { OrgIdentity } from './org.type';
-import { UI_TEXT } from './ui-text.const';
+import { UI_MESSAGES } from './ui-text.const';
 
 interface SportCardProps {
   sport: SportCardData;
@@ -25,6 +27,7 @@ interface SportCardProps {
 
 /** Whole card clickable → /sports/$slug (stretched link); association links stay independently clickable. */
 export function SportCard({ sport, showAssociations = true, maxAssociations = 4, associations, associationsLabel, tags, footer }: SportCardProps) {
+  const ui = useText(UI_MESSAGES);
   const listed = associations ?? sport.associations.slice(0, maxAssociations);
   return (
     <article className="sport-card" style={{ '--c': tokenColor(sport.colorToken) } as CSSProperties}>
@@ -39,7 +42,7 @@ export function SportCard({ sport, showAssociations = true, maxAssociations = 4,
       {tags && <div className="row">{tags}</div>}
       <div className="count">{sport.athletes}</div>
       <small>
-        {UI_TEXT.champions} · {UI_TEXT.mythic(sport.mythic)} · {UI_TEXT.competitions(sport.competitions)}
+        {ui.champions} · {ui.mythic(sport.mythic)} · {ui.competitions(sport.competitions)}
       </small>
       {showAssociations && associationsLabel && <span className="label mt-2">{associationsLabel}</span>}
       {showAssociations && listed.length > 0 && (

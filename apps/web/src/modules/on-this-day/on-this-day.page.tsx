@@ -3,9 +3,10 @@ import { getRouteApi, Link } from '@tanstack/react-router';
 
 import { useToday } from '@/app/use-boot.hook';
 import { onThisDayQuery } from '@/data/endpoints/discovery.query';
+import { useText } from '@/i18n/use-text.hook';
 import { Avatar } from '@/shared-ui/avatar.component';
 import { ButtonLink } from '@/shared-ui/button-link.component';
-import { ON_THIS_DAY_KIND_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { formatDayMonth } from '@/shared-ui/format.helper';
 import { Notice } from '@/shared-ui/notice.component';
@@ -15,14 +16,17 @@ import { Section } from '@/shared-ui/section.component';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { Tag } from '@/shared-ui/tag.component';
 import { Timeline } from '@/shared-ui/timeline.component';
-import { UI_TEXT } from '@/shared-ui/ui-text.const';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 
-import { ON_THIS_DAY_GROUPS, ON_THIS_DAY_TEXT as T } from './on-this-day.const';
+import { ON_THIS_DAY_GROUPS, ON_THIS_DAY_MESSAGES } from './on-this-day.const';
 
 const route = getRouteApi('/on-this-day/$md');
 
 /** P13 On this day (doc 09): births · achievements · deaths of that month-day (any year), sport day, day ± navigation. */
 export function OnThisDayPage() {
+  const T = useText(ON_THIS_DAY_MESSAGES);
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const ui = useText(UI_MESSAGES);
   const { md } = route.useParams();
   const label = formatDayMonth(monthDayToIso(md));
   const prev = addDaysMonthDay(md, -1);
@@ -38,6 +42,7 @@ export function OnThisDayPage() {
       eyebrow={T.eyebrow}
       lead={T.lead}
       breadcrumb={[{ label: T.eyebrow }, { label }]}
+      contentLocale={day.data?.contentLocale}
       actions={
         <nav className="row" aria-label={T.dayNav}>
           <ButtonLink size="sm" to="/on-this-day/$md" params={{ md: prev }} aria-label={T.prevLabel(prevLabel)}>
@@ -58,7 +63,7 @@ export function OnThisDayPage() {
                   {T.observance}: {d.observance.name}
                 </b>
                 {d.observance.reference && <span className="muted"> ({d.observance.reference})</span>}{' '}
-                <Tag tone="soft">{UI_TEXT.observanceScope[d.observance.scope]}</Tag>{' '}
+                <Tag tone="soft">{ui.observanceScope[d.observance.scope]}</Tag>{' '}
                 {d.observance.sport && (
                   <Link to="/sports/$slug" params={{ slug: d.observance.sport.slug }}>
                     {T.seeSport(d.observance.sport.name)}
@@ -95,7 +100,7 @@ export function OnThisDayPage() {
                             <span className="muted text-sm font-normal">{i.athlete.sport.name}</span>
                           </span>
                         ),
-                        detail: `${ON_THIS_DAY_KIND_LABEL[i.kind]} · ${i.title}`,
+                        detail: `${labels.onThisDayKind[i.kind]} · ${i.title}`,
                       }))}
                     />
                   </Section>

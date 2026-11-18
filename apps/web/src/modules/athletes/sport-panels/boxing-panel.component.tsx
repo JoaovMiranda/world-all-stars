@@ -1,6 +1,8 @@
 import { AchievementType, type AthleteProfile, type BoxingStats, BoxingStatsSchema } from '@was/shared';
 import { useCallback } from 'react';
 
+import { currentText } from '@/i18n/text-for.helper';
+import { useText } from '@/i18n/use-text.hook';
 import { donutOption } from '@/shared-ui/chart-presets.helper';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
@@ -8,14 +10,13 @@ import { FactList } from '@/shared-ui/fact-list.component';
 import { formatDate } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
 
-import { ATHLETE_PROFILE_TEXT } from '../athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from '../athletes.const';
 import { kpi, metric, percent } from './sport-panel.helper';
 import type { SportPanelDef } from './sport-panel.type';
 
-const T = ATHLETE_PROFILE_TEXT.panels;
-const D = ATHLETE_PROFILE_TEXT.dash;
-
 function BoxingPanel({ stats }: { profile: AthleteProfile; stats: BoxingStats }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
+  const D = useText(ATHLETE_PROFILE_MESSAGES).dash;
   const r = stats.record;
   const option = useCallback(
     (theme: ChartTheme) =>
@@ -29,7 +30,7 @@ function BoxingPanel({ stats }: { profile: AthleteProfile; stats: BoxingStats })
         ],
         T.fightsCenter(r.fights),
       ),
-    [r],
+    [r, T],
   );
   return (
     <Section
@@ -60,6 +61,8 @@ function BoxingPanel({ stats }: { profile: AthleteProfile; stats: BoxingStats })
 export const BOXING_PANEL: SportPanelDef<BoxingStats> = {
   schema: BoxingStatsSchema,
   kpis: (p, s) => {
+    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
+    const D = currentText(ATHLETE_PROFILE_MESSAGES).dash;
     const r = s.record;
     const hof = p.achievements.find((a) => a.type === AchievementType.HallOfFame);
     return [
@@ -69,12 +72,15 @@ export const BOXING_PANEL: SportPanelDef<BoxingStats> = {
       kpi(T.hallOfFame, hof ? String(hof.year) : D, T.hallOfFameHint),
     ];
   },
-  compare: (p, s) => [
-    metric(T.wins, s.record.wins),
-    metric(T.knockouts, s.record.wins_ko),
-    metric(T.koShare, `${percent(s.record.wins_ko, s.record.wins)}%`),
-    metric(T.losses, s.record.losses, false),
-    metric(T.reigns, p.reigns.length),
-  ],
+  compare: (p, s) => {
+    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
+    return [
+      metric(T.wins, s.record.wins),
+      metric(T.knockouts, s.record.wins_ko),
+      metric(T.koShare, `${percent(s.record.wins_ko, s.record.wins)}%`),
+      metric(T.losses, s.record.losses, false),
+      metric(T.reigns, p.reigns.length),
+    ];
+  },
   Panel: BoxingPanel,
 };

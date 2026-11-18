@@ -1,14 +1,15 @@
 import { type HomeResponse, type IsoDate } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Avatar } from '@/shared-ui/avatar.component';
-import { ON_THIS_DAY_KIND_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { formatDayMonth } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
 import { Skeleton, SkeletonList } from '@/shared-ui/skeleton.component';
 
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 
 interface TodayInHistoryProps {
   date: IsoDate;
@@ -16,9 +17,8 @@ interface TodayInHistoryProps {
   data: HomeResponse['todayInHistory'] | undefined;
 }
 
-const t = HOME_TEXT.today;
-
 function ObservanceBox({ data }: { data: HomeResponse['todayInHistory'] }) {
+  const t = useText(HOME_MESSAGES).today;
   const today = data.observance;
   const next = data.nextObservance;
   if (!today && !next) return <p className="observance observance-empty">{t.noObservance}</p>;
@@ -37,6 +37,8 @@ function ObservanceBox({ data }: { data: HomeResponse['todayInHistory'] }) {
 }
 
 export function TodayInHistory({ date, isSimulatedDate, data }: TodayInHistoryProps) {
+  const t = useText(HOME_MESSAGES).today;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   return (
     <Section
       variant="gold"
@@ -75,7 +77,7 @@ export function TodayInHistory({ date, isSimulatedDate, data }: TodayInHistoryPr
                     <b>{item.athlete.knownAs}</b>
                   </Link>
                   <small>
-                    {ON_THIS_DAY_KIND_LABEL[item.kind]} · {item.title}
+                    {labels.onThisDayKind[item.kind]} · {item.title}
                   </small>
                 </span>
                 <span className="otd-year">{item.year}</span>

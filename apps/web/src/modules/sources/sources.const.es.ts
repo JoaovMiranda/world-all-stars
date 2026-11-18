@@ -1,0 +1,98 @@
+import type { Messages } from '@was/shared';
+
+import type { SOURCES_TEXT } from './sources.const';
+
+export const SOURCES_TEXT_ES = {
+  page: {
+    title: 'Fuentes',
+    heading: 'De dónde vienen los datos',
+    eyebrow: 'Transparencia',
+    lead: 'Cada dato del sitio apunta a una fuente, con su licencia y fecha de recopilación. Aquí están todas las fuentes: las que usamos, las que esperan permiso y las que solo reciben un enlace.',
+  },
+  kpis: {
+    label: 'Fuentes por situación',
+    active: 'Fuentes en uso',
+    pending_permission: 'Esperando permiso',
+    link_only: 'Solo enlace',
+    rejected: 'Descartadas',
+  },
+  list: {
+    title: 'Fuentes',
+    filterLabel: 'Filtrar por situación',
+    chip: (label, n) => `${label} · ${n}`,
+    athletes: 'atletas',
+    fields: 'campos',
+    achievements: 'logros',
+    noRun: 'sin recopilación automática',
+    lastRun: (checked, unchanged, updated, errors, mode) =>
+      `Última ejecución: ${checked} verificados · ${unchanged} sin cambios · ${updated} actualizados · ${errors} errores (modo ${mode}).`,
+    linksCaption: (name) => `Enlaces recopilados de ${name}`,
+    colLink: 'Enlace recopilado',
+    colEntity: 'Entidad',
+    colRevision: 'Revisión',
+    colChecked: 'Verificado',
+    noLinks: 'Ningún enlace recopilado de esta fuente.',
+    openSource: (name) => `Abrir ${name}`,
+    external: '(se abre en una pestaña nueva)',
+    emptyTitle: 'Todavía no hay fuentes registradas',
+    emptyText: 'El registro de fuentes (licencia, uso comercial y situación) aparece aquí antes de la primera recopilación.',
+    noMatch: 'Ninguna fuente en esta situación.',
+    dash: '—',
+  },
+  runs: {
+    title: 'Recopilación asistida por IA',
+    eyebrow: 'extractor local · docs 11 y 18',
+    intro:
+      'La IA solo propone: cada dato se convierte en una propuesta que aprueba un admin. Antes de gastar un solo token, cada ejecución pasa por filtros. Si la revisión de la fuente no cambió, ni siquiera se llama al extractor (0 tokens). Un dato propuesto solo entra si el fragmento citado existe literalmente en la fuente.',
+    gatesTitle: 'Los filtros, del más barato al más caro',
+    gates: [
+      { title: 'Agenda y revisión', text: '¿Le toca revisión a la fuente y cambió su versión (revid, ETag)? Si no cambió, ni se descarga el contenido.' },
+      { title: 'Sección y ruido', text: 'Solo la sección relevante, comparada por hash. Los cambios solo de formato, enlace u ortografía se descartan.' },
+      { title: 'Primero el parser', text: 'Una tabla bien formada va al parser determinista, sin IA. Un fragmento ya procesado reutiliza el resultado.' },
+      { title: 'Diff mínimo y presupuesto', text: 'El modelo recibe solo las líneas modificadas, dentro de un límite por ejecución. Lo que sobra queda para la siguiente.' },
+      { title: 'Fragmento literal', text: 'Cada valor incluye el fragmento de la fuente (evidence_quote). Si el fragmento no existe en el texto original, el dato se descarta.' },
+      { title: 'Aprobación', text: 'Nada se publica directamente: se convierte en una propuesta en la cola de curaduría, con el fragmento de la fuente junto a cada valor.' },
+    ],
+    caption: 'Ejecuciones de la recopilación asistida por IA',
+    colStarted: 'Ejecución',
+    colMode: 'Modo',
+    colChecked: 'Verificados',
+    colUnchanged: 'Sin cambios (0 tokens)',
+    colValidated: 'Validados',
+    colAccepted: 'Datos aceptados',
+    colRejected: 'Descartados',
+    colTokens: 'Tokens del extractor',
+    empty: 'Todavía no hay ejecuciones registradas.',
+  },
+  origins: {
+    title: 'Los 6 orígenes primarios del mercado',
+    eyebrow: 'de dónde viene cualquier dato deportivo',
+    items: [
+      { title: '1. Actas oficiales', text: 'Federaciones, árbitros y comisiones (FIFA, FIDE, CBDA).' },
+      { title: '2. La propia plataforma', text: 'Partidas jugadas en Lichess, Chess.com, servidores de CS.' },
+      { title: '3. Recopilación humana', text: 'Scouts que ven los partidos (Opta, BoxRec, HLTV).' },
+      { title: '4. Archivo histórico', text: 'Periódicos y anuarios investigados por voluntarios (RSSSF, Olympedia).' },
+      { title: '5. Comunidad', text: 'Wikipedia, Liquipedia, TheSportsDB copiando de 1 a 4.' },
+      { title: '6. Reventa', text: 'Feeds comerciales con licencia (Opta, Sportradar, GRID).' },
+    ],
+  },
+  commercialUse: {
+    yes: 'Uso comercial permitido',
+    no: 'Uso comercial no permitido',
+    ask: 'Pedir confirmación',
+    'paid-for-lpdb': 'Comercial de pago (LPDB)',
+  },
+  originKind: {
+    community: 'Comunidad',
+    official: 'Oficial',
+    historians: 'Historiadores',
+    proprietary: 'Propietaria',
+    unknown: 'No declarada',
+  },
+  runStatus: {
+    success: 'OK',
+    partial: 'Parcial',
+    failed: 'Falló',
+    running: 'En curso',
+  },
+} satisfies Messages<typeof SOURCES_TEXT>;

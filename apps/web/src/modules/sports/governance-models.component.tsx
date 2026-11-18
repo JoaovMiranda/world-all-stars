@@ -1,14 +1,14 @@
 import type { GovernanceModelInfo } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 
-import { SPORTS_TEXT } from './sports.const';
-
-const t = SPORTS_TEXT.models;
+import { SPORTS_MESSAGES } from './sports.const';
 
 /** Cards of the 5 governance models (doc 18) with links to their sports. */
 export function GovernanceModels({ models }: { models: readonly GovernanceModelInfo[] }) {
+  const t = useText(SPORTS_MESSAGES).models;
   if (models.length === 0) {
     return (
       <EmptyState title={t.emptyTitle} compact>

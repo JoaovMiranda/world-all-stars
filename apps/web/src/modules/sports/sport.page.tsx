@@ -1,20 +1,11 @@
 import './sports.page.css';
 
-import {
-  type CompetitionEvent,
-  matchesAthleteFilters,
-  matchesCompetitionFilters,
-  nextMonthDayOccurrence,
-  type ObservanceEvent,
-  CalendarEventType,
-  normalizeForSearch,
-  type SportPage as SportPageData,
-  SportPageFiltersSchema,
-} from '@was/shared';
+import { type CompetitionEvent, matchesAthleteFilters, matchesCompetitionFilters, nextMonthDayOccurrence, type ObservanceEvent, CalendarEventType, normalizeForSearch, type SportPage as SportPageData, SportPageFiltersSchema } from '@was/shared';
 import { getRouteApi } from '@tanstack/react-router';
 
 import { useToday } from '@/app/use-boot.hook';
 import { sportPageQuery } from '@/data/endpoints/sports.query';
+import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { EventList } from '@/shared-ui/event-list.component';
@@ -33,10 +24,9 @@ import { SportCompetitions } from './sport-competitions.component';
 import { SportFilters } from './sport-filters.component';
 import { SportGovernance } from './sport-governance.component';
 import { sportPageInput } from './sports-query.helper';
-import { SPORTS_TEXT } from './sports.const';
+import { SPORTS_MESSAGES } from './sports.const';
 
 const route = getRouteApi('/sports/$slug');
-const t = SPORTS_TEXT.page;
 
 const loadingSkeleton = (
   <div className="page">
@@ -50,14 +40,18 @@ const loadingSkeleton = (
   </div>
 );
 
-const ExternalButton = ({ href, children }: { href: string; children: string }) => (
-  <a className="btn btn-secondary btn-sm" href={href} target="_blank" rel="noopener noreferrer">
-    {children}
-    <span className="sr-only"> {t.external}</span>
-  </a>
-);
+function ExternalButton({ href, children }: { href: string; children: string }) {
+  const t = useText(SPORTS_MESSAGES).page;
+  return (
+    <a className="btn btn-secondary btn-sm" href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+      <span className="sr-only"> {t.external}</span>
+    </a>
+  );
+}
 
 function SportContent({ sport }: { sport: SportPageData }) {
+  const t = useText(SPORTS_MESSAGES).page;
   const { filters, setFilter, reset, activeCount } = useUrlFilters(SportPageFiltersSchema);
   useHashScroll();
   const q = normalizeForSearch(filters.q);
@@ -83,6 +77,7 @@ function SportContent({ sport }: { sport: SportPageData }) {
   return (
     <PageLayout
       title={sport.name}
+      contentLocale={sport.contentLocale}
       heading={sport.name}
       eyebrow={
         <>
@@ -171,6 +166,7 @@ function SportContent({ sport }: { sport: SportPageData }) {
  * and "Associações de X" (#associacoes).
  */
 export function SportPage() {
+  const t = useText(SPORTS_MESSAGES).page;
   const { slug } = route.useParams();
   const sport = sportPageQuery.useQuery(sportPageInput(slug));
   return (

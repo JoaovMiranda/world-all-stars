@@ -3,26 +3,27 @@ import { useState } from 'react';
 
 import { isApiError } from '@/data/api-error.error';
 import { setOfficialTier } from '@/data/endpoints/tier-votes.query';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
-import { TIER_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Input } from '@/shared-ui/input.component';
 import { Notice } from '@/shared-ui/notice.component';
 import { Select } from '@/shared-ui/select.component';
 import { useForm } from '@/shared-ui/use-form.hook';
 
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
-
-const T = ATHLETE_PROFILE_TEXT.vote.admin;
-const OPTIONS = TIER_ORDER.map((v) => ({ value: v, label: TIER_LABEL[v] }));
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
 /** Admin: change the official tier with a mandatory reason (Mythic needs an approved dossier, doc 17). */
 export function AdminTierForm({ slug, official }: { slug: string; official: Tier }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).vote.admin;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const OPTIONS = TIER_ORDER.map((v) => ({ value: v, label: labels.tier[v] }));
   const form = useForm({ schema: SetOfficialTierRequestSchema, initialValues: { tier: official, reason: '' } });
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
   const mutation = setOfficialTier.useMutation({
     onSuccess: (r) => {
-      setResult({ ok: true, text: T.saved(TIER_LABEL[r.official]) });
+      setResult({ ok: true, text: T.saved(labels.tier[r.official]) });
       form.reset({ tier: r.official, reason: '' });
     },
     onError: (e) => setResult({ ok: false, text: isApiError(e) && e.body.message ? e.body.message : T.error }),

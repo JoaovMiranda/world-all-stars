@@ -2,6 +2,7 @@ import { type AthleteProfile, type AthleteStats, AthleteStatsSchema, isCompetiti
 import { useCallback, useMemo } from 'react';
 import { z } from 'zod';
 
+import { useText } from '@/i18n/use-text.hook';
 import { barsOption } from '@/shared-ui/chart-presets.helper';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
@@ -10,11 +11,10 @@ import { FactList } from '@/shared-ui/fact-list.component';
 import { capitalize, formatNumber } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
 
-import { GENERIC_STATS_MAX, ATHLETE_PROFILE_TEXT } from '../athletes.const';
+import { GENERIC_STATS_MAX, ATHLETE_PROFILE_MESSAGES } from '../athletes.const';
 import { kpi, metric, titleKpis, titleMetrics } from './sport-panel.helper';
 import type { SportPanelDef } from './sport-panel.type';
 
-const T = ATHLETE_PROFILE_TEXT.panels;
 const HIDDEN_KEYS = new Set(['schema', '_kpis', '_labels']);
 
 interface StatEntry {
@@ -45,6 +45,7 @@ const statEntries = (stats: AthleteStats | null): StatEntry[] => {
 };
 
 function GenericPanel({ profile }: { profile: AthleteProfile; stats: AthleteStats | null }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
   const entries = useMemo(() => statEntries(profile.stats).slice(0, GENERIC_STATS_MAX), [profile.stats]);
   const byComp = useMemo(() => {
     const counts = new Map<string, number>();
@@ -54,7 +55,7 @@ function GenericPanel({ profile }: { profile: AthleteProfile; stats: AthleteStat
   const option = useCallback(
     (theme: ChartTheme) =>
       barsOption(theme, byComp.map(([n]) => n), [{ name: T.titles, data: byComp.map(([, c]) => c), color: `--${profile.sport.colorToken}` }], { horizontal: true, barMaxWidth: 16 }),
-    [byComp, profile.sport.colorToken],
+    [byComp, profile.sport.colorToken, T],
   );
   return (
     <Section title={T.genericTitle(profile.sport.name)} eyebrow={T.genericLabel(profile.stats?.schema ?? profile.sport.statsSchema)}>

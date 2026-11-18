@@ -1,22 +1,40 @@
-// UI strings of the shared layout (pt-BR). Ready to move to i18n namespaces (packages/shared/i18n) later.
+import { defineMessages } from '@was/shared';
+
+import { LAYOUT_TEXT_EN } from './layout.const.en';
+import { LAYOUT_TEXT_ES } from './layout.const.es';
+
 export const MAIN_CONTENT_ID = 'conteudo';
 
+/** Main navigation (routes are data; labels come from LAYOUT_TEXT.links). */
 export const NAV_ITEMS = [
-  { to: '/hall-of-greats', label: 'Hall of Greats', featured: true },
-  { to: '/athletes', label: 'Atletas', featured: false },
-  { to: '/sports', label: 'Esportes', featured: false },
-  { to: '/sources', label: 'Fontes', featured: false },
-  { to: '/contact', label: 'Contato', featured: false },
+  { to: '/hall-of-greats', labelKey: 'hallOfGreats', featured: true },
+  { to: '/athletes', labelKey: 'athletes', featured: false },
+  { to: '/sports', labelKey: 'sports', featured: false },
+  { to: '/sources', labelKey: 'sources', featured: false },
+  { to: '/contact', labelKey: 'contact', featured: false },
 ] as const;
 
+export const FOOTER_PROJECT_LINKS = [
+  { to: '/about/criteria', labelKey: 'criteria' },
+  { to: '/sources', labelKey: 'sourcesAndLicenses' },
+  { to: '/accessibility', labelKey: 'accessibility' },
+] as const;
+
+export const FOOTER_LEGAL_LINKS = [
+  { to: '/legal/privacy', labelKey: 'privacy' },
+  { to: '/legal/terms', labelKey: 'terms' },
+  { to: '/legal/cookies', labelKey: 'cookies' },
+] as const;
+
+// UI strings of the shared layout (pt-BR source; en/es next to this file).
 export const LAYOUT_TEXT = {
   brand: 'World All Stars',
   /** Default <meta name="description"> (pages override it in their route head). */
   description: 'World All Stars: a enciclopédia dos maiores campeões de todos os esportes, com dados, fontes e história.',
   skipLink: 'Pular para o conteúdo',
   navLabel: 'Principal',
-  language: 'PT',
-  languageLabel: 'Idioma: português. Outros idiomas em breve',
+  languageLabel: (current: string) => `Idioma: ${current}. Trocar idioma`,
+  languageMenu: 'Idioma',
   signIn: 'Entrar',
   themeToDark: 'Mudar para o tema escuro',
   themeToLight: 'Mudar para o tema claro',
@@ -26,21 +44,22 @@ export const LAYOUT_TEXT = {
   footerNote: 'Os dados vêm das fontes listadas na página Fontes; cada campo tem sua origem.',
   footerExplore: 'Explorar',
   footerProject: 'Projeto',
-  footerHowWeChoose: 'Como escolhemos',
-  footerLicenses: 'Licenças',
   footerLegal: 'Legal',
   menuOpen: 'Abrir menu',
   menuClose: 'Fechar menu',
+  links: {
+    hallOfGreats: 'Hall of Greats',
+    athletes: 'Atletas',
+    sports: 'Esportes',
+    sources: 'Fontes',
+    contact: 'Contato',
+    criteria: 'Como escolhemos',
+    sourcesAndLicenses: 'Fontes e licenças',
+    accessibility: 'Acessibilidade',
+    privacy: 'Privacidade',
+    terms: 'Termos de uso',
+    cookies: 'Cookies',
+  },
 } as const;
 
-export const FOOTER_PROJECT_LINKS = [
-  { to: '/about/criteria', label: 'Como escolhemos' },
-  { to: '/sources', label: 'Fontes e licenças' },
-  { to: '/accessibility', label: 'Acessibilidade' },
-] as const;
-
-export const FOOTER_LEGAL_LINKS = [
-  { to: '/legal/privacy', label: 'Privacidade' },
-  { to: '/legal/terms', label: 'Termos de uso' },
-  { to: '/legal/cookies', label: 'Cookies' },
-] as const;
+export const LAYOUT_MESSAGES = defineMessages(LAYOUT_TEXT, { en: LAYOUT_TEXT_EN, es: LAYOUT_TEXT_ES });

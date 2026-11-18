@@ -1,21 +1,20 @@
 import type { AthleteProfile } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { DateLink } from '@/shared-ui/date-link.component';
 import { type FactItem, FactList, FactListSeparator } from '@/shared-ui/fact-list.component';
 import { ageAt, formatYears } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
-import { UI_TEXT } from '@/shared-ui/ui-text.const';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 
 import { formatPlace } from './athlete-profile.helper';
-import { ATHLETE_PROFILE_TEXT, INFOBOX_TEAMS_MAX } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES, INFOBOX_TEAMS_MAX } from './athletes.const';
 import { FieldSource } from './field-source.component';
 
-const T = ATHLETE_PROFILE_TEXT.infobox;
-const D = ATHLETE_PROFILE_TEXT.dash;
-
 function External({ href, children }: { href: string; children: string }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).infobox;
   return (
     <a href={href} target="_blank" rel="noopener noreferrer">
       {children}
@@ -26,6 +25,10 @@ function External({ href, children }: { href: string; children: string }) {
 
 /** Sticky "Ficha": identity, life events, teams, tier and external links, each field with its source ⓘ. */
 export function AthleteInfobox({ profile: p }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).infobox;
+  const D = useText(ATHLETE_PROFILE_MESSAGES).dash;
+  const profileText = useText(ATHLETE_PROFILE_MESSAGES);
+  const ui = useText(UI_MESSAGES);
   const deathAge = p.birth.date && p.death?.date ? ageAt(p.birth.date, p.death.date) : null;
   const personal: FactItem[] = [
     { key: 'name', term: T.fullName, detail: <>{p.fullName ?? D}<FieldSource profile={p} field="full_name" /></> },
@@ -49,7 +52,7 @@ export function AthleteInfobox({ profile: p }: { profile: AthleteProfile }) {
             detail: (
               <>
                 {p.death.date ? <DateLink date={p.death.date} /> : D}
-                {deathAge !== null && ` (${ATHLETE_PROFILE_TEXT.hero.years(deathAge)})`}
+                {deathAge !== null && ` (${profileText.hero.years(deathAge)})`}
                 <FieldSource profile={p} field="death_date" />
                 <span className="cell-sub">{formatPlace(p.death.city)}</span>
               </>
@@ -67,7 +70,7 @@ export function AthleteInfobox({ profile: p }: { profile: AthleteProfile }) {
           <FieldSource profile={p} field="height_cm" />
         </>
       ) : (
-        <span className="muted">{ATHLETE_PROFILE_TEXT.noData}</span>
+        <span className="muted">{profileText.noData}</span>
       ),
     },
     { key: 'pos', term: T.position, detail: p.position ?? D },
@@ -118,7 +121,7 @@ export function AthleteInfobox({ profile: p }: { profile: AthleteProfile }) {
             variant="split"
             items={teams.map((t, i) => ({
               key: `${t.name}-${i}`,
-              term: <span className="num">{formatYears(t.from, t.to, UI_TEXT.untilNow)}</span>,
+              term: <span className="num">{formatYears(t.from, t.to, ui.untilNow)}</span>,
               detail: `${t.country?.flag ?? ''} ${t.name}`.trim(),
             }))}
           />

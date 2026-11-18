@@ -18,7 +18,7 @@ apps/web/src/
     demo.store.ts               mutações da demo (memória + localStorage)
     fixture-mode.store.ts       ?fixture=sample|empty|loading|error (padrão sample; cookie was_fixture)
   fixtures/sample/*.json        GERADO por `pnpm fixtures:export` (não edite à mão)
-  session/                      sessão simulada (anon · reader · admin), useSession(), requireLogin()
+  session/                      useSession() (kind/user do sessionQuery), requireLogin(), signOut(), auth-client (Better Auth, Google), ConsentDialog; perfis simulados no dev
   shared-ui/                    kit de componentes, hooks e helpers de UI genéricos
   modules/<módulo>/             páginas e componentes específicos (+ <módulo>.const.ts com os textos)
 ```
@@ -73,10 +73,21 @@ Toda página é renderizada pelo `apps/server` (Hono) com TanStack Router SSR (s
 - **Loader só faz prefetch** e devolve o `PageMeta` do `<head>`: `prefetchQueries(context.queryClient, [xQuery.queryOptions(input)])`; a entidade principal usa `ensureOr404` (404 → `notFound()`, HTTP 404). Nunca espera `?fixture=loading`; fixtures sem latência no servidor.
 - **A query key do loader e da página vem do mesmo helper** (`home-query.helper.ts`, `athletes-query.helper.ts`, `sports-query.helper.ts`): se divergir, a hidratação mostra skeleton/erro. Página nova pública = loader + helper de input + `head`.
 - **Nada de `window`/`document`/`localStorage`/`new Date()` na renderização.** "Hoje" é `useToday()` (`app/use-boot.hook.ts`, `APP_TIME_ZONE` do servidor); instantes com hora usam `instantFormat()` (`format.helper.ts`). Efeitos (`useEffect`) podem usar o navegador.
-- Estado que o servidor precisa saber fica em cookie: `was_fixture`, `was_session`, `was-theme` (o `<html data-theme>` já sai certo, sem script inline). Lido no `boot` (`request-scope.ts`): `AsyncLocalStorage` no servidor, módulo no cliente.
+- Estado que o servidor precisa saber fica em cookie: `was_fixture`, `was_session`, `was-theme`, `was_locale` (o `<html data-theme>` já sai certo, sem script inline). Lido no `boot` (`request-scope.ts`): `AsyncLocalStorage` no servidor, módulo no cliente.
 - Componente só de navegador: `<ClientOnly fallback={caixa do mesmo tamanho}>` (globo). `ChartContainer` já só desenha em efeito.
 - CSP com nonce por requisição: script inline só com `nonce` (o router e o React já põem).
-- Teste: `src/app/entry-server.test.ts` (200 + `<h1>` + estado desidratado + nonce; 404).
+- **Head:** o loader devolve `PageMeta` (`title`, `description`, `image` → og:image, `noindex`, `jsonLd`). JSON-LD só pelos helpers de `@was/shared` (`webSiteJsonLd`, `organizationJsonLd`, `athleteJsonLd`, `sportJsonLd`, `breadcrumbJsonLd`, `itemListJsonLd`); sai em `<script type="application/ld+json" nonce>`. 404 e erro ganham título próprio + `noindex` na rota raiz.
+- **Página nova:** `lazyPage('<módulo>/<arquivo>', 'ExportName')` (registra o módulo em `staticData.pageModule`: o servidor faz `modulepreload` do chunk da rota).
+- Teste: `src/app/entry-server.test.ts` (200 + `<h1>` + estado desidratado + nonce; 404 com título; JSON-LD válido; preload do chunk).
+
+## Idiomas (pt-BR, en, es na mesma URL, doc 12)
+A tradução troca **no lugar**: o seletor (`LanguageSwitcher`, cabeçalho) grava o cookie `was_locale` (1 ano), muda `<html lang>`, re-renderiza e chama `router.invalidate()` (títulos do `head()` e dados da API no idioma). A URL não muda. O SSR resolve cookie → Accept-Language → pt-BR no `boot.locale`.
+- **Convenção:** `x.const.ts` mantém o objeto pt-BR (`X_TEXT`, fonte) e exporta `X_MESSAGES = defineMessages(X_TEXT, { en: X_TEXT_EN, es: X_TEXT_ES })`; ao lado ficam `x.const.en.ts` e `x.const.es.ts` com `satisfies Messages<typeof X_TEXT>` (mesmas chaves, mesmas assinaturas). Rotas e dados ficam **fora** do dicionário (`NAV_ITEMS = [{ to, labelKey }]`).
+- **Componente:** `const t = useText(HOME_MESSAGES).intro` (`@/i18n/use-text.hook`). Fora de componente (helper chamado no render, loader/head): `currentText(X_MESSAGES)`. Documentos longos (legal, "Como escolhemos"): mapa por idioma lido com `useLocalized(LEGAL_DOCS)` / `currentLocalized`.
+- **Formatação:** `useFormat()` (data, dia e mês, mês, número, %, intervalo, "há 3 dias", plural, collator `fmt.compare`, país, idioma) com o `APP_TIME_ZONE`; `formatDate`/`instantFormat`/`formatRelativeDay` leem o idioma atual. Nada de `'pt-BR'` fixo nem `localeCompare` sem collator.
+- `useMemo`/`useCallback` que usam textos devem ter o `t` nas dependências (a resposta pode ser a mesma referência em outro idioma).
+- **Dados:** a query key termina com o locale; trocar de idioma mantém a resposta anterior até a nova chegar (sem skeleton). O http-client manda `x-was-locale`. Respostas de detalhe trazem `contentLocale`; `PageLayout contentLocale={…}` mostra a `UntranslatedNote` quando difere do idioma da interface. Fixtures dizem `contentLocale: 'pt-BR'`.
+- **Teste:** `src/i18n/messages-coverage.test.ts` (todo `*_MESSAGES`: mesmas chaves, aridade, sem string vazia, en/es traduzidos; documentos com a mesma estrutura).
 
 ## Catálogo (`src/shared-ui`)
 | Componente | Uso |
@@ -105,7 +116,7 @@ Toda página é renderizada pelo `apps/server` (Hono) com TanStack Router SSR (s
 | `EventRow`, `EventList` | campeonatos/dias do esporte (home, dia do calendário, "Próximos campeonatos") |
 | `Timeline` | linha do tempo com losangos (`tone="gold"` para conquista) |
 | `Notice` | aviso inline (`tone`, `live`) |
-| `Dialog`, `LoginDialog` | modal nativo (foco preso, Esc, foco volta); login é placeholder E1 |
+| `Dialog`, `LoginDialog`, `GoogleButton` | modal nativo (foco preso, Esc, foco volta; `dismissible={false}` = bloqueante); login com Google (estado "não configurado" sem credenciais; "Simular entrada" só com simulação) |
 | `DateLink` | toda data vira link para `/on-this-day/$md` |
 | `SourceInfo` | ⓘ da fonte de um campo |
 | `ChartContainer` | `<ChartContainer ariaLabel option={useCallback(({ cssVar, axis }) => ({…}), deps)} summary/>` ECharts lazy, cores dos tokens, re-render no tema |
@@ -127,13 +138,14 @@ Helpers: `format.helper.ts` (formatDate, formatDayMonth, formatDateRange, format
 Shared (BE+FE): `matchesAthleteFilters`, `isCompetitionWin`/`competitionWins`/`winYearSpan`/`careerOverlapYears` + `WINNING_ACHIEVEMENT_TYPES`, `Football|Swimming|Boxing|CsStatsSchema` (stats por esporte), `normalizeForSearch`, `validateComment`, `validateSuggestion`, `validateContact`, `checkSourceUrl`, `eventsOnDay/eventsBetween/eventKey`, `addDaysIso`, `addDaysMonthDay`/`monthDayToIso`/`nextMonthDayOccurrence`, `featuredAssociations`/`filterSportsTree`/`countSports`/`filterOrgTree`/`countOrgTree`/`matchesSportSearch`/`matchesCompetitionFilters`, `createCommentInputSchema`, `createSuggestionInputSchema`, `createContactInputSchema`.
 
 ## Sessão e participação
+Login real = Google via Better Auth (cookie `was.session_token`, mesmo domínio). `useSession()` lê `kind`/`user` do `sessionQuery` (já vem no SSR). `pendingConsent` abre o `ConsentDialog` bloqueante (Termos + Privacidade com versões, 18+; "Não aceito, sair"). `signOut()` encerra o Better Auth, zera o perfil simulado e recarrega as queries. O seletor de perfis simulados (e o header `x-was-session`) só existe em fixtures ou com `AUTH_SIMULATED` no servidor (`session.simulated`).
 `const { isSignedIn, isAdmin, user, requireLogin } = useSession();` → antes de votar/comentar/responder/curtir: `if (!requireLogin('vote')) return;` (abre o popup). `tierVotesQuery` exige conta (use `enabled: isSignedIn`; visitante vê só o tier oficial e os 4 botões). As mutações na demo vão para `demoStore` (memória + localStorage; o SSR não as vê, e o cliente invalida as queries depois da hidratação se houver algo salvo); "Limpar … da demo" no menu de sessão zera.
 
 ## Regras
 - **Nunca** redefina algo do catálogo. Precisa de variação genérica? Estenda o componente em `shared-ui` (com props), não copie.
 - Genérico (usado por 2+ módulos) → `shared-ui`. Específico → `modules/<módulo>`. Enums/consts/schemas/regras de negócio → **só** `packages/shared`.
 - Um arquivo, uma responsabilidade, com sufixo (`.page.tsx`, `.component.tsx`, `.hook.ts`, `.helper.ts`, `.const.ts`, `.schema.ts`, `.query.ts`, `.fixture.ts`…). Imports diretos (sem barrel no app).
-- Textos de UI só em `<módulo>.const.ts` (ou `ui-text.const.ts`/`domain-labels.const.ts`), prontos para i18n. Nada de string visível solta no JSX.
+- Textos de UI só em `<módulo>.const.ts` (ou `ui-text.const.ts`/`domain-labels.const.ts`) com `.en.ts`/`.es.ts` ao lado, lidos por `useText`. Nada de string visível solta no JSX.
 - Cores só por tokens (`var(--…)`, `tokenColor('c-teal')`). **Nenhum hex** em componentes/CSS de módulo; tokens novos vão para `packages/shared/src/theme/theme.css` (claro e escuro).
 - Filtros e abas na URL (`useUrlFilters`), nunca em estado solto.
 - A11y (WCAG 2.2 AA, doc 14): um `h1` por página (PageLayout); ícones decorativos `aria-hidden`; botões sem texto com `aria-label`; foco visível; erros de formulário via `FormField` (aria-describedby) e foco no primeiro inválido; 375 px sem rolagem horizontal; respeite `prefers-reduced-motion`.

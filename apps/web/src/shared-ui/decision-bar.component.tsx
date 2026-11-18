@@ -2,10 +2,12 @@ import './review-kit.css';
 
 import { type ReactNode, useState } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { Button } from './button.component';
 import type { ButtonVariant } from './button.helper';
 import { ConfirmDialog, type ReasonConfig } from './confirm-dialog.component';
-import { REVIEW_KIT_TEXT } from './review-kit.const';
+import { REVIEW_KIT_MESSAGES } from './review-kit.const';
 
 export interface DecisionAction {
   key: string;
@@ -31,6 +33,7 @@ interface DecisionBarProps {
 
 /** Row of decision buttons (approve · reject · …); each one confirms in a ConfirmDialog, with reason when needed. */
 export function DecisionBar({ label, actions, kicker }: DecisionBarProps) {
+  const kit = useText(REVIEW_KIT_MESSAGES);
   const [openKey, setOpenKey] = useState<string | null>(null);
   const open = actions.find((a) => a.key === openKey);
   return (
@@ -45,7 +48,7 @@ export function DecisionBar({ label, actions, kicker }: DecisionBarProps) {
         onClose={() => setOpenKey(null)}
         title={open?.confirmTitle ?? open?.label}
         {...(kicker ? { kicker } : {})}
-        confirmLabel={open?.label ?? REVIEW_KIT_TEXT.confirm}
+        confirmLabel={open?.label ?? kit.confirm}
         confirmVariant={open?.variant === 'danger' ? 'danger' : 'primary'}
         {...(open?.reason ? { reason: open.reason } : {})}
         onConfirm={(reason) => open?.onConfirm(reason)}

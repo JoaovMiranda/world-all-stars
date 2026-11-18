@@ -9,11 +9,15 @@ export interface SessionContextValue {
   user: SessionUser | null;
   isSignedIn: boolean;
   isAdmin: boolean;
-  /** Switches the simulated profile (header menu). */
+  /** The dev profile switcher is available (fixtures, or AUTH_SIMULATED on the server). */
+  simulationAvailable: boolean;
+  /** Switches the simulated profile (header menu, dev only). */
   setKind: (kind: SessionKind) => void;
+  /** Ends the session (Google/Better Auth and the simulated profile) and refetches everything personal. */
+  signOut: () => Promise<void>;
   /**
    * Gate for actions that need an account (vote, comment, reply, react): returns true when signed in, otherwise
-   * opens the login popup (E1 placeholder) and returns false. `if (!requireLogin('vote')) return;`
+   * opens the login popup (Google) and returns false. `if (!requireLogin('vote')) return;`
    */
   requireLogin: (reason?: LoginReason) => boolean;
   /** Clears votes, comments and admin changes made in the demo. */
@@ -22,7 +26,7 @@ export interface SessionContextValue {
 
 export const SessionContext = createContext<SessionContextValue | null>(null);
 
-/** Simulated session (docs 17/20). Must be under <SessionProvider>. */
+/** Current session (Google via Better Auth, or the dev simulated profile). Must be under <SessionProvider>. */
 export function useSession(): SessionContextValue {
   const value = useContext(SessionContext);
   if (!value) throw new Error('useSession must be used inside <SessionProvider>');

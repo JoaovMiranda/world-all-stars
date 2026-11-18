@@ -1,24 +1,40 @@
-/** Cookie of the simulated session kind (doc 17: anon · reader · admin), also read by the API. `?as=` overrides it. */
-export const SESSION_COOKIE = 'was_session';
+import { APP_COOKIE, AUTH_BASE_PATH as SHARED_AUTH_BASE_PATH, defineMessages } from '@was/shared';
+
+import { SESSION_TEXT_EN } from './session.const.en';
+import { SESSION_TEXT_ES } from './session.const.es';
+
+/** Cookie of the simulated session kind (dev switcher: anon · reader · admin), also read by the API. `?as=` overrides it. */
+export const SESSION_COOKIE = APP_COOKIE.session;
 /** Legacy localStorage key (before SSR): migrated to the cookie once, then removed. */
 export const SESSION_STORAGE_KEY = 'was-session';
 export const SESSION_URL_PARAM = 'as';
+/** Better Auth on the same origin (Google sign-in, callback, sign-out). */
+export const AUTH_BASE_PATH = SHARED_AUTH_BASE_PATH;
 
-// UI strings of the session menu and login placeholder (pt-BR, ready for i18n).
+// UI strings of the session menu, login and consent dialogs (pt-BR source; en/es next to it).
 export const SESSION_TEXT = {
   menuLabel: 'Sessão simulada',
   profiles: { anon: 'Visitante (sem conta)', reader: 'Leitor com conta', admin: 'Admin' },
   signIn: 'Entrar',
+  signOut: 'Sair',
+  accountMenu: (name: string) => `Conta de ${name}`,
+  signedInAs: (email: string) => `Conectado como ${email}`,
   resetDemo: 'Limpar votos, comentários e mudanças da demo',
-  hint: 'Protótipo: não há login real. Escolha um perfil para testar.',
+  hint: 'Desenvolvimento: troque de perfil de demonstração sem login real.',
   myProfile: 'Meu perfil',
   notifications: 'Notificações',
   myData: 'Meus dados',
   admin: 'Painel admin',
   loginKicker: 'Conta',
   loginTitle: (reason: string) => `Entre para ${reason}`,
-  loginText: 'A tela de login ainda será desenhada (handoff E1). Por enquanto, simule a entrada como leitor.',
+  loginText: 'Use sua conta Google. Recebemos só seu nome, e-mail e foto do perfil.',
+  loginGoogle: 'Entrar com Google',
+  loginGoogleUnavailable: 'Login com Google não configurado',
+  loginGoogleUnavailableHint: 'Defina GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env do servidor (veja .env.example) e reinicie.',
+  loginGoogleError: 'Não foi possível abrir o login com Google. Tente de novo.',
+  loginLegal: { before: 'No primeiro acesso, você aceita os', terms: 'Termos de uso', and: 'e o', privacy: 'Aviso de privacidade', after: '.' },
   loginCancel: 'Agora não',
+  loginSimulateHint: 'Desenvolvimento: entre com a conta de demonstração.',
   loginConfirm: 'Simular entrada como leitor',
   reasons: {
     vote: 'votar no nível do atleta',
@@ -28,5 +44,20 @@ export const SESSION_TEXT = {
     account: 'ver sua conta',
     default: 'continuar',
   },
+  consent: {
+    kicker: 'Conta',
+    title: 'Antes de continuar',
+    text: (email: string) => `Você entrou com ${email}. Para votar e comentar, confirme os dois itens abaixo.`,
+    documentsBefore: 'Li e aceito os',
+    terms: (version: string) => `Termos de uso (v${version})`,
+    and: 'e o',
+    privacy: (version: string) => `Aviso de privacidade (v${version})`,
+    adult: (age: number) => `Declaro ter ${age} anos ou mais.`,
+    decline: 'Não aceito, sair',
+    accept: 'Continuar',
+    error: 'Não foi possível registrar o aceite. Tente de novo.',
+  },
 } as const;
 export type LoginReason = keyof typeof SESSION_TEXT.reasons;
+
+export const SESSION_MESSAGES = defineMessages(SESSION_TEXT, { en: SESSION_TEXT_EN, es: SESSION_TEXT_ES });

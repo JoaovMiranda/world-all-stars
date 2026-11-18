@@ -3,6 +3,8 @@ import './sports.page.css';
 import { countSports, filterSportsTree, GOVERNANCE_MODEL_VALUES, SportsFiltersSchema } from '@was/shared';
 
 import { governanceModelsQuery, organizationsQuery, sportsQuery } from '@/data/endpoints/sports.query';
+import { currentText } from '@/i18n/text-for.helper';
+import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
@@ -17,13 +19,15 @@ import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 import { GovernanceModels } from './governance-models.component';
 import { OrgHierarchy } from './org-hierarchy.component';
 import { SportDirectory } from './sport-directory.component';
-import { GOVERNANCE_LABEL, SPORTS_TEXT } from './sports.const';
+import { SPORTS_MESSAGES } from './sports.const';
 
-const t = SPORTS_TEXT.list;
-const GOVERNANCE_OPTIONS = GOVERNANCE_MODEL_VALUES.map((value) => ({
-  value,
-  label: GOVERNANCE_LABEL[value],
-}));
+const GOVERNANCE_OPTIONS = () => {
+  const sportsText = currentText(SPORTS_MESSAGES);
+  return GOVERNANCE_MODEL_VALUES.map((value) => ({
+    value,
+    label: sportsText.governance[value],
+  }));
+};
 
 const sportGridSkeleton = (
   <div className="sport-grid">
@@ -35,6 +39,8 @@ const sportGridSkeleton = (
 
 /** P6 Sports + associations (doc 09/19): search + governance filter · groups › subgroups › cards · models · hierarchy. */
 export function SportsPage() {
+  const t = useText(SPORTS_MESSAGES).list;
+  const sportsText = useText(SPORTS_MESSAGES);
   const { filters, setFilter, setFilters } = useUrlFilters(SportsFiltersSchema);
   const sports = sportsQuery.useQuery();
   const models = governanceModelsQuery.useQuery();
@@ -78,7 +84,7 @@ export function SportsPage() {
                   </span>
                   <ChipToggleGroup
                     label={t.governanceLabel}
-                    options={GOVERNANCE_OPTIONS}
+                    options={GOVERNANCE_OPTIONS()}
                     value={filters.governance}
                     onChange={(v) => setFilter('governance', v)}
                   />
@@ -90,7 +96,7 @@ export function SportsPage() {
         }}
       </QueryBoundary>
 
-      <Section variant="plain" title={SPORTS_TEXT.models.title} eyebrow={SPORTS_TEXT.models.eyebrow} className="mt-8">
+      <Section variant="plain" title={sportsText.models.title} eyebrow={sportsText.models.eyebrow} className="mt-8">
         <QueryBoundary query={models} loading={<SkeletonList rows={2} className="h-24 w-full" />}>
           {(m) => <GovernanceModels models={m} />}
         </QueryBoundary>

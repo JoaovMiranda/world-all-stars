@@ -1,9 +1,12 @@
 import { PublicApi, eventsBetween } from '@was/shared';
 
 import { defineQuery } from '../define-endpoint.helper';
+import { FIXTURE_CONTENT_LOCALE } from '../data-layer.const';
 
 /** GET /api/hall-of-greats (P11): Mythics + Legendary candidates. */
-export const hallOfGreatsQuery = defineQuery(PublicApi.hallOfGreats, { sample: ({ sample }) => sample('hall-of-greats.json') });
+export const hallOfGreatsQuery = defineQuery(PublicApi.hallOfGreats, {
+  sample: async ({ sample }) => ({ ...(await sample('hall-of-greats.json')), contentLocale: FIXTURE_CONTENT_LOCALE }),
+});
 
 /** GET /api/sources (P14). */
 export const sourcesQuery = defineQuery(PublicApi.sources, { sample: ({ sample }) => sample('sources.json') });
@@ -21,7 +24,10 @@ export const calendarQuery = defineQuery(PublicApi.calendar, {
 
 /** GET /api/today/:md (P13). */
 export const onThisDayQuery = defineQuery(PublicApi.onThisDay, {
-  sample: async ({ input, sample }) => (await sample('on-this-day.json'))[input.params.md] ?? { md: input.params.md, items: [], observance: null },
+  sample: async ({ input, sample }) => ({
+    ...((await sample('on-this-day.json'))[input.params.md] ?? { md: input.params.md, items: [], observance: null }),
+    contentLocale: FIXTURE_CONTENT_LOCALE,
+  }),
   empty: ({ input }) => ({ md: input.params.md, items: [], observance: null }),
 });
 

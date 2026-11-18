@@ -1,9 +1,13 @@
-import { ACCESS_LOG_RETENTION_MONTHS, ACCOUNT_MIN_AGE, CONTACT_RETENTION_MONTHS } from '@was/shared';
+import { ACCESS_LOG_RETENTION_MONTHS, ACCOUNT_MIN_AGE, CONTACT_RETENTION_MONTHS, defineMessages, type Locale } from '@was/shared';
 
 import type { DocumentContent } from '@/shared-ui/document-page-layout.component';
 
-// UI strings and contents of the legal module (pt-BR, ready to become an i18n namespace). Source: plan/docs/13 and 14.
+import { LEGAL_DOCS_EN, LEGAL_TEXT_EN } from './legal.const.en';
+import { LEGAL_DOCS_ES, LEGAL_TEXT_ES } from './legal.const.es';
+
+// UI strings and contents of the legal module (pt-BR source; en/es next to it). Source: plan/docs/13 and 14.
 // Technical draft, NOT legal advice: the final texts need a lawyer's review and the company (CNPJ) definition.
+// The en/es documents are convenience translations: the Portuguese version prevails (said in their draft notice).
 
 /** Placeholders that stay visible until the company is defined (doc 13, "Riscos / pendências"). */
 export const LEGAL_PENDING = {
@@ -25,6 +29,8 @@ export const LEGAL_TEXT = {
     contact: 'Relatar uma barreira',
   },
 } as const;
+
+export const LEGAL_MESSAGES = defineMessages(LEGAL_TEXT, { en: LEGAL_TEXT_EN, es: LEGAL_TEXT_ES });
 
 export const PRIVACY_DOC: DocumentContent = {
   title: 'Aviso de privacidade',
@@ -62,7 +68,7 @@ export const PRIVACY_DOC: DocumentContent = {
             ['Visitante', 'IP, data e hora, endereço acessado, navegador (registros de acesso)', 'Segurança e obrigação do Marco Civil', 'Obrigação legal (II)', `${ACCESS_LOG_RETENTION_MONTHS} meses, depois apagados`],
             ['Visitante', 'Cookies essenciais (tema, idioma, sessão, consentimento)', 'Funcionamento do site', 'Legítimo interesse (IX)', 'Da sessão a 12 meses'],
             ['Visitante', 'Cookies de medição e de anúncios (se ativados)', 'Estatística e monetização', 'Consentimento (I)', 'Conforme o fornecedor; revogável'],
-            ['Leitor com conta', 'E-mail, nome, avatar, hash da senha, sessões, idioma, tema', 'Criar e manter a conta, notificações', 'Execução de contrato (V)', 'Até a exclusão da conta, depois anonimização'],
+            ['Leitor com conta', 'Nome, e-mail e foto do perfil recebidos do Google; identificador da conta Google; sessões (hash do IP e navegador); idioma; aceites dos Termos e da Privacidade e declaração de 18+', 'Criar e manter a conta, notificações', 'Execução de contrato (V)', 'Até a exclusão da conta, depois anonimização'],
             ['Leitor com conta', 'Votos de tier, comentários e reações', 'Comunidade e moderação', 'Execução de contrato (V) e legítimo interesse (IX)', 'Permanente, sob pseudônimo após a exclusão'],
             ['Atletas', 'Nome, nascimento, nacionalidade, carreira, foto com licença livre', 'Enciclopédia sobre figuras públicas', 'Legítimo interesse (IX); dados tornados públicos (art. 7º, §4º)', 'Enquanto relevante; correção e oposição a pedido'],
             ['Quem usa o Contato', 'Atleta sugerido, links, justificativa, nome e e-mail', 'Avaliar a sugestão e responder a mensagem', 'Legítimo interesse (IX)', `${CONTACT_RETENTION_MONTHS} meses após a decisão ou o encerramento`],
@@ -91,6 +97,7 @@ export const PRIVACY_DOC: DocumentContent = {
         {
           kind: 'list',
           items: [
+            'Google (login): autentica sua conta e nos envia só nome, e-mail e foto do perfil (escopos openid, email, profile). Não recebemos sua senha.',
             'Cloudflare: rede de entrega e proteção contra ataques.',
             'Fly.io: servidor da aplicação.',
             'Neon: banco de dados.',
@@ -142,7 +149,7 @@ export const PRIVACY_DOC: DocumentContent = {
       blocks: [
         {
           kind: 'p',
-          text: 'Criptografia em trânsito (HTTPS), senhas guardadas só como hash, acesso restrito por papel, registros de auditoria e backups cifrados.',
+          text: 'Criptografia em trânsito (HTTPS), login só pelo Google (não guardamos senhas), IP das sessões guardado só como hash, acesso restrito por papel, registros de auditoria e backups cifrados.',
         },
       ],
     },
@@ -199,7 +206,7 @@ export const TERMS_DOC: DocumentContent = {
           kind: 'list',
           items: [
             `Só para maiores de ${ACCOUNT_MIN_AGE} anos (declaração no cadastro).`,
-            'Uma conta por pessoa; você cuida da segurança da sua senha.',
+            'Uma conta por pessoa, criada com o login do Google; você cuida da segurança da sua conta Google.',
             'Contas que abusam das regras podem ser suspensas.',
             'Com conta, você vota no tier dos atletas e comenta. Ninguém edita os dados do site.',
           ],
@@ -335,8 +342,10 @@ export const COOKIES_DOC: DocumentContent = {
           caption: 'Cookies em uso: nome, fornecedor, finalidade e duração',
           headers: ['Nome', 'Fornecedor', 'Finalidade', 'Duração'],
           rows: [
-            ['was-theme', 'World All Stars', 'Lembrar o tema escolhido', 'Até você limpar o navegador'],
-            ['sessão', 'World All Stars', 'Manter você conectado', 'Até sair ou 30 dias'],
+            ['was-theme', 'World All Stars', 'Lembrar o tema claro ou escuro escolhido (preferência estritamente necessária)', '12 meses'],
+            ['was_locale', 'World All Stars', 'Lembrar o idioma escolhido: português, inglês ou espanhol (preferência estritamente necessária)', '12 meses'],
+            ['was.session_token', 'World All Stars', 'Manter você conectado depois do login com Google (estritamente necessário; HttpOnly)', 'Até sair ou 30 dias'],
+            ['was.state', 'World All Stars', 'Proteger a volta do login com Google contra falsificação (estritamente necessário)', 'Alguns minutos, durante o login'],
             ['consentimento', 'World All Stars', 'Guardar suas escolhas de cookies', '12 meses'],
             ['WMF-Uniq', 'Wikimedia (terceiro)', 'Definido ao carregar fotos hotlinkadas', 'Conforme a Wikimedia; some com o proxy de imagens'],
           ],
@@ -428,7 +437,7 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
           items: [
             'Barras douradas dos gráficos têm contraste baixo no tema claro: os mesmos dados estão em tabela ao lado.',
             'Fotos vêm de links externos (Wikimedia) e podem demorar a carregar; o nome do atleta está sempre em texto.',
-            'O site está só em português por enquanto; inglês e espanhol estão planejados.',
+            'A interface está em português, inglês e espanhol; parte do conteúdo dos atletas ainda existe só em português (o site avisa quando isso acontece).',
           ],
         },
       ],
@@ -457,6 +466,20 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
       ],
     },
   ],
+};
+
+export interface LegalDocs {
+  privacy: DocumentContent;
+  terms: DocumentContent;
+  cookies: DocumentContent;
+  accessibility: DocumentContent;
+}
+
+/** Legal documents of each language (read with useLocalized / currentLocalized). */
+export const LEGAL_DOCS: Record<Locale, LegalDocs> = {
+  'pt-BR': { privacy: PRIVACY_DOC, terms: TERMS_DOC, cookies: COOKIES_DOC, accessibility: ACCESSIBILITY_DOC },
+  en: LEGAL_DOCS_EN,
+  es: LEGAL_DOCS_ES,
 };
 
 /** Date of the last accessibility audit (doc 14). */

@@ -1,16 +1,16 @@
 import type { SportCard as SportCardData } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
 import { SportCard } from '@/shared-ui/sport-card.component';
 
-import { HOME_TEXT } from './home.const';
-
-const t = HOME_TEXT.sports;
+import { HOME_MESSAGES } from './home.const';
 
 export function SportsSection({ sports }: { sports: SportCardData[] | undefined }) {
+  const t = useText(HOME_MESSAGES).sports;
   return (
     <section className="c-12" aria-labelledby="sports-title">
       <div className="card-head sports-head">

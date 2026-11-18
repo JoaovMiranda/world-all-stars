@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { ButtonLink } from './button-link.component';
 import type { BreadcrumbItem } from './breadcrumb.component';
 import { EmptyState } from './empty-state.component';
 import { PageLayout } from './page-layout.component';
 import { RequireSession } from './require-session.component';
-import { UI_TEXT } from './ui-text.const';
+import { UI_MESSAGES } from './ui-text.const';
 
 interface StubPageProps {
   title: string;
@@ -20,10 +22,11 @@ interface StubPageProps {
 
 /** Route placeholder for phase 2: real layout + "Em construção". Replace the page body, keep the route. */
 export function StubPage({ title, eyebrow, lead, breadcrumb = [{ label: title }], children, gate }: StubPageProps) {
+  const ui = useText(UI_MESSAGES);
   const body = (
     <>
-      <EmptyState title={UI_TEXT.underConstructionTitle} mark="◇" action={<ButtonLink to="/">{UI_TEXT.backHome}</ButtonLink>}>
-        <p>{UI_TEXT.underConstructionText}</p>
+      <EmptyState title={ui.underConstructionTitle} mark="◇" action={<ButtonLink to="/">{ui.backHome}</ButtonLink>}>
+        <p>{ui.underConstructionText}</p>
       </EmptyState>
       {children}
     </>

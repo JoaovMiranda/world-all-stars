@@ -1,13 +1,12 @@
 import { type FieldErrors, SUGGESTION_URLS_MAX } from '@was/shared';
 import { useId } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Input } from '@/shared-ui/input.component';
 
-import { CONTACT_TEXT } from './contact.const';
-
-const t = CONTACT_TEXT.suggestion;
+import { CONTACT_MESSAGES } from './contact.const';
 
 interface SourceLinksFieldProps {
   urls: readonly string[];
@@ -18,6 +17,7 @@ interface SourceLinksFieldProps {
 
 /** 1 to SUGGESTION_URLS_MAX source links (doc 21). A group error is shown on the first link, so focus lands there. */
 export function SourceLinksField({ urls, onChange, errors }: SourceLinksFieldProps) {
+  const t = useText(CONTACT_MESSAGES).suggestion;
   const legendId = useId();
   const set = (index: number, value: string) => onChange(urls.map((u, i) => (i === index ? value : u)));
   const remove = (index: number) => onChange(urls.filter((_, i) => i !== index));

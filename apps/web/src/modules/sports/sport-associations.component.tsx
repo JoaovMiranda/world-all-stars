@@ -1,15 +1,15 @@
 import type { SportPage } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { OrgRow } from '@/shared-ui/org-row.component';
 import { Section } from '@/shared-ui/section.component';
 
-import { SPORTS_HASH, SPORTS_TEXT } from './sports.const';
-
-const t = SPORTS_TEXT.page;
+import { SPORTS_HASH, SPORTS_MESSAGES } from './sports.const';
 
 /** "Associações de X" (#associacoes): every association as OrgRow (logo, Wikipedia, roles, nature, ⓘ). */
 export function SportAssociations({ sport }: { sport: SportPage }) {
+  const t = useText(SPORTS_MESSAGES).page;
   return (
     <Section id={SPORTS_HASH.associations} title={t.associationsOf(sport.name)} eyebrow={t.associationsEyebrow(sport.associations.length)}>
       {sport.associations.length > 0 ? (

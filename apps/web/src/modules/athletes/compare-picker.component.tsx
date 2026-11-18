@@ -1,13 +1,12 @@
 import { ANALYSIS_MAX_ATHLETES, type AthleteSummary } from '@was/shared';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Chip } from '@/shared-ui/chip.component';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Select } from '@/shared-ui/select.component';
 
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 import { SeriesSwatch } from './compare-matrix.component';
-
-const T = ATHLETE_PROFILE_TEXT.analysis;
 
 interface ComparePickerProps {
   main: AthleteSummary;
@@ -20,6 +19,7 @@ interface ComparePickerProps {
 
 /** "Adicionar à comparação" select (same sport first), colored chips with remove, and the explicit "Ninguém" option. */
 export function ComparePicker({ main, selected, candidates, onChange }: ComparePickerProps) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
   const slugs = selected.map((s) => s.slug);
   const full = slugs.length >= ANALYSIS_MAX_ATHLETES;
   const free = candidates.filter((a) => a.slug !== main.slug && !slugs.includes(a.slug));

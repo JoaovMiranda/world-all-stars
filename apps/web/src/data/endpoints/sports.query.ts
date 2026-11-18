@@ -2,6 +2,7 @@ import { PublicApi } from '@was/shared';
 
 import { ApiError } from '../api-error.error';
 import { defineQuery } from '../define-endpoint.helper';
+import { FIXTURE_CONTENT_LOCALE } from '../data-layer.const';
 
 /** GET /api/sports (P6): group › subgroup › sports with associations. */
 export const sportsQuery = defineQuery(PublicApi.sports, { sample: ({ sample }) => sample('sports.json') });
@@ -11,7 +12,7 @@ export const sportPageQuery = defineQuery(PublicApi.sportPage, {
   sample: async ({ input, sample }) => {
     const page = (await sample('sport-pages.json'))[input.params.slug];
     if (!page) throw new ApiError(404, { error: 'not_found' });
-    return page;
+    return { ...page, contentLocale: FIXTURE_CONTENT_LOCALE };
   },
   empty: 'not-found',
 });

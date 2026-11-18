@@ -1,11 +1,12 @@
 import type { GlobeCountry } from '@was/shared';
 
+import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { Chip } from '@/shared-ui/chip.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
 
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 
 export interface SelectedCountry {
   id: string;
@@ -18,9 +19,8 @@ interface GlobePanelProps {
   onSelectCountry: (country: GlobeCountry) => void;
 }
 
-const t = HOME_TEXT.globe;
-
 function TitlesLegend() {
+  const t = useText(HOME_MESSAGES).globe;
   return (
     <div className="globe-legend" aria-hidden="true">
       <span>{t.legendNone}</span>
@@ -31,6 +31,7 @@ function TitlesLegend() {
 }
 
 function SelectedCountryCard({ selected, data }: { selected: SelectedCountry; data: GlobeCountry | undefined }) {
+  const t = useText(HOME_MESSAGES).globe;
   const entries = [...(data?.sports ?? [])].sort((a, b) => b.titles - a.titles);
   const max = entries[0]?.titles ?? 1;
   return (
@@ -70,6 +71,7 @@ function SelectedCountryCard({ selected, data }: { selected: SelectedCountry; da
 
 /** Side panel of the globe: selected country + list of countries with titles, or the empty explanation. */
 export function GlobePanel({ countries, selected, onSelectCountry }: GlobePanelProps) {
+  const t = useText(HOME_MESSAGES).globe;
   if (!countries) {
     return (
       <div className="globe-panel" aria-busy="true">

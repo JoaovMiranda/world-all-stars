@@ -1,6 +1,7 @@
 import { AdminDecision, type CrawlerProposal, ReviewStatus } from '@was/shared';
 
 import { adminProposalsQuery, reviewProposal } from '@/data/endpoints/admin.query';
+import { useText } from '@/i18n/use-text.hook';
 import { DecisionBar } from '@/shared-ui/decision-bar.component';
 import { DiffView } from '@/shared-ui/diff-view.component';
 import { FactList } from '@/shared-ui/fact-list.component';
@@ -11,24 +12,26 @@ import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { StatusFilter } from '@/shared-ui/status-filter.component';
 import { Tag } from '@/shared-ui/tag.component';
 
-import { ADMIN_TEXT } from './admin.const';
+import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import { REVIEW_STATUS_META } from './admin-labels.const';
 import { ADMIN_REASON, filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import type { QueueState } from './queue-state.type';
 import { SourceLink } from './source-link.component';
 import { StatusTag } from './status-tag.component';
+import { useAdminMeta } from './use-admin-meta.hook';
 
-const T = ADMIN_TEXT.review;
 const statusOf = (p: CrawlerProposal) => p.status;
 
 function ProposalDetail({ p }: { p: CrawlerProposal }) {
+  const T = useText(ADMIN_MESSAGES).review;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const review = reviewProposal.useMutation();
   const decide = (decision: AdminDecision) => (reason: string) => review.mutateAsync({ params: { id: p.id }, body: { decision, reason } });
   return (
     <div className="admin-detail">
       <div className="admin-detail-head">
-        <StatusTag meta={REVIEW_STATUS_META[p.status]} />
+        <StatusTag meta={meta.reviewStatus[p.status]} />
         {p.extractedByAi ? <Tag tone="info">{T.aiBadge}</Tag> : <Tag>{T.conflictBadge}</Tag>}
       </div>
       <h2>{p.entity.label}</h2>
@@ -36,8 +39,8 @@ function ProposalDetail({ p }: { p: CrawlerProposal }) {
         variant="split"
         items={[
           { key: 'field', term: T.field, detail: <code className="admin-wrap">{p.field}</code> },
-          { key: 'source', term: ADMIN_TEXT.common.source, detail: <SourceLink source={p.source} /> },
-          { key: 'created', term: ADMIN_TEXT.common.created, detail: formatDateTime(p.createdAt) },
+          { key: 'source', term: adminText.common.source, detail: <SourceLink source={p.source} /> },
+          { key: 'created', term: adminText.common.created, detail: formatDateTime(p.createdAt) },
           ...(p.model ? [{ key: 'model', term: T.model, detail: p.model }] : []),
           ...(p.skippedAtGate ? [{ key: 'gate', term: T.skippedAt, detail: p.skippedAtGate }] : []),
         ]}
@@ -59,7 +62,7 @@ function ProposalDetail({ p }: { p: CrawlerProposal }) {
       />
       {p.reviewNote && (
         <Notice>
-          <b>{ADMIN_TEXT.common.reviewNote}:</b> {p.reviewNote}
+          <b>{adminText.common.reviewNote}:</b> {p.reviewNote}
         </Notice>
       )}
       {p.status === ReviewStatus.Pending ? (
@@ -79,15 +82,18 @@ function ProposalDetail({ p }: { p: CrawlerProposal }) {
 
 /** A1 · crawler/AI proposals: status chips + queue + 3-way diff with evidence quote and approve/reject with reason. */
 export function ProposalQueue({ state }: { state: QueueState }) {
+  const T = useText(ADMIN_MESSAGES).review;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const query = adminProposalsQuery.useQuery();
   return (
     <QueryBoundary query={query} loading={<SkeletonList rows={6} />}>
       {({ items }) => {
-        const status = pickStatus(REVIEW_STATUS_META, state.status);
+        const status = pickStatus(meta.reviewStatus, state.status);
         const shown = filterByStatus(items, status, statusOf);
         return (
           <div className="stack">
-            <StatusFilter label={ADMIN_TEXT.common.statusFilter} options={statusOptions(REVIEW_STATUS_META, items, statusOf)} value={status} total={items.length} onChange={state.setStatus} />
+            <StatusFilter label={adminText.common.statusFilter} options={statusOptions(meta.reviewStatus, items, statusOf)} value={status} total={items.length} onChange={state.setStatus} />
             <ReviewQueue
               label={T.queueLabel}
               items={shown}
@@ -100,7 +106,7 @@ export function ProposalQueue({ state }: { state: QueueState }) {
                 <>
                   <span className="review-queue-item-head">
                     <b>{p.entity.label}</b>
-                    <StatusTag meta={REVIEW_STATUS_META[p.status]} />
+                    <StatusTag meta={meta.reviewStatus[p.status]} />
                   </span>
                   <small className="admin-wrap">
                     {p.field}

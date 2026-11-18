@@ -1,11 +1,10 @@
 import { useEffect, useId, useRef } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 
-import { CONTACT_TEXT } from './contact.const';
-
-const t = CONTACT_TEXT.done;
+import { CONTACT_MESSAGES } from './contact.const';
 
 interface SubmissionReceiptProps {
   title: string;
@@ -17,6 +16,7 @@ interface SubmissionReceiptProps {
 
 /** Confirmation with the protocol (SUG-… / CTT-…), without leaving the page; focus moves here (doc 21). */
 export function SubmissionReceipt({ title, protocol, text, notes, onAgain }: SubmissionReceiptProps) {
+  const t = useText(CONTACT_MESSAGES).done;
   const ref = useRef<HTMLDivElement>(null);
   const titleId = useId();
   useEffect(() => {

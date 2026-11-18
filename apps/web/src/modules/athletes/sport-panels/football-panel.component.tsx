@@ -1,6 +1,8 @@
 import { type AthleteProfile, competitionWins, type FootballStats, FootballStatsSchema } from '@was/shared';
 import { useCallback } from 'react';
 
+import { currentText } from '@/i18n/text-for.helper';
+import { useText } from '@/i18n/use-text.hook';
 import { barsOption, donutOption } from '@/shared-ui/chart-presets.helper';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
@@ -9,15 +11,15 @@ import { formatDate, formatNumber } from '@/shared-ui/format.helper';
 import { Notice } from '@/shared-ui/notice.component';
 import { Section } from '@/shared-ui/section.component';
 
-import { ATHLETE_PROFILE_TEXT } from '../athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from '../athletes.const';
 import { awardsCount, kpi, metric, percent, titleMetrics } from './sport-panel.helper';
 import type { SportPanelDef } from './sport-panel.type';
 
-const T = ATHLETE_PROFILE_TEXT.panels;
 const WORLD_CUP = 'copa-do-mundo-fifa';
 type Cup = FootballStats['world_cups'][number];
 
 function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStats }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
   const n = stats.national_team;
   const cups = stats.world_cups;
   const hasWdl = n.wins != null && n.draws != null && n.losses != null;
@@ -32,7 +34,7 @@ function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStat
         ],
         T.wdl.center(n.matches),
       ),
-    [n],
+    [n, T],
   );
   const cupBars = useCallback(
     (theme: ChartTheme) =>
@@ -44,7 +46,7 @@ function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStat
           { name: T.goals, data: cups.map((c) => c.goals), color: '--primary' },
         ],
       ),
-    [cups],
+    [cups, T],
   );
   return (
     <Section title={T.nationalTitle} eyebrow={T.nationalLabel(n.matches, n.goals)}>
@@ -90,6 +92,7 @@ function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStat
 export const FOOTBALL_PANEL: SportPanelDef<FootballStats> = {
   schema: FootballStatsSchema,
   kpis: (p, s) => {
+    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
     const cups = competitionWins(p.achievements, WORLD_CUP);
     return [
       kpi(T.titles, p.titles, T.clubsAndNational, true),
@@ -101,6 +104,7 @@ export const FOOTBALL_PANEL: SportPanelDef<FootballStats> = {
     ];
   },
   compare: (p, s) => {
+    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
     const n = s.national_team;
     return [
       ...titleMetrics(p),

@@ -2,7 +2,8 @@ import { type AthleteProfile, type Tier, TIER_ORDER, type TierVotesResponse } fr
 import { useState } from 'react';
 
 import { castTierVote, tierVotesQuery } from '@/data/endpoints/tier-votes.query';
-import { TIER_LABEL } from '@/shared-ui/domain-labels.const';
+import { useText } from '@/i18n/use-text.hook';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { MeterList } from '@/shared-ui/meter-list.component';
 import { Notice } from '@/shared-ui/notice.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
@@ -12,10 +13,9 @@ import { TierTag } from '@/shared-ui/tier-tag.component';
 import { useSession } from '@/session/use-session.hook';
 
 import { AdminTierForm } from './admin-tier-form.component';
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 import { percent } from './sport-panels/sport-panel.helper';
 
-const T = ATHLETE_PROFILE_TEXT.vote;
 const fillOf = (tier: Tier) => `var(--tier-${tier}-grad)`;
 
 interface VoteOptionsProps {
@@ -28,6 +28,7 @@ interface VoteOptionsProps {
 
 /** The 4 tier buttons (highest first), the official one marked, mine pressed. */
 function VoteOptions({ label, official, mine, busy, onVote }: VoteOptionsProps) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).vote;
   return (
     <div className="vote-options" role="group" aria-label={label}>
       {TIER_ORDER.map((t) => (
@@ -41,6 +42,8 @@ function VoteOptions({ label, official, mine, busy, onVote }: VoteOptionsProps) 
 }
 
 function SignedInVote({ profile, votes }: { profile: AthleteProfile; votes: TierVotesResponse }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).vote;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   const { user, isAdmin } = useSession();
   const [error, setError] = useState(false);
   const cast = castTierVote.useMutation({ onError: () => setError(true), onSuccess: () => setError(false) });
@@ -54,7 +57,7 @@ function SignedInVote({ profile, votes }: { profile: AthleteProfile; votes: Tier
         onVote={(tier) => cast.mutate({ params: { slug: profile.slug }, body: { tier } })}
       />
       <p className="vote-hint" aria-live="polite">
-        {votes.myVote ? T.myVote(TIER_LABEL[votes.myVote]) : T.noVote} {user && T.votedCount(user.tierVotesCount)}
+        {votes.myVote ? T.myVote(labels.tier[votes.myVote]) : T.noVote} {user && T.votedCount(user.tierVotesCount)}
       </p>
       {error && (
         <Notice tone="danger" live="assertive">
@@ -66,7 +69,7 @@ function SignedInVote({ profile, votes }: { profile: AthleteProfile; votes: Tier
         items={TIER_ORDER.map((t) => {
           const n = votes.counts[t] ?? 0;
           const pct = percent(n, votes.total);
-          return { key: t, label: TIER_LABEL[t], percent: pct, valueText: T.share(n, pct), fill: fillOf(t), emphasis: t === votes.official };
+          return { key: t, label: labels.tier[t], percent: pct, valueText: T.share(n, pct), fill: fillOf(t), emphasis: t === votes.official };
         })}
       />
       <p className="vote-foot">{T.footnote}</p>
@@ -77,13 +80,15 @@ function SignedInVote({ profile, votes }: { profile: AthleteProfile; votes: Tier
 
 /** Tier vote (doc 17): visitors see the official tier + 4 buttons (login popup); readers vote and see the shares. */
 export function TierVoteCard({ profile }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).vote;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   const { isSignedIn, requireLogin } = useSession();
   const votes = tierVotesQuery.useQuery({ params: { slug: profile.slug } }, { enabled: isSignedIn });
   const title = T.title(profile.knownAs);
 
   if (!isSignedIn) {
     return (
-      <Section title={title} eyebrow={T.official(TIER_LABEL[profile.tier])}>
+      <Section title={title} eyebrow={T.official(labels.tier[profile.tier])}>
         <VoteOptions label={T.anonGroup} official={profile.tier} mine={null} onVote={() => requireLogin('vote')} />
         <p className="vote-hint">{T.anonHint}</p>
       </Section>

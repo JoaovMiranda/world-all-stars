@@ -1,10 +1,12 @@
 import { geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
 import { type KeyboardEvent, type PointerEvent, useEffect, useId, useMemo, useRef } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { countryNameFromNumeric } from './country-name.helper';
 import { GLOBE } from './globe.const';
 import { clampLatitude, countryFill, standGeometry } from './globe.helper';
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 import type { CountryFeature } from './use-world-atlas.hook';
 
 interface DeskGlobeProps {
@@ -20,6 +22,7 @@ const GRATICULE = geoGraticule10();
 
 /** Desk globe (doc 08): orthographic d3-geo projection, draggable, keyboard-rotatable, idle spin unless reduced motion. */
 export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: DeskGlobeProps) {
+  const homeText = useText(HOME_MESSAGES);
   const shadeId = useId();
   const oceanRef = useRef<SVGPathElement>(null);
   const graticuleRef = useRef<SVGPathElement>(null);
@@ -131,7 +134,7 @@ export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: D
         className="globe-svg"
         viewBox={viewBox}
         role="img"
-        aria-label={HOME_TEXT.globe.ariaLabel}
+        aria-label={homeText.globe.ariaLabel}
         tabIndex={0}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}

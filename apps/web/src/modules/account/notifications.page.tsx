@@ -1,6 +1,8 @@
 import { AthleteProfileTab, type Notification, NotificationFilter, NotificationsSearchSchema } from '@was/shared';
 
 import { markNotificationRead, notificationsQuery } from '@/data/endpoints/session.query';
+import { currentText } from '@/i18n/text-for.helper';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
@@ -13,18 +15,21 @@ import { Tag } from '@/shared-ui/tag.component';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 
 import { AccountLayout } from './account-layout.component';
-import { ACCOUNT_TEXT } from './account.const';
+import { ACCOUNT_MESSAGES } from './account.const';
 
-const t = ACCOUNT_TEXT.notifications;
-const FILTER_OPTIONS = [
-  { value: NotificationFilter.Unread, label: t.filters['nao-lidas'] },
-  { value: NotificationFilter.Read, label: t.filters.lidas },
-];
+const FILTER_OPTIONS = () => {
+  const t = currentText(ACCOUNT_MESSAGES).notifications;
+  return [
+    { value: NotificationFilter.Unread, label: t.filters['nao-lidas'] },
+    { value: NotificationFilter.Read, label: t.filters.lidas },
+  ];
+};
 
 const matches = (n: Notification, filter: NotificationFilter | undefined) =>
   filter === NotificationFilter.Unread ? !n.read : filter === NotificationFilter.Read ? n.read : true;
 
 function NotificationItem({ n, onRead, busy }: { n: Notification; onRead: () => void; busy: boolean }) {
+  const t = useText(ACCOUNT_MESSAGES).notifications;
   const title = t.kind[n.kind](n.actor ?? t.someone, n.athlete?.knownAs ?? '');
   return (
     <li className={n.read ? 'account-item' : 'account-item is-unread'}>
@@ -58,6 +63,7 @@ function NotificationItem({ n, onRead, busy }: { n: Notification; onRead: () => 
 }
 
 function NotificationsContent() {
+  const t = useText(ACCOUNT_MESSAGES).notifications;
   const { filters, setFilter, reset } = useUrlFilters(NotificationsSearchSchema);
   const query = notificationsQuery.useQuery();
   const mark = markNotificationRead.useMutation();
@@ -90,7 +96,7 @@ function NotificationsContent() {
             }
           >
             <div className="mb-4">
-              <ChipToggleGroup label={t.filterLabel} options={FILTER_OPTIONS} value={filters.filtro} onChange={(v) => setFilter('filtro', v)} />
+              <ChipToggleGroup label={t.filterLabel} options={FILTER_OPTIONS()} value={filters.filtro} onChange={(v) => setFilter('filtro', v)} />
             </div>
             {shown.length ? (
               <ul className="account-list" aria-live="polite">
@@ -110,6 +116,7 @@ function NotificationsContent() {
 
 /** E4 Notifications (docs 09/20): replies to my comments, read/unread filter in the URL, mark as read. */
 export function NotificationsPage() {
+  const t = useText(ACCOUNT_MESSAGES).notifications;
   return (
     <AccountLayout title={t.title} lead={t.lead}>
       <NotificationsContent />

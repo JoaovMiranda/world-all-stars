@@ -1,6 +1,7 @@
+import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 import { RandomAthleteButton } from './random-athlete-button.component';
 
 interface HomeIntroProps {
@@ -9,9 +10,8 @@ interface HomeIntroProps {
   isError?: boolean;
 }
 
-const t = HOME_TEXT.intro;
-
 export function HomeIntro({ athleteSlugs, isError = false }: HomeIntroProps) {
+  const t = useText(HOME_MESSAGES).intro;
   return (
     <div className="home-intro">
       <span className="label ornament">{t.kicker}</span>

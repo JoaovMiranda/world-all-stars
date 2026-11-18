@@ -3,6 +3,7 @@ import { ANALYSIS_DIMENSIONS, CompareQuerySchema, PublicApi, composeCompare, mat
 import { ApiError } from '../api-error.error';
 import { defineQuery } from '../define-endpoint.helper';
 import { withDemoTier } from '../fixtures/demo-tier.fixture';
+import { FIXTURE_CONTENT_LOCALE } from '../data-layer.const';
 
 /** GET /api/athletes (P4): filters q/sport/country/tier/group, sorted by legacy percentile. */
 export const athletesQuery = defineQuery(PublicApi.athletes, {
@@ -18,7 +19,7 @@ export const athleteProfileQuery = defineQuery(PublicApi.athleteProfile, {
   sample: async ({ input, sample }) => {
     const profile = (await sample('athlete-profiles.json'))[input.params.slug];
     if (!profile) throw new ApiError(404, { error: 'not_found' });
-    return withDemoTier(profile);
+    return { ...withDemoTier(profile), contentLocale: FIXTURE_CONTENT_LOCALE };
   },
   empty: 'not-found',
 });

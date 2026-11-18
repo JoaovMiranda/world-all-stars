@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
 
-import { MEDAL_LABEL } from './domain-labels.const';
+import { useText } from '@/i18n/use-text.hook';
 
-export type MedalMetal = keyof typeof MEDAL_LABEL;
+import { DOMAIN_LABELS_MESSAGES } from './domain-labels.const';
+
+export type MedalMetal = 'gold' | 'silver' | 'bronze';
 
 interface MedalProps {
   metal: MedalMetal;
@@ -12,8 +14,9 @@ interface MedalProps {
 
 /** Olympic-style medal disc with the real metal gradient (gold/silver/bronze tokens). */
 export function Medal({ metal, children }: MedalProps) {
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   return (
-    <span className={`medal medal-${metal}`} role="img" aria-label={children === undefined ? MEDAL_LABEL[metal] : `${MEDAL_LABEL[metal]}: ${String(children)}`}>
+    <span className={`medal medal-${metal}`} role="img" aria-label={children === undefined ? labels.medal[metal] : `${labels.medal[metal]}: ${String(children)}`}>
       <span aria-hidden="true">{children}</span>
     </span>
   );

@@ -1,4 +1,4 @@
-import { FIXTURE_MODE_VALUES, FixtureMode, type IsoDate, SESSION_KIND_VALUES, SessionKind } from '@was/shared';
+import { FIXTURE_MODE_VALUES, FixtureMode, type IsoDate, LOCALE_COOKIE, SESSION_KIND_VALUES, SessionKind, resolveLocale } from '@was/shared';
 
 import { FIXTURE_MODE_COOKIE, FIXTURE_MODE_PARAM } from '@/data/data-layer.const';
 import { SESSION_COOKIE, SESSION_URL_PARAM } from '@/session/session.const';
@@ -19,14 +19,16 @@ export interface BootRequest {
   cookie: string | null;
   timeZone: string;
   publicUrl: string;
+  acceptLanguage?: string | null;
   now?: Date;
 }
 
 /**
  * Server: what the page load starts with. Fixture mode = `?fixture=` → cookie → sample; session = `?as=` → cookie →
- * anon (the same rule the simulated auth provider applies to API calls); theme = cookie.
+ * anon (the same rule the simulated auth provider applies to API calls); theme = cookie; locale = cookie →
+ * Accept-Language → pt-BR (the same rule the API applies).
  */
-export const resolveBoot = ({ url, cookie, timeZone, publicUrl, now = new Date() }: BootRequest): Boot => {
+export const resolveBoot = ({ url, cookie, timeZone, publicUrl, acceptLanguage, now = new Date() }: BootRequest): Boot => {
   const modeParam = url.searchParams.get(FIXTURE_MODE_PARAM);
   const modeCookie = readCookie(cookie, FIXTURE_MODE_COOKIE);
   const kindParam = url.searchParams.get(SESSION_URL_PARAM);
@@ -40,5 +42,6 @@ export const resolveBoot = ({ url, cookie, timeZone, publicUrl, now = new Date()
     timeZone,
     publicUrl: publicUrl.replace(/\/+$/, ''),
     theme: isThemeName(theme) ? theme : null,
+    locale: resolveLocale({ cookie: readCookie(cookie, LOCALE_COOKIE), acceptLanguage }),
   };
 };

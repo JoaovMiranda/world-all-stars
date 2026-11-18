@@ -1,4 +1,9 @@
-// pt-BR strings of the review kit (ConfirmDialog, DecisionBar, DiffView, StatusFilter, ReviewQueue). Ready for i18n.
+import { defineMessages } from '@was/shared';
+
+import { REVIEW_KIT_TEXT_EN } from './review-kit.const.en';
+import { REVIEW_KIT_TEXT_ES } from './review-kit.const.es';
+
+// pt-BR strings of the review kit (ConfirmDialog, DecisionBar, DiffView, StatusFilter, ReviewQueue). en/es next to it.
 export const REVIEW_KIT_TEXT = {
   cancel: 'Cancelar',
   confirm: 'Confirmar',
@@ -16,3 +21,5 @@ export const REVIEW_KIT_TEXT = {
   emptyValue: '—',
   queueDetail: 'Detalhe do item selecionado',
 } as const;
+
+export const REVIEW_KIT_MESSAGES = defineMessages(REVIEW_KIT_TEXT, { en: REVIEW_KIT_TEXT_EN, es: REVIEW_KIT_TEXT_ES });

@@ -1,14 +1,14 @@
 import type { AthleteSummary, CollectionReport } from '@was/shared';
 
+import { useText } from '@/i18n/use-text.hook';
 import { AthleteGrid } from '@/shared-ui/athlete-grid.component';
 import { Notice } from '@/shared-ui/notice.component';
 
-import { SPORTS_TEXT } from './sports.const';
-
-const t = SPORTS_TEXT.page;
+import { SPORTS_MESSAGES } from './sports.const';
 
 /** "No athlete identified" report of the simulated collection (doc 18): reason + facts, each with its evidence link. */
 function CollectionReportView({ report }: { report: CollectionReport }) {
+  const t = useText(SPORTS_MESSAGES).page;
   return (
     <>
       <Notice tone="info">
@@ -48,6 +48,7 @@ interface SportChampionsProps {
 
 /** Champions grid (filtered) · collection report when the sport has no athlete · empty state. */
 export function SportChampions({ athletes, totalAthletes, report }: SportChampionsProps) {
+  const t = useText(SPORTS_MESSAGES).page;
   if (totalAthletes === 0 && report) return <CollectionReportView report={report} />;
   return totalAthletes === 0 ? (
     <AthleteGrid athletes={[]} emptyTitle={t.noChampionsTitle} emptyText={t.noChampionsText} />

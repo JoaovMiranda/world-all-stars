@@ -1,7 +1,9 @@
 import { Link, type LinkProps } from '@tanstack/react-router';
 import { Fragment } from 'react';
 
-import { UI_TEXT } from './ui-text.const';
+import { useText } from '@/i18n/use-text.hook';
+
+import { UI_MESSAGES } from './ui-text.const';
 
 export interface BreadcrumbItem {
   label: string;
@@ -11,9 +13,10 @@ export interface BreadcrumbItem {
 
 /** "Início › Atletas › Pelé" trail (nav landmark; the home is implicit and always first). */
 export function Breadcrumb({ items }: { items: readonly BreadcrumbItem[] }) {
+  const ui = useText(UI_MESSAGES);
   return (
-    <nav className="breadcrumb" aria-label={UI_TEXT.breadcrumbLabel}>
-      <Link to="/">{UI_TEXT.home}</Link>
+    <nav className="breadcrumb" aria-label={ui.breadcrumbLabel}>
+      <Link to="/">{ui.home}</Link>
       {items.map((item, i) => (
         <Fragment key={`${item.label}-${i}`}>
           <span aria-hidden="true">›</span>

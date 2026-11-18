@@ -2,16 +2,16 @@ import type { GlobeCountry } from '@was/shared';
 import { ClientOnly } from '@tanstack/react-router';
 import { lazy, Suspense, useMemo, useState } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { countryNameFromNumeric } from './country-name.helper';
 import { GlobePanel, type SelectedCountry } from './globe-panel.component';
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 import { useWorldAtlas } from './use-world-atlas.hook';
 
 interface GlobeSectionProps {
   countries: GlobeCountry[] | undefined;
 }
-
-const t = HOME_TEXT.globe;
 
 // d3-geo + the globe live in their own chunk (doc 04: lazy-load) and only render in the browser (SSR prints the empty
 // stage); the fallback keeps the same box (no layout shift).
@@ -20,6 +20,7 @@ const DeskGlobe = lazy(() => import('./desk-globe.component').then((m) => ({ def
 
 /** "Campeões pelo mundo": the globe always renders (neutral countries when there are no titles). */
 export function GlobeSection({ countries }: GlobeSectionProps) {
+  const t = useText(HOME_MESSAGES).globe;
   const atlas = useWorldAtlas();
   const [selected, setSelected] = useState<SelectedCountry | null>(null);
 

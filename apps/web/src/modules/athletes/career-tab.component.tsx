@@ -1,5 +1,6 @@
 import { type AthleteProfile, OnThisDayKind } from '@was/shared';
 
+import { useText } from '@/i18n/use-text.hook';
 import { DateLink } from '@/shared-ui/date-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { formatDate, formatYears } from '@/shared-ui/format.helper';
@@ -7,23 +8,24 @@ import { RangeBars } from '@/shared-ui/range-bars.component';
 import { Section } from '@/shared-ui/section.component';
 import { SourceInfo } from '@/shared-ui/source-info.component';
 import { Timeline, type TimelineItem } from '@/shared-ui/timeline.component';
-import { UI_TEXT } from '@/shared-ui/ui-text.const';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 
 import { currentYear } from './athlete-profile.helper';
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
-const T = ATHLETE_PROFILE_TEXT.career;
 const NATIONAL_TEAM = 'national';
 const yearOf = (iso: string) => Number(iso.slice(0, 4));
 const TONE: Partial<Record<OnThisDayKind, TimelineItem['tone']>> = { [OnThisDayKind.Title]: 'gold', [OnThisDayKind.Record]: 'gold', [OnThisDayKind.Death]: 'muted' };
 
 /** Carreira: teams gantt (national team in green), title reigns, milestones timeline with day links. */
 export function CareerTab({ profile: p }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).career;
+  const ui = useText(UI_MESSAGES);
   const now = currentYear();
   const teams = p.teams.filter((t) => t.from !== null);
   return (
     <div className="stack">
-      <Section title={T.teamsTitle} eyebrow={formatYears(p.careerFrom, p.careerTo, UI_TEXT.untilNow)}>
+      <Section title={T.teamsTitle} eyebrow={formatYears(p.careerFrom, p.careerTo, ui.untilNow)}>
         {teams.length ? (
           <RangeBars
             label={T.teamsLabel}
@@ -35,8 +37,8 @@ export function CareerTab({ profile: p }: { profile: AthleteProfile }) {
                 label: `${t.country?.flag ?? ''} ${t.name}`.trim(),
                 from,
                 to,
-                text: formatYears(t.from, t.to, UI_TEXT.untilNow),
-                description: T.teamDescription(t.name, t.fromDate ? formatDate(t.fromDate) : String(from), t.toDate ? formatDate(t.toDate) : t.to ? String(t.to) : UI_TEXT.untilNow, t.role),
+                text: formatYears(t.from, t.to, ui.untilNow),
+                description: T.teamDescription(t.name, t.fromDate ? formatDate(t.fromDate) : String(from), t.toDate ? formatDate(t.toDate) : t.to ? String(t.to) : ui.untilNow, t.role),
                 tone: t.kind === NATIONAL_TEAM ? 'success' : 'primary',
               };
             })}

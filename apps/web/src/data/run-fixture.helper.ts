@@ -1,5 +1,6 @@
 import { type ApiContract, FixtureMode, accessDenial } from '@was/shared';
 
+import { localeStore } from '@/i18n/locale.store';
 import { IS_SERVER } from '@/app/request-scope';
 
 import { ApiError } from './api-error.error';
@@ -44,7 +45,7 @@ export const runFixture = async <C extends ApiContract>(
   if (effective === FixtureMode.Error) throw new ApiError(503, { error: 'fixture_error', message: 'Falha simulada (?fixture=error).' });
 
   const session = await sessionSnapshot();
-  const denial = accessDenial(contract.access, session.kind);
+  const denial = accessDenial(contract.access, session.kind, false, localeStore.get());
   if (denial) throw new ApiError(denial.status, denial.body);
 
   const ctx = { input: input as never, sample: loadSample, session };

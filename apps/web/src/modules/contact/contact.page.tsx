@@ -4,6 +4,7 @@ import { ContactSearchSchema, ContactTab, type SubmissionResponse } from '@was/s
 import { useState } from 'react';
 
 import { validationContextQuery } from '@/data/endpoints/discovery.query';
+import { useText } from '@/i18n/use-text.hook';
 import { useSession } from '@/session/use-session.hook';
 import { PageLayout } from '@/shared-ui/page-layout.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
@@ -13,16 +14,11 @@ import { Tabs } from '@/shared-ui/tabs.component';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 
 import { ContactAside } from './contact-aside.component';
-import { CONTACT_TEXT } from './contact.const';
+import { CONTACT_MESSAGES } from './contact.const';
 import { MessageForm } from './message-form.component';
 import { SubmissionReceipt } from './submission-receipt.component';
 import { SuggestionForm } from './suggestion-form.component';
 
-const t = CONTACT_TEXT;
-const TABS = [
-  { value: ContactTab.Suggestion, label: t.tabs.sugestao },
-  { value: ContactTab.Message, label: t.tabs.mensagem },
-] as const;
 
 interface Receipt {
   tab: ContactTab;
@@ -33,6 +29,11 @@ interface Receipt {
 
 /** P17 Contact (doc 21): tabs Sugerir atleta / Mensagem (`?tipo=mensagem`), shared validators, protocol on success. */
 export function ContactPage() {
+  const t = useText(CONTACT_MESSAGES);
+  const TABS = [
+    { value: ContactTab.Suggestion, label: t.tabs.sugestao },
+    { value: ContactTab.Message, label: t.tabs.mensagem },
+  ] as const;
   const { filters, setFilter } = useUrlFilters(ContactSearchSchema);
   const tab = filters.tipo ?? ContactTab.Suggestion;
   const { user } = useSession();

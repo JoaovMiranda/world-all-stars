@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { isApiError } from '@/data/api-error.error';
 import { postComment } from '@/data/endpoints/comments.query';
 import { validationContextQuery } from '@/data/endpoints/discovery.query';
+import { useLocale } from '@/i18n/locale.store';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { CharCounter } from '@/shared-ui/char-counter.component';
 import { FormField } from '@/shared-ui/form-field.component';
@@ -11,9 +13,7 @@ import { Notice } from '@/shared-ui/notice.component';
 import { Textarea } from '@/shared-ui/textarea.component';
 import { useForm } from '@/shared-ui/use-form.hook';
 
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
-
-const T = ATHLETE_PROFILE_TEXT.comments;
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
 interface CommentFormProps {
   slug: string;
@@ -26,8 +26,10 @@ interface CommentFormProps {
 
 /** Comment/reply form: shared validateComment rules (empty, invisible chars, 500 limit, banned words) + server 422. */
 export function CommentForm({ slug, label, parentId = null, autoFocus = false, onDone }: CommentFormProps) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).comments;
+  const locale = useLocale();
   const ctx = validationContextQuery.useQuery();
-  const schema = useMemo(() => (ctx.data ? createCommentInputSchema(ctx.data.bannedWords) : null), [ctx.data]);
+  const schema = useMemo(() => (ctx.data ? createCommentInputSchema(ctx.data.bannedWords, locale) : null), [ctx.data, locale]);
   const form = useForm({ schema, initialValues: { body: '', parentId } });
   const [failed, setFailed] = useState(false);
   const [posted, setPosted] = useState(false);

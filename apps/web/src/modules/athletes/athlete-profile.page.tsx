@@ -6,6 +6,8 @@ import { useCallback, useMemo } from 'react';
 
 import { athleteProfileQuery } from '@/data/endpoints/athletes.query';
 import { commentsQuery } from '@/data/endpoints/comments.query';
+import { useLocale } from '@/i18n/locale.store';
+import { useText } from '@/i18n/use-text.hook';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { PageLayout } from '@/shared-ui/page-layout.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
@@ -22,7 +24,7 @@ import { AthleteInfobox } from './athlete-infobox.component';
 import { AthleteKpis } from './athlete-kpis.component';
 import { AthleteProfileSkeleton } from './athlete-profile-skeleton.component';
 import { athleteProfileInput, commentsInput } from './athletes-query.helper';
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 import { CareerTab } from './career-tab.component';
 import { CommentsTab } from './comments-tab.component';
 import { OverviewTab } from './overview-tab.component';
@@ -30,17 +32,18 @@ import { SourcesTab } from './sources-tab.component';
 import { resolveSportPanel } from './sport-panels/sport-panel.registry';
 
 const route = getRouteApi('/athletes/$slug');
-const t = ATHLETE_PROFILE_TEXT;
 const TABS_ID = 'perfil-abas';
 
 const splitSlugs = (value: string | undefined) => [...new Set((value ?? '').split(',').map((s) => s.trim()).filter(Boolean))];
 
 function Profile({ athlete, slug }: { athlete: AthleteProfile; slug: string }) {
+  const t = useText(ATHLETE_PROFILE_MESSAGES);
   const { filters, setFilter, setFilters } = useUrlFilters(AthleteProfileSearchSchema);
   const tab = filters.tab ?? AthleteProfileTab.Overview;
   const sort = filters.sort ?? CommentSort.Top;
   const comments = commentsQuery.useQuery(commentsInput(slug, filters.sort));
-  const panel = useMemo(() => resolveSportPanel(athlete), [athlete]);
+  const locale = useLocale();
+  const panel = useMemo(() => resolveSportPanel(athlete), [athlete, locale]); // panels read texts of the current language
   const compare = useMemo(() => splitSlugs(filters.compare).filter((s) => s !== athlete.slug), [filters.compare, athlete.slug]);
 
   const selectTab = useCallback((v: AthleteProfileTab) => setFilter('tab', v === AthleteProfileTab.Overview ? undefined : v), [setFilter]);
@@ -81,6 +84,7 @@ function Profile({ athlete, slug }: { athlete: AthleteProfile; slug: string }) {
   return (
     <PageLayout
       title={athlete.knownAs}
+      contentLocale={athlete.contentLocale}
       eyebrow={t.eyebrow}
       badges={
         <>
@@ -122,6 +126,7 @@ function Profile({ athlete, slug }: { athlete: AthleteProfile; slug: string }) {
 
 /** P2 Athlete profile (doc 09): hero, sport KPIs and the six URL-synced tabs (?tab=, ?compare=, ?sort=). */
 export function AthleteProfilePage() {
+  const t = useText(ATHLETE_PROFILE_MESSAGES);
   const { slug } = route.useParams();
   const profile = athleteProfileQuery.useQuery(athleteProfileInput(slug));
   return (

@@ -1,17 +1,17 @@
 import { ContactTab } from '@was/shared';
 
+import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 
-import { LEGAL_TEXT } from './legal.const';
-
-const t = LEGAL_TEXT.actions;
+import { LEGAL_MESSAGES } from './legal.const';
 
 /** "Talk to us" shortcut: opens the message tab of the contact page. */
-export function ContactMessageLink({ label = t.contactPrivacy }: { label?: string }) {
+export function ContactMessageLink({ label }: { label?: string }) {
+  const t = useText(LEGAL_MESSAGES).actions;
   return (
     <div className="row">
       <ButtonLink to="/contact" search={{ tipo: ContactTab.Message }} size="sm">
-        {label}
+        {label ?? t.contactPrivacy}
       </ButtonLink>
     </div>
   );
@@ -19,6 +19,7 @@ export function ContactMessageLink({ label = t.contactPrivacy }: { label?: strin
 
 /** Rights section shortcuts: self-service data page + contact. */
 export function PrivacyRightsLinks() {
+  const t = useText(LEGAL_MESSAGES).actions;
   return (
     <div className="row">
       <ButtonLink to="/me/data" size="sm" variant="primary">
@@ -33,6 +34,7 @@ export function PrivacyRightsLinks() {
 
 /** Links between the legal documents. */
 export function RelatedLegalLinks({ show }: { show: readonly ('privacy' | 'terms' | 'cookies')[] }) {
+  const t = useText(LEGAL_MESSAGES).actions;
   return (
     <div className="row">
       {show.includes('privacy') && (

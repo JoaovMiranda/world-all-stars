@@ -2,8 +2,10 @@ import './review-kit.css';
 
 import { type ReactNode, useRef } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
+
 import { EmptyState } from './empty-state.component';
-import { REVIEW_KIT_TEXT } from './review-kit.const';
+import { REVIEW_KIT_MESSAGES } from './review-kit.const';
 
 interface ReviewQueueProps<T> {
   /** Accessible name of the list. */
@@ -26,7 +28,9 @@ interface ReviewQueueProps<T> {
  * Master–detail queue: selectable list on the left, detail panel on the right (stacked below 960 px, where
  * selecting moves focus to the detail). Used by every admin queue.
  */
-export function ReviewQueue<T>({ label, items, getKey, selectedKey, onSelect, renderItem, renderDetail, emptyTitle, emptyText, detailLabel = REVIEW_KIT_TEXT.queueDetail }: ReviewQueueProps<T>) {
+export function ReviewQueue<T>({ label, items, getKey, selectedKey, onSelect, renderItem, renderDetail, emptyTitle, emptyText, detailLabel: detailLabelProp }: ReviewQueueProps<T>) {
+  const kit = useText(REVIEW_KIT_MESSAGES);
+  const detailLabel = detailLabelProp ?? kit.queueDetail;
   const detailRef = useRef<HTMLElement>(null);
   if (items.length === 0) return <EmptyState title={emptyTitle} compact>{emptyText}</EmptyState>;
   const selected = items.find((i) => getKey(i) === selectedKey) ?? items[0]!;

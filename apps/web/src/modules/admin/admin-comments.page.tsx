@@ -2,6 +2,7 @@ import { ADMIN_COMMENTS_TAB_VALUES, AthleteProfileTab, COMMENT_FLAG_MIN_DISLIKES
 import { Link } from '@tanstack/react-router';
 
 import { adminCommentsQuery, moderateComment } from '@/data/endpoints/admin.query';
+import { useText } from '@/i18n/use-text.hook';
 import { DecisionBar } from '@/shared-ui/decision-bar.component';
 import { FactList } from '@/shared-ui/fact-list.component';
 import { Notice } from '@/shared-ui/notice.component';
@@ -11,22 +12,25 @@ import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { StatusFilter } from '@/shared-ui/status-filter.component';
 import { Tabs } from '@/shared-ui/tabs.component';
 
-import { ADMIN_TEXT } from './admin.const';
+import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import { COMMENT_STATUS_META, type StatusMeta } from './admin-labels.const';
+import type { StatusMeta } from './admin-labels.const';
 import { AdminLayout } from './admin-layout.component';
 import { ADMIN_REASON, filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import { BannedWords } from './banned-words.component';
 import { StatusTag } from './status-tag.component';
 import { useAdminTab } from './use-admin-tab.hook';
 import { useQueueState } from './use-queue-state.hook';
+import { type AdminMeta, useAdminMeta } from './use-admin-meta.hook';
 
-const T = ADMIN_TEXT.comments;
 type CommentFilter = 'flagged' | CommentStatus;
-const FILTER_META: Record<CommentFilter, StatusMeta> = { flagged: { label: T.flagged, tone: 'gold' }, ...COMMENT_STATUS_META };
+const filterMeta = (meta: AdminMeta, flagged: string): Record<CommentFilter, StatusMeta> => ({ flagged: { label: flagged, tone: 'gold' }, ...meta.commentStatus });
 const filterOf = (c: AdminComment): CommentFilter => (isCommentFlagged(c) ? 'flagged' : c.status);
 
 function CommentDetail({ c }: { c: AdminComment }) {
+  const T = useText(ADMIN_MESSAGES).comments;
+  const FILTER_META = filterMeta(useAdminMeta(), T.flagged);
+  const adminText = useText(ADMIN_MESSAGES);
   const moderate = moderateComment.useMutation();
   const set = (status: CommentStatus) => (reason: string) => moderate.mutateAsync({ params: { id: c.id }, body: { status, reason } });
   const hidden = c.status === CommentStatus.Hidden;
@@ -45,7 +49,7 @@ function CommentDetail({ c }: { c: AdminComment }) {
       <FactList
         variant="split"
         items={[
-          { key: 'at', term: ADMIN_TEXT.common.created, detail: formatDateTime(c.at) },
+          { key: 'at', term: adminText.common.created, detail: formatDateTime(c.at) },
           { key: 'likes', term: T.likes, detail: c.likes },
           { key: 'dislikes', term: T.dislikes, detail: c.dislikes },
           { key: 'replies', term: T.replies, detail: c.replies },
@@ -70,6 +74,9 @@ function CommentDetail({ c }: { c: AdminComment }) {
 
 /** A7 Moderação: comments with many dislikes (hide/show with reason) and the banned-words list per locale. */
 export function AdminCommentsPage() {
+  const T = useText(ADMIN_MESSAGES).comments;
+  const FILTER_META = filterMeta(useAdminMeta(), T.flagged);
+  const adminText = useText(ADMIN_MESSAGES);
   const { tab, setTab } = useAdminTab(AdminCommentsSearchSchema, ADMIN_COMMENTS_TAB_VALUES);
   const state = useQueueState();
   const query = adminCommentsQuery.useQuery();
@@ -91,7 +98,7 @@ export function AdminCommentsPage() {
             return (
               <div className="stack">
                 <Notice tone="info">{T.flagRule(COMMENT_FLAG_MIN_DISLIKES)}</Notice>
-                <StatusFilter label={ADMIN_TEXT.common.statusFilter} options={statusOptions(FILTER_META, items, filterOf)} value={status} total={items.length} onChange={state.setStatus} />
+                <StatusFilter label={adminText.common.statusFilter} options={statusOptions(FILTER_META, items, filterOf)} value={status} total={items.length} onChange={state.setStatus} />
                 <ReviewQueue
                   label={T.queueLabel}
                   items={filterByStatus(items, status, filterOf)}

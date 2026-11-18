@@ -1,0 +1,98 @@
+import type { Messages } from '@was/shared';
+
+import type { SOURCES_TEXT } from './sources.const';
+
+export const SOURCES_TEXT_EN = {
+  page: {
+    title: 'Sources',
+    heading: 'Where the data comes from',
+    eyebrow: 'Transparency',
+    lead: 'Every piece of data on the site points to a source, with its license and collection date. Here are all the sources: the ones we use, the ones awaiting permission and the ones we only link to.',
+  },
+  kpis: {
+    label: 'Sources by status',
+    active: 'Sources in use',
+    pending_permission: 'Awaiting permission',
+    link_only: 'Link only',
+    rejected: 'Discarded',
+  },
+  list: {
+    title: 'Sources',
+    filterLabel: 'Filter by status',
+    chip: (label, n) => `${label} · ${n}`,
+    athletes: 'athletes',
+    fields: 'fields',
+    achievements: 'achievements',
+    noRun: 'no automatic collection',
+    lastRun: (checked, unchanged, updated, errors, mode) =>
+      `Last run: ${checked} checked · ${unchanged} unchanged · ${updated} updated · ${errors} errors (${mode} mode).`,
+    linksCaption: (name) => `Links collected from ${name}`,
+    colLink: 'Collected link',
+    colEntity: 'Entity',
+    colRevision: 'Revision',
+    colChecked: 'Checked',
+    noLinks: 'No links collected from this source.',
+    openSource: (name) => `Open ${name}`,
+    external: '(opens in a new tab)',
+    emptyTitle: 'No sources on file yet',
+    emptyText: 'The source registry (license, commercial use and status) shows up here before the first collection.',
+    noMatch: 'No sources with this status.',
+    dash: '—',
+  },
+  runs: {
+    title: 'AI-assisted collection',
+    eyebrow: 'local extractor · docs 11 and 18',
+    intro:
+      'The AI only proposes: every fact becomes a proposal that an admin approves. Before spending a single token, each run goes through gates. If the source revision hasn’t changed, the extractor isn’t even called (0 tokens). A proposed fact only gets in if the quoted excerpt exists verbatim in the source.',
+    gatesTitle: 'The gates, from cheapest to most expensive',
+    gates: [
+      { title: 'Schedule and revision', text: 'Is the source due for a check, and has its revision changed (revid, ETag)? If not, the content isn’t even downloaded.' },
+      { title: 'Section and noise', text: 'Only the relevant section, compared by hash. Changes to formatting, links or spelling alone are discarded.' },
+      { title: 'Parser first', text: 'A well-formed table goes to the deterministic parser, with no AI. An excerpt already processed reuses the result.' },
+      { title: 'Minimal diff and budget', text: 'The model only receives the changed lines, within a per-run limit. Whatever is left waits for the next run.' },
+      { title: 'Verbatim excerpt', text: 'Every value carries its excerpt from the source (evidence_quote). If the excerpt isn’t in the original text, the fact is discarded.' },
+      { title: 'Approval', text: 'Nothing goes live directly: it becomes a proposal in the curators’ queue, with the source excerpt next to each value.' },
+    ],
+    caption: 'AI-assisted collection runs',
+    colStarted: 'Run',
+    colMode: 'Mode',
+    colChecked: 'Checked',
+    colUnchanged: 'Unchanged (0 tokens)',
+    colValidated: 'Validated',
+    colAccepted: 'Facts accepted',
+    colRejected: 'Discarded',
+    colTokens: 'Extractor tokens',
+    empty: 'No runs recorded yet.',
+  },
+  origins: {
+    title: 'The market’s 6 primary origins',
+    eyebrow: 'where any sports data comes from',
+    items: [
+      { title: '1. Official score sheets', text: 'Federations, referees and commissions (FIFA, FIDE, CBDA).' },
+      { title: '2. The platform itself', text: 'Games played on Lichess, Chess.com, CS servers.' },
+      { title: '3. Human data entry', text: 'Scouts watching the games (Opta, BoxRec, HLTV).' },
+      { title: '4. Historical archives', text: 'Newspapers and yearbooks researched by volunteers (RSSSF, Olympedia).' },
+      { title: '5. Community', text: 'Wikipedia, Liquipedia, TheSportsDB copying from 1 to 4.' },
+      { title: '6. Resale', text: 'Licensed commercial feeds (Opta, Sportradar, GRID).' },
+    ],
+  },
+  commercialUse: {
+    yes: 'Commercial use OK',
+    no: 'No commercial use',
+    ask: 'Ask for confirmation',
+    'paid-for-lpdb': 'Paid commercial (LPDB)',
+  },
+  originKind: {
+    community: 'Community',
+    official: 'Official',
+    historians: 'Historians',
+    proprietary: 'Proprietary',
+    unknown: 'Undisclosed',
+  },
+  runStatus: {
+    success: 'OK',
+    partial: 'Partial',
+    failed: 'Failed',
+    running: 'In progress',
+  },
+} satisfies Messages<typeof SOURCES_TEXT>;

@@ -1,4 +1,9 @@
-// UI strings of the home page (pt-BR). One place per module, ready to become an i18n namespace.
+import { defineMessages } from '@was/shared';
+
+import { HOME_TEXT_EN } from './home.const.en';
+import { HOME_TEXT_ES } from './home.const.es';
+
+// UI strings of the home page (pt-BR source; en/es next to it).
 export const HOME_TEXT = {
   documentTitle: 'World All Stars · Enciclopédia de campeões',
   intro: {
@@ -49,6 +54,8 @@ export const HOME_TEXT = {
     emptyNotice: 'Ainda não há campeonatos nem dias do esporte cadastrados. A grade fica pronta para recebê-los.',
     emptyDay: 'Nenhum campeonato ou dia do esporte nesta data.',
     events: (n: number) => (n === 1 ? '1 evento' : `${n} eventos`),
+    /** Screen-reader rest of a day cell after its number ("7" + " de novembro: 2 eventos"). */
+    cellSuffix: (month: string, events: string) => ` de ${month}: ${events}`,
     weekdays: ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'],
   },
   upcoming: {
@@ -77,3 +84,5 @@ export const HOME_TEXT = {
     retry: 'Tentar novamente',
   },
 } as const;
+
+export const HOME_MESSAGES = defineMessages(HOME_TEXT, { en: HOME_TEXT_EN, es: HOME_TEXT_ES });

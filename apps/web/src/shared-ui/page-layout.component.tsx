@@ -1,7 +1,9 @@
+import type { Locale } from '@was/shared';
 import type { ReactNode } from 'react';
 
 import { Breadcrumb, type BreadcrumbItem } from './breadcrumb.component';
 import { PageHeader } from './page-header.component';
+import { UntranslatedNote } from './untranslated-note.component';
 
 interface PageLayoutProps {
   /** Text of the h1 unless `heading` is given (the <title> comes from the route head, app/head.helper.ts). */
@@ -19,17 +21,20 @@ interface PageLayoutProps {
   media?: ReactNode;
   /** Right column (4/12): infobox, filters. Stacks under the content below 960 px. */
   aside?: ReactNode;
+  /** Language the API content came in (`contentLocale`): a discreet note when it differs from the interface. */
+  contentLocale?: Locale | undefined;
   children: ReactNode;
 }
 
 /** Skeleton of every public page: breadcrumb → header → content (8/12) + optional aside (4/12). */
-export function PageLayout({ title, heading, breadcrumb, eyebrow, lead, badges, actions, headerExtra, media, aside, children }: PageLayoutProps) {
+export function PageLayout({ title, heading, breadcrumb, eyebrow, lead, badges, actions, headerExtra, media, aside, contentLocale, children }: PageLayoutProps) {
   return (
     <div className="page">
       {breadcrumb && <Breadcrumb items={breadcrumb} />}
       <PageHeader title={heading ?? title} eyebrow={eyebrow} lead={lead} badges={badges} actions={actions} media={media}>
         {headerExtra}
       </PageHeader>
+      <UntranslatedNote contentLocale={contentLocale} />
       {aside ? (
         <div className="page-body-aside">
           <div className="stack">{children}</div>

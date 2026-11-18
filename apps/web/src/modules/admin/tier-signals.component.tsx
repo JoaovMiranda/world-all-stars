@@ -4,10 +4,11 @@ import { useState } from 'react';
 
 import { adminSummaryQuery, adminTierSignalsQuery } from '@/data/endpoints/admin.query';
 import { setOfficialTier } from '@/data/endpoints/tier-votes.query';
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { ConfirmDialog } from '@/shared-ui/confirm-dialog.component';
 import { DataTable } from '@/shared-ui/data-table.component';
-import { TIER_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Notice } from '@/shared-ui/notice.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
@@ -17,17 +18,18 @@ import { StatusFilter } from '@/shared-ui/status-filter.component';
 import { Tag } from '@/shared-ui/tag.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
 
-import { ADMIN_TEXT } from './admin.const';
+import { ADMIN_MESSAGES } from './admin.const';
 import { formatPercent } from './admin-format.helper';
 import { ADMIN_REASON } from './admin-queue.helper';
 import type { QueueState } from './queue-state.type';
 
-const T = ADMIN_TEXT.tiers;
 const SIGNALS = 'signals';
-const tierOptions = TIER_VALUES.map((t) => ({ value: t, label: TIER_LABEL[t] }));
 
 /** Dialog to change the official tier (reason required; Mythic refused without an approved dossier, doc 17). */
 function ChangeTierDialog({ row, onClose }: { row: TierSignal | null; onClose: () => void }) {
+  const T = useText(ADMIN_MESSAGES).tiers;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const tierOptions = TIER_VALUES.map((t) => ({ value: t, label: labels.tier[t] }));
   const client = useQueryClient();
   const mutation = setOfficialTier.useMutation({
     onSuccess: () => Promise.all([adminTierSignalsQuery, adminSummaryQuery].map((q) => client.invalidateQueries({ queryKey: q.baseKey }))),
@@ -54,6 +56,9 @@ function ChangeTierDialog({ row, onClose }: { row: TierSignal | null; onClose: (
 
 /** A1 · "Sinais de tier": readers' votes vs the official tier, with the change-tier action. */
 export function TierSignals({ state }: { state: QueueState }) {
+  const T = useText(ADMIN_MESSAGES).tiers;
+  const adminText = useText(ADMIN_MESSAGES);
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   const query = adminTierSignalsQuery.useQuery();
   const [editing, setEditing] = useState<TierSignal | null>(null);
   return (
@@ -78,13 +83,13 @@ export function TierSignals({ state }: { state: QueueState }) {
               rows={onlySignals ? items.filter((s) => s.isSignal) : items}
               rowKey={(s) => s.athlete.slug}
               columns={[
-                { key: 'athlete', header: ADMIN_TEXT.common.athlete, cell: (s) => <b>{s.athlete.knownAs}</b>, sortValue: (s) => s.athlete.knownAs },
+                { key: 'athlete', header: adminText.common.athlete, cell: (s) => <b>{s.athlete.knownAs}</b>, sortValue: (s) => s.athlete.knownAs },
                 { key: 'official', header: T.official, cell: (s) => <TierTag tier={s.official} /> },
                 { key: 'most', header: T.mostVoted, cell: (s) => (s.mostVoted ? <TierTag tier={s.mostVoted} /> : T.noSignal) },
-                { key: 'other', header: T.topOther, cell: (s) => (s.topOther ? `${TIER_LABEL[s.topOther]} · ${formatPercent(s.topOtherShare)}` : T.noSignal), sortValue: (s) => s.topOtherShare },
+                { key: 'other', header: T.topOther, cell: (s) => (s.topOther ? `${labels.tier[s.topOther]} · ${formatPercent(s.topOtherShare)}` : T.noSignal), sortValue: (s) => s.topOtherShare },
                 { key: 'votes', header: T.votes, cell: (s) => s.total, sortValue: (s) => s.total, align: 'end' },
                 { key: 'signal', header: T.signal, cell: (s) => (s.isSignal ? <Tag tone="gold">{T.signal}</Tag> : T.noSignal), sortValue: (s) => Number(s.isSignal) },
-                { key: 'action', header: ADMIN_TEXT.common.actions, cell: (s) => <Button size="sm" onClick={() => setEditing(s)} aria-label={T.changeTitle(s.athlete.knownAs)}>{T.change}</Button> },
+                { key: 'action', header: adminText.common.actions, cell: (s) => <Button size="sm" onClick={() => setEditing(s)} aria-label={T.changeTitle(s.athlete.knownAs)}>{T.change}</Button> },
               ]}
             />
             <ChangeTierDialog row={editing} onClose={() => setEditing(null)} />

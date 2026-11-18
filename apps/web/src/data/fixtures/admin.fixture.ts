@@ -1,27 +1,6 @@
-import {
-  API_ERROR_MESSAGES,
-  type AddCollectionLinksRequest,
-  type AdminAuditAction,
-  AdminAuditAction as Audit,
-  type AdminDecision,
-  AdminDecision as Decision,
-  type AdminSummaryResponse,
-  type BannedWord,
-  type ContactStatus,
-  type FieldErrors,
-  IngestionRunStatus,
-  PrivacyRequestStatus,
-  type PrivacyRequestStatus as PrivacyStatus,
-  ReviewStatus,
-  SuggestionStatus,
-  type TierSignal,
-  type UpdateSourceRequest,
-  type UpdateUserRequest,
-  adminPendingCounts,
-  checkSourceUrl,
-  reviewDossierOutcome,
-  tierSignalOf,
-} from '@was/shared';
+import { API_ERROR_MESSAGES, type AddCollectionLinksRequest, type AdminAuditAction, AdminAuditAction as Audit, type AdminDecision, AdminDecision as Decision, type AdminSummaryResponse, type BannedWord, type ContactStatus, type FieldErrors, IngestionRunStatus, PrivacyRequestStatus, type PrivacyRequestStatus as PrivacyStatus, ReviewStatus, SuggestionStatus, type TierSignal, type UpdateSourceRequest, type UpdateUserRequest, adminPendingCounts, checkSourceUrl, reviewDossierOutcome, tierSignalOf } from '@was/shared';
+import { currentText } from '@/i18n/text-for.helper';
+import { localeStore } from '@/i18n/locale.store';
 
 import { ApiError } from '../api-error.error';
 import { demoId, demoStore } from '../demo.store';
@@ -62,7 +41,7 @@ export const buildProposals = async (sample: Sample) => {
 export const reviewDemoProposal = async (sample: Sample, session: Session, id: string, decision: AdminDecision, reason: string) => {
   const item = (await buildProposals(sample)).items.find((p) => p.id === id);
   if (!item) throw new ApiError(404, { error: 'not_found' });
-  if (item.status !== ReviewStatus.Pending) throw invalid(API_ERROR_MESSAGES.proposalDecided);
+  if (item.status !== ReviewStatus.Pending) throw invalid(currentText(API_ERROR_MESSAGES).proposalDecided);
   const approve = decision === Decision.Approve;
   return decide(session, { action: approve ? Audit.ProposalApproved : Audit.ProposalRejected, target: `${item.entity.label} · ${item.field}`, reason }, (a) => {
     a.proposals[id] = { status: approve ? ReviewStatus.Approved : ReviewStatus.Rejected, reason };
@@ -141,11 +120,11 @@ const queueLinks = async (sample: Sample, athleteName: string, sport: string | n
   const { sources } = await sample('validation-context.json');
   const errors: FieldErrors = {};
   const checked = urls.map((url, i) => {
-    const r = checkSourceUrl(url, sources);
+    const r = checkSourceUrl(url, sources, localeStore.get());
     if (!r.ok) errors[`urls.${i}`] = r.message;
     return r;
   });
-  if (Object.keys(errors).length) throw invalid(API_ERROR_MESSAGES.invalidLinks, errors);
+  if (Object.keys(errors).length) throw invalid(currentText(API_ERROR_MESSAGES).invalidLinks, errors);
   const at = now();
   return checked.flatMap((r) => (r.ok ? [{ id: demoId(), athleteName, sport, url: r.url, sourceName: r.source?.name ?? null, origin, createdAt: at }] : []));
 };
@@ -167,7 +146,7 @@ export const buildUsers = async (sample: Sample) => {
 export const updateDemoUser = async (sample: Sample, session: Session, id: string, body: UpdateUserRequest) => {
   const target = (await buildUsers(sample)).items.find((u) => u.id === id);
   if (!target) throw new ApiError(404, { error: 'not_found' });
-  if (target.email === requireUser(session).email) throw invalid(API_ERROR_MESSAGES.ownAccount);
+  if (target.email === requireUser(session).email) throw invalid(currentText(API_ERROR_MESSAGES).ownAccount);
   const action = body.role ? Audit.RoleChanged : body.banned ? Audit.UserBanned : Audit.UserUnbanned;
   return decide(session, { action, target: target.name, reason: body.reason }, (a) => {
     const prev = a.users[id] ?? {};
@@ -211,7 +190,7 @@ export const buildDossiers = async (sample: Sample) => {
 export const reviewDemoDossier = async (sample: Sample, session: Session, id: string, decision: AdminDecision, reason: string) => {
   const dossier = (await buildDossiers(sample)).items.find((d) => d.id === id);
   if (!dossier) throw new ApiError(404, { error: 'not_found' });
-  const outcome = reviewDossierOutcome(dossier, decision, requireUser(session).name);
+  const outcome = reviewDossierOutcome(dossier, decision, requireUser(session).name, localeStore.get());
   if (!outcome.ok) throw invalid(outcome.message);
   const { approvedBy, status } = outcome;
   const action = decision === Decision.Approve ? Audit.DossierApproved : Audit.DossierRejected;
@@ -234,7 +213,7 @@ export const buildAdminComments = async (sample: Sample) => {
 
 export const addDemoBannedWord = async (sample: Sample, session: Session, word: BannedWord) => {
   const { bannedWords } = await buildAdminComments(sample);
-  if (bannedWords.some((w) => wordKey(w) === wordKey(word))) throw invalid(API_ERROR_MESSAGES.bannedWordExists, { term: API_ERROR_MESSAGES.bannedWordExistsField });
+  if (bannedWords.some((w) => wordKey(w) === wordKey(word))) throw invalid(currentText(API_ERROR_MESSAGES).bannedWordExists, { term: currentText(API_ERROR_MESSAGES).bannedWordExistsField });
   return decide(session, { action: Audit.BannedWordAdded, target: `${word.term} (${word.locale})`, reason: null }, (a) => {
     a.bannedWordsRemoved = a.bannedWordsRemoved.filter((k) => k !== wordKey(word));
     a.bannedWordsAdded.unshift(word);

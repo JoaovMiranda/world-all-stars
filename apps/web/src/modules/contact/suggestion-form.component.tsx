@@ -10,6 +10,9 @@ import { Link } from '@tanstack/react-router';
 import { useMemo } from 'react';
 
 import { submitSuggestion } from '@/data/endpoints/contact.query';
+import { useLocale } from '@/i18n/locale.store';
+import { useFormat } from '@/i18n/use-format.hook';
+import { useText } from '@/i18n/use-text.hook';
 import { CharCounter } from '@/shared-ui/char-counter.component';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Input } from '@/shared-ui/input.component';
@@ -20,9 +23,7 @@ import { useForm } from '@/shared-ui/use-form.hook';
 import { fieldErrorsOf } from './contact-errors.helper';
 import { ContactSubmitFooter } from './contact-submit-footer.component';
 import { SourceLinksField } from './source-links-field.component';
-import { CONTACT_TEXT } from './contact.const';
-
-const t = CONTACT_TEXT.suggestion;
+import { CONTACT_MESSAGES, SPORT_OTHER_VALUE } from './contact.const';
 
 interface SuggestionFormProps {
   context: ValidationContext;
@@ -33,7 +34,11 @@ interface SuggestionFormProps {
 
 /** "Sugerir atleta" (doc 21): same shared validator as the server (https, anti-SSRF, rejected sources, duplicates). */
 export function SuggestionForm({ context, email, onDone }: SuggestionFormProps) {
-  const schema = useMemo(() => createSuggestionInputSchema(context), [context]);
+  const locale = useLocale();
+  const t = useText(CONTACT_MESSAGES).suggestion;
+  const fmt = useFormat();
+  const contactText = useText(CONTACT_MESSAGES);
+  const schema = useMemo(() => createSuggestionInputSchema(context, locale), [context, locale]);
   const form = useForm({ schema, initialValues: { athleteName: '', sport: '', sportOther: '', urls: [''], why: '', email } });
   const { values, errors } = form;
   const send = submitSuggestion.useMutation({
@@ -44,12 +49,12 @@ export function SuggestionForm({ context, email, onDone }: SuggestionFormProps) 
     },
   });
   // "Já está no site": the shared validator also tells which profile, to link it next to the error.
-  const existing = errors.athleteName ? validateSuggestion(values, context).existing : null;
+  const existing = errors.athleteName ? validateSuggestion(values, context, locale).existing : null;
   const sportOptions = useMemo(
-    () => [...context.sports].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')).map((s) => ({ value: s.slug, label: s.name })),
-    [context.sports],
+    () => [...context.sports].sort((a, b) => fmt.compare(a.name, b.name)).map((s) => ({ value: s.slug, label: s.name })),
+    [context.sports, fmt],
   );
-  const isOther = values.sport === CONTACT_TEXT.sportOtherValue;
+  const isOther = values.sport === SPORT_OTHER_VALUE;
 
   return (
     <form
@@ -87,7 +92,7 @@ export function SuggestionForm({ context, email, onDone }: SuggestionFormProps) 
         <FormField label={t.sport}>
           {(p) => (
             <Select {...p} {...form.register('sport')} options={sportOptions} placeholder={t.sportUnknown}>
-              <option value={CONTACT_TEXT.sportOtherValue}>{t.sportOther}</option>
+              <option value={SPORT_OTHER_VALUE}>{t.sportOther}</option>
             </Select>
           )}
         </FormField>

@@ -1,15 +1,11 @@
-import {
-  CONTACT_MESSAGE_MAX_LENGTH,
-  CONTACT_TOPIC_VALUES,
-  type SubmissionResponse,
-  type ValidationContext,
-  createContactInputSchema,
-} from '@was/shared';
+import { CONTACT_MESSAGE_MAX_LENGTH, CONTACT_TOPIC_VALUES, type SubmissionResponse, type ValidationContext, createContactInputSchema } from '@was/shared';
 import { useMemo } from 'react';
 
 import { submitContact } from '@/data/endpoints/contact.query';
+import { useLocale } from '@/i18n/locale.store';
+import { useText } from '@/i18n/use-text.hook';
 import { CharCounter } from '@/shared-ui/char-counter.component';
-import { CONTACT_TOPIC_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Input } from '@/shared-ui/input.component';
 import { Select } from '@/shared-ui/select.component';
@@ -18,10 +14,7 @@ import { useForm } from '@/shared-ui/use-form.hook';
 
 import { fieldErrorsOf } from './contact-errors.helper';
 import { ContactSubmitFooter } from './contact-submit-footer.component';
-import { CONTACT_TEXT } from './contact.const';
-
-const t = CONTACT_TEXT.message;
-const TOPIC_OPTIONS = CONTACT_TOPIC_VALUES.map((value) => ({ value, label: CONTACT_TOPIC_LABEL[value] }));
+import { CONTACT_MESSAGES } from './contact.const';
 
 interface MessageFormProps {
   context: ValidationContext;
@@ -32,7 +25,11 @@ interface MessageFormProps {
 
 /** "Mensagem" (doc 21): name, e-mail, topic and body (≤ 1000, no banned words), validated by the shared rules. */
 export function MessageForm({ context, name, email, onDone }: MessageFormProps) {
-  const schema = useMemo(() => createContactInputSchema(context.bannedWords), [context.bannedWords]);
+  const locale = useLocale();
+  const t = useText(CONTACT_MESSAGES).message;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const TOPIC_OPTIONS = CONTACT_TOPIC_VALUES.map((value) => ({ value, label: labels.contactTopic[value] }));
+  const schema = useMemo(() => createContactInputSchema(context.bannedWords, locale), [context.bannedWords, locale]);
   const form = useForm({ schema, initialValues: { name, email, topic: '', body: '' } });
   const { values, errors } = form;
   const send = submitContact.useMutation({

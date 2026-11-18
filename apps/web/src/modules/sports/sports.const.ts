@@ -1,6 +1,9 @@
-import type { GovernanceModel, OrgNature } from '@was/shared';
+import { defineMessages, type GovernanceModel } from '@was/shared';
 
-// UI strings of the sports module (pt-BR, ready to become an i18n namespace).
+import { SPORTS_TEXT_EN } from './sports.const.en';
+import { SPORTS_TEXT_ES } from './sports.const.es';
+
+// UI strings of the sports module (pt-BR source; en/es next to it).
 export const SPORTS_TEXT = {
   list: {
     title: 'Esportes e associações',
@@ -102,59 +105,47 @@ export const SPORTS_TEXT = {
     fullHierarchy: 'Ver a hierarquia completa',
     dash: '—',
   },
+  /** Governance models (doc 18), labels of the /sports filter chips and card badges. */
+  governance: {
+    pyramid: 'Pirâmide tradicional',
+    condominium: 'Condomínio de associações',
+    free_market: 'Livre mercado',
+    publisher: 'Pirâmide invertida (publisher)',
+    cultural: 'Identidade e cultura',
+  } satisfies Record<GovernanceModel, string>,
+  /** Prize forms (doc 19 category). Unknown keys fall back to the raw value. */
+  prizeForm: {
+    medal: 'Medalha',
+    belt: 'Cinturão',
+    championship_trophy: 'Troféu de campeão',
+    title_rank: 'Graduação / título vitalício',
+    ranking: 'Posição em ranking',
+    individual_award: 'Prêmio individual (eleição)',
+    hall_of_fame: 'Hall da fama',
+    pro_card: 'Cartão profissional',
+    traditional_trophy: 'Troféu ou artesanato tradicional',
+  } as Record<string, string>,
+  periodicity: {
+    annual: 'anual',
+    biennial: 'bienal',
+    quadrennial: 'quadrienal',
+    irregular: 'irregular',
+    continuous: 'título contínuo (cinturão)',
+  } as Record<string, string>,
+  environment: {
+    closed: { name: 'Fechado', summary: 'Depende quase só do próprio atleta e do relógio/juízes.' },
+    open: { name: 'Aberto', summary: 'Caótico: depende de adversários, tática e, às vezes, companheiros.' },
+  } as Record<string, { name: string; summary: string }>,
+  format: {
+    individual: 'individual',
+    duel: '1 contra 1',
+    team: 'em equipe',
+    judged: 'julgado por juízes',
+  } as Record<string, string>,
 } as const;
 
-/** Governance models (doc 18), labels of the /sports filter chips and card badges. */
-export const GOVERNANCE_LABEL: Record<GovernanceModel, string> = {
-  pyramid: 'Pirâmide tradicional',
-  condominium: 'Condomínio de associações',
-  free_market: 'Livre mercado',
-  publisher: 'Pirâmide invertida (publisher)',
-  cultural: 'Identidade e cultura',
-};
-
-/** Nature of an organization (doc 19), labels of the hierarchy filter. */
-export const ORG_NATURE_LABEL: Record<OrgNature, string> = {
-  association: 'Associação sem fins lucrativos',
-  company: 'Empresa',
-  brand: 'Marca',
-  community: 'Comunidade / cultura',
-  media: 'Mídia',
-  unknown: 'A classificar',
-};
-
-/** Prize forms (doc 19 category). Unknown keys fall back to the raw value. */
-export const PRIZE_FORM_LABEL: Record<string, string> = {
-  medal: 'Medalha',
-  belt: 'Cinturão',
-  championship_trophy: 'Troféu de campeão',
-  title_rank: 'Graduação / título vitalício',
-  ranking: 'Posição em ranking',
-  individual_award: 'Prêmio individual (eleição)',
-  hall_of_fame: 'Hall da fama',
-  pro_card: 'Cartão profissional',
-  traditional_trophy: 'Troféu ou artesanato tradicional',
-};
-
-export const PERIODICITY_LABEL: Record<string, string> = {
-  annual: 'anual',
-  biennial: 'bienal',
-  quadrennial: 'quadrienal',
-  irregular: 'irregular',
-  continuous: 'título contínuo (cinturão)',
-};
-
-export const ENVIRONMENT_LABEL: Record<string, { name: string; summary: string }> = {
-  closed: { name: 'Fechado', summary: 'Depende quase só do próprio atleta e do relógio/juízes.' },
-  open: { name: 'Aberto', summary: 'Caótico: depende de adversários, tática e, às vezes, companheiros.' },
-};
-
-export const FORMAT_LABEL: Record<string, string> = {
-  individual: 'individual',
-  duel: '1 contra 1',
-  team: 'em equipe',
-  judged: 'julgado por juízes',
-};
 
 /** In-page anchors (linked from cards, the sport page and the /organizations redirect). */
 export const SPORTS_HASH = { hierarchy: 'hierarquia', associations: 'associacoes' } as const;
+
+export const SPORTS_MESSAGES = defineMessages(SPORTS_TEXT, { en: SPORTS_TEXT_EN, es: SPORTS_TEXT_ES });

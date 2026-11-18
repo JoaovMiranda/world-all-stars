@@ -1,6 +1,8 @@
 import { type ReactNode, useMemo, useState } from 'react';
 
-import { UI_TEXT } from './ui-text.const';
+import { useText } from '@/i18n/use-text.hook';
+
+import { UI_MESSAGES } from './ui-text.const';
 
 export interface DataColumn<T> {
   key: string;
@@ -23,7 +25,8 @@ interface DataTableProps<T> {
 }
 
 /** Accessible table: sortable headers (buttons + aria-sort), horizontal scroll on small screens, empty row. */
-export function DataTable<T>({ columns, rows, rowKey, caption, captionHidden = false, emptyText = UI_TEXT.tableEmpty, initialSort }: DataTableProps<T>) {
+export function DataTable<T>({ columns, rows, rowKey, caption, captionHidden = false, emptyText, initialSort }: DataTableProps<T>) {
+  const ui = useText(UI_MESSAGES);
   const [sort, setSort] = useState(initialSort ?? null);
   const sorted = useMemo(() => {
     const col = sort && columns.find((c) => c.key === sort.key);
@@ -53,7 +56,7 @@ export function DataTable<T>({ columns, rows, rowKey, caption, captionHidden = f
               return (
                 <th key={c.key} scope="col" data-align={c.align} aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : c.sortValue ? 'none' : undefined}>
                   {c.sortValue ? (
-                    <button type="button" className="sort-btn" onClick={() => toggle(c.key)} aria-label={UI_TEXT.sortBy(c.header)}>
+                    <button type="button" className="sort-btn" onClick={() => toggle(c.key)} aria-label={ui.sortBy(c.header)}>
                       {c.header}
                       <span aria-hidden="true">{active ? (sort.dir === 'asc' ? '▲' : '▼') : '↕'}</span>
                     </button>
@@ -69,7 +72,7 @@ export function DataTable<T>({ columns, rows, rowKey, caption, captionHidden = f
           {sorted.length === 0 ? (
             <tr>
               <td className="table-empty" colSpan={columns.length}>
-                {emptyText}
+                {emptyText ?? ui.tableEmpty}
               </td>
             </tr>
           ) : (

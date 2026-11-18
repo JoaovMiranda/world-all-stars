@@ -1,17 +1,16 @@
 import { type AthleteProfile, COMMENT_SORT_VALUES, type CommentSort, type CommentsResponse } from '@was/shared';
 import { useState } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { Section } from '@/shared-ui/section.component';
 import { useSession } from '@/session/use-session.hook';
 
-import { ATHLETE_PROFILE_TEXT } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 import { CommentForm } from './comment-form.component';
 import { CommentItem } from './comment-item.component';
-
-const T = ATHLETE_PROFILE_TEXT.comments;
 
 interface CommentsTabProps {
   profile: AthleteProfile;
@@ -22,6 +21,7 @@ interface CommentsTabProps {
 
 /** Comentários (doc 20): threads with 1 level of replies, sort top/recent, reactions; visitors are invited to sign in. */
 export function CommentsTab({ profile, comments, sort, onSort }: CommentsTabProps) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).comments;
   const { user, isSignedIn, requireLogin } = useSession();
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const reply = (id: string) => {

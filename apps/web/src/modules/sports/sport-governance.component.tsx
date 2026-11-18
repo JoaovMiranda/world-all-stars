@@ -1,18 +1,20 @@
 import type { SportPage } from '@was/shared';
 import { Fragment } from 'react';
 
-import { ORG_ROLE_LABEL } from '@/shared-ui/domain-labels.const';
+import { useText } from '@/i18n/use-text.hook';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { OrgName } from '@/shared-ui/org-name.component';
 import { Section } from '@/shared-ui/section.component';
 import { Tag } from '@/shared-ui/tag.component';
 
-import { ENVIRONMENT_LABEL, FORMAT_LABEL, PRIZE_FORM_LABEL, SPORTS_HASH, SPORTS_TEXT } from './sports.const';
-
-const t = SPORTS_TEXT.page;
+import { SPORTS_MESSAGES, SPORTS_HASH } from './sports.const';
 
 /** "Quem manda / O ápice / Ambiente" (doc 18/19): governance chains with Wikipedia links, pinnacle, prize forms. */
 export function SportGovernance({ sport }: { sport: SportPage }) {
-  const env = ENVIRONMENT_LABEL[sport.environment];
+  const t = useText(SPORTS_MESSAGES).page;
+  const sportsText = useText(SPORTS_MESSAGES);
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const env = sportsText.environment[sport.environment];
   return (
     <Section title={t.whoRules} className="sport-governance">
       <div className="gov-grid">
@@ -25,7 +27,7 @@ export function SportGovernance({ sport }: { sport: SportPage }) {
                 const self = b.chain.at(-1);
                 return (
                   <li key={`${b.role}-${b.name}`}>
-                    <span className="muted">{ORG_ROLE_LABEL[b.role] ?? b.role}:</span>{' '}
+                    <span className="muted">{labels.orgRole[b.role] ?? b.role}:</span>{' '}
                     {b.chain.map((c, i) => (
                       <Fragment key={c.id}>
                         {i > 0 && (
@@ -56,7 +58,7 @@ export function SportGovernance({ sport }: { sport: SportPage }) {
             {sport.prizeForms.length > 0
               ? sport.prizeForms.map((f) => (
                   <Tag key={f} tone="soft">
-                    {PRIZE_FORM_LABEL[f] ?? f}
+                    {sportsText.prizeForm[f] ?? f}
                   </Tag>
                 ))
               : t.dash}
@@ -65,7 +67,7 @@ export function SportGovernance({ sport }: { sport: SportPage }) {
         <div>
           <span className="label">{t.environment}</span>
           <b className="gov-value">
-            {env?.name ?? t.dash} · {FORMAT_LABEL[sport.format] ?? t.dash}
+            {env?.name ?? t.dash} · {sportsText.format[sport.format] ?? t.dash}
           </b>
           {env && <p className="muted">{env.summary}</p>}
         </div>

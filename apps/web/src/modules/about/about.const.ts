@@ -1,11 +1,16 @@
-import { COMPETITION_LEVEL_WEIGHT, MYTHIC_MIN_EVIDENCES, TIER_PERCENTILE_THRESHOLD, type CompetitionLevel, type Tier } from '@was/shared';
+import { COMPETITION_LEVEL_WEIGHT, MYTHIC_MIN_EVIDENCES, TIER_PERCENTILE_THRESHOLD, type CompetitionLevel, defineMessages, type Locale, type Tier } from '@was/shared';
 
 import type { DocumentContent } from '@/shared-ui/document-page-layout.component';
 
-// UI strings and contents of the about module (pt-BR, ready to become an i18n namespace). Source: plan/docs/00, 17.
+import { ABOUT_TEXT_EN, CRITERIA_DOC_EN } from './about.const.en';
+import { ABOUT_TEXT_ES, CRITERIA_DOC_ES } from './about.const.es';
+
+// UI strings and contents of the about module (pt-BR source; en/es next to it). Source: plan/docs/00, 17.
+
+/** Last review of the criteria page. */
+export const CRITERIA_UPDATED_AT = '2026-11-04';
 
 export const ABOUT_TEXT = {
-  updatedAt: '2026-11-04',
   tiersCaption: 'Níveis de campeão: selo e definição',
   levelsHeaders: ['Nível', 'Peso no legacy score', 'Exemplos'],
   levelsCaption: 'Níveis de campeonato e prêmio, com peso e exemplos',
@@ -15,24 +20,24 @@ export const ABOUT_TEXT = {
     sources: 'De onde vêm os dados',
     suggest: 'Sugerir um atleta',
   },
+  /** Definition of each tier (doc 00 "Níveis de campeão"). */
+  tierDefinition: {
+    mythic:
+      'Mudou o esporte: redefiniu técnica, recordes, popularidade ou a forma como o esporte é jogado e visto, e é referência histórica unânime. Entra no Hall of Greats.',
+    legendary: 'Domínio prolongado e números históricos entre os maiores de todos os tempos, sem (ou com menos consenso sobre) ter transformado o esporte.',
+    elite: 'Vários títulos de nível mundial ou continental e destaque claro na sua geração.',
+    champion: 'Cumpre os critérios de inclusão do esporte (título relevante), sem domínio prolongado.',
+  } satisfies Record<Tier, string>,
+  /** Examples of each competition level (doc 00 "Nível de campeonato e prêmio"). */
+  levelExamples: {
+    world: 'Copa do Mundo FIFA, Jogos Olímpicos, Mundial de Natação, Mundial de Xadrez, Major de CS, cinturões WBA/WBC/IBF/WBO, Bola de Ouro',
+    continental: 'Copa Libertadores, Eurocopa, Pan-Americano, Europeu de Xadrez, IEM regional',
+    national: 'Brasileirão, Troféu José Finkel, Brasileiro de Xadrez, Gamers Club Liga Série A',
+    local: 'Estaduais (Paulistão, Carioca), torneios municipais e regionais',
+  } satisfies Record<CompetitionLevel, string>,
 } as const;
 
-/** Definition of each tier (doc 00 "Níveis de campeão"). */
-export const TIER_DEFINITION: Record<Tier, string> = {
-  mythic:
-    'Mudou o esporte: redefiniu técnica, recordes, popularidade ou a forma como o esporte é jogado e visto, e é referência histórica unânime. Entra no Hall of Greats.',
-  legendary: 'Domínio prolongado e números históricos entre os maiores de todos os tempos, sem (ou com menos consenso sobre) ter transformado o esporte.',
-  elite: 'Vários títulos de nível mundial ou continental e destaque claro na sua geração.',
-  champion: 'Cumpre os critérios de inclusão do esporte (título relevante), sem domínio prolongado.',
-};
-
-/** Examples of each competition level (doc 00 "Nível de campeonato e prêmio"). */
-export const LEVEL_EXAMPLES: Record<CompetitionLevel, string> = {
-  world: 'Copa do Mundo FIFA, Jogos Olímpicos, Mundial de Natação, Mundial de Xadrez, Major de CS, cinturões WBA/WBC/IBF/WBO, Bola de Ouro',
-  continental: 'Copa Libertadores, Eurocopa, Pan-Americano, Europeu de Xadrez, IEM regional',
-  national: 'Brasileirão, Troféu José Finkel, Brasileiro de Xadrez, Gamers Club Liga Série A',
-  local: 'Estaduais (Paulistão, Carioca), torneios municipais e regionais',
-};
+export const ABOUT_MESSAGES = defineMessages(ABOUT_TEXT, { en: ABOUT_TEXT_EN, es: ABOUT_TEXT_ES });
 
 const w = COMPETITION_LEVEL_WEIGHT;
 
@@ -138,3 +143,6 @@ export const CRITERIA_DOC: DocumentContent = {
     },
   ],
 };
+
+/** "How we choose" in each language (read with useLocalized / currentLocalized). */
+export const CRITERIA_DOCS: Record<Locale, DocumentContent> = { 'pt-BR': CRITERIA_DOC, en: CRITERIA_DOC_EN, es: CRITERIA_DOC_ES };

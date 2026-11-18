@@ -1,0 +1,47 @@
+import type { Messages } from '@was/shared';
+
+import type { ADMIN_LABELS_TEXT } from './admin-labels.const';
+
+export const ADMIN_LABELS_TEXT_EN = {
+  reviewStatus: { pending: 'Pending', approved: 'Approved', rejected: 'Rejected', skipped: 'Skipped' },
+  dossierStatus: { draft: 'Draft', pending: 'Awaiting approval', approved: 'Approved', rejected: 'Rejected' },
+  runStatus: { running: 'Running', success: 'Success', partial: 'Partial', failed: 'Failed' },
+  privacyStatus: { open: 'Open', in_progress: 'In progress', answered: 'Answered', rejected: 'Declined' },
+  deadline: { overdue: 'Overdue', due_soon: 'Due soon', on_track: 'On track', closed: 'Closed' },
+  suggestionStatus: { pending: 'Pending', approved: 'Approved', rejected: 'Rejected', duplicate: 'Duplicate' },
+  contactStatus: { new: 'New', answered: 'Answered', closed: 'Closed' },
+  commentStatus: { visible: 'Visible', hidden: 'Hidden' },
+  userRole: { reader: 'Reader', admin: 'Admin' },
+  gate: { unchanged: 'Unchanged', noise: 'Noise', parser: 'Parser', duplicate: 'Duplicate', budget: 'Budget' },
+  privacyRight: { access: 'Access', correction: 'Correction', deletion: 'Deletion', portability: 'Portability', opposition: 'Objection', revoke: 'Withdraw consent' },
+  privacySubject: { user: 'User', athlete: 'Athlete', heir: 'Heir', other: 'Other' },
+  evidenceType: {
+    technique_named: 'Technique named after them',
+    decades_record: 'Record that stood for decades',
+    rule_or_market_change: 'Changed a rule or the market',
+    global_popularization: 'Global popularization',
+    institutional_recognition: 'Institutional recognition',
+    other: 'Other',
+  },
+  auditAction: {
+    role_changed: 'Role changed',
+    user_banned: 'Account banned',
+    user_unbanned: 'Ban lifted',
+    tier_changed: 'Official tier changed',
+    proposal_approved: 'Proposal approved',
+    proposal_rejected: 'Proposal rejected',
+    dossier_approved: 'Dossier approved',
+    dossier_rejected: 'Dossier rejected',
+    source_updated: 'Source updated',
+    links_queued: 'Links sent to collection',
+    suggestion_reviewed: 'Suggestion reviewed',
+    message_updated: 'Message updated',
+    privacy_updated: 'Privacy request updated',
+    comment_moderated: 'Comment moderated',
+    banned_word_added: 'Banned word added',
+    banned_word_removed: 'Banned word removed',
+    ingestion_triggered: 'Collection triggered',
+  },
+  matchMode: { word: 'Whole word', contains: 'Also inside words' },
+  locale: { 'pt-BR': 'Portuguese', en: 'English', es: 'Spanish' },
+} satisfies Messages<typeof ADMIN_LABELS_TEXT>;

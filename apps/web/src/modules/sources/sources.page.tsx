@@ -3,8 +3,9 @@ import './sources.page.css';
 import { SOURCE_USAGE_STATUS_VALUES, SourcesFiltersSchema } from '@was/shared';
 
 import { collectionRunsQuery, sourcesQuery } from '@/data/endpoints/discovery.query';
+import { useText } from '@/i18n/use-text.hook';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
-import { SOURCE_USAGE_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { KpiGrid } from '@/shared-ui/kpi-grid.component';
 import { PageLayout } from '@/shared-ui/page-layout.component';
@@ -16,9 +17,7 @@ import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 
 import { CollectionRuns } from './collection-runs.component';
 import { SourceItem } from './source-item.component';
-import { SOURCES_TEXT } from './sources.const';
-
-const T = SOURCES_TEXT;
+import { SOURCES_MESSAGES } from './sources.const';
 
 const loading = (
   <>
@@ -29,6 +28,8 @@ const loading = (
 
 /** P14 Sources (doc 09): KPIs by usage status · filterable registry · AI-assisted collection runs · the 6 primary origins. */
 export function SourcesPage() {
+  const T = useText(SOURCES_MESSAGES);
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   const { filters, setFilter } = useUrlFilters(SourcesFiltersSchema);
   const sources = sourcesQuery.useQuery();
   const runs = collectionRunsQuery.useQuery();
@@ -58,7 +59,7 @@ export function SourcesPage() {
                 actions={
                   <ChipToggleGroup
                     label={T.list.filterLabel}
-                    options={SOURCE_USAGE_STATUS_VALUES.map((value) => ({ value, label: T.list.chip(SOURCE_USAGE_LABEL[value], count(value)) }))}
+                    options={SOURCE_USAGE_STATUS_VALUES.map((value) => ({ value, label: T.list.chip(labels.sourceUsage[value], count(value)) }))}
                     value={filters.status}
                     onChange={(v) => setFilter('status', v)}
                   />

@@ -3,7 +3,7 @@ import { ParticipationApi } from '@was/shared';
 import { defineMutation, defineQuery } from '../define-endpoint.helper';
 import { requireUser } from '../fixtures/require-user.fixture';
 import { buildMyData, buildMyDataExport, deleteDemoAccount, updateDemoConsent } from '../fixtures/my-data.fixture';
-import { meQuery, notificationsQuery } from './session.query';
+import { meQuery, notificationsQuery, sessionQuery } from './session.query';
 
 /** GET /api/me/data (E6): Terms/Privacy acceptances and optional consents. */
 export const myDataQuery = defineQuery(ParticipationApi.myData, { sample: () => buildMyData() });
@@ -19,4 +19,9 @@ export const exportMyData = defineMutation(ParticipationApi.exportMyData, ({ sam
 /** DELETE /api/me: anonymizes the account (doc 13). */
 export const deleteAccount = defineMutation(ParticipationApi.deleteAccount, ({ input }) => deleteDemoAccount(input.body.confirmation), {
   invalidates: [meQuery, notificationsQuery, myDataQuery],
+});
+
+/** POST /api/account/consent: a pending Google sign-in accepts the current Terms + Privacy and declares 18+. */
+export const acceptConsent = defineMutation(ParticipationApi.acceptConsent, () => ({ ok: true as const }), {
+  invalidates: [sessionQuery, myDataQuery],
 });

@@ -1,6 +1,7 @@
 import './hall-of-greats.page.css';
 
 import { hallOfGreatsQuery } from '@/data/endpoints/discovery.query';
+import { useText } from '@/i18n/use-text.hook';
 import { AthleteGrid } from '@/shared-ui/athlete-grid.component';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
@@ -9,10 +10,8 @@ import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { Section } from '@/shared-ui/section.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
 
-import { HALL_OF_GREATS_TEXT } from './hall-of-greats.const';
+import { HALL_OF_GREATS_MESSAGES } from './hall-of-greats.const';
 import { LegendCard } from './legend-card.component';
-
-const T = HALL_OF_GREATS_TEXT;
 
 const loading = (
   <div className="legends">
@@ -24,6 +23,7 @@ const loading = (
 
 /** P11 Hall of Greats (doc 09): always-dark stage · entry rules · Mythics with dossier · queue of Legendary candidates. */
 export function HallOfGreatsPage() {
+  const T = useText(HALL_OF_GREATS_MESSAGES);
   const hall = hallOfGreatsQuery.useQuery();
   return (
     <div className="hall-stage theme-stage">
@@ -33,6 +33,7 @@ export function HallOfGreatsPage() {
         eyebrow={<span className="label-gold">{T.page.eyebrow}</span>}
         lead={T.page.lead}
         breadcrumb={[{ label: T.page.title }]}
+        contentLocale={hall.data?.contentLocale}
       >
         <ul className="hall-rules" aria-label={T.rules.label}>
           {T.rules.items.map((r) => (

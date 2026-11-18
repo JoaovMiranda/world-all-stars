@@ -1,6 +1,9 @@
-import type { OnThisDayKind } from '@was/shared';
+import { defineMessages, type OnThisDayKind } from '@was/shared';
 
-// UI strings of the on-this-day module (pt-BR, ready to become an i18n namespace).
+import { ON_THIS_DAY_TEXT_EN } from './on-this-day.const.en';
+import { ON_THIS_DAY_TEXT_ES } from './on-this-day.const.es';
+
+// UI strings of the on-this-day module (pt-BR source; en/es next to it).
 export const ON_THIS_DAY_TEXT = {
   eyebrow: 'Hoje na história',
   title: (dayLabel: string) => `${dayLabel} na história do esporte`,
@@ -30,3 +33,5 @@ export const ON_THIS_DAY_GROUPS: readonly { key: keyof typeof ON_THIS_DAY_TEXT.g
   { key: 'achievements', kinds: ['title', 'record', 'career'] },
   { key: 'deaths', kinds: ['death'] },
 ];
+
+export const ON_THIS_DAY_MESSAGES = defineMessages(ON_THIS_DAY_TEXT, { en: ON_THIS_DAY_TEXT_EN, es: ON_THIS_DAY_TEXT_ES });

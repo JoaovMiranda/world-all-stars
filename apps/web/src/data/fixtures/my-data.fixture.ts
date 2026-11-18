@@ -1,16 +1,6 @@
-import {
-  ACCOUNT_DELETE_CONFIRMATION,
-  CONSENT_PURPOSE_VALUES,
-  ConsentPurpose,
-  type DeleteAccountResponse,
-  LEGAL_DOCUMENT_VERSIONS,
-  LegalDocumentKind,
-  type MyDataExport,
-  type MyDataResponse,
-  type SessionUser,
-  VALIDATION_MESSAGES,
-  anonymizedUserName,
-} from '@was/shared';
+import { ACCOUNT_DELETE_CONFIRMATION, CONSENT_PURPOSE_VALUES, ConsentPurpose, type DeleteAccountResponse, LEGAL_DOCUMENT_VERSIONS, LegalDocumentKind, type MyDataExport, type MyDataResponse, type SessionUser, VALIDATION_MESSAGES, anonymizedUserName } from '@was/shared';
+
+import { currentText } from '@/i18n/text-for.helper';
 
 import { ApiError } from '../api-error.error';
 import { demoStore } from '../demo.store';
@@ -59,8 +49,8 @@ export const deleteDemoAccount = (confirmation: string): DeleteAccountResponse =
   if (confirmation.trim() !== ACCOUNT_DELETE_CONFIRMATION) {
     throw new ApiError(422, {
       error: 'validation',
-      message: VALIDATION_MESSAGES.accountDeleteConfirmation(ACCOUNT_DELETE_CONFIRMATION),
-      errors: { confirmation: VALIDATION_MESSAGES.accountDeleteConfirmation(ACCOUNT_DELETE_CONFIRMATION) },
+      message: currentText(VALIDATION_MESSAGES).accountDeleteConfirmation(ACCOUNT_DELETE_CONFIRMATION),
+      errors: { confirmation: currentText(VALIDATION_MESSAGES).accountDeleteConfirmation(ACCOUNT_DELETE_CONFIRMATION) },
     });
   }
   demoStore.update((d) => {

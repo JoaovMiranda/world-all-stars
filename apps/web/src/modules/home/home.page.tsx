@@ -4,13 +4,14 @@ import { getRouteApi } from '@tanstack/react-router';
 
 import { useToday } from '@/app/use-boot.hook';
 import { homeQuery } from '@/data/endpoints/home.query';
+import { useText } from '@/i18n/use-text.hook';
 import { ErrorState } from '@/shared-ui/error-state.component';
 
 import { GlobeSection } from './globe-section.component';
 import { HallOfGreatsBand } from './hall-of-greats-band.component';
 import { HomeIntro } from './home-intro.component';
 import { homeQueryInput } from './home-query.helper';
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 import { MonthCalendar } from './month-calendar.component';
 import { SportsSection } from './sports-section.component';
 import { TodayInHistory } from './today-in-history.component';
@@ -23,6 +24,7 @@ const route = getRouteApi('/');
  * Sections render their own skeleton while `data` is undefined, so the page never jumps.
  */
 export function HomePage() {
+  const homeText = useText(HOME_MESSAGES);
   const search = route.useSearch();
   const today = useToday();
   const input = homeQueryInput(search, today);
@@ -35,8 +37,8 @@ export function HomePage() {
       <HomeIntro athleteSlugs={data?.athleteSlugs} isError={home.isError} />
       {home.isError ? (
         <ErrorState
-          title={HOME_TEXT.error.title}
-          description={HOME_TEXT.error.text}
+          title={homeText.error.title}
+          description={homeText.error.text}
           onRetry={() => void home.refetch()}
           isRetrying={home.isFetching}
         />

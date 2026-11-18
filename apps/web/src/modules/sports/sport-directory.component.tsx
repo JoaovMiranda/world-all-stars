@@ -1,15 +1,16 @@
 import { countSports, featuredAssociations, SPORT_CARD_ASSOCIATIONS_LIMIT, type SportGroup } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 
+import { useText } from '@/i18n/use-text.hook';
 import { SportCard } from '@/shared-ui/sport-card.component';
 import { Tag } from '@/shared-ui/tag.component';
 
-import { GOVERNANCE_LABEL, SPORTS_HASH, SPORTS_TEXT } from './sports.const';
-
-const t = SPORTS_TEXT.list;
+import { SPORTS_MESSAGES, SPORTS_HASH } from './sports.const';
 
 /** Groups › subgroups › SportCards (whole card → sport page; association names → Wikipedia). */
 export function SportDirectory({ groups }: { groups: readonly SportGroup[] }) {
+  const t = useText(SPORTS_MESSAGES).list;
+  const sportsText = useText(SPORTS_MESSAGES);
   return (
     <div className="sport-directory">
       {groups.map((g) => (
@@ -31,7 +32,7 @@ export function SportDirectory({ groups }: { groups: readonly SportGroup[] }) {
                         sport={s}
                         associations={shown}
                         associationsLabel={t.associations(s.associations.length)}
-                        tags={s.governance && <Tag tone="soft">{GOVERNANCE_LABEL[s.governance]}</Tag>}
+                        tags={s.governance && <Tag tone="soft">{sportsText.governance[s.governance]}</Tag>}
                         footer={
                           <>
                             {s.associations.length === 0 && <p className="muted">{t.noAssociations}</p>}

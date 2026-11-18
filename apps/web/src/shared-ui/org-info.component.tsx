@@ -1,9 +1,14 @@
-import { LEVEL_LABEL } from './domain-labels.const';
+
+import { useText } from '@/i18n/use-text.hook';
+
+import { DOMAIN_LABELS_MESSAGES } from './domain-labels.const';
 import type { OrgLike } from './org.type';
-import { UI_TEXT } from './ui-text.const';
+import { UI_MESSAGES } from './ui-text.const';
 
 /** Summary panel of an organization (opened by OrgInfoButton): kind, nature, scope, country, hierarchy, links. */
 export function OrgInfo({ org, id }: { org: OrgLike; id: string }) {
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const ui = useText(UI_MESSAGES);
   return (
     <div className="org-info" id={id}>
       {org.image && <img src={org.image} alt="" loading="lazy" referrerPolicy="no-referrer" />}
@@ -13,21 +18,21 @@ export function OrgInfo({ org, id }: { org: OrgLike; id: string }) {
           {org.description && <span className="muted"> · {org.description}</span>}
         </p>
         <p className="muted">
-          {org.kindLabel} · {org.natureLabel} · {LEVEL_LABEL[org.scope]}
+          {org.kindLabel} · {org.natureLabel} · {labels.level[org.scope]}
           {org.country && ` · ${org.country.flag} ${org.country.name}`}
         </p>
         {org.chain && org.chain.length > 1 && (
           <p className="muted">
-            {UI_TEXT.hierarchy}: {org.chain.map((c) => c.name).join(' › ')}
+            {ui.hierarchy}: {org.chain.map((c) => c.name).join(' › ')}
           </p>
         )}
         <p>
           {org.wikipedia ? (
             <a href={org.wikipedia} target="_blank" rel="noopener noreferrer">
-              {UI_TEXT.readOnWikipedia}
+              {ui.readOnWikipedia}
             </a>
           ) : (
-            <span className="muted">{UI_TEXT.noWikipedia}</span>
+            <span className="muted">{ui.noWikipedia}</span>
           )}
           {org.qid && (
             <>

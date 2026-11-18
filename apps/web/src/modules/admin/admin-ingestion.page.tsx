@@ -1,6 +1,7 @@
 import { ADMIN_INGESTION_TAB_VALUES, type AdminIngestionRun, AdminIngestionSearchSchema, AdminIngestionTab, INGESTION_GATE_VALUES } from '@was/shared';
 
 import { adminIngestionQuery, runIngestion } from '@/data/endpoints/admin.query';
+import { useText } from '@/i18n/use-text.hook';
 import { DataTable } from '@/shared-ui/data-table.component';
 import { DecisionBar } from '@/shared-ui/decision-bar.component';
 import { FactList } from '@/shared-ui/fact-list.component';
@@ -15,31 +16,33 @@ import { StatTile } from '@/shared-ui/stat-tile.component';
 import { StatusFilter } from '@/shared-ui/status-filter.component';
 import { Tabs } from '@/shared-ui/tabs.component';
 
-import { ADMIN_TEXT } from './admin.const';
+import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import { GATE_LABEL, RUN_STATUS_META } from './admin-labels.const';
 import { AdminLayout } from './admin-layout.component';
 import { filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import { StatusTag } from './status-tag.component';
 import { useAdminTab } from './use-admin-tab.hook';
 import { useQueueState } from './use-queue-state.hook';
+import { useAdminMeta } from './use-admin-meta.hook';
 
-const T = ADMIN_TEXT.ingestion;
 const statusOf = (r: AdminIngestionRun) => r.status;
 const skippedOf = (r: AdminIngestionRun) => INGESTION_GATE_VALUES.reduce((s, g) => s + (r.skipped[g] ?? 0), 0);
 
 function RunDetail({ run }: { run: AdminIngestionRun }) {
+  const T = useText(ADMIN_MESSAGES).ingestion;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const skipped = skippedOf(run);
   return (
     <div className="admin-detail">
       <div className="admin-detail-head">
-        <StatusTag meta={RUN_STATUS_META[run.status]} />
+        <StatusTag meta={meta.runStatus[run.status]} />
       </div>
       <h2>{run.jobKey}</h2>
       <FactList
         variant="split"
         items={[
-          { key: 'src', term: ADMIN_TEXT.common.source, detail: run.source?.name ?? ADMIN_TEXT.common.noSource },
+          { key: 'src', term: adminText.common.source, detail: run.source?.name ?? adminText.common.noSource },
           { key: 'mode', term: T.mode, detail: run.mode },
           { key: 'start', term: T.duration, detail: formatDateTime(run.startedAt) },
           { key: 'checked', term: T.checked, detail: run.checked },
@@ -54,7 +57,7 @@ function RunDetail({ run }: { run: AdminIngestionRun }) {
           label={T.gates}
           items={INGESTION_GATE_VALUES.map((g) => ({
             key: g,
-            label: GATE_LABEL[g],
+            label: meta.gate[g],
             percent: skipped ? ((run.skipped[g] ?? 0) / skipped) * 100 : 0,
             valueText: run.skipped[g] ?? 0,
           }))}
@@ -79,9 +82,12 @@ function RunDetail({ run }: { run: AdminIngestionRun }) {
 }
 
 function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
+  const T = useText(ADMIN_MESSAGES).ingestion;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const state = useQueueState();
   const run = runIngestion.useMutation();
-  const status = pickStatus(RUN_STATUS_META, state.status);
+  const status = pickStatus(meta.runStatus, state.status);
   const jobs = [...new Map(runs.map((r) => [r.jobKey, r])).values()];
   return (
     <div className="stack">
@@ -100,10 +106,10 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
           columns={[
             { key: 'job', header: T.jobsTitle, cell: (r) => <span className="admin-wrap">{r.jobKey}</span> },
             { key: 'last', header: T.duration, cell: (r) => formatDateTime(r.startedAt) },
-            { key: 'status', header: T.status, cell: (r) => <StatusTag meta={RUN_STATUS_META[r.status]} /> },
+            { key: 'status', header: T.status, cell: (r) => <StatusTag meta={meta.runStatus[r.status]} /> },
             {
               key: 'run',
-              header: ADMIN_TEXT.common.actions,
+              header: adminText.common.actions,
               cell: (r) => (
                 <DecisionBar
                   label={T.runNowTitle(r.jobKey)}
@@ -114,7 +120,7 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
           ]}
         />
       </Section>
-      <StatusFilter label={ADMIN_TEXT.common.statusFilter} options={statusOptions(RUN_STATUS_META, runs, statusOf)} value={status} total={runs.length} onChange={state.setStatus} />
+      <StatusFilter label={adminText.common.statusFilter} options={statusOptions(meta.runStatus, runs, statusOf)} value={status} total={runs.length} onChange={state.setStatus} />
       <ReviewQueue
         label={T.runsLabel}
         items={filterByStatus(runs, status, statusOf)}
@@ -127,7 +133,7 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
           <>
             <span className="review-queue-item-head">
               <b>{r.jobKey}</b>
-              <StatusTag meta={RUN_STATUS_META[r.status]} />
+              <StatusTag meta={meta.runStatus[r.status]} />
             </span>
             <small>
               {formatDateTime(r.startedAt)} · {T.checked} {r.checked} · {T.tokens} {formatNumber(r.tokens)}
@@ -142,6 +148,9 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
 
 /** A2 Ingestão: runs per job (gates, tokens, logs, "rodar agora") and the AI extraction queue. */
 export function AdminIngestionPage() {
+  const T = useText(ADMIN_MESSAGES).ingestion;
+  const adminText = useText(ADMIN_MESSAGES);
+  const meta = useAdminMeta();
   const { tab, setTab } = useAdminTab(AdminIngestionSearchSchema, ADMIN_INGESTION_TAB_VALUES);
   const query = adminIngestionQuery.useQuery();
   return (
@@ -166,13 +175,13 @@ export function AdminIngestionPage() {
                 rows={data.queue}
                 rowKey={(q) => q.id}
                 columns={[
-                  { key: 'entity', header: ADMIN_TEXT.common.athlete, cell: (q) => <b>{q.entityLabel}</b>, sortValue: (q) => q.entityLabel },
+                  { key: 'entity', header: adminText.common.athlete, cell: (q) => <b>{q.entityLabel}</b>, sortValue: (q) => q.entityLabel },
                   { key: 'section', header: T.section, cell: (q) => <code className="admin-wrap">{q.section}</code> },
-                  { key: 'source', header: ADMIN_TEXT.common.source, cell: (q) => q.sourceName ?? ADMIN_TEXT.common.noSource },
+                  { key: 'source', header: adminText.common.source, cell: (q) => q.sourceName ?? adminText.common.noSource },
                   { key: 'status', header: T.status, cell: (q) => q.status },
-                  { key: 'gate', header: T.gate, cell: (q) => (q.skippedAtGate ? GATE_LABEL[q.skippedAtGate] : '—') },
+                  { key: 'gate', header: T.gate, cell: (q) => (q.skippedAtGate ? meta.gate[q.skippedAtGate] : '—') },
                   { key: 'tokens', header: T.tokensInOut, cell: (q) => `${formatNumber(q.tokensIn)} / ${formatNumber(q.tokensOut)}`, align: 'end' },
-                  { key: 'at', header: ADMIN_TEXT.common.created, cell: (q) => formatDateTime(q.createdAt), sortValue: (q) => q.createdAt },
+                  { key: 'at', header: adminText.common.created, cell: (q) => formatDateTime(q.createdAt), sortValue: (q) => q.createdAt },
                 ]}
               />
             )

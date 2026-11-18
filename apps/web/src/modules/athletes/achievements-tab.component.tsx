@@ -1,19 +1,13 @@
-import {
-  type AthleteProfile,
-  type AwardAchievement,
-  type CompetitionAchievement,
-  COMPETITION_LEVEL_ORDER,
-  type CompetitionLevel,
-  competitionWins,
-  isAwardAchievement,
-} from '@was/shared';
+import { type AthleteProfile, type AwardAchievement, type CompetitionAchievement, COMPETITION_LEVEL_ORDER, type CompetitionLevel, competitionWins, isAwardAchievement } from '@was/shared';
 import { useCallback, useMemo, useState } from 'react';
 
+import { currentText } from '@/i18n/text-for.helper';
+import { useText } from '@/i18n/use-text.hook';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { DataTable } from '@/shared-ui/data-table.component';
-import { LEVEL_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { LevelTag } from '@/shared-ui/level-tag.component';
 import { Section } from '@/shared-ui/section.component';
@@ -21,14 +15,13 @@ import { SourceInfo } from '@/shared-ui/source-info.component';
 import { barsOption } from '@/shared-ui/chart-presets.helper';
 
 import { type AchievementGroup, byYear, groupByAward, groupByCompetition, yearsBetween } from './achievements.helper';
-import { ATHLETE_PROFILE_TEXT, LEVEL_COLOR_TOKEN } from './athletes.const';
+import { ATHLETE_PROFILE_MESSAGES, LEVEL_COLOR_TOKEN } from './athletes.const';
 import { YearChips } from './year-chips.component';
 
-const T = ATHLETE_PROFILE_TEXT.achievements;
-
-const typeLabel = (type: string) => T.typeLabel[type] ?? type;
+const typeLabel = (type: string) => currentText(ATHLETE_PROFILE_MESSAGES).achievements.typeLabel[type] ?? type;
 
 function TitlesTable({ groups }: { groups: readonly AchievementGroup<CompetitionAchievement>[] }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).achievements;
   return (
     <DataTable<AchievementGroup<CompetitionAchievement>>
       caption={T.titlesCaption}
@@ -73,6 +66,7 @@ function TitlesTable({ groups }: { groups: readonly AchievementGroup<Competition
 }
 
 function AwardsTable({ groups }: { groups: readonly AchievementGroup<AwardAchievement>[] }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).achievements;
   return (
     <DataTable<AchievementGroup<AwardAchievement>>
       caption={T.awardsCaption}
@@ -114,6 +108,8 @@ function AwardsTable({ groups }: { groups: readonly AchievementGroup<AwardAchiev
 
 /** Conquistas: titles per year stacked by level (toggle chips), titles by competition, awards. */
 export function AchievementsTab({ profile }: { profile: AthleteProfile }) {
+  const T = useText(ATHLETE_PROFILE_MESSAGES).achievements;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
   const wins = useMemo(() => competitionWins(profile.achievements), [profile.achievements]);
   const awards = useMemo(() => profile.achievements.filter(isAwardAchievement), [profile.achievements]);
   const levels = useMemo(() => COMPETITION_LEVEL_ORDER.filter((l) => wins.some((a) => a.level === l)), [wins]);
@@ -131,12 +127,12 @@ export function AchievementsTab({ profile }: { profile: AthleteProfile }) {
       ...barsOption(
         theme,
         years,
-        shown.map((l) => ({ name: LEVEL_LABEL[l], data: years.map((y) => wins.filter((a) => a.level === l && a.year === y).length), color: `--${LEVEL_COLOR_TOKEN[l]}` })),
+        shown.map((l) => ({ name: labels.level[l], data: years.map((y) => wins.filter((a) => a.level === l && a.year === y).length), color: `--${LEVEL_COLOR_TOKEN[l]}` })),
         { stack: true, barMaxWidth: 18 },
       ),
       legend: { show: false },
     }),
-    [years, shown, wins],
+    [years, shown, wins, labels],
   );
 
   if (!profile.achievements.length) {
@@ -158,7 +154,7 @@ export function AchievementsTab({ profile }: { profile: AthleteProfile }) {
               label={T.levelsLabel}
               value={shown}
               onChange={(next) => next.length && setActive(next)}
-              options={levels.map((l) => ({ value: l, label: T.levelChip(LEVEL_LABEL[l], wins.filter((a) => a.level === l).length), swatch: LEVEL_COLOR_TOKEN[l] }))}
+              options={levels.map((l) => ({ value: l, label: T.levelChip(labels.level[l], wins.filter((a) => a.level === l).length), swatch: LEVEL_COLOR_TOKEN[l] }))}
             />
           )
         }

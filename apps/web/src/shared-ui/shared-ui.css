@@ -171,6 +171,7 @@
 
   /* Notices */
   .notice-info { border-color: color-mix(in oklab, var(--info) 45%, var(--border)); }
+  .untranslated-note { margin: 0 0 16px; font-size: 13px; }
   .notice-success { border-color: color-mix(in oklab, var(--success) 50%, var(--border)); color: var(--text); }
   .notice-warning { border-color: var(--accent); color: var(--text); }
   .notice-danger { border-color: var(--danger); color: var(--text); }
@@ -189,7 +190,9 @@
   .menu-pop { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; width: 270px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--float-shadow); padding: 10px; display: grid; gap: 2px; }
   .menu-item { display: block; width: 100%; text-align: left; font: 500 14px var(--font-ui); color: var(--text); background: none; border: 0; border-radius: var(--r-sm); padding: 8px 10px; cursor: pointer; }
   .menu-item:hover { background: var(--surface-2); text-decoration: none; }
-  .menu-item[aria-checked="true"] { background: var(--primary-soft); font-weight: 600; }
+  .menu-item[aria-checked="true"], .menu-item[aria-current="true"] { background: var(--primary-soft); font-weight: 600; }
+  .menu-pop-narrow { width: 220px; }
+  .menu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
   .menu-sep { border: 0; border-top: 1px solid var(--border); margin: 6px 0; }
   .menu-hint { font-size: 12px; color: var(--muted); padding: 4px 10px 6px; margin: 0; }
   .btn.nav-toggle { display: none; }
@@ -217,4 +220,19 @@
   .dev-switcher { position: fixed; left: 12px; bottom: 12px; z-index: 50; display: flex; gap: 6px; align-items: center; font: 600 11px var(--font-ui); background: var(--surface); border: 1px dashed var(--border-strong); border-radius: var(--r-pill); padding: 4px 6px 4px 12px; box-shadow: var(--float-shadow); opacity: .75; transition: opacity var(--t-fast); }
   .dev-switcher:hover, .dev-switcher:focus-within { opacity: 1; }
   .dev-switcher select { font: 600 11px var(--font-ui); color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 3px 8px; }
+
+  /* Sign-in (Google button, consent checkboxes, account menu avatar) */
+  .google-btn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 44px; padding: 0 16px; border-radius: var(--r-pill); border: 1px solid var(--google-btn-border); background: var(--google-btn-bg); color: var(--google-btn-text); font: 500 15px var(--font-ui); cursor: pointer; transition: box-shadow var(--t-fast); }
+  .google-btn:hover:not(:disabled) { box-shadow: var(--float-shadow); }
+  .google-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .google-btn:disabled { opacity: .55; cursor: not-allowed; }
+  .google-btn-mark { width: 20px; height: 20px; flex: none; }
+  .login-stack { display: grid; gap: 12px; margin-top: 4px; }
+  .login-legal { font-size: 13px; color: var(--muted); margin: 0; }
+  .login-dev { border-top: 1px dashed var(--border-strong); padding-top: 12px; display: grid; gap: 8px; }
+  .consent-list { display: grid; gap: 12px; margin: 14px 0 0; }
+  .consent-check { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; font-size: 15px; line-height: 1.45; cursor: pointer; }
+  .consent-check input { width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--primary); }
+  .session-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; flex: none; }
+  .session-btn { display: inline-flex; align-items: center; gap: 8px; }
 }

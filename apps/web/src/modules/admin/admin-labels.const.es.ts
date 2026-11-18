@@ -1,0 +1,47 @@
+import type { Messages } from '@was/shared';
+
+import type { ADMIN_LABELS_TEXT } from './admin-labels.const';
+
+export const ADMIN_LABELS_TEXT_ES = {
+  reviewStatus: { pending: 'Pendiente', approved: 'Aprobada', rejected: 'Rechazada', skipped: 'Omitida' },
+  dossierStatus: { draft: 'Borrador', pending: 'Esperando aprobación', approved: 'Aprobado', rejected: 'Rechazado' },
+  runStatus: { running: 'En curso', success: 'Éxito', partial: 'Parcial', failed: 'Falló' },
+  privacyStatus: { open: 'Abierta', in_progress: 'En curso', answered: 'Respondida', rejected: 'Rechazada' },
+  deadline: { overdue: 'Atrasada', due_soon: 'Vence pronto', on_track: 'En plazo', closed: 'Cerrada' },
+  suggestionStatus: { pending: 'Pendiente', approved: 'Aprobada', rejected: 'Rechazada', duplicate: 'Duplicada' },
+  contactStatus: { new: 'Nueva', answered: 'Respondida', closed: 'Cerrada' },
+  commentStatus: { visible: 'Visible', hidden: 'Oculto' },
+  userRole: { reader: 'Lector', admin: 'Admin' },
+  gate: { unchanged: 'Sin cambios', noise: 'Ruido', parser: 'Parser', duplicate: 'Duplicado', budget: 'Presupuesto' },
+  privacyRight: { access: 'Acceso', correction: 'Rectificación', deletion: 'Eliminación', portability: 'Portabilidad', opposition: 'Oposición', revoke: 'Revocar el consentimiento' },
+  privacySubject: { user: 'Usuario', athlete: 'Atleta', heir: 'Heredero', other: 'Otro' },
+  evidenceType: {
+    technique_named: 'Técnica con su nombre',
+    decades_record: 'Récord de décadas',
+    rule_or_market_change: 'Cambió una regla o el mercado',
+    global_popularization: 'Popularización global',
+    institutional_recognition: 'Reconocimiento institucional',
+    other: 'Otra',
+  },
+  auditAction: {
+    role_changed: 'Rol cambiado',
+    user_banned: 'Cuenta bloqueada',
+    user_unbanned: 'Bloqueo levantado',
+    tier_changed: 'Nivel oficial cambiado',
+    proposal_approved: 'Propuesta aprobada',
+    proposal_rejected: 'Propuesta rechazada',
+    dossier_approved: 'Dossier aprobado',
+    dossier_rejected: 'Dossier rechazado',
+    source_updated: 'Fuente actualizada',
+    links_queued: 'Enlaces enviados a la recopilación',
+    suggestion_reviewed: 'Sugerencia evaluada',
+    message_updated: 'Mensaje actualizado',
+    privacy_updated: 'Solicitud de privacidad actualizada',
+    comment_moderated: 'Comentario moderado',
+    banned_word_added: 'Palabra prohibida añadida',
+    banned_word_removed: 'Palabra prohibida quitada',
+    ingestion_triggered: 'Recopilación iniciada',
+  },
+  matchMode: { word: 'Palabra completa', contains: 'También dentro de palabras' },
+  locale: { 'pt-BR': 'Portugués', en: 'Inglés', es: 'Español' },
+} satisfies Messages<typeof ADMIN_LABELS_TEXT>;

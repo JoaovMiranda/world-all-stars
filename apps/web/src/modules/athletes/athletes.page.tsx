@@ -2,9 +2,11 @@ import { AthleteFiltersSchema, TIER_ORDER } from '@was/shared';
 import { useMemo } from 'react';
 
 import { athletesQuery } from '@/data/endpoints/athletes.query';
+import { currentFormat } from '@/i18n/use-format.hook';
+import { useText } from '@/i18n/use-text.hook';
 import { AthleteGrid } from '@/shared-ui/athlete-grid.component';
 import { Button } from '@/shared-ui/button.component';
-import { TIER_LABEL } from '@/shared-ui/domain-labels.const';
+import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { FilterBar } from '@/shared-ui/filter-bar.component';
 import { FormField } from '@/shared-ui/form-field.component';
@@ -13,19 +15,21 @@ import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { SearchInput } from '@/shared-ui/search-input.component';
 import { Select, type SelectOption } from '@/shared-ui/select.component';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
-import { UI_TEXT } from '@/shared-ui/ui-text.const';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 import { useUrlSearchText } from '@/shared-ui/use-url-search-text.hook';
 
 import { ALL_ATHLETES_INPUT, athletesListInput } from './athletes-query.helper';
-import { ATHLETES_TEXT } from './athletes.const';
+import { ATHLETES_MESSAGES } from './athletes.const';
 
-const t = ATHLETES_TEXT.list;
-const byLabel = (a: SelectOption, b: SelectOption) => a.label.localeCompare(b.label, 'pt-BR');
-const TIER_OPTIONS: SelectOption[] = TIER_ORDER.map((v) => ({ value: v, label: TIER_LABEL[v] }));
+const byLabel = (a: SelectOption, b: SelectOption) => currentFormat().compare(a.label, b.label);
 
 /** P4 Athletes list (doc 09): name/nickname search + sport, country and tier filters bound to the URL. */
 export function AthletesPage() {
+  const t = useText(ATHLETES_MESSAGES).list;
+  const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const TIER_OPTIONS: SelectOption[] = TIER_ORDER.map((v) => ({ value: v, label: labels.tier[v] }));
+  const ui = useText(UI_MESSAGES);
   const { filters, setFilter, reset, activeCount } = useUrlFilters(AthleteFiltersSchema);
   const [q, setQ] = useUrlSearchText(filters.q, (v) => setFilter('q', v));
   const all = athletesQuery.useQuery(ALL_ATHLETES_INPUT);
@@ -93,7 +97,7 @@ export function AthletesPage() {
             emptyText={t.noResultsText}
             emptyAction={
               <Button variant="secondary" onClick={reset}>
-                {UI_TEXT.clearFilters}
+                {ui.clearFilters}
               </Button>
             }
           />

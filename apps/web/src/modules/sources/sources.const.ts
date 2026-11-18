@@ -1,8 +1,11 @@
-import type { IngestionRunStatus, SourceOriginKind, SourceUsageStatus } from '@was/shared';
+import { defineMessages, type IngestionRunStatus, type SourceOriginKind, type SourceUsageStatus } from '@was/shared';
 
 import type { TagTone } from '@/shared-ui/tag.component';
 
-// UI strings of the sources module (pt-BR, ready to become an i18n namespace).
+import { SOURCES_TEXT_EN } from './sources.const.en';
+import { SOURCES_TEXT_ES } from './sources.const.es';
+
+// UI strings of the sources module (pt-BR source; en/es next to it).
 export const SOURCES_TEXT = {
   page: {
     title: 'Fontes',
@@ -77,29 +80,31 @@ export const SOURCES_TEXT = {
       { title: '6. Revenda', text: 'Feeds comerciais licenciados (Opta, Sportradar, GRID).' },
     ],
   },
+  /** `commercialUse` of the registry (free text in the contract). Unknown values fall back to the raw key. */
+  commercialUse: {
+    yes: 'Uso comercial ok',
+    no: 'Uso comercial não',
+    ask: 'Pedir confirmação',
+    'paid-for-lpdb': 'Comercial pago (LPDB)',
+  } as Record<string, string>,
+  originKind: {
+    community: 'Comunidade',
+    official: 'Oficial',
+    historians: 'Historiadores',
+    proprietary: 'Proprietária',
+    unknown: 'Não declarada',
+  } satisfies Record<SourceOriginKind, string>,
+  runStatus: {
+    success: 'OK',
+    partial: 'Parcial',
+    failed: 'Falhou',
+    running: 'Em andamento',
+  } satisfies Record<IngestionRunStatus, string>,
 } as const;
 
 export const USAGE_STATUS_TONE: Record<SourceUsageStatus, TagTone> = { active: 'success', pending_permission: 'gold', link_only: 'info', rejected: 'danger' };
+/** Tone of each `commercialUse` value of the registry (labels in SOURCES_TEXT.commercialUse). */
+export const COMMERCIAL_USE_TONE: Record<string, TagTone> = { yes: 'success', no: 'danger', ask: 'gold', 'paid-for-lpdb': 'gold' };
+export const RUN_STATUS_TONE: Record<IngestionRunStatus, TagTone> = { success: 'success', partial: 'gold', failed: 'danger', running: 'info' };
 
-/** `commercialUse` of the registry (free text in the contract). Unknown values fall back to the raw key. */
-export const COMMERCIAL_USE_LABEL: Record<string, { label: string; tone: TagTone }> = {
-  yes: { label: 'Uso comercial ok', tone: 'success' },
-  no: { label: 'Uso comercial não', tone: 'danger' },
-  ask: { label: 'Pedir confirmação', tone: 'gold' },
-  'paid-for-lpdb': { label: 'Comercial pago (LPDB)', tone: 'gold' },
-};
-
-export const ORIGIN_KIND_LABEL: Record<SourceOriginKind, string> = {
-  community: 'Comunidade',
-  official: 'Oficial',
-  historians: 'Historiadores',
-  proprietary: 'Proprietária',
-  unknown: 'Não declarada',
-};
-
-export const RUN_STATUS: Record<IngestionRunStatus, { label: string; tone: TagTone }> = {
-  success: { label: 'OK', tone: 'success' },
-  partial: { label: 'Parcial', tone: 'gold' },
-  failed: { label: 'Falhou', tone: 'danger' },
-  running: { label: 'Em andamento', tone: 'info' },
-};
+export const SOURCES_MESSAGES = defineMessages(SOURCES_TEXT, { en: SOURCES_TEXT_EN, es: SOURCES_TEXT_ES });

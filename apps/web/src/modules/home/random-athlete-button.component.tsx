@@ -1,9 +1,10 @@
 import { useNavigate } from '@tanstack/react-router';
 import { type ReactNode, useId, useRef } from 'react';
 
+import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 
-import { HOME_TEXT } from './home.const';
+import { HOME_MESSAGES } from './home.const';
 
 interface RandomAthleteButtonProps {
   /** Slugs to draw from; undefined while loading. */
@@ -14,13 +15,12 @@ interface RandomAthleteButtonProps {
   children?: ReactNode;
 }
 
-const t = HOME_TEXT.intro;
-
 /**
  * "Me surpreenda" (doc 09 P1): draws among all athletes without repeating the last pick. With an empty database it
  * stays focusable but aria-disabled and explains why. Future: GET /api/athletes/random.
  */
 export function RandomAthleteButton({ athleteSlugs, isError = false, children }: RandomAthleteButtonProps) {
+  const t = useText(HOME_MESSAGES).intro;
   const noteId = useId();
   const navigate = useNavigate();
   const last = useRef<string | null>(null);
