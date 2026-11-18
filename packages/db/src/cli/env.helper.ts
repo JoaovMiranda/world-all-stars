@@ -1,6 +1,8 @@
 import path from 'node:path';
 
-import { type DatabaseOptions, findRepoRoot } from '../client';
+import { type DatabaseOptions, findRepoRoot, loadRootEnv } from '../client';
+
+loadRootEnv();
 
 /** DATABASE_URL → Postgres; else PGLITE_DATA_DIR (relative to the repo root) or `.data/pglite`. */
 export const databaseOptionsFromEnv = (env: NodeJS.ProcessEnv = process.env): DatabaseOptions => ({

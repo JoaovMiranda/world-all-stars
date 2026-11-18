@@ -39,8 +39,9 @@ describe('seed', () => {
     expect(await counts(h)).toEqual(first);
   });
 
+  // The trigger is FOR EACH ROW: target a table the configuration seed always fills (CI has no plan/).
   it('refuses physical DELETE (soft delete only)', async () => {
-    const error = await h.db.execute(sql`delete from banned_words`).then(() => null, (e: Error & { cause?: Error }) => e);
+    const error = await h.db.execute(sql`delete from competition_levels`).then(() => null, (e: Error & { cause?: Error }) => e);
     expect(String(error?.cause?.message ?? error?.message)).toMatch(/forbidden/i);
   });
 });

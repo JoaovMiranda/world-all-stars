@@ -13,7 +13,10 @@ import {
 } from '../columns/pg-enum.column';
 import { athletes } from './athlete.table';
 
-/** Better Auth will add sessions/accounts/verifications next to this table (doc 04). */
+/**
+ * Accounts (doc 03). Better Auth reads/writes this table as its `user` model (auth/better-auth.config.ts: name→display_name,
+ * image→avatar_url); its sessions/accounts/verifications live in auth.table.ts.
+ */
 export const users = pgTable(
   'users',
   {
@@ -22,6 +25,8 @@ export const users = pgTable(
     displayName: text().notNull(),
     avatarUrl: text(),
     role: userRoleEnum().notNull().default('reader'),
+    /** Better Auth's flag; kept in sync with emailVerifiedAt (the audit-friendly instant) by its database hooks. */
+    emailVerified: boolean().notNull().default(false),
     emailVerifiedAt: timestamptz(),
     locale: text().notNull().default('pt-BR'),
     bannedAt: timestamptz(),

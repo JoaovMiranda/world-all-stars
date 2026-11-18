@@ -15,6 +15,13 @@
       "when": 1793867470956,
       "tag": "0001_forbid-delete",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794948227304,
+      "tag": "0002_auth",
+      "breakpoints": true
     }
   ]
 }
