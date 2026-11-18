@@ -83,10 +83,16 @@ export function CollectionLinksForm() {
         {urls.map((u, i) => (
           <div key={i} className="admin-url-row">
             <FormField label={T.url(i + 1)} hint={hintFor(u)} error={errors[`urls.${i}`]} required={i === 0}>
-              {(p) => <Input {...p} type="url" inputMode="url" value={u} onChange={(e) => setUrls(urls.map((x, j) => (j === i ? e.target.value : x)))} />}
+              {(p) => <Input {...p} type="url" inputMode="url" data-admin-url-index={i} value={u} onChange={(e) => setUrls(urls.map((x, j) => (j === i ? e.target.value : x)))} />}
             </FormField>
             {urls.length > 1 && (
-              <Button variant="ghost" size="sm" onClick={() => setUrls(urls.filter((_, j) => j !== i))} aria-label={T.removeUrl(i + 1)}>
+              <Button variant="ghost" size="sm" onClick={() => {
+                  setUrls(urls.filter((_, j) => j !== i));
+                  // The focused × left with its row: focus the nearest remaining link field (WCAG 2.4.3).
+                  requestAnimationFrame(() => document.querySelector<HTMLInputElement>(`[data-admin-url-index="${Math.max(0, i - 1)}"]`)?.focus());
+                }}
+                aria-label={T.removeUrl(i + 1)}
+              >
                 ×
               </Button>
             )}
@@ -100,7 +106,7 @@ export function CollectionLinksForm() {
               {T.addUrl}
             </Button>
           )}
-          <Button type="submit" variant="primary" disabled={add.isPending}>
+          <Button type="submit" variant="primary" pending={add.isPending}>
             {T.submit}
           </Button>
         </div>

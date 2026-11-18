@@ -5,6 +5,7 @@ import {
   cleanText,
   createSuggestionInputSchema,
   validateSuggestion,
+  withDefaultHttps,
 } from '@was/shared';
 import { Link } from '@tanstack/react-router';
 import { useMemo } from 'react';
@@ -67,7 +68,7 @@ export function SuggestionForm({ context, email, onDone }: SuggestionFormProps) 
             athleteName: data.athleteName,
             sport: data.sport || null,
             sportOther: isOther ? data.sportOther || null : null,
-            urls: data.urls.map((u) => u.trim()).filter(Boolean),
+            urls: data.urls.map(withDefaultHttps).filter(Boolean),
             why: data.why || null,
             email: data.email || null,
           },

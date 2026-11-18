@@ -1,6 +1,8 @@
 import './range-bars.css';
 
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
+
+import { useReveal } from './use-reveal.hook';
 
 export interface RangeBarItem {
   key: string;
@@ -25,12 +27,14 @@ interface RangeBarsProps {
 
 /** Gantt rows on one shared axis (career at each team, title reigns). Each bar keeps its text for assistive tech. */
 export function RangeBars({ items, min, max, label }: RangeBarsProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  useReveal(ref, { stagger: true, settleMs: 2400 });
   if (!items.length) return null;
   const from = min ?? Math.min(...items.map((i) => i.from));
   const to = max ?? Math.max(...items.map((i) => i.to));
   const span = Math.max(to - from + 1, 1);
   return (
-    <div className="range-bars" role="list" aria-label={label}>
+    <div ref={ref} className="range-bars" role="list" aria-label={label}>
       {items.map((i) => (
         <div key={i.key} className="range-row" role="listitem">
           <span className="range-label">{i.label}</span>

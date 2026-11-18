@@ -21,11 +21,11 @@ export interface MeterItem {
 export function MeterList({ items, label }: { items: readonly MeterItem[]; label?: string }) {
   return (
     <ul className="meter-list" aria-label={label}>
-      {items.map((m) => (
+      {items.map((m, i) => (
         <li key={m.key} className={cx('meter-row', m.emphasis && 'is-emphasis')}>
           <span className="meter-label">{m.label}</span>
           <span className="meter-track" aria-hidden="true">
-            <span className="meter-fill" style={{ width: `${Math.max(0, Math.min(100, m.percent))}%`, ...(m.fill ? ({ '--meter-fill': m.fill } as CSSProperties) : {}) }} />
+            <span className="meter-fill" style={{ '--pct': `${Math.max(0, Math.min(100, m.percent))}%`, '--i': i, ...(m.fill ? { '--meter-fill': m.fill } : {}) } as CSSProperties} />
           </span>
           <span className="meter-value">{m.valueText}</span>
         </li>

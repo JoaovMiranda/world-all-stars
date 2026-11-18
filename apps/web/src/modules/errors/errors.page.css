@@ -2,14 +2,17 @@
 @layer components {
   .error-screen { display: grid; gap: 20px; }
   .error-hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: center; }
-  .error-code { font: 500 clamp(56px, 12vw, 112px)/1 var(--font-display); color: var(--accent-text); letter-spacing: -.02em; }
+  .error-code { font: 500 clamp(3.5rem, 12vw, 7rem)/1 var(--font-display); color: var(--accent-text); letter-spacing: -.02em; }
+  /* O código "cai" na página com squash e leve desfoque (feedback exagerado, uma vez). */
+  .error-code { display: inline-block; animation: error-stamp var(--dur-6) var(--ease-snap) both; }
+  @keyframes error-stamp { from { opacity: 0; transform: scale(1.5) rotate(-8deg); filter: blur(8px); } 55% { opacity: 1; transform: scale(.94, 1.06) rotate(1deg); filter: blur(0); } 80% { transform: scale(1.02, .98); } }
   .error-hero p { margin: 0; max-width: 60ch; }
-  .error-path { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
-  .error-shortcuts { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .error-path { font-size: 0.8125rem; color: var(--muted); overflow-wrap: anywhere; }
+  .error-shortcuts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 12px; }
   .error-shortcut { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); color: var(--text); }
   .error-shortcut:hover { border-color: var(--accent); background: var(--surface-2); text-decoration: none; }
-  .error-shortcut b { font-family: var(--font-display); font-size: 19px; font-weight: 500; }
+  .error-shortcut b { font-family: var(--font-display); font-size: 1.1875rem; font-weight: 500; }
   .error-shortcut small { color: var(--muted); }
-  .error-details pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12.5px; background: var(--surface-2); padding: 10px; border-radius: var(--r-md); margin: 8px 0 0; }
+  .error-details pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.7812rem; background: var(--surface-2); padding: 10px; border-radius: var(--r-md); margin: 8px 0 0; }
   @media (max-width: 600px) { .error-hero { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
 }

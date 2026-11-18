@@ -72,7 +72,7 @@ export const notifications = pgTable(
     readAt: timestamptz(),
     emailedAt: timestamptz(),
   },
-  (t) => [index().on(t.userId).where(live(t.deletedAt))],
+  (t) => [index().on(t.userId, t.createdAt).where(live(t.deletedAt))],
 );
 
 /** LGPD requests (A5) with the legal deadline (doc 13). */
@@ -90,4 +90,5 @@ export const privacyRequests = pgTable('privacy_requests', {
   answeredAt: timestamptz(),
   handledBy: uuid().references(() => users.id),
   note: text(),
-});
+},
+(t) => [index().on(t.createdAt).where(live(t.deletedAt))]);

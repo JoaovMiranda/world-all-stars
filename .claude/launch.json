@@ -1,0 +1,31 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "dev"
+      ],
+      "port": 8787
+    },
+    {
+      "name": "prod-local",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "apps/server/dist/main.js"
+      ],
+      "env": {
+        "NODE_ENV": "production",
+        "HOST": "127.0.0.1",
+        "PORT": "8798",
+        "PGLITE_DATA_DIR": ".data/pglite-perf-check",
+        "IP_HASH_SALT": "local-prod-salt-not-a-secret",
+        "BETTER_AUTH_SECRET": "local-prod-better-auth-secret-not-a-secret-000",
+        "PUBLIC_URL": "http://127.0.0.1:8798",
+        "AUTH_SIMULATED": "0"
+      },
+      "port": 8798
+    }
+  ]
+}

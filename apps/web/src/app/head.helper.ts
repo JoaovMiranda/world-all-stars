@@ -1,5 +1,8 @@
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
 import { type JsonLd, LOCALE_OG, serializeJsonLd } from '@was/shared';
 
+import { DATA_SOURCE } from '@/data/data-layer.const';
 import { currentText } from '@/i18n/text-for.helper';
 import { localeStore } from '@/i18n/locale.store';
 import { ERRORS_MESSAGES } from '@/modules/errors/errors.const';
@@ -36,7 +39,6 @@ const outcomeMeta = (matches: readonly HeadMatch[]): PageMeta | undefined => {
   return undefined;
 };
 
-const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Manrope:wght@400;500;600;700&display=swap';
 
 /** Tags shared by every page (root route). Pages add title/description/canonical through `buildHead`. */
 export const rootHead = ({ matches }: { matches: readonly HeadMatch[] }) => {
@@ -63,9 +65,13 @@ const baseMeta = () => {
 };
 const baseLinks = [
   { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
-  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-  { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' as const },
-  { rel: 'stylesheet', href: FONTS_URL },
+  // Self-hosted fonts (styles.css): the two latin files used above the fold start downloading with the HTML, not
+  // after the stylesheet is parsed. Same hashed URLs the @font-face rules point to, so nothing is fetched twice.
+  { rel: 'preload', href: manropeLatin, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' as const },
+  { rel: 'preload', href: frauncesLatin, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' as const },
+  // Fixture mode only: photos come straight from Wikimedia Commons, so open that connection while the HTML parses
+  // (crossorigin matches ResponsiveImg's anonymous requests). With the real API they come from our own /img/wm proxy.
+  ...(DATA_SOURCE === 'http' ? [] : [{ rel: 'preconnect', href: 'https://upload.wikimedia.org', crossOrigin: 'anonymous' as const }]),
 ];
 
 /** Title, description, canonical and Open Graph of one page (canonical = PUBLIC_URL + path, without the search). */

@@ -1,0 +1,34 @@
+# Dependency updates (doc 22, "CI e Docker"). Weekly, grouped to keep the PR count low; CI runs on every PR.
+# - npm: the pnpm workspace (pnpm-lock.yaml at the root; Dependabot supports pnpm lockfiles).
+# - github-actions: the workflows pin actions by full commit SHA with a "# vX.Y.Z" comment; Dependabot bumps both.
+# - docker: the Dockerfile base image (node:26-slim@sha256:…): digest bumps for the same tag.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      production:
+        dependency-type: production
+        update-types: [minor, patch]
+      development:
+        dependency-type: development
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      base-image:
+        patterns: ['*']

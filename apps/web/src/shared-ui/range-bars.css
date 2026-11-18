@@ -1,15 +1,18 @@
 /* Gantt-like rows on a shared year axis (career teams, title reigns). */
 @layer components {
   .range-bars { display: grid; gap: 8px; }
-  .range-row { display: grid; grid-template-columns: minmax(110px, 200px) minmax(0, 1fr); gap: 12px; align-items: center; font-size: 13.5px; }
+  .range-row { display: grid; grid-template-columns: minmax(110px, 200px) minmax(0, 1fr); gap: 12px; align-items: center; font-size: 0.8438rem; }
   .range-label { min-width: 0; overflow-wrap: anywhere; }
   .range-track { position: relative; height: 26px; background: var(--surface-2); border-radius: var(--r-sm); }
-  .range-bar { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; padding: 0 6px; border-radius: var(--r-sm); font: 600 11px var(--font-ui); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: var(--primary); color: var(--on-primary); }
+  .range-bar { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; padding: 0 6px; border-radius: var(--r-sm); font: 600 0.6875rem var(--font-ui); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: var(--primary); color: var(--on-primary); }
   .range-bar-accent { background: var(--accent); color: var(--on-accent); }
   .range-bar-success { background: var(--success); color: var(--on-success); }
-  .range-axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .range-axis { display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   @media (max-width: 600px) {
     .range-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
     .range-row-axis > :first-child { display: none; }
   }
+  /* Barras de período crescem da esquerda, linha a linha (follow-through). */
+  .range-bars[data-reveal="in"] .range-bar { animation: range-grow var(--dur-5) var(--ease-cinematic) both; animation-delay: calc(min(var(--i, 0), 12) * 70ms + 120ms); }
+  @keyframes range-grow { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 }

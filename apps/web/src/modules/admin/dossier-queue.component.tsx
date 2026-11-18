@@ -52,7 +52,7 @@ function DossierDetail({ d }: { d: AdminDossier }) {
         items={[
           { key: 'by', term: T.approvedBy, detail: d.approvedBy.length ? d.approvedBy.join(', ') : T.nobody },
           { key: 'updated', term: adminText.common.updated, detail: formatDateTime(d.updatedAt) },
-          { key: 'profile', term: adminText.common.athlete, detail: <Link to="/athletes/$slug" params={{ slug: d.athlete.slug }}>{T.profile}</Link> },
+          { key: 'profile', term: adminText.common.athlete, detail: <Link to="/athletes/$slug" params={{ slug: d.athlete.slug }}>{T.profile}<span className="sr-only">: {d.athlete.knownAs}</span></Link> },
         ]}
       />
       <div>

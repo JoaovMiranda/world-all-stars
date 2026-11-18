@@ -1,20 +1,21 @@
 /* Account pages (E2, E4, E6). Tokens only. */
 @layer components {
   .account-nav { display: flex; gap: 6px; flex-wrap: wrap; margin: -8px 0 4px; }
-  .account-nav a { font: 600 12.5px var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 8px 14px; min-height: 36px; display: inline-flex; align-items: center; gap: 6px; }
+  .account-nav a { font: 600 0.7812rem var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 8px 14px; min-height: 36px; display: inline-flex; align-items: center; gap: 6px; }
   .account-nav a:hover { color: var(--text); text-decoration: none; border-color: var(--accent); }
   .account-nav a[aria-current="page"] { color: var(--text); background: var(--primary-soft); border-color: var(--accent); }
+  @media (pointer: coarse) { .account-nav a { min-height: 44px; } }   /* Fitts: 44px reais no toque */
   .account-athlete { display: inline-flex; gap: 10px; align-items: center; color: var(--text); font-weight: 600; min-width: 0; }
   .account-list { display: grid; }
   .account-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 14px 0; border-top: 1px solid var(--border); }
   .account-item:first-child { border-top: 0; padding-top: 0; }
   .account-item-body { display: grid; gap: 4px; min-width: 0; }
   .account-item-body p { margin: 0; overflow-wrap: anywhere; }
-  .account-item-meta { font-size: 13px; color: var(--muted); }
+  .account-item-meta { font-size: 0.8125rem; color: var(--muted); }
   .account-item-actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
   .account-item.is-unread .account-item-title { font-weight: 700; }
   .unread-dot { width: 10px; height: 10px; margin-top: 7px; border-radius: 50%; background: var(--accent); }
-  .read-dot { width: 10px; height: 10px; margin-top: 7px; border-radius: 50%; border: 1px solid var(--border-strong); }
+  .read-dot { width: 10px; height: 10px; margin-top: 7px; border-radius: 50%; border: 1px solid var(--border-control); }
   .account-switches { display: grid; gap: 14px; }
   .account-switches > * + * { padding-top: 14px; border-top: 1px solid var(--border); }
   .danger-zone { border-color: var(--danger); }

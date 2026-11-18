@@ -9,6 +9,7 @@ import {
   NotificationKind,
   type ReactToCommentResponse,
   buildCommentThreads,
+  COMMENTS_PAGE_SIZE,
   validateComment,
 } from '@was/shared';
 
@@ -16,21 +17,31 @@ import type { AuthUser } from '../../auth/auth-provider.type';
 import type { RequestContext } from '../../http/app-context.type';
 import { forbidden, notFound, unprocessable, unprocessableKey } from '../../http/http-error.error';
 import { loadBannedWords } from '../moderation/moderation.repository';
-import { findComment, findReaction, reactionsOf, visibleComments } from './comments.repository';
+import { countVisibleComments, findComment, findReaction, reactionsOf, repliesOf, topCommentsPage } from './comments.repository';
 
 const NOTIFICATION_EXCERPT = 140;
 const athleteIdOf = async (ctx: RequestContext, slug: string) => {
-  const a = (await ctx.deps.catalog.get()).athleteBySlug(slug);
+  const a = (await ctx.deps.catalog.get(ctx.locale)).athleteBySlug(slug);
   if (!a) throw notFound();
   return a.id;
 };
 const counterOf = (r: CommentReaction) => (r === 'like' ? 'likesCount' : 'dislikesCount');
 
-/** GET threads (doc 20): rows from the database, threading and order by the shared buildCommentThreads. */
-export const listComments = async (ctx: RequestContext, slug: string, sort: CommentSort): Promise<CommentsResponse> => {
-  const rows = await visibleComments(ctx.deps.db, await athleteIdOf(ctx, slug));
+/**
+ * GET threads (doc 20): one page of top-level comments (keyset in SQL, COMMENTS_PAGE_SIZE) + their replies + the
+ * total, then threading and order by the shared buildCommentThreads.
+ */
+export const listComments = async (ctx: RequestContext, slug: string, sort: CommentSort, cursor?: string): Promise<CommentsResponse> => {
+  const athleteId = await athleteIdOf(ctx, slug);
+  const db = ctx.deps.db;
+  // An unknown/deleted cursor restarts at the first page instead of returning nothing.
+  const from = cursor && (await findComment(db, cursor))?.athleteId === athleteId ? cursor : null;
+  const [page, total] = await Promise.all([topCommentsPage(db, athleteId, sort, from, COMMENTS_PAGE_SIZE), countVisibleComments(db, athleteId)]);
+  const tops = page.slice(0, COMMENTS_PAGE_SIZE);
+  const replies = await repliesOf(db, athleteId, tops.map((r) => r.c.id));
+  const rows = [...tops, ...replies];
   const me = ctx.session.user;
-  const mine = me ? new Map((await reactionsOf(ctx.deps.db, me.id, rows.map((r) => r.c.id))).map((r) => [r.commentId, r.reaction])) : new Map();
+  const mine = me ? new Map((await reactionsOf(db, me.id, rows.map((r) => r.c.id))).map((r) => [r.commentId, r.reaction])) : new Map();
   const flat: Comment[] = rows.map(({ c, author }) => ({
     id: c.id,
     parentId: c.parentCommentId,
@@ -42,15 +53,17 @@ export const listComments = async (ctx: RequestContext, slug: string, sort: Comm
     dislikes: c.dislikesCount,
     myReaction: mine.get(c.id) ?? null,
   }));
-  return buildCommentThreads(flat, sort);
+  const built = buildCommentThreads(flat, sort, { limit: Number.POSITIVE_INFINITY, total });
+  return { ...built, nextCursor: page.length > COMMENTS_PAGE_SIZE ? (tops.at(-1)?.c.id ?? null) : null };
 };
 
 /** POST comment/reply: shared validateComment (422), reply to a reply goes to the top comment, notifies the parent author. */
 export const postComment = async (ctx: RequestContext, user: AuthUser, slug: string, body: string, parentId: string | null | undefined) => {
-  const athleteId = await athleteIdOf(ctx, slug);
-  const result = validateComment(body, await loadBannedWords(ctx.deps.db), ctx.locale);
+  // Independent reads in one round-trip: the athlete (404 when unknown), the banned words and the parent comment.
+  const [athleteId, words, found] = await Promise.all([athleteIdOf(ctx, slug), loadBannedWords(ctx.deps.db), parentId ? findComment(ctx.deps.db, parentId) : null]);
+  const result = validateComment(body, words, ctx.locale);
   if (!result.ok) throw unprocessable(result.error, result.message, { body: result.message });
-  let parent = parentId ? await findComment(ctx.deps.db, parentId) : null;
+  let parent = found;
   if (parentId && (!parent || parent.athleteId !== athleteId || parent.status !== CommentStatus.Visible)) {
     throw unprocessableKey(ApiErrorCode.Parent, 'parentGone');
   }

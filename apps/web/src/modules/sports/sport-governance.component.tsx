@@ -31,8 +31,9 @@ export function SportGovernance({ sport }: { sport: SportPage }) {
                     {b.chain.map((c, i) => (
                       <Fragment key={c.id}>
                         {i > 0 && (
-                          <span className="rel" title={c.relationLabel ?? undefined} aria-hidden="true">
-                            ›
+                          <span className="rel" title={c.relationLabel ?? undefined}>
+                            <span aria-hidden="true">›</span>
+                            {c.relationLabel && <span className="sr-only">{c.relationLabel}</span>}
                           </span>
                         )}{' '}
                         <span className={i === b.chain.length - 1 ? 'chain-self' : 'muted'}>

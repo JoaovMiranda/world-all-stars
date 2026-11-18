@@ -31,6 +31,7 @@ export function Switch({ label, description, checked, onChange, disabled = false
         type="checkbox"
         role="switch"
         checked={checked}
+        aria-checked={checked}
         disabled={disabled}
         aria-describedby={description ? `${id}-desc` : undefined}
         onChange={(e) => onChange(e.target.checked)}

@@ -42,7 +42,13 @@ export function EventRow({ event, withBadges = false }: EventRowProps) {
             <>
               <SportDot colorToken={event.sport.colorToken} />
               {event.sport.name} · {fmt.dateRange(event.start, event.end)}
-              {event.host && <span title={event.host.name}> · {event.host.flag}</span>}
+              {event.host && (
+                <span title={event.host.name}>
+                  {' · '}
+                  <span aria-hidden="true">{event.host.flag}</span>
+                  <span className="sr-only">{event.host.name}</span>
+                </span>
+              )}
             </>
           ) : (
             <>

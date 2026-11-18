@@ -10,6 +10,8 @@ export const SESSION_STORAGE_KEY = 'was-session';
 export const SESSION_URL_PARAM = 'as';
 /** Better Auth on the same origin (Google sign-in, callback, sign-out). */
 export const AUTH_BASE_PATH = SHARED_AUTH_BASE_PATH;
+/** Query params Better Auth appends to the errorCallbackURL when a sign-in fails (`error` = code first). */
+export const AUTH_ERROR_PARAMS = ['error', 'error_description'] as const;
 
 // UI strings of the session menu, login and consent dialogs (pt-BR source; en/es next to it).
 export const SESSION_TEXT = {
@@ -33,6 +35,9 @@ export const SESSION_TEXT = {
   loginGoogleUnavailableHint: 'Defina GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env do servidor (veja .env.example) e reinicie.',
   loginGoogleError: 'Não foi possível abrir o login com Google. Tente de novo.',
   loginLegal: { before: 'No primeiro acesso, você aceita os', terms: 'Termos de uso', and: 'e o', privacy: 'Aviso de privacidade', after: '.' },
+  signInFailedTitle: 'Não foi possível entrar',
+  signInFailed: 'O login com Google não foi concluído. Tente de novo.',
+  signInFailedClose: 'Fechar',
   loginCancel: 'Agora não',
   loginSimulateHint: 'Desenvolvimento: entre com a conta de demonstração.',
   loginConfirm: 'Simular entrada como leitor',
@@ -48,6 +53,7 @@ export const SESSION_TEXT = {
     kicker: 'Conta',
     title: 'Antes de continuar',
     text: (email: string) => `Você entrou com ${email}. Para votar e comentar, confirme os dois itens abaixo.`,
+    acceptHint: 'Marque as duas caixas para continuar.',
     documentsBefore: 'Li e aceito os',
     terms: (version: string) => `Termos de uso (v${version})`,
     and: 'e o',

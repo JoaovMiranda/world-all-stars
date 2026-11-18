@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { AdminAuditAction, ConsentPurpose, DEMO_SESSION_EMAILS, LEGAL_DOCUMENT_VERSIONS, LegalDocumentKind, NotificationKind } from '@was/shared';
+import { AdminAuditAction, ConsentPurpose, DEMO_SESSION_EMAILS, LEGAL_DOCUMENT_VERSIONS, NotificationKind, REQUIRED_LEGAL_DOCUMENTS } from '@was/shared';
 import { eq, getTableColumns, getTableName, isNull, sql } from 'drizzle-orm';
 import countryCodes from 'i18n-iso-countries';
 import type { PgTable } from 'drizzle-orm/pg-core';
@@ -235,12 +235,15 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
     });
   }
 
-  // 7 · Sign-up of the demo accounts: Terms + Privacy accepted, notification e-mails opted in (doc 13).
+  // 7 · Sign-up of the demo accounts: the CURRENT Terms + Privacy accepted (no demo account is left pending), notification
+  // e-mails opted in (doc 13). One row per version (the id includes it): re-seeding an existing database after
+  // LEGAL_DOCUMENT_VERSIONS changes adds the new acceptance and keeps the old one as history.
   for (const email of Object.values(DEMO_SESSION_EMAILS)) {
     const user = protoUser(email);
     if (!user) continue;
-    for (const kind of [LegalDocumentKind.Terms, LegalDocumentKind.Privacy]) {
-      await put('legal_acceptances', { id: seedId('la', email, kind), createdVia: 'seed', userId: P(user.id), documentKind: kind, documentVersion: LEGAL_DOCUMENT_VERSIONS[kind].version, acceptedAt: new Date(SIGNED_UP_AT) });
+    for (const kind of REQUIRED_LEGAL_DOCUMENTS) {
+      const { version } = LEGAL_DOCUMENT_VERSIONS[kind];
+      await put('legal_acceptances', { id: seedId('la', email, kind, version), createdVia: 'seed', userId: P(user.id), documentKind: kind, documentVersion: version, acceptedAt: new Date(SIGNED_UP_AT) });
     }
     await put('user_consents', { id: seedId('uc', email), createdVia: 'seed', userId: P(user.id), purpose: ConsentPurpose.NotificationEmails, granted: true, decidedAt: new Date(SIGNED_UP_AT) });
   }

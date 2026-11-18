@@ -1,0 +1,156 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "env NODE_ENV=production HOST=127.0.0.1 PORT=8799 PGLITE_DATA_DIR=${LHCI_PGLITE_DATA_DIR:-memory://} IP_HASH_SALT=ci-lhci-salt-not-a-secret BETTER_AUTH_SECRET=ci-lhci-better-auth-secret-not-a-secret-0000 PUBLIC_URL=http://127.0.0.1:8799 AUTH_SIMULATED=0 LOG_REQUESTS=0 node apps/server/dist/main.js",
+      "startServerReadyPattern": "World All Stars on",
+      "startServerReadyTimeout": 60000,
+      "url": [
+        "http://127.0.0.1:8799/",
+        "http://127.0.0.1:8799/athletes",
+        "http://127.0.0.1:8799/athletes/pele",
+        "http://127.0.0.1:8799/sports",
+        "http://127.0.0.1:8799/contact"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "cpuSlowdownMultiplier": 4
+        },
+        "chromeFlags": "--no-sandbox --headless=new",
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ]
+      }
+    },
+    "assert": {
+      "assertMatrix": [
+        {
+          "matchingUrlPattern": "^(?!.*/athletes/[^/?#]+$).*$",
+          "assertions": {
+            "categories:performance": [
+              "error",
+              {
+                "minScore": 0.9,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "largest-contentful-paint": [
+              "error",
+              {
+                "maxNumericValue": 2500,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "cumulative-layout-shift": [
+              "error",
+              {
+                "maxNumericValue": 0.1,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "total-blocking-time": [
+              "error",
+              {
+                "maxNumericValue": 300,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "categories:accessibility": [
+              "error",
+              {
+                "minScore": 1,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "categories:best-practices": [
+              "error",
+              {
+                "minScore": 0.95,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "categories:seo": [
+              "error",
+              {
+                "minScore": 0.95,
+                "aggregationMethod": "median-run"
+              }
+            ]
+          }
+        },
+        {
+          "matchingUrlPattern": "/athletes/[^/?#]+$",
+          "assertions": {
+            "categories:performance": [
+              "error",
+              {
+                "minScore": 0.8,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "largest-contentful-paint": [
+              "error",
+              {
+                "maxNumericValue": 5000,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "cumulative-layout-shift": [
+              "error",
+              {
+                "maxNumericValue": 0.1,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "total-blocking-time": [
+              "error",
+              {
+                "maxNumericValue": 300,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "categories:accessibility": [
+              "error",
+              {
+                "minScore": 1,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "categories:best-practices": [
+              "error",
+              {
+                "minScore": 0.95,
+                "aggregationMethod": "median-run"
+              }
+            ],
+            "categories:seo": [
+              "error",
+              {
+                "minScore": 0.95,
+                "aggregationMethod": "median-run"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

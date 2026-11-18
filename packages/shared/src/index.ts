@@ -125,6 +125,7 @@ export * from './schemas/sport-ref.schema';
 export * from './schemas/sports-filters.schema';
 export * from './schemas/sports-tree.schema';
 export * from './schemas/tier-vote.schema';
+export * from './schemas/web-vital.schema';
 export * from './schemas/url-filter.schema';
 
 // API contracts (method + path + schemas, used by the server routes and the web data layer)
@@ -135,7 +136,9 @@ export * from './contracts/public.contract';
 // Helpers (pure, shared by server and web)
 export * from './helpers/admin-rules.helper';
 export * from './helpers/account.helper';
+export * from './helpers/zod-error-map.helper';
 export * from './helpers/achievement.helper';
+export * from './helpers/commons-image.helper';
 export * from './helpers/admin-summary.helper';
 export * from './helpers/analysis.helper';
 export * from './helpers/api-access.helper';

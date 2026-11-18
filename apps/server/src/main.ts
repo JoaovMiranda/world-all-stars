@@ -9,6 +9,7 @@ import { createDatabase, findRepoRoot, loadRootEnv } from '@was/db';
 import { createApp } from './app';
 import { promoteAdminEmails } from './auth/admin-bootstrap.helper';
 import { loadConfig, type ServerConfig } from './config/env.config';
+import { startCleanupScheduler } from './maintenance/cleanup.scheduler';
 import { readProdAssets, type WebRenderModule } from './web/web-assets.helper';
 import type { WebRuntime } from './web/web-handler';
 import { createViteDev, type ViteDev } from './web/vite-dev';
@@ -19,6 +20,7 @@ const config = loadConfig();
 const handle = await createDatabase({
   databaseUrl: config.databaseUrl,
   pgliteDataDir: config.pgliteDataDir,
+  pool: config.dbPool,
   ...(process.env.MIGRATIONS_DIR ? { migrationsFolder: process.env.MIGRATIONS_DIR } : {}),
 });
 if (config.migrateOnBoot) await handle.migrate();
@@ -46,6 +48,12 @@ const httpServer = createServer((req, res) => {
   else toHono(req, res);
 });
 
+// Slow or stalled clients cannot hold sockets forever: headers within 15 s, the whole request within 30 s. Keep-alive
+// above the usual load-balancer idle timeout (60 s) so the proxy, not Node, closes idle connections.
+httpServer.headersTimeout = 15_000;
+httpServer.requestTimeout = 30_000;
+httpServer.keepAliveTimeout = 65_000;
+
 let web: WebRuntime | undefined;
 if (config.webDev) {
   vite = await createViteDev({ webRoot: path.join(findRepoRoot(), 'apps/web'), httpServer });
@@ -59,15 +67,17 @@ listener = getRequestListener(app.fetch);
 
 if (!config.google) console.warn('[auth] Google sign-in not configured (GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET missing in .env): the login dialog says so.');
 if (config.authSimulated) console.warn('[auth] AUTH_SIMULATED on: the dev session switcher (demo reader/admin) is accepted. Never in production.');
+const stopCleanup = startCleanupScheduler(handle.db, config.cleanupIntervalMinutes);
 const promoted = await promoteAdminEmails(deps.repo, config.adminEmails);
 if (promoted) console.log(`[auth] ADMIN_EMAILS: ${promoted} account(s) promoted to admin`);
 
 httpServer.listen(config.port, config.host, () => {
   const mode = config.webDev ? 'pages: SSR + Vite HMR' : web ? 'pages: SSR (build)' : 'API only';
-  console.log(`[server] World All Stars on http://${config.host === '127.0.0.1' ? 'localhost' : config.host}:${config.port} (${mode}; db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name}${config.google ? ' (Google on)' : ''}${envLoaded ? ', .env loaded' : ''})`);
+  console.log(`[server] World All Stars on http://${config.host === '127.0.0.1' ? 'localhost' : config.host}:${config.port} (${mode}; db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name}, rate limit: ${config.rateLimitStore}${config.google ? ' (Google on)' : ''}${envLoaded ? ', .env loaded' : ''})`);
 });
 
 const shutdown = async () => {
+  stopCleanup();
   httpServer.close();
   await vite?.close();
   await handle.close();

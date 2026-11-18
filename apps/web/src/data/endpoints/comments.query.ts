@@ -1,7 +1,7 @@
 import { CommentSort, CommentsQuerySchema, ParticipationApi } from '@was/shared';
 
 import { demoStore } from '../demo.store';
-import { defineMutation, defineQuery } from '../define-endpoint.helper';
+import { bySlug, defineMutation, defineQuery } from '../define-endpoint.helper';
 import { postDemoComment, reactDemoComment } from '../fixtures/comment-mutations.fixture';
 import { buildComments, commentRows } from '../fixtures/comments.fixture';
 import { requireUser } from '../fixtures/require-user.fixture';
@@ -9,18 +9,22 @@ import { meQuery, notificationsQuery, sessionQuery } from './session.query';
 
 /** GET /api/athletes/:slug/comments?sort=top|recent (doc 20). Public read. */
 export const commentsQuery = defineQuery(ParticipationApi.comments, {
-  sample: async ({ input, sample, session }) =>
-    buildComments(await commentRows(sample, session.user), input.params.slug, CommentsQuerySchema.parse(input.query ?? {}).sort ?? CommentSort.Top),
+  sample: async ({ input, sample, session }) => {
+    const query = CommentsQuerySchema.parse(input.query ?? {});
+    return buildComments(await commentRows(sample, session.user), input.params.slug, query.sort ?? CommentSort.Top, query.cursor);
+  },
   empty: () => ({ threads: [], total: 0, max: 500, nextCursor: null }),
 });
 
 const afterComment = [commentsQuery, sessionQuery, meQuery, notificationsQuery] as const;
+/** A new comment only changes the threads of its athlete. */
+const afterPost = [bySlug(commentsQuery), sessionQuery, meQuery, notificationsQuery] as const;
 
 /** POST /api/athletes/:slug/comments: comment or reply (shared validation, 422 on failure). */
 export const postComment = defineMutation(
   ParticipationApi.postComment,
   ({ input, sample, session }) => postDemoComment(sample, requireUser(session), input.params.slug, input.body.body, input.body.parentId),
-  { invalidates: afterComment },
+  { invalidates: afterPost },
 );
 
 /** PUT /api/comments/:id/reaction: like/dislike, null undoes. 403 on your own comment. */

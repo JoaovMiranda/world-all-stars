@@ -16,6 +16,18 @@ const LOCAL_SUFFIXES = ['.localhost', '.local', '.internal', '.lan', '.home.arpa
 
 const bareHost = (hostname: string): string => hostname.toLowerCase().replace(/^www\./, '').replace(/\.$/, '');
 
+/**
+ * Postel: accepts a link typed without a scheme ("pt.wikipedia.org/wiki/Pelé" → "https://pt.wikipedia.org/wiki/Pelé").
+ * Only adds https:// when there is no scheme at all and the text looks like a host (has a dot, no spaces); anything
+ * else (including an explicit http://) is returned trimmed, so checkSourceUrl still decides and explains.
+ */
+export const withDefaultHttps = (raw: string): string => {
+  const text = raw.trim();
+  if (!text || /^[a-z][a-z\d+.-]*:/i.test(text) || /\s/.test(text)) return text;
+  const host = text.replace(/^\/\//, '').split(/[/?#]/)[0] ?? '';
+  return host.includes('.') ? `https://${text.replace(/^\/\//, '')}` : text;
+};
+
 /** Anti-SSRF (doc 05/21): no localhost, no IPv4/IPv6 literal, no dotless or local-only host, no credentials. */
 export const isForbiddenSourceHost = (url: URL): boolean => {
   const host = url.hostname.toLowerCase();

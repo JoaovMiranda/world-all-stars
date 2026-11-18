@@ -4,7 +4,7 @@ import type { ERRORS_TEXT } from './errors.const';
 
 export const ERRORS_TEXT_EN = {
   shortcutsLabel: 'Shortcuts',
-  searchHint: 'Use the search at the top of the page (shortcut: the / key) to find a champion by name.',
+  searchHint: 'Use the search at the top of the page (shortcut: Ctrl+K, or ⌘K on a Mac) to find a champion by name.',
   shortcuts: {
     home: { label: 'Home', hint: 'Globe, on this day and calendar' },
     athletes: { label: 'Athletes', hint: 'Every champion, with filters' },

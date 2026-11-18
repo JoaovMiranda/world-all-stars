@@ -1,4 +1,4 @@
-import { type ApiContract, ApiErrorCode, ApiAccess, type RateLimitKey, accessDenial } from '@was/shared';
+import { type ApiContract, ApiErrorCode, ApiAccess, type Locale, type RateLimitKey, accessDenial, zodErrorMap } from '@was/shared';
 import type { Context, Hono } from 'hono';
 import type { z } from 'zod';
 
@@ -37,9 +37,10 @@ export const defineRoute = <C extends ApiContract>(contract: C, handler: Contrac
   options,
 });
 
-const parsePart = (schema: z.ZodType | undefined, value: unknown, part: string): unknown => {
+/** Generic Zod messages (required, too long, invalid e-mail…) come in the request language (zodErrorMap). */
+const parsePart = (schema: z.ZodType | undefined, value: unknown, part: string, locale: Locale): unknown => {
   if (!schema) return undefined;
-  const result = schema.safeParse(value);
+  const result = schema.safeParse(value, { error: zodErrorMap(locale) });
   if (!result.success) throw invalidFields(fieldErrorsOf(result.error, part === 'body' ? undefined : part));
   return result.data;
 };
@@ -67,12 +68,12 @@ export const registerRoutes = (app: Hono<HonoEnv>, routes: readonly RouteDefinit
       if (denial) throw new HttpError(denial.status, denial.body);
       // Accounts must come with an e-mail the identity provider verified (Google always does; doc 05).
       if (contract.access !== ApiAccess.Public && request.session.user && !request.session.user.emailVerified) throw forbidden(ApiErrorCode.EmailUnverified, 'emailUnverified');
-      if (options.rateLimit) request.deps.rateLimiter.hit(options.rateLimit, request.session.user?.id ?? request.ipHash);
+      if (options.rateLimit) await request.deps.rateLimiter.hit(options.rateLimit, request.session.user?.id ?? request.ipHash);
 
       const input = {
-        params: parsePart(contract.params, c.req.param(), 'params'),
-        query: parsePart(contract.query, c.req.query(), 'query'),
-        body: contract.body ? parsePart(contract.body, await readBody(c), 'body') : undefined,
+        params: parsePart(contract.params, c.req.param(), 'params', request.locale),
+        query: parsePart(contract.query, c.req.query(), 'query', request.locale),
+        body: contract.body ? parsePart(contract.body, await readBody(c), 'body', request.locale) : undefined,
       } as ContractInputOf<ApiContract>;
       const result = await handler(input, { ...request, user: request.session.user as AuthUser });
 

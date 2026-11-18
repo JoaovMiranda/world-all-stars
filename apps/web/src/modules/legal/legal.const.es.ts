@@ -332,6 +332,7 @@ export const LEGAL_DOCS_ES: LegalDocs = {
             headers: ['Nombre', 'Proveedor', 'Finalidad', 'Duración'],
             rows: [
               ['was-theme', 'World All Stars', 'Recordar el tema claro u oscuro elegido (preferencia estrictamente necesaria)', '12 meses'],
+              ['was-motion', 'World All Stars', 'Recordar si pausaste las animaciones (preferencia de accesibilidad, estrictamente necesaria)', '12 meses'],
               ['was_locale', 'World All Stars', 'Recordar el idioma elegido: portugués, inglés o español (preferencia estrictamente necesaria)', '12 meses'],
               ['was.session_token', 'World All Stars', 'Mantener tu sesión iniciada después del inicio de sesión con Google (estrictamente necesaria; HttpOnly)', 'Hasta cerrar sesión o 30 días'],
               ['was.state', 'World All Stars', 'Proteger el regreso del inicio de sesión con Google contra falsificaciones (estrictamente necesaria)', 'Unos minutos, durante el inicio de sesión'],
@@ -378,18 +379,17 @@ export const LEGAL_DOCS_ES: LegalDocs = {
         id: 'auditoria',
         title: 'Última auditoría',
         blocks: [
-          { kind: 'p', text: 'Auditoría con Lighthouse 12.6.1 (perfil móvil) en los temas claro y oscuro, el 3 y el 4 de noviembre de 2026, sobre el prototipo:' },
+          { kind: 'p', text: 'Auditoría con Lighthouse 13.6.0 (perfil móvil, 4G lento simulado) y axe-core 4.14 (WCAG 2.2 A y AA) el 18 de noviembre de 2026. axe-core no encuentra ninguna infracción en las páginas públicas; el contraste de los temas claro y oscuro se verifica con una prueba automática de todos los colores.' },
           {
             kind: 'table',
             caption: 'Resultados de Lighthouse por página (accesibilidad y SEO)',
             headers: ['Página', 'Accesibilidad', 'SEO'],
             rows: [
               ['Inicio', '100', '100'],
-              ['Perfil del atleta (claro y oscuro)', '100', '100'],
-              ['Deporte', '100', '100'],
-              ['Hall of Greats', '100', '100'],
               ['Atletas', '100', '100'],
-              ['Fuentes', '100', '100'],
+              ['Perfil del atleta', '100', '100'],
+              ['Deportes', '100', '100'],
+              ['Contacto', '100', '100'],
             ],
           },
         ],
@@ -408,7 +408,12 @@ export const LEGAL_DOCS_ES: LegalDocs = {
               'Gráficos con una tabla equivalente de los mismos datos.',
               'Formularios con etiquetas visibles, errores en texto debajo de cada campo y foco en el primer error.',
               'Diseño sin desplazamiento horizontal hasta 320 px y texto ampliable hasta el 200%.',
-              'Animaciones cortas, desactivadas cuando el sistema pide movimiento reducido.',
+              'Animaciones cortas, desactivadas cuando el sistema pide movimiento reducido o con el botón “Pausar animaciones” arriba en cada página.',
+              'Cambios de página anunciados a los lectores de pantalla, con el foco llevado al título de la nueva página.',
+              'Mensajes de estado (resultados de filtros, comentarios cargados, envío de formularios) leídos sin mover el foco.',
+              'Texto en unidades relativas: respeta el tamaño de letra elegido en el navegador.',
+              'Atajo de búsqueda con modificador (Ctrl+K o ⌘K), que no se activa al escribir o dictar.',
+              'Si tu sesión caduca mientras escribes un comentario, el texto se conserva.',
             ],
           },
         ],
@@ -434,7 +439,7 @@ export const LEGAL_DOCS_ES: LegalDocs = {
           {
             kind: 'list',
             items: [
-              'En cada cambio: Lighthouse y axe-core automáticos, con cero infracciones graves o críticas.',
+              'En cada cambio (CI): axe-core sobre todas las páginas públicas (WCAG 2.2 A y AA, cero infracciones), prueba de contraste de todos los colores del tema, reglas de accesibilidad del JSX y Lighthouse en perfil móvil exigiendo 100 en accesibilidad.',
               'En cada versión: navegación solo con teclado, lectores de pantalla NVDA y VoiceOver, zoom del 200% y 400%, alto contraste y móviles reales.',
             ],
           },

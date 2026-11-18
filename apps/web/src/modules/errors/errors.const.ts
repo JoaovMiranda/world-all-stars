@@ -14,7 +14,7 @@ export const ERROR_SHORTCUTS = [
 // UI strings of the error pages (pt-BR source; en/es next to it). Doc 09 P20: search + shortcuts.
 export const ERRORS_TEXT = {
   shortcutsLabel: 'Atalhos',
-  searchHint: 'Use a busca no topo da página (atalho: tecla /) para achar um campeão pelo nome.',
+  searchHint: 'Use a busca no topo da página (atalho: Ctrl+K, ou ⌘K no Mac) para achar um campeão pelo nome.',
   shortcuts: {
     home: { label: 'Início', hint: 'Globo, hoje na história e calendário' },
     athletes: { label: 'Atletas', hint: 'Todos os campeões, com filtros' },

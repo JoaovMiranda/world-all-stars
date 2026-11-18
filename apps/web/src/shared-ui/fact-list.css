@@ -1,11 +1,11 @@
 /* Definition lists: "stacked" (infobox: term above value) and "split" (term left, value right). */
 @layer components {
-  .fact-list { display: grid; gap: 10px; margin: 0; font-size: 14px; }
-  .fact-list dt { font: 600 11px var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); }
+  .fact-list { display: grid; gap: 10px; margin: 0; font-size: 0.875rem; }
+  .fact-list dt { font: 600 0.6875rem var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); }
   .fact-list dd { margin: 2px 0 0; overflow-wrap: anywhere; }
   .fact-list-split > div { display: contents; }
   .fact-list-split { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; }
-  .fact-list-split dt { font: 400 14px var(--font-ui); letter-spacing: 0; text-transform: none; }
+  .fact-list-split dt { font: 400 0.875rem var(--font-ui); letter-spacing: 0; text-transform: none; }
   .fact-list-split dd { margin: 0; font-weight: 600; text-align: right; }
   .fact-list-sep { border: 0; border-top: 1px solid var(--border); margin: 14px 0; }
 }

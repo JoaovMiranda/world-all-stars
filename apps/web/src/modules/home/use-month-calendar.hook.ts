@@ -1,5 +1,5 @@
 import { type IsoDate, toIsoDate, fromIsoDate } from '@was/shared';
-import { addMonths, startOfMonth } from 'date-fns';
+import { addMonths, isSameMonth, startOfMonth } from 'date-fns';
 import { useCallback, useState } from 'react';
 
 /** Month navigation + selected day of the home calendar. */
@@ -12,7 +12,11 @@ export function useMonthCalendar(today: IsoDate) {
     setMonth(startOfMonth(fromIsoDate(today)));
     setSelected(today);
   }, [today]);
-  const selectDay = useCallback((day: Date) => setSelected(toIsoDate(day)), []);
+  // Selecting a day of another month (arrow keys across the edge) brings that month into view.
+  const selectDay = useCallback((day: Date) => {
+    setSelected(toIsoDate(day));
+    setMonth((m) => (isSameMonth(m, day) ? m : startOfMonth(day)));
+  }, []);
 
   return { month, selected, goToMonth, goToToday, selectDay };
 }

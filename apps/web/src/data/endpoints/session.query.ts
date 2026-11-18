@@ -9,7 +9,7 @@ import { requireUser } from '../fixtures/require-user.fixture';
 export const sessionQuery = defineQuery(ParticipationApi.session, {
   sample: ({ session }) => ({ ...session, pendingConsent: null, simulated: true, googleEnabled: false }),
   modeIndependent: true,
-});
+}, { keyedByIdentity: false });
 
 /** GET /api/me (E2). */
 export const meQuery = defineQuery(ParticipationApi.me, {

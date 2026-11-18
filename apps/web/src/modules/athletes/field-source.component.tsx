@@ -25,6 +25,7 @@ export function FieldSource({ profile, field }: { profile: AthleteProfile; field
             title={profileText.infobox.conflictTitle}
           >
             {profileText.infobox.conflict}
+            <span className="sr-only">: {profileText.infobox.conflictTitle}</span>
           </Link>
         </>
       )}

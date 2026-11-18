@@ -7,6 +7,7 @@ import { useText } from '@/i18n/use-text.hook';
 import { tokenColor } from './format.helper';
 import { OrgMini } from './org-mini.component';
 import type { OrgIdentity } from './org.type';
+import { CountUp } from './count-up.component';
 import { UI_MESSAGES } from './ui-text.const';
 
 interface SportCardProps {
@@ -40,7 +41,9 @@ export function SportCard({ sport, showAssociations = true, maxAssociations = 4,
         </Link>
       </h3>
       {tags && <div className="row">{tags}</div>}
-      <div className="count">{sport.athletes}</div>
+      <div className="count">
+        <CountUp value={sport.athletes} />
+      </div>
       <small>
         {ui.champions} · {ui.mythic(sport.mythic)} · {ui.competitions(sport.competitions)}
       </small>

@@ -1,5 +1,7 @@
 // Pages vs API on one server: CSP split, in-process API calls, HTML cache policy (ETag/304/LRU), SEO files.
-import { createDatabase, type DatabaseHandle, findRepoRoot, seedDatabase, users } from '@was/db';
+import zlib from 'node:zlib';
+
+import { bannedWords, createDatabase, type DatabaseHandle, findRepoRoot, seedDatabase, sources, users } from '@was/db';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../app';
@@ -43,6 +45,16 @@ describe('web pages mounted on the API server', () => {
     expect(csp).toContain("frame-ancestors 'none'");
     expect(await res.text()).toContain(`nonce="${seen.nonce}"`);
     expect(seen.apiStatus).toBe(200);
+  });
+
+  it('reports the render time of pages in Server-Timing and marks in-process cache hits', async () => {
+    created.htmlCache.clear();
+    const miss = await app().request('/hall');
+    expect(miss.headers.get('server-timing')).toMatch(/ssr;dur=[\d.]+;desc="render"/);
+    expect(miss.headers.get('x-cache')).toBeNull();
+    const hit = await app().request('/hall');
+    expect(hit.headers.get('x-cache')).toBe('HIT');
+    expect(hit.headers.get('server-timing')).not.toContain('ssr;');
   });
 
   it("keeps default-src 'none' on /api and never renders a page for an unknown /api path", async () => {
@@ -97,11 +109,70 @@ describe('web pages mounted on the API server', () => {
     expect(shared.headers.get('cache-control')).toBe(PUBLIC_HTML_CACHE_CONTROL);
   });
 
-  it('drops the HTML cache on any database write', async () => {
+  it('drops the HTML cache on writes to what public pages show, keeps it on private writes', async () => {
+    const system = { userId: null, name: null, via: 'system', ipHash: null, userAgent: null } as never;
     await app().request('/sports');
     expect(created.htmlCache.size).toBeGreaterThan(0);
-    await created.deps.repo.insert(users, { email: `cache-${Date.now()}@exemplo.invalid`, displayName: 'Cache' } as never, { userId: null, name: null, via: 'system', ipHash: null, userAgent: null } as never);
+    // Account data never renders on an anonymous page.
+    await created.deps.repo.insert(users, { email: `cache-${Date.now()}@exemplo.invalid`, displayName: 'Cache' } as never, system);
+    expect(created.htmlCache.size).toBeGreaterThan(0);
+    await created.deps.repo.insert(bannedWords, { term: `cache${Date.now()}`, matchMode: 'word', locale: 'pt-BR' } as never, system);
+    expect(created.htmlCache.size).toBeGreaterThan(0);
+    // Catalog content does.
+    await created.deps.repo.insert(sources, { slug: `cache-${Date.now()}`, name: 'Cache', baseUrl: 'https://cache.invalid', originKind: 'official', commercialUse: 'no', usageStatus: 'link_only' } as never, system);
     expect(created.htmlCache.size).toBe(0);
+  });
+
+  it('compresses pages and API JSON (brotli preferred, gzip fallback), never in-process API calls', async () => {
+    const decode = async (res: Response) => {
+      const bytes = Buffer.from(await res.arrayBuffer());
+      const enc = res.headers.get('content-encoding');
+      return (enc === 'br' ? zlib.brotliDecompressSync(bytes) : enc === 'gzip' ? zlib.gunzipSync(bytes) : bytes).toString('utf8');
+    };
+    const br = await app().request('/sports', { headers: { 'accept-encoding': 'gzip, deflate, br' } });
+    expect(br.headers.get('content-encoding')).toBe('br');
+    expect(br.headers.get('vary')).toContain('Accept-Encoding');
+    expect(br.headers.get('content-length')).toBeNull();
+    expect(await decode(br)).toContain('<!DOCTYPE html>');
+
+    const gz = await app().request('/sitemaps/static.xml', { headers: { 'accept-encoding': 'gzip' } });
+    expect(gz.headers.get('content-encoding')).toBe('gzip');
+    expect(await decode(gz)).toContain('<urlset');
+
+    const refused = await app().request('/sports', { headers: { 'accept-encoding': 'br;q=0, identity' } });
+    expect(refused.headers.get('content-encoding')).toBeNull();
+
+    const ssr = await app().request('/api/health', { headers: { 'accept-encoding': 'br', 'x-was-ssr': '1' } });
+    expect(ssr.headers.get('content-encoding')).toBeNull();
+    expect(await ssr.json()).toEqual({ ok: true, db: 'up' });
+    expect(ssr.headers.get('server-timing')).toMatch(/total;dur=[\d.]+;desc="server"/);
+
+    const notModified = await app().request('/sports', { headers: { 'accept-encoding': 'br', 'if-none-match': br.headers.get('etag') ?? '' } });
+    expect(notModified.status).toBe(304);
+    expect(notModified.headers.get('content-encoding')).toBeNull();
+  });
+
+  it('refuses API bodies above BODY_LIMIT_KB with a 413 in the API error shape', async () => {
+    const res = await app().request('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message: 'x'.repeat(70 * 1024) }) });
+    expect(res.status).toBe(413);
+    expect(await res.json()).toMatchObject({ error: 'payload_too_large' });
+  });
+
+  it('accepts anonymous Web Vitals beacons (RUM) and logs one JSON line per metric', async () => {
+    const lines: string[] = [];
+    const log = console.log;
+    console.log = (line: string) => void lines.push(line);
+    try {
+      const metrics = [{ name: 'LCP', value: 2310.5, rating: 'good', path: '/athletes/pele', navigationType: 'navigate', connection: '4g' }, { name: 'CLS', value: 0.31, rating: 'poor', path: '/athletes/pele' }];
+      const res = await app().request('/api/vitals', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ metrics }) });
+      expect(res.status).toBe(200);
+    } finally {
+      console.log = log;
+    }
+    const vitals = lines.filter((l) => l.includes('"web-vital"')).map((l) => JSON.parse(l));
+    expect(vitals).toMatchObject([{ name: 'LCP', value: 2310.5, rating: 'good', level: 'info', conn: '4g' }, { name: 'CLS', rating: 'poor', level: 'warn' }]);
+    const bad = await app().request('/api/vitals', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ metrics: [{ name: 'XYZ', value: -1, rating: 'good', path: 'x' }] }) });
+    expect(bad.status).toBe(422);
   });
 
   it('serves robots.txt and the sitemaps with absolute PUBLIC_URL links', async () => {

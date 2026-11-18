@@ -1,4 +1,4 @@
-import { type Database, active, legalAcceptances, users } from '@was/db';
+import { type Database, active, authSessions, legalAcceptances, users } from '@was/db';
 import { LEGAL_DOCUMENT_VERSIONS, REQUIRED_LEGAL_DOCUMENTS, SessionKind, UserRole } from '@was/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 
@@ -41,7 +41,16 @@ export const hasCurrentConsent = async (db: Database, userId: string): Promise<b
  * Session of a resolved account: pending (= anonymous) until the current Terms/Privacy are accepted, else reader or
  * admin by role. Same rule for Better Auth and the simulated switcher.
  */
-export const accountSession = async (db: Database, user: AuthUser, source: SessionSource): Promise<SessionContext> => {
-  if (!(await hasCurrentConsent(db, user.id))) return { ...ANON_SESSION, pending: user, source };
+export const accountSession = async (db: Database, user: AuthUser, source: SessionSource, consent?: boolean): Promise<SessionContext> => {
+  if (!(consent ?? (await hasCurrentConsent(db, user.id)))) return { ...ANON_SESSION, pending: user, source };
   return { kind: user.role === UserRole.Admin ? SessionKind.Admin : SessionKind.Reader, user, pending: null, source };
 };
+
+/** Session of an account id (Better Auth): the user row and its consent are read in parallel (one round-trip). */
+export const sessionForUserId = async (db: Database, userId: string, source: SessionSource): Promise<SessionContext> => {
+  const [user, consent] = await Promise.all([loadAuthUser(db, { id: userId }), hasCurrentConsent(db, userId)]);
+  return user ? accountSession(db, user, source, consent) : ANON_SESSION;
+};
+
+/** Signs the account out of every browser (Better Auth sessions are ephemeral rows: physical DELETE allowed). */
+export const revokeAuthSessions = (db: Database, userId: string) => db.delete(authSessions).where(eq(authSessions.userId, userId));

@@ -12,12 +12,17 @@
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
-    "start": "NODE_ENV=production node apps/server/dist/main.js",
+    "start": "NODE_ENV=production node --import ./apps/server/dist/instrumentation.js apps/server/dist/main.js",
     "db:generate": "pnpm --filter @was/db generate",
     "db:migrate": "pnpm --filter @was/db migrate",
     "db:seed": "pnpm --filter @was/db seed",
     "db:reset": "pnpm --filter @was/db reset",
-    "fixtures:export": "node scripts/fixtures/export-prototype-fixtures.mjs"
+    "db:cleanup": "pnpm --filter @was/db cleanup",
+    "perf:budget": "node scripts/ci/bundle-budget.mjs",
+    "perf:lighthouse": "npx -y @lhci/cli@0.16.0 autorun",
+    "fixtures:export": "node scripts/fixtures/export-prototype-fixtures.mjs",
+    "translations:content": "node scripts/translations/content-translations.mjs",
+    "lint:a11y": "pnpm --filter web lint:a11y"
   },
   "devDependencies": {
     "turbo": "2.11.10",

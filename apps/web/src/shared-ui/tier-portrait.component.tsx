@@ -1,12 +1,14 @@
 import './tier-portrait.css';
 
 import type { MediaLink, Tier } from '@was/shared';
-import { type CSSProperties, useState } from 'react';
+import { type CSSProperties, useRef, useState } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 
 import { initials } from './format.helper';
+import { ResponsiveImg } from './responsive-img.component';
 import { UI_MESSAGES } from './ui-text.const';
+import { useTilt } from './use-tilt.hook';
 
 interface TierPortraitProps {
   name: string;
@@ -21,11 +23,14 @@ interface TierPortraitProps {
 export function TierPortrait({ name, tier, photo, width }: TierPortraitProps) {
   const ui = useText(UI_MESSAGES);
   const [broken, setBroken] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  useTilt(ref, 8);
   const credit = photo && [photo.year, photo.author].filter(Boolean).join(' · ');
   return (
-    <figure className={`tier-portrait tier-portrait-${tier}`} style={width ? ({ '--portrait-w': `${width}px` } as CSSProperties) : undefined}>
+    <figure ref={ref} className={`tier-portrait tier-portrait-${tier} tilt tilt-spec`} style={width ? ({ '--portrait-w': `${width}px` } as CSSProperties) : undefined}>
       {photo && !broken && (
-        <img src={photo.url} alt={name} width={168} height={210} fetchPriority="high" decoding="async" referrerPolicy="no-referrer" onError={() => setBroken(true)} />
+        // LCP image of the profile: thumbnail of the shown width (steps 1x→2x by w-descriptor), fetched with high priority, never lazy.
+        <ResponsiveImg url={photo.url} displayWidth={width ?? 168} alt={name} width={168} height={210} fetchPriority="high" onBroken={() => setBroken(true)} />
       )}
       <span className="tier-portrait-fallback" aria-hidden="true">
         {initials(name)}

@@ -1,4 +1,4 @@
-import { ANALYSIS_DIMENSIONS, CompareQuerySchema, PublicApi, composeCompare, matchesAthleteFilters } from '@was/shared';
+import { ANALYSIS_DIMENSIONS, type AthleteListQuery, CompareQuerySchema, PublicApi, composeCompare, matchesAthleteFilters, pageOf } from '@was/shared';
 
 import { ApiError } from '../api-error.error';
 import { defineQuery } from '../define-endpoint.helper';
@@ -9,8 +9,8 @@ import { FIXTURE_CONTENT_LOCALE } from '../data-layer.const';
 export const athletesQuery = defineQuery(PublicApi.athletes, {
   sample: async ({ input, sample }) => {
     const [list, names] = await Promise.all([sample('athletes.json'), sample('athlete-names.json')]);
-    const items = list.items.map(withDemoTier).filter((a) => matchesAthleteFilters(a, input.query, names[a.slug]));
-    return { items, total: items.length };
+    const { page, ...filters } = (input.query ?? {}) as AthleteListQuery;
+    return pageOf(list.items.map(withDemoTier).filter((a) => matchesAthleteFilters(a, filters, names[a.slug])), page);
   },
 });
 

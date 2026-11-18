@@ -14,6 +14,7 @@ import { Section } from '@/shared-ui/section.component';
 import { Skeleton, SkeletonList } from '@/shared-ui/skeleton.component';
 import { StatTile } from '@/shared-ui/stat-tile.component';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
+import { Reveal } from '@/shared-ui/reveal.component';
 
 import { CollectionRuns } from './collection-runs.component';
 import { SourceItem } from './source-item.component';
@@ -66,13 +67,13 @@ export function SourcesPage() {
                 }
               >
                 {visible.length > 0 ? (
-                  <ul className="src-list">
+                  <Reveal as="ul" className="src-list" stagger name="src-list">
                     {visible.map((s) => (
                       <li key={s.slug}>
                         <SourceItem source={s} />
                       </li>
                     ))}
-                  </ul>
+                  </Reveal>
                 ) : (
                   <p className="empty">{T.list.noMatch}</p>
                 )}
@@ -85,14 +86,14 @@ export function SourcesPage() {
       <Section title={T.runs.title} eyebrow={T.runs.eyebrow}>
         <p className="muted max-w-[80ch] text-sm">{T.runs.intro}</p>
         <h3 className="label mt-4">{T.runs.gatesTitle}</h3>
-        <ol className="src-gates">
+        <Reveal as="ol" className="src-gates" stagger name="src-gates">
           {T.runs.gates.map((g) => (
             <li key={g.title}>
               <b>{g.title}</b>
               {g.text}
             </li>
           ))}
-        </ol>
+        </Reveal>
         <div className="mt-4">
           <QueryBoundary query={runs} loading={<SkeletonList rows={2} />}>
             {(r) => <CollectionRuns runs={r} />}
@@ -101,14 +102,14 @@ export function SourcesPage() {
       </Section>
 
       <Section variant="plain" title={T.origins.title} eyebrow={T.origins.eyebrow}>
-        <ul className="src-origins">
+        <Reveal as="ul" className="src-origins" stagger name="src-origins">
           {T.origins.items.map((o) => (
             <li key={o.title} className="src-origin">
               <b>{o.title}</b>
               {o.text}
             </li>
           ))}
-        </ul>
+        </Reveal>
       </Section>
     </PageLayout>
   );

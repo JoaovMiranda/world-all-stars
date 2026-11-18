@@ -1,4 +1,4 @@
-import { ACCOUNT_DELETE_CONFIRMATION, type Messages } from '@was/shared';
+import type { Messages } from '@was/shared';
 
 import type { ACCOUNT_TEXT } from './account.const';
 
@@ -92,7 +92,7 @@ export const ACCOUNT_TEXT_EN = {
     deleteDialogKicker: 'Permanent action',
     deleteDialogTitle: 'Delete the account?',
     deleteDialogText: 'Your name and email will be removed and you’ll be signed out. Comments and votes remain under a pseudonym.',
-    deleteConfirmLabel: `Type ${ACCOUNT_DELETE_CONFIRMATION} to confirm`,
+    deleteConfirmLabel: (word) => `Type ${word} to confirm`,
     deleteCancel: 'Cancel',
     deleteConfirm: 'Delete permanently',
     deleting: 'Deleting…',

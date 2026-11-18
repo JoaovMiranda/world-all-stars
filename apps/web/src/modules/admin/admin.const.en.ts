@@ -7,6 +7,7 @@ export const ADMIN_TEXT_EN = {
   eyebrow: 'Admin',
   lead: 'Collection review queues, moderation and inbox.',
   sectionsLabel: 'Panel sections',
+  navGroups: { moderation: 'Moderation', data: 'Data', people: 'People' },
   pending: (n) => (n === 1 ? '1 pending' : `${n} pending`),
   open: 'Open',
   sections: {

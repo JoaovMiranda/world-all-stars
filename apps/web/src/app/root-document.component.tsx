@@ -10,10 +10,10 @@ import { useBoot } from './use-boot.hook';
  * cookie becomes <html data-theme> here and the locale <html lang>, so the first paint already has the right colors (no inline script).
  */
 export function RootDocument({ children }: { children: ReactNode }) {
-  const { theme } = useBoot();
+  const { theme, motionPaused } = useBoot();
   const locale = useLocale();
   return (
-    <html lang={locale} {...(theme ? { 'data-theme': theme } : {})}>
+    <html lang={locale} {...(theme ? { 'data-theme': theme } : {})} {...(motionPaused ? { 'data-motion': 'reduced' } : {})}>
       <head>
         <HeadContent />
       </head>

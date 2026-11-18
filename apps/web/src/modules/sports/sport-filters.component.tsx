@@ -38,7 +38,7 @@ export function SportFilters({ sport, filters, setFilter, reset, activeCount, su
 
   return (
     <FilterBar label={t.filtersLabel} activeCount={activeCount} onReset={reset}>
-      <form role="search" className="sports-search" onSubmit={(e) => e.preventDefault()}>
+      <form role="search" aria-label={t.searchLabel} className="sports-search" onSubmit={(e) => e.preventDefault()}>
         <SearchInput inline label={t.searchLabel} placeholder={t.searchPlaceholder} value={filters.q ?? ''} onChange={(e) => setFilter('q', e.target.value)} />
       </form>
       <FormField label={t.country}>

@@ -18,10 +18,10 @@
   .diff-view { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 0; background: var(--border); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
   @media (max-width: 600px) { .diff-view { grid-template-columns: minmax(0, 1fr); } }
   .diff-cell { background: var(--surface); padding: 10px 12px; min-width: 0; }
-  .diff-cell dt { font: 600 11px var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); }
-  .diff-cell dd { margin: 4px 0 0; font: 600 16px var(--font-ui); overflow-wrap: anywhere; }
+  .diff-cell dt { font: 600 0.6875rem var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); }
+  .diff-cell dd { margin: 4px 0 0; font: 600 1rem var(--font-ui); overflow-wrap: anywhere; }
   .diff-cell.is-changed { background: var(--primary-soft); }
-  .diff-cell .diff-flag { display: block; font: 600 11px var(--font-ui); color: var(--accent-text); margin-top: 4px; }
+  .diff-cell .diff-flag { display: block; font: 600 0.6875rem var(--font-ui); color: var(--accent-text); margin-top: 4px; }
   .diff-note { margin-top: 8px; }
 
   .decision-bar { display: flex; flex-wrap: wrap; gap: 8px; }

@@ -13,8 +13,9 @@ const out = path.join(here, 'dist');
 
 fs.rmSync(out, { recursive: true, force: true });
 await build({
-  entryPoints: [path.join(here, 'src/main.ts')],
-  outfile: path.join(out, 'main.js'),
+  // instrumentation.js is preloaded with `node --import` (OpenTelemetry must patch pg before main.js imports it).
+  entryPoints: { main: path.join(here, 'src/main.ts'), instrumentation: path.join(here, 'src/observability/instrumentation.ts') },
+  outdir: out,
   bundle: true,
   platform: 'node',
   format: 'esm',
@@ -26,4 +27,4 @@ await build({
   logLevel: 'info',
 });
 fs.cpSync(path.join(here, '../../packages/db/src/migrations'), path.join(out, 'migrations'), { recursive: true });
-console.log('[build] dist/main.js + dist/migrations');
+console.log('[build] dist/main.js + dist/instrumentation.js + dist/migrations');

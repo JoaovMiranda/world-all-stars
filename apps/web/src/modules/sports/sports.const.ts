@@ -75,6 +75,7 @@ export const SPORTS_TEXT = {
     reportTitle: 'Nenhum atleta individual identificado em fonte pública.',
     reportFacts: 'O que a coleta encontrou',
     evidence: (quote: string | null) => (quote ? `Trecho literal: ${quote}` : 'Ver a fonte'),
+    evidenceToggle: (n: number) => `Trecho literal do fato ${n}`,
     evidenceLabel: (n: number) => `Fonte do fato ${n} (abre em nova aba)`,
     competitions: 'Competições e títulos',
     competitionsEyebrow: 'por nível',

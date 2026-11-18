@@ -43,6 +43,10 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # jsx-a11y rules (oxlint): static accessibility checks of the React markup.
+      - name: Accessibility lint
+        run: pnpm lint:a11y
+
       # plan/ is gitignored: the prototype-based tests and the db seed skip without it; web fixtures are committed.
       - name: Test
         run: pnpm test
@@ -52,12 +56,59 @@ jobs:
         env:
           VITE_DATA_SOURCE: http
 
+      # Initial JS per route (entry + page chunk, gzip) and the stylesheet: fails on a regression above the budget.
+      - name: Bundle budget
+        run: pnpm perf:budget
+
       # Starts apps/server/dist/main.js with NODE_ENV=production on an in-memory PGlite and dummy CI secrets.
       - name: Smoke test of the production build
         run: bash scripts/ci/smoke.sh
 
       - name: Audit production dependencies
         run: pnpm audit --prod --audit-level=high
+
+  lighthouse:
+    name: Lighthouse (mobile, slow 4G, accessibility)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm (version from packageManager)
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: Set up Node (.nvmrc)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (production, real API)
+        run: pnpm build
+        env:
+          VITE_DATA_SOURCE: http
+
+      # lighthouserc.json: Moto-class phone, simulated slow 4G (150 ms RTT, 1.6 Mbps, CPU ×4), median of 3 runs on
+      # /, /athletes, /athletes/pele, /sports and /contact (Lighthouse 13 via @lhci/cli 0.16). Fails on accessibility < 100,
+      # best practices or SEO < 95, performance < 90, LCP > 2.5 s, CLS > 0.1 or TBT > 300 ms. The athlete profile (LCP = the
+      # portrait image) is a regression guard instead: score ≥ 80, LCP ≤ 5 s. The simulated model adds every early request
+      # to an image LCP; with real throttling (devtools) the same page measures LCP ≈ 2.2 s. Reports are kept as an artifact.
+      - name: Lighthouse CI
+        run: pnpm perf:lighthouse
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports
+          retention-days: 14
 
   docker:
     name: Docker image (build only, no push)

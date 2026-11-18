@@ -14,7 +14,7 @@ interface SourceInfoProps {
 export function SourceInfo({ source, field }: SourceInfoProps) {
   const ui = useText(UI_MESSAGES);
   if (!source) return null;
-  const label = `${ui.sourceOf(field, source.name)} ${ui.external}`;
+  const label = `${ui.sourceOf(field, source.name)} (${source.license}) ${ui.external}`;
   return (
     <a className="src" href={source.url} target="_blank" rel="noopener noreferrer" aria-label={label} title={`${source.name} · ${source.license}`}>
       i

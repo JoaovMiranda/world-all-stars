@@ -9,18 +9,18 @@
   .src-item > summary:focus-visible { outline-offset: -2px; }
   @media (max-width: 900px) { .src-item > summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } .src-name { grid-column: 1 / -1; } }
   .src-name b { display: block; font-weight: 600; }
-  .src-name b::before { content: "▸ "; color: var(--accent-text); }
-  .src-item[open] .src-name b::before { content: "▾ "; }
-  .src-name small, .src-cell small { color: var(--muted); font-size: 12px; display: block; }
+  .src-name b::before { content: "▸"; display: inline-block; margin-right: .35em; color: var(--accent-text); transition: transform var(--dur-3) var(--ease-snap); }
+  .src-item[open] .src-name b::before { transform: rotate(90deg); }
+  .src-name small, .src-cell small { color: var(--muted); font-size: 0.75rem; display: block; }
   .src-cell { display: grid; gap: 4px; justify-items: start; min-width: 0; }
-  .src-cell b.display-num { font-size: 18px; }
+  .src-cell b.display-num { font-size: 1.125rem; }
   .src-body { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0 16px 16px; border-top: 1px solid var(--border); }
   .src-cell small.tone-success { color: var(--success-text); } .src-cell small.tone-danger { color: var(--danger-text); }
   .src-cell small.tone-gold { color: var(--accent-text); } .src-cell small.tone-info { color: var(--info-text); }
   .src-gates { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; margin-top: 8px; counter-reset: gate; }
-  .src-gates li, .src-origin { border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px; font-size: 13px; color: var(--muted); background: var(--surface); }
+  .src-gates li, .src-origin { border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px; font-size: 0.8125rem; color: var(--muted); background: var(--surface); }
   .src-gates li { counter-increment: gate; background: var(--surface-2); }
   .src-gates li b::before { content: counter(gate) ". "; color: var(--accent-text); }
-  .src-gates b, .src-origin b { color: var(--text); display: block; font-size: 14px; margin-bottom: 4px; }
+  .src-gates b, .src-origin b { color: var(--text); display: block; font-size: 0.875rem; margin-bottom: 4px; }
   .src-origins { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 10px; }
 }

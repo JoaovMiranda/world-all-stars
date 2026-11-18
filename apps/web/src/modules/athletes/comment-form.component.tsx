@@ -1,9 +1,11 @@
 import { COMMENT_MAX_LENGTH, createCommentInputSchema } from '@was/shared';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { isApiError } from '@/data/api-error.error';
 import { postComment } from '@/data/endpoints/comments.query';
 import { validationContextQuery } from '@/data/endpoints/discovery.query';
+import { sessionQuery } from '@/data/endpoints/session.query';
 import { useLocale } from '@/i18n/locale.store';
 import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
@@ -12,6 +14,7 @@ import { FormField } from '@/shared-ui/form-field.component';
 import { Notice } from '@/shared-ui/notice.component';
 import { Textarea } from '@/shared-ui/textarea.component';
 import { useForm } from '@/shared-ui/use-form.hook';
+import { useSession } from '@/session/use-session.hook';
 
 import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
@@ -31,7 +34,10 @@ export function CommentForm({ slug, label, parentId = null, autoFocus = false, o
   const ctx = validationContextQuery.useQuery();
   const schema = useMemo(() => (ctx.data ? createCommentInputSchema(ctx.data.bannedWords, locale) : null), [ctx.data, locale]);
   const form = useForm({ schema, initialValues: { body: '', parentId } });
-  const [failed, setFailed] = useState(false);
+  // 'auth': the session expired while writing. The draft stays in the field (WCAG 2.2.5 / 3.3.7): sign in, resend.
+  const [failed, setFailed] = useState<false | 'error' | 'auth'>(false);
+  const { requireLogin } = useSession();
+  const queryClient = useQueryClient();
   const [posted, setPosted] = useState(false);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const post = postComment.useMutation({
@@ -42,7 +48,11 @@ export function CommentForm({ slug, label, parentId = null, autoFocus = false, o
     },
     onError: (e) => {
       if (isApiError(e) && e.status === 422) form.setServerErrors(e.body.errors ?? { body: e.body.message ?? T.error });
-      else setFailed(true);
+      else if (isApiError(e) && e.status === 401) {
+        setFailed('auth');
+        // The server no longer knows us: refresh the session so "Entrar de novo" opens the login dialog.
+        void queryClient.invalidateQueries({ queryKey: sessionQuery.baseKey });
+      } else setFailed('error');
     },
   });
 
@@ -70,13 +80,21 @@ export function CommentForm({ slug, label, parentId = null, autoFocus = false, o
             {T.cancel}
           </Button>
         )}
-        <Button type="submit" variant="primary" disabled={post.isPending || !schema}>
+        <Button type="submit" variant="primary" disabled={!schema} pending={post.isPending}>
           {parentId ? T.reply : T.publish}
         </Button>
       </div>
-      {failed && (
+      {failed === 'error' && (
         <Notice tone="danger" live="assertive">
           {T.error}
+        </Notice>
+      )}
+      {failed === 'auth' && (
+        <Notice tone="danger" live="assertive">
+          {T.sessionExpired}{' '}
+          <Button size="sm" variant="secondary" onClick={() => requireLogin('comment')}>
+            {T.signInAgain}
+          </Button>
         </Notice>
       )}
       {posted && !parentId && <p className="sr-only" role="status">{T.posted}</p>}

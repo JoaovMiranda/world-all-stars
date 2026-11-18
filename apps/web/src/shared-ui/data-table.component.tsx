@@ -1,8 +1,9 @@
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useRef, useState } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 
 import { UI_MESSAGES } from './ui-text.const';
+import { useReveal } from './use-reveal.hook';
 
 export interface DataColumn<T> {
   key: string;
@@ -26,6 +27,9 @@ interface DataTableProps<T> {
 
 /** Accessible table: sortable headers (buttons + aria-sort), horizontal scroll on small screens, empty row. */
 export function DataTable<T>({ columns, rows, rowKey, caption, captionHidden = false, emptyText, initialSort }: DataTableProps<T>) {
+  // Rows cascade in the first time the table scrolls into view.
+  const bodyRef = useRef<HTMLTableSectionElement>(null);
+  useReveal(bodyRef, { stagger: true });
   const ui = useText(UI_MESSAGES);
   const [sort, setSort] = useState(initialSort ?? null);
   const sorted = useMemo(() => {
@@ -68,7 +72,7 @@ export function DataTable<T>({ columns, rows, rowKey, caption, captionHidden = f
             })}
           </tr>
         </thead>
-        <tbody>
+        <tbody ref={bodyRef}>
           {sorted.length === 0 ? (
             <tr>
               <td className="table-empty" colSpan={columns.length}>

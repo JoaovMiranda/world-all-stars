@@ -37,10 +37,10 @@ const statValue = (stats: Record<string, unknown> | undefined, field: string): s
 };
 
 /** A1: field conflicts + AI extraction queue + AI-extracted values with evidence (doc 11). Users never propose edits. */
-export const listProposals = async ({ deps }: RequestContext): Promise<{ items: CrawlerProposal[] }> => {
-  const view = await deps.catalog.get();
-  const queue = await deps.db.select().from(aiExtractionQueue).where(active(aiExtractionQueue));
-  const label = (type: string, id: string | null) => (type === 'athletes' && id ? (view.rows.athletes.find((a) => a.id === id)?.knownAs ?? id) : (id ?? type));
+export const listProposals = async ({ deps, locale }: RequestContext): Promise<{ items: CrawlerProposal[] }> => {
+  const [view, queue] = await Promise.all([deps.catalog.get(locale), deps.db.select().from(aiExtractionQueue).where(active(aiExtractionQueue))]);
+  const athleteNames = new Map(view.rows.athletes.map((a) => [a.id, a.knownAs]));
+  const label = (type: string, id: string | null) => (type === 'athletes' && id ? (athleteNames.get(id) ?? id) : (id ?? type));
   const conflicts: CrawlerProposal[] = view.rows.conflicts.map((c) => ({
     id: c.id,
     origin: 'field_conflict',
@@ -120,10 +120,11 @@ export const reviewProposal = async (ctx: RequestContext, id: string, decision: 
 };
 
 /** A1 "Sinais de tier" (doc 17): shared tierSignalOf over the live votes. */
-export const listTierSignals = async ({ deps }: RequestContext): Promise<{ items: TierSignal[] }> => {
-  const [view, votes] = await Promise.all([deps.catalog.get(), allVotes(deps.db)]);
+export const listTierSignals = async ({ deps, locale }: RequestContext): Promise<{ items: TierSignal[] }> => {
+  const [view, votes] = await Promise.all([deps.catalog.get(locale), allVotes(deps.db)]);
+  const votesByAthlete = Map.groupBy(votes, (v) => v.athleteId);
   const items = view.athletes().map((a) => {
-    const counts = tierVoteCounts(votes.filter((v) => v.athleteId === a.id).map((v) => v.tier));
+    const counts = tierVoteCounts((votesByAthlete.get(a.id) ?? []).map((v) => v.tier));
     const total = Object.values(counts).reduce((s, n) => s + n, 0);
     return { athlete: { slug: a.slug, knownAs: a.knownAs, tier: a.tier }, official: a.tier, counts, total, ...tierSignalOf(counts, a.tier) };
   });
@@ -131,24 +132,26 @@ export const listTierSignals = async ({ deps }: RequestContext): Promise<{ items
 };
 
 /** A6: dossiers with evidences and the names of the admins who approved. */
-export const listDossiers = async ({ deps }: RequestContext): Promise<{ items: AdminDossier[] }> => {
-  const view = await deps.catalog.get();
-  const approvals = await deps.db
-    .select({ dossierId: greatsDossierApprovals.dossierId, userId: users.id, name: users.displayName, at: greatsDossierApprovals.createdAt })
-    .from(greatsDossierApprovals)
-    .innerJoin(users, eq(users.id, greatsDossierApprovals.adminUserId))
-    .where(active(greatsDossierApprovals));
+export const listDossiers = async ({ deps, locale }: RequestContext): Promise<{ items: AdminDossier[] }> => {
+  const [view, approvals] = await Promise.all([
+    deps.catalog.get(locale),
+    deps.db
+      .select({ dossierId: greatsDossierApprovals.dossierId, userId: users.id, name: users.displayName, at: greatsDossierApprovals.createdAt })
+      .from(greatsDossierApprovals)
+      .innerJoin(users, eq(users.id, greatsDossierApprovals.adminUserId))
+      .where(active(greatsDossierApprovals)),
+  ]);
+  const approvalsByDossier = Map.groupBy(approvals, (a) => a.dossierId);
+  const evidencesByDossier = Map.groupBy(view.rows.evidences, (e) => e.dossierId);
   const items = view.rows.dossiers.map((d) => ({
     id: d.id,
     athlete: view.athleteRef(d.athleteId),
     headline: view.dossierHeadline(d.id) ?? '',
     status: d.status,
     approvalsRequired: d.approvalsRequired,
-    approvedBy: approvals.filter((a) => a.dossierId === d.id).sort((a, b) => a.at.getTime() - b.at.getTime()).map((a) => a.name),
+    approvedBy: (approvalsByDossier.get(d.id) ?? []).sort((a, b) => a.at.getTime() - b.at.getTime()).map((a) => a.name),
     reviewNote: d.reviewNote,
-    evidences: view.rows.evidences
-      .filter((e) => e.dossierId === d.id)
-      .map((e) => ({ id: e.id, type: e.evidenceType as AdminDossier['evidences'][number]['type'], description: view.evidenceDescription(e.id), source: view.source(e.sourceLinkId) })),
+    evidences: (evidencesByDossier.get(d.id) ?? []).map((e) => ({ id: e.id, type: e.evidenceType as AdminDossier['evidences'][number]['type'], description: view.evidenceDescription(e.id), source: view.source(e.sourceLinkId) })),
     updatedAt: isoOf(d.updatedAt)!,
   }));
   return { items: items.sort((a, b) => Number(b.status === 'pending') - Number(a.status === 'pending')) };
@@ -156,7 +159,7 @@ export const listDossiers = async ({ deps }: RequestContext): Promise<{ items: A
 
 /** PATCH /api/admin/dossiers/:id: shared rule (2 approvals by different admins, 1 rejection closes). */
 export const reviewDossier = async (ctx: RequestContext, id: string, decision: AdminDecision, reason: string) => {
-  const view = await ctx.deps.catalog.get();
+  const view = await ctx.deps.catalog.get(ctx.locale);
   const dossier = view.rows.dossiers.find((d) => d.id === id);
   if (!dossier) throw notFound();
   const approvers = await ctx.deps.db.select().from(greatsDossierApprovals).where(active(greatsDossierApprovals, inArray(greatsDossierApprovals.dossierId, [id])));

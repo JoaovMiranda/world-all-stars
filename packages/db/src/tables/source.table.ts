@@ -1,4 +1,5 @@
 // Source registry, collected links, per-field provenance, conflicts, AI extraction queue and media (doc 03/11/18).
+import { sql } from 'drizzle-orm';
 import { boolean, date, index, integer, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { baseColumns, live, timestamptz } from '../columns/base.column';
@@ -45,7 +46,12 @@ export const sourceLinks = pgTable(
     lastCheckedAt: date({ mode: 'string' }),
     lastStatus: text(),
   },
-  (t) => [index().on(t.entityType, t.entityId).where(live(t.deletedAt)), index().on(t.sourceId).where(live(t.deletedAt))],
+  (t) => [
+    index().on(t.entityType, t.entityId).where(live(t.deletedAt)),
+    index().on(t.sourceId).where(live(t.deletedAt)),
+    // Links queued for the next collection (entity not known yet), newest first.
+    index('source_links_queued_idx').on(t.createdAt).where(sql`${t.deletedAt} is null and ${t.entityId} is null`),
+  ],
 );
 
 /** Origin of one field of an entity (Sources tab, ⓘ per field). */
@@ -110,7 +116,7 @@ export const aiExtractionQueue = pgTable(
     reviewedBy: uuid(),
     reviewedAt: timestamptz(),
   },
-  (t) => [uniqueIndex().on(t.sourceLinkId, t.sectionHash).where(live(t.deletedAt))],
+  (t) => [uniqueIndex().on(t.sourceLinkId, t.sectionHash).where(live(t.deletedAt)), index().on(t.createdAt).where(live(t.deletedAt))],
 );
 
 /** Image by link only (Commons): nothing stored (doc 00). */

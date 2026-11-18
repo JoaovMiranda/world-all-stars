@@ -13,7 +13,6 @@ import { PageLayout } from '@/shared-ui/page-layout.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { Tabs } from '@/shared-ui/tabs.component';
-import { TierPortrait } from '@/shared-ui/tier-portrait.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 
@@ -30,6 +29,7 @@ import { CommentsTab } from './comments-tab.component';
 import { OverviewTab } from './overview-tab.component';
 import { SourcesTab } from './sources-tab.component';
 import { resolveSportPanel } from './sport-panels/sport-panel.registry';
+import { TierDecor, TierEpigraph, TierMedia, tierPageClass, useTierCeremony } from './tier-hero.component';
 
 const route = getRouteApi('/athletes/$slug');
 const TABS_ID = 'perfil-abas';
@@ -81,8 +81,12 @@ function Profile({ athlete, slug }: { athlete: AthleteProfile; slug: string }) {
     ...(comments.data ? { [AthleteProfileTab.Comments]: comments.data.total } : {}),
   };
 
+  const ceremony = useTierCeremony(athlete.slug);
+
   return (
     <PageLayout
+      className={tierPageClass(athlete.tier, ceremony.short)}
+      decor={<TierDecor tier={athlete.tier} />}
       title={athlete.knownAs}
       contentLocale={athlete.contentLocale}
       eyebrow={t.eyebrow}
@@ -93,8 +97,13 @@ function Profile({ athlete, slug }: { athlete: AthleteProfile; slug: string }) {
         </>
       }
       lead={<AthleteNames profile={athlete} />}
-      headerExtra={<AthleteHeroDetails profile={athlete} />}
-      media={<TierPortrait name={athlete.knownAs} tier={athlete.tier} photo={athlete.photo} />}
+      headerExtra={
+        <>
+          <TierEpigraph profile={athlete} />
+          <AthleteHeroDetails profile={athlete} />
+        </>
+      }
+      media={<TierMedia profile={athlete} />}
       actions={<AthleteHeroActions version={athlete.version.current} onGo={goTo} />}
       breadcrumb={[
         { label: athlete.sport.name, link: { to: '/sports/$slug', params: { slug: athlete.sport.slug } } },

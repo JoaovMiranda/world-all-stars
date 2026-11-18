@@ -2,7 +2,7 @@ import { ApiAccess } from '../enums/api-access.enum';
 import { HttpMethod } from '../enums/http-method.enum';
 import { defineContract } from '../helpers/api-contract.helper';
 import { AnalysisDimensionsResponseSchema, CompareQuerySchema, CompareResponseSchema } from '../schemas/analysis.schema';
-import { AthleteFiltersSchema } from '../schemas/athlete-filters.schema';
+import { AthleteListQuerySchema } from '../schemas/athlete-filters.schema';
 import { AthleteListResponseSchema } from '../schemas/athlete-list.schema';
 import { AthleteProfileSchema, AthleteSlugParamsSchema } from '../schemas/athlete-profile.schema';
 import { CalendarQuerySchema, CalendarResponseSchema } from '../schemas/calendar.schema';
@@ -22,7 +22,7 @@ const pub = { method: HttpMethod.Get, access: ApiAccess.Public } as const;
 /** Read-only public endpoints (doc 04). */
 export const PublicApi = {
   home: defineContract({ ...pub, path: '/api/home', summary: 'Home payload for the client day', query: HomeQuerySchema, response: HomeResponseSchema }),
-  athletes: defineContract({ ...pub, path: '/api/athletes', summary: 'Athletes list with filters', query: AthleteFiltersSchema, response: AthleteListResponseSchema }),
+  athletes: defineContract({ ...pub, path: '/api/athletes', summary: 'Athletes list with filters', query: AthleteListQuerySchema, response: AthleteListResponseSchema }),
   athleteProfile: defineContract({ ...pub, path: '/api/athletes/:slug', summary: 'Full athlete profile (all tabs)', params: AthleteSlugParamsSchema, response: AthleteProfileSchema }),
   analysisDimensions: defineContract({ ...pub, path: '/api/analysis/dimensions', summary: 'Normalized analysis dimensions of every athlete', response: AnalysisDimensionsResponseSchema }),
   compare: defineContract({ ...pub, path: '/api/compare', summary: 'Analysis data for up to 5 athletes', query: CompareQuerySchema, response: CompareResponseSchema }),

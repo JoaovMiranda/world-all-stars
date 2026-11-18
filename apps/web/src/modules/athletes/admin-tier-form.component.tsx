@@ -49,7 +49,7 @@ export function AdminTierForm({ slug, official }: { slug: string; official: Tier
         </FormField>
       </div>
       <div className="form-actions">
-        <Button type="submit" variant="primary" disabled={mutation.isPending}>
+        <Button type="submit" variant="primary" pending={mutation.isPending}>
           {T.submit}
         </Button>
       </div>

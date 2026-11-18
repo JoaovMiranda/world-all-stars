@@ -50,11 +50,14 @@ function NotificationItem({ n, onRead, busy }: { n: Notification; onRead: () => 
         {n.athlete && (
           <ButtonLink to="/athletes/$slug" params={{ slug: n.athlete.slug }} search={{ tab: AthleteProfileTab.Comments }} size="sm" onClick={() => !n.read && onRead()}>
             {t.open}
+            {/* Repeated per item: the notification title tells them apart for screen readers (WCAG 2.4.4). */}
+            <span className="sr-only">: {title}</span>
           </ButtonLink>
         )}
         {!n.read && (
           <Button size="sm" variant="ghost" onClick={onRead} disabled={busy}>
             {t.markRead}
+            <span className="sr-only">: {title}</span>
           </Button>
         )}
       </div>

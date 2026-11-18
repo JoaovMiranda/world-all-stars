@@ -10,6 +10,11 @@ export const GLOBE = {
   initialRotation: [40, -10] as const,
   /** Degrees per animation frame of the idle spin. */
   autoSpinStep: 0.07,
+  /** Throw after a drag: per-frame decay and max degrees per frame. */
+  momentumDecay: 0.94,
+  momentumMax: 8,
+  /** Degrees per frame of the throw when the globe scrolls into view (≈ 110° in total with the decay). */
+  arrivalSpin: 6.6,
   keyboardStep: 10,
   maxLatitude: 80,
 } as const;

@@ -12,6 +12,7 @@ import {
 } from '@was/db';
 import {
   ADMIN_AUDIT_ACTION_VALUES,
+  ADMIN_AUDIT_LOG_LIMIT,
   API_ERROR_MESSAGES,
   textFor,
   type AdminAuditAction as AuditAction,
@@ -30,6 +31,7 @@ import {
 } from '@was/shared';
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 
+import { revokeAuthSessions } from '../../auth/auth-user.helper';
 import type { RequestContext } from '../../http/app-context.type';
 import { notFound, unprocessableKey } from '../../http/http-error.error';
 import { ApiErrorCode } from '@was/shared';
@@ -38,10 +40,10 @@ import { loadBannedWords } from '../moderation/moderation.repository';
 import { insertCollectionLinks, prepareCollectionLinks } from './admin-collection.service';
 
 // ── A4 · users and the audit log ──
-export const listUsers = async ({ deps }: RequestContext): Promise<AdminUsersResponse> => {
+export const listUsers = async ({ deps, locale }: RequestContext): Promise<AdminUsersResponse> => {
   const [rows, log] = await Promise.all([
     deps.db.select().from(users).where(active(users)).orderBy(desc(users.createdAt)),
-    deps.db.select().from(auditLogs).where(active(auditLogs, inArray(auditLogs.action, [...ADMIN_AUDIT_ACTION_VALUES]))).orderBy(desc(auditLogs.createdAt)),
+    deps.db.select().from(auditLogs).where(active(auditLogs, inArray(auditLogs.action, [...ADMIN_AUDIT_ACTION_VALUES]))).orderBy(desc(auditLogs.createdAt)).limit(ADMIN_AUDIT_LOG_LIMIT),
   ]);
   return {
     items: rows.map((u) => ({
@@ -83,19 +85,24 @@ export const updateUser = async (ctx: RequestContext, id: string, body: UpdateUs
       { reason: body.reason },
     );
     await repo.audit(ctx.actor, action, { type: 'users', id }, { target: target.displayName, reason: body.reason });
+    // A ban signs the account out of every browser right away (new sessions are refused by Better Auth's hook).
+    if (body.banned) await revokeAuthSessions(repo.db, id);
   });
   return { ok: true as const };
 };
 
 // ── A5 · privacy requests ──
-export const listPrivacy = async ({ deps }: RequestContext): Promise<{ items: PrivacyRequest[] }> => {
-  const view = await deps.catalog.get();
-  const rows = await deps.db
-    .select({ r: privacyRequests, handler: users.displayName })
-    .from(privacyRequests)
-    .leftJoin(users, eq(users.id, privacyRequests.handledBy))
-    .where(active(privacyRequests))
-    .orderBy(desc(privacyRequests.createdAt));
+export const listPrivacy = async ({ deps, locale }: RequestContext): Promise<{ items: PrivacyRequest[] }> => {
+  const [view, rows] = await Promise.all([
+    deps.catalog.get(locale),
+    deps.db
+      .select({ r: privacyRequests, handler: users.displayName })
+      .from(privacyRequests)
+      .leftJoin(users, eq(users.id, privacyRequests.handledBy))
+      .where(active(privacyRequests))
+      .orderBy(desc(privacyRequests.createdAt)),
+  ]);
+  const athleteIds = new Set(view.rows.athletes.map((a) => a.id));
   return {
     items: rows.map(({ r, handler }) => ({
       id: r.id,
@@ -103,7 +110,7 @@ export const listPrivacy = async ({ deps }: RequestContext): Promise<{ items: Pr
       requesterEmail: r.requesterEmail,
       subjectKind: r.subjectKind,
       right: r.right,
-      athlete: r.athleteId && view.rows.athletes.some((a) => a.id === r.athleteId) ? view.athleteRef(r.athleteId) : null,
+      athlete: r.athleteId && athleteIds.has(r.athleteId) ? view.athleteRef(r.athleteId) : null,
       details: r.details,
       status: r.status,
       createdAt: r.createdAt.toISOString(),
@@ -127,21 +134,26 @@ export const updatePrivacy = async (ctx: RequestContext, id: string, status: Pri
 };
 
 // ── A7 · comments and banned words ──
-export const listAdminComments = async ({ deps }: RequestContext): Promise<AdminCommentsResponse> => {
-  const view = await deps.catalog.get();
-  const rows = await deps.db
-    .select({ c: comments, author: users.displayName })
-    .from(comments)
-    .innerJoin(users, eq(users.id, comments.userId))
-    .where(active(comments))
-    .orderBy(desc(comments.dislikesCount), desc(comments.createdAt));
+export const listAdminComments = async ({ deps, locale }: RequestContext): Promise<AdminCommentsResponse> => {
+  // Catalog, comments and banned words are independent: one round-trip instead of three.
+  const [view, rows, words] = await Promise.all([
+    deps.catalog.get(locale),
+    deps.db
+      .select({ c: comments, author: users.displayName })
+      .from(comments)
+      .innerJoin(users, eq(users.id, comments.userId))
+      .where(active(comments))
+      .orderBy(desc(comments.dislikesCount), desc(comments.createdAt)),
+    loadBannedWords(deps.db),
+  ]);
+  const athleteIds = new Set(view.rows.athletes.map((a) => a.id));
   return {
     items: rows.flatMap(({ c, author }) =>
-      view.rows.athletes.some((a) => a.id === c.athleteId)
+      athleteIds.has(c.athleteId)
         ? [{ id: c.id, athlete: view.athleteRef(c.athleteId), author, body: c.body, at: c.createdAt.toISOString(), likes: c.likesCount, dislikes: c.dislikesCount, replies: c.repliesCount, status: c.status, hiddenReason: c.hiddenReason }]
         : [],
     ),
-    bannedWords: await loadBannedWords(deps.db),
+    bannedWords: words,
   };
 };
 
@@ -178,18 +190,19 @@ export const removeBannedWord = async (ctx: RequestContext, word: Pick<BannedWor
 };
 
 // ── A8 · suggestions and contact messages ──
-export const listInbox = async ({ deps }: RequestContext): Promise<AdminInboxResponse> => {
-  const view = await deps.catalog.get();
-  const [suggestions, messages] = await Promise.all([
+export const listInbox = async ({ deps, locale }: RequestContext): Promise<AdminInboxResponse> => {
+  const [view, suggestions, messages] = await Promise.all([
+    deps.catalog.get(locale),
     deps.db.select().from(athleteSuggestions).where(active(athleteSuggestions)).orderBy(desc(athleteSuggestions.createdAt)),
     deps.db.select().from(contactMessages).where(active(contactMessages)).orderBy(desc(contactMessages.createdAt)),
   ]);
+  const sportSlugs = new Map(view.rows.sports.map((x) => [x.id, x.slug]));
   return {
     suggestions: suggestions.map((s) => ({
       id: s.id,
       protocol: s.protocol,
       athleteName: s.athleteName,
-      sport: s.sportId ? (view.rows.sports.find((x) => x.id === s.sportId)?.slug ?? null) : s.sportOther,
+      sport: s.sportId ? (sportSlugs.get(s.sportId) ?? null) : s.sportOther,
       urls: s.urls,
       why: s.justification,
       email: s.contactEmail,
@@ -202,11 +215,13 @@ export const listInbox = async ({ deps }: RequestContext): Promise<AdminInboxRes
 
 /** Approving a suggestion queues its links for the collection (doc 21); the author is notified when signed in. */
 export const reviewSuggestion = async (ctx: RequestContext, id: string, status: SuggestionStatus, note: string | undefined) => {
-  const [s] = await ctx.deps.db.select().from(athleteSuggestions).where(active(athleteSuggestions, eq(athleteSuggestions.id, id)));
+  const [[s], view] = await Promise.all([
+    ctx.deps.db.select().from(athleteSuggestions).where(active(athleteSuggestions, eq(athleteSuggestions.id, id))),
+    ctx.deps.catalog.get(ctx.locale),
+  ]);
   if (!s) throw notFound();
-  const view = await ctx.deps.catalog.get();
   const sport = s.sportId ? (view.rows.sports.find((x) => x.id === s.sportId)?.slug ?? null) : s.sportOther;
-  const links = status === SuggestionStatus.Approved ? await prepareCollectionLinks(ctx.deps, { athleteName: s.athleteName, sport, urls: s.urls, origin: 'suggestion', suggestionId: s.id }) : [];
+  const links = status === SuggestionStatus.Approved ? await prepareCollectionLinks(ctx, { athleteName: s.athleteName, sport, urls: s.urls, origin: 'suggestion', suggestionId: s.id }) : [];
   await ctx.deps.repo.transaction(async (repo) => {
     await insertCollectionLinks(repo, ctx.actor, links);
     await repo.update(athleteSuggestions, id, { status, reviewNote: note ?? null }, ctx.actor, { reason: note ?? null });

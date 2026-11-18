@@ -3,6 +3,7 @@ import { createRouter } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 
 import { ErrorPage } from '@/modules/errors/error.page';
+import { PagePending } from '@/shared-ui/page-pending.component';
 
 import { type Boot, getBoot, initClientScope } from './request-scope';
 import { routeTree } from './router';
@@ -32,6 +33,11 @@ export const createAppRouter = ({ queryClient, nonce }: CreateAppRouterOptions) 
     defaultPreloadStaleTime: 0,
     scrollRestoration: true,
     defaultErrorComponent: ErrorPage,
+    // Slow navigation (page chunk + loader > 300 ms): a skeleton of the page frame instead of a frozen old page;
+    // once shown it stays ≥ 400 ms so it never flashes.
+    defaultPendingComponent: PagePending,
+    defaultPendingMs: 300,
+    defaultPendingMinMs: 400,
     ...(nonce ? { ssr: { nonce } } : {}),
     // Plain JSON data (contract responses); `as never` skips the router's deep serializability check of DehydratedState.
     dehydrate: () => ({ boot: getBoot(), queries: dehydrate(queryClient) }) as never,

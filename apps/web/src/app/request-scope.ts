@@ -1,6 +1,7 @@
 import { DEFAULT_LOCALE, FixtureMode, type IsoDate, type Locale, SessionKind, toIsoDate } from '@was/shared';
 import type { QueryClient } from '@tanstack/react-query';
 
+import { ANON_IDENTITY } from '@/session/session-identity.helper';
 import type { ThemeName } from '@/shared-ui/theme.const';
 
 /**
@@ -10,6 +11,11 @@ import type { ThemeName } from '@/shared-ui/theme.const';
 export interface Boot {
   fixtureMode: FixtureMode;
   sessionKind: SessionKind;
+  /**
+   * Who the API says is browsing (`kind:userId` from GET /api/session, session-identity.helper): part of every
+   * personalized query key, so data of one account never shows for another after a sign-in/out.
+   */
+  identity: string;
   /** YYYY-MM-DD in `timeZone` (APP_TIME_ZONE on the server). */
   today: IsoDate;
   /** ISO instant of the request. */
@@ -19,6 +25,8 @@ export interface Boot {
   publicUrl: string;
   /** Manual theme from the `was-theme` cookie (null = follow the OS). */
   theme: ThemeName | null;
+  /** "Pausar animações" from the `was-motion` cookie: <html data-motion="reduced"> on the first paint. */
+  motionPaused: boolean;
   /** Interface language: `was_locale` cookie → Accept-Language → pt-BR (switchable in place: locale.store). */
   locale: Locale;
 }
@@ -41,11 +49,13 @@ const localBoot = (): Boot => {
   return {
     fixtureMode: FixtureMode.Sample,
     sessionKind: SessionKind.Anon,
+    identity: ANON_IDENTITY,
     today: toIsoDate(now),
     now: now.toISOString(),
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     publicUrl: IS_SERVER ? 'http://localhost:8787' : window.location.origin,
     theme: null,
+    motionPaused: false,
     locale: DEFAULT_LOCALE,
   };
 };

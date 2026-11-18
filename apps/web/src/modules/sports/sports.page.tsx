@@ -69,7 +69,7 @@ export function SportsPage() {
                 activeCount={sportFilterCount}
                 onReset={() => setFilters({ q: undefined, governance: undefined })}
               >
-                <form role="search" className="sports-search" onSubmit={(e) => e.preventDefault()}>
+                <form role="search" aria-label={t.searchLabel} className="sports-search" onSubmit={(e) => e.preventDefault()}>
                   <SearchInput
                     inline
                     label={t.searchLabel}

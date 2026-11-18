@@ -1,5 +1,6 @@
 // Business rules of the mutations (rules come from @was/shared; the server only applies them).
 import { AdminApi, ParticipationApi, PublicApi } from '@was/shared';
+import { sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { HAS_PROTOTYPE, createTestApp, type TestApp } from './test-app.helper';
@@ -56,6 +57,45 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
       const note = notes.json.items.find((n: { commentId: string | null; excerpt: string }) => n.excerpt === 'Eu vi!');
       expect(note).toMatchObject({ kind: 'comment_reply', read: false });
       expect((await t.call(ParticipationApi.markNotificationRead, { params: { id: note.id } }, 'reader')).status).toBe(200);
+    });
+  });
+
+  describe('comment pages (cursor, doc 20)', () => {
+    it('walks every thread once, in order, for both sorts; replies come with their thread', async () => {
+      for (let i = 0; i < 25; i += 1) {
+        await t.call(ParticipationApi.postComment, { params: { slug: 'pele' }, body: { body: `Página ${i}` } }, 'reader');
+      }
+      const first = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort: 'recent' } }, 'reader');
+      await t.call(ParticipationApi.postComment, { params: { slug: 'pele' }, body: { body: 'Resposta', parentId: first.json.threads[0].id } }, 'admin');
+      for (const sort of ['recent', 'top'] as const) {
+        const seen: string[] = [];
+        let cursor: string | undefined;
+        let pages = 0;
+        let total = 0;
+        do {
+          const res = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort, ...(cursor ? { cursor } : {}) } }, 'reader');
+          expect(res.status).toBe(200);
+          expect(res.json.threads.length).toBeLessThanOrEqual(20);
+          seen.push(...res.json.threads.map((x: { id: string }) => x.id));
+          total = res.json.total;
+          cursor = res.json.nextCursor ?? undefined;
+          pages += 1;
+        } while (cursor && pages < 20);
+        expect(pages).toBeGreaterThan(1);
+        expect(new Set(seen).size).toBe(seen.length);
+        // total counts threads + replies; every top-level comment was listed exactly once.
+        const all = await t.handle.db.execute(sql`select count(*)::int as n from comments c join athletes a on a.id = c.athlete_id where a.slug = 'pele' and c.deleted_at is null and c.status = 'visible' and c.parent_comment_id is null`);
+        expect(seen.length).toBe((all as unknown as { rows: { n: number }[] }).rows[0]?.n);
+        expect(total).toBeGreaterThan(seen.length);
+      }
+      const recent = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort: 'recent' } }, 'reader');
+      expect(recent.json.threads.find((x: { id: string }) => x.id === first.json.threads[0].id)?.replies[0]).toMatchObject({ body: 'Resposta' });
+    });
+
+    it('an unknown cursor restarts at the first page', async () => {
+      const first = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort: 'top' } });
+      const bogus = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort: 'top', cursor: '00000000-0000-7000-8000-000000000000' } });
+      expect(bogus.json.threads.map((x: { id: string }) => x.id)).toEqual(first.json.threads.map((x: { id: string }) => x.id));
     });
   });
 

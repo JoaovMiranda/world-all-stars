@@ -77,7 +77,11 @@ export const loadCatalogRows = async (db: Database) => {
     all<Row<typeof T.fieldProvenance>>(db, T.fieldProvenance),
     all<Row<typeof T.fieldConflicts>>(db, T.fieldConflicts),
     all<Row<typeof T.ingestionRuns>>(db, T.ingestionRuns),
-    db.select().from(T.entityVersions).where(active(T.entityVersions, eq(T.entityVersions.entityType, 'athletes'))),
+    // Version history of the profiles: only the 4 columns shown (never the snapshot/diff JSONB, the bulk of the table).
+    db
+      .select({ entityId: T.entityVersions.entityId, versionNumber: T.entityVersions.versionNumber, summary: T.entityVersions.summary, author: T.entityVersions.author })
+      .from(T.entityVersions)
+      .where(active(T.entityVersions, eq(T.entityVersions.entityType, 'athletes'))),
   ]);
   return {
     calendarDays, countries, countryTr, cities, cityTr, levels, tiers, achievementTypes, governance, governanceTr, prizeForms, prizeFormTr,

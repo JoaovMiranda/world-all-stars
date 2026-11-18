@@ -92,10 +92,10 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
   return (
     <div className="stack">
       <KpiGrid columns={4} label={T.kpis}>
-        <StatTile label={T.runsKpi} value={formatNumber(runs.length)} />
-        <StatTile label={T.tokensKpi} value={formatNumber(runs.reduce((s, r) => s + r.tokens, 0))} />
-        <StatTile label={T.skippedKpi} value={formatNumber(runs.reduce((s, r) => s + skippedOf(r), 0))} />
-        <StatTile label={T.errorsKpi} value={formatNumber(runs.reduce((s, r) => s + r.errors, 0))} />
+        <StatTile label={T.runsKpi} value={runs.length} />
+        <StatTile label={T.tokensKpi} value={runs.reduce((s, r) => s + r.tokens, 0)} />
+        <StatTile label={T.skippedKpi} value={runs.reduce((s, r) => s + skippedOf(r), 0)} />
+        <StatTile label={T.errorsKpi} value={runs.reduce((s, r) => s + r.errors, 0)} />
       </KpiGrid>
       <Section title={T.jobsTitle} headingLevel={2}>
         <DataTable

@@ -2,7 +2,7 @@
  * First-party cookies the server render reads (simulated session, fixture mode, theme). A page request carrying any
  * of them is personalized: never shared by caches.
  */
-export const APP_COOKIE = { session: 'was_session', fixture: 'was_fixture', theme: 'was-theme' } as const;
+export const APP_COOKIE = { session: 'was_session', fixture: 'was_fixture', theme: 'was-theme', motion: 'was-motion' } as const;
 export const APP_COOKIE_NAMES: readonly string[] = Object.values(APP_COOKIE);
 
 /**

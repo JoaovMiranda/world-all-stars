@@ -9,6 +9,7 @@ import { PageLayout } from '@/shared-ui/page-layout.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { Section } from '@/shared-ui/section.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
+import { Reveal } from '@/shared-ui/reveal.component';
 
 import { HALL_OF_GREATS_MESSAGES } from './hall-of-greats.const';
 import { LegendCard } from './legend-card.component';
@@ -48,13 +49,13 @@ export function HallOfGreatsPage() {
             <>
               <section aria-label={T.legends.label}>
                 {greats.length > 0 ? (
-                  <ul className="legends">
+                  <Reveal as="ul" className="legends" stagger name="legends">
                     {greats.map((g) => (
                       <li key={g.slug}>
                         <LegendCard athlete={g} />
                       </li>
                     ))}
-                  </ul>
+                  </Reveal>
                 ) : (
                   <EmptyState title={T.legends.emptyTitle} mark="★" action={<ButtonLink to="/about/criteria">{T.legends.emptyAction}</ButtonLink>}>
                     {T.legends.emptyText}

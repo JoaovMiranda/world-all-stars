@@ -27,7 +27,7 @@ WORKDIR /repo
 
 # ── deps: only the lockfile and the manifests, so this layer is cached until a dependency changes ──
 FROM base AS deps
-COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc package.json ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml .pnpmfile.cjs .npmrc package.json ./
 COPY apps/server/package.json apps/server/
 COPY apps/web/package.json apps/web/
 COPY packages/db/package.json packages/db/
@@ -56,7 +56,7 @@ ENV NODE_ENV=production \
 WORKDIR /app
 # Code stays owned by root (read-only for the app user); only /data is writable.
 COPY --from=build /out/node_modules ./node_modules
-COPY --from=build /repo/apps/server/dist/main.js /repo/apps/server/dist/main.js.map ./
+COPY --from=build /repo/apps/server/dist/main.js /repo/apps/server/dist/main.js.map /repo/apps/server/dist/instrumentation.js ./
 COPY --from=build /repo/apps/server/dist/migrations ./migrations
 COPY --from=build /repo/apps/web/dist/client ./web/client
 COPY --from=build /repo/apps/web/dist/server ./web/server
@@ -66,4 +66,5 @@ USER node
 EXPOSE 8787
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
   CMD ["node", "-e", "fetch('http://127.0.0.1:' + (process.env.PORT || 8787) + '/api/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
-CMD ["node", "--enable-source-maps", "main.js"]
+# instrumentation.js: OpenTelemetry, a no-op unless OTEL_EXPORTER_OTLP_ENDPOINT is set.
+CMD ["node", "--enable-source-maps", "--import", "./instrumentation.js", "main.js"]

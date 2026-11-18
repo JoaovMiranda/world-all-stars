@@ -23,6 +23,7 @@ export const API_ERROR_TEXT = {
   rateLimited: 'Muitas tentativas. Espere um pouco e tente de novo.',
   internal: 'Algo deu errado do nosso lado. Tente de novo.',
   invalidJson: 'JSON inválido.',
+  payloadTooLarge: 'O conteúdo enviado é grande demais.',
   emailUnverified: 'Seu e-mail ainda não foi verificado pelo provedor de login. Verifique-o e entre de novo.',
   consentOutdated: 'Os Termos ou o Aviso de privacidade mudaram. Recarregue a página e aceite as versões atuais.',
   consentNotPending: 'Não há aceite pendente para esta sessão.',

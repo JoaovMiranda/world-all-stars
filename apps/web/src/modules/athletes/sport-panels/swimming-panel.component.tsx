@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 
 import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import { barsOption } from '@/shared-ui/chart-presets.helper';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
@@ -20,6 +21,7 @@ const total = (m: SwimmingStats['olympic_medals']) => m.gold + m.silver + m.bron
 
 function SwimmingPanel({ profile }: { profile: AthleteProfile; stats: SwimmingStats }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
+  const ui = useText(UI_MESSAGES);
   const medals = useMemo(
     () => profile.achievements.filter(isCompetitionAchievement).filter((a) => a.isOlympic && isMetal(a.type)),
     [profile.achievements],
@@ -43,7 +45,7 @@ function SwimmingPanel({ profile }: { profile: AthleteProfile; stats: SwimmingSt
   if (!medals.length) return null;
   return (
     <Section title={T.medalsTitle} eyebrow={T.medalsLabel}>
-      <ChartContainer option={option} ariaLabel={T.medalsChart} height={240} />
+      <ChartContainer option={option} ariaLabel={T.medalsChart} height={240} summary={ui.chartDataInTable} />
       <div className="panel-gap">
         <DataTable<string>
           caption={T.medalGridCaption}

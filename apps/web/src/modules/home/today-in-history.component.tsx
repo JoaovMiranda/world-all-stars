@@ -7,6 +7,7 @@ import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { formatDayMonth } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
+import { Reveal } from '@/shared-ui/reveal.component';
 import { Skeleton, SkeletonList } from '@/shared-ui/skeleton.component';
 
 import { HOME_MESSAGES } from './home.const';
@@ -68,7 +69,7 @@ export function TodayInHistory({ date, isSimulatedDate, data }: TodayInHistoryPr
             <p>{t.emptyText}</p>
           </EmptyState>
         ) : (
-          <ul className="otd-list">
+          <Reveal as="ul" className="otd-list" stagger>
             {data.items.map((item) => (
               <li key={`${item.athlete.slug}-${item.kind}-${item.year}`} className="otd-item">
                 <Avatar name={item.athlete.knownAs} tier={item.athlete.tier} photoUrl={item.athlete.photo?.url ?? null} size={36} />
@@ -83,7 +84,7 @@ export function TodayInHistory({ date, isSimulatedDate, data }: TodayInHistoryPr
                 <span className="otd-year">{item.year}</span>
               </li>
             ))}
-          </ul>
+          </Reveal>
         )}
       </div>
     </Section>

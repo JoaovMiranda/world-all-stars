@@ -25,10 +25,24 @@ const ALLOWED_SAME = new Set([
   'Wikipedia, Liquipedia, TheSportsDB copiando de 1 a 4.', '—', '404', '!', 'https://', 'Elite', 'Continental', 'Local', 'Bronze', 'Hall of Fame', 'Wikipedia', 'Total', 'Status', 'Headline', 'Links', 'Link', '.',
 ]);
 /**
- * Spanish shares many words and short labels with Portuguese ("Atletas", "Motivo", "Ver perfil"): for es only phrases of
- * 4+ words identical to pt-BR are flagged (a sentence left untranslated); en is checked string by string.
+ * Every string with letters identical to pt-BR is flagged in en and es, short ones included. Spanish shares many
+ * words with Portuguese: ALLOWED_SAME_ES lists the ones that are correct Spanish as they are.
  */
-const ES_MIN_WORDS = 4;
+const ALLOWED_SAME_ES = new Set([
+  'globo', 'Resultados', 'título', 'títulos', 'Títulos', 'Míticos', 'Política de cookies', 'Todos', 'todos', 'Todas', 'Ver todas', 'Ver todos',
+  'individual', 'Legacy score bruto', 'Métrica', 'Percentil', 'Tipo', 'Atletas', 'atletas', 'Atleta', 'sáb', 'dom',
+  'Cancelar', 'Reinados por período', 'Reinados de título', 'Oculto', 'Ocultar', 'Autor', 'Forma comparada',
+  'Idioma', 'Modo', 'Texto normalizado', 'Publicar', 'Responder', 'responder', 'Lista por idioma', 'Nota',
+  'Nota interna', 'Protocolo', 'Motivo', 'Confirmar', 'Continuar', 'continuar', 'Antes de continuar',
+  'Marcar como duplicada', 'De', 'Reabrir', 'Respondida', 'Documento', 'Perfil', 'Administrador', 'Ver perfil',
+  'Ver atletas', 'Foto', 'Explorar', 'Duplicado', 'Duplicada', 'Comentar', 'comentar', 'Ficha', 'Verificado',
+  'Verificados', 'Descartada', 'Descartadas', 'Descartados', 'Nacional', 'Mundial', 'País', 'campos',
+  'Filtros de atletas', 'Marca', 'Empresa', 'Principal', 'Abrir', 'Circuito', 'Circuito privado', 'Liga',
+  'Historiadores', 'Oficial', 'oficial', 'Organizador', 'Próximo', 'Próximos campeonatos', 'Derrotas', 'Empates',
+  'Resultado', 'anual', 'bienal', 'irregular', 'Anterior', 'Solicitante', 'afiliada a', 'Extraído por IA',
+  'Registro', 'Campo', 'Modelo', 'Parcial', 'Validados', 'Enviando…', 'Divergente', 'Uso', '(opcional)',
+  'Sugerir atleta', 'Mítico', 'Mostrar', 'Votos', 'Promover a admin',
+]);
 const ALLOWED_SAME_EN = new Set(['individual', 'irregular', 'bronze', 'Total', 'Elite', 'Continental', 'Local', 'Bronze', 'Status', 'Headline', 'Links', 'Link', 'Ranking', 'Majors']);
 
 interface Leaf {
@@ -63,8 +77,7 @@ describe('messages coverage (pt-BR, en, es)', () => {
       const ptLeaves = new Map(leaves(pt).map((l) => [l.path, l.value]));
       const same = leaves(messages[locale]).filter((l) => {
         if (typeof l.value !== 'string' || ptLeaves.get(l.path) !== l.value || ALLOWED_SAME.has(l.value)) return false;
-        if (locale === 'es') return l.value.split(/\s+/).length >= ES_MIN_WORDS;
-        return !ALLOWED_SAME_EN.has(l.value) && /[a-zà-ú]{3}/i.test(l.value);
+        return !(locale === 'es' ? ALLOWED_SAME_ES : ALLOWED_SAME_EN).has(l.value) && /[a-zà-ú]{2}/i.test(l.value);
       });
       expect(same.map((l) => `${l.path} = ${String(l.value)}`)).toEqual([]);
     });

@@ -5,18 +5,22 @@
   .hall-title { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hall-rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
   @media (max-width: 760px) { .hall-rules { grid-template-columns: minmax(0, 1fr); } }
-  .hall-rule { border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px; font-size: 14px; color: var(--muted); }
-  .hall-rule b { display: block; color: var(--text); font-size: 15px; margin-bottom: 4px; }
+  .hall-rule { border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px; font-size: 0.875rem; color: var(--muted); }
+  .hall-rule b { display: block; color: var(--text); font-size: 0.9375rem; margin-bottom: 4px; }
 
   .legends { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; margin-top: 8px; }
   .legend-card { display: grid; grid-template-columns: 140px minmax(0, 1fr); height: 100%; color: var(--text); border-radius: var(--r-lg); overflow: hidden; border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box; }
   .legend-card:hover { text-decoration: none; }
+  /* Staging (holofote): ao apontar um Mítico, os outros recuam para a penumbra. */
+  /* Inclui transform/box-shadow da inclinação (.tilt) e a borda: esta regra carrega depois e substituiria a lista. */
+  .legend-card { transition: opacity var(--dur-3) var(--ease-out), filter var(--dur-3) var(--ease-out), transform var(--dur-4) var(--ease-out), box-shadow var(--dur-3) var(--ease-out), border-color var(--t-fast); }
+  @media (hover: hover) { .legends:has(.legend-card:hover) .legend-card:not(:hover) { opacity: .55; filter: saturate(.6); } }
   .legend-card:hover .legend-name { color: var(--accent-text); }
-  .legend-photo { position: relative; background: var(--surface-2); min-height: 190px; display: grid; place-items: center; font: 700 30px var(--font-display); color: var(--muted); }
+  .legend-photo { position: relative; background: var(--surface-2); min-height: 190px; display: grid; place-items: center; font: 700 1.875rem var(--font-display); color: var(--muted); }
   .legend-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
   .legend-body { padding: 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-  .legend-name { font: 600 22px/1.15 var(--font-display); transition: color var(--t-fast); }
-  .legend-headline { font-size: 15px; }
+  .legend-name { font: 600 1.375rem/1.15 var(--font-display); transition: color var(--t-fast); }
+  .legend-headline { font-size: 0.9375rem; }
   .legend-body small { color: var(--muted); }
   @media (max-width: 420px) { .legend-card { grid-template-columns: 96px minmax(0, 1fr); } .legend-photo { min-height: 150px; } }
 }

@@ -28,8 +28,9 @@ export const commentRows = async (sample: typeof loadSample, user: SessionUser |
 };
 
 /** Threads of one athlete: same shared builder (order, 1-level replies) as the server. */
-export const buildComments = (rows: readonly Row[], slug: string, sort: CommentSort): CommentsResponse =>
+export const buildComments = (rows: readonly Row[], slug: string, sort: CommentSort, cursor?: string): CommentsResponse =>
   buildCommentThreads(
     rows.filter((r) => r.slug === slug).map(({ slug: _slug, ...c }): Comment => c),
     sort,
+    { cursor },
   );

@@ -1,11 +1,12 @@
 import { ACCOUNT_MIN_AGE, ConsentFormSchema, LEGAL_DOCUMENT_VERSIONS } from '@was/shared';
 import { Link } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { acceptConsent } from '@/data/endpoints/account.query';
 import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { Dialog } from '@/shared-ui/dialog.component';
+import { NewTabNote } from '@/shared-ui/new-tab-note.component';
 import { Notice } from '@/shared-ui/notice.component';
 import { useForm } from '@/shared-ui/use-form.hook';
 
@@ -25,6 +26,8 @@ interface ConsentDialogProps {
  */
 export function ConsentDialog({ pending, onAccepted, onDecline }: ConsentDialogProps) {
   const t = useText(SESSION_MESSAGES).consent;
+  const docsId = useId();
+  const hintId = useId();
   const form = useForm({ schema: ConsentFormSchema, initialValues: { documents: false as never, adult: false as never } });
   const [leaving, setLeaving] = useState(false);
   const accept = acceptConsent.useMutation({ onSuccess: onAccepted });
@@ -51,7 +54,7 @@ export function ConsentDialog({ pending, onAccepted, onDecline }: ConsentDialogP
           <Button variant="ghost" onClick={() => void decline()} disabled={leaving || accept.isPending}>
             {t.decline}
           </Button>
-          <Button variant="primary" type="submit" form="consent-form" disabled={!ready || accept.isPending}>
+          <Button variant="primary" type="submit" form="consent-form" disabled={!ready} pending={accept.isPending} aria-describedby={hintId}>
             {t.accept}
           </Button>
         </>
@@ -59,18 +62,37 @@ export function ConsentDialog({ pending, onAccepted, onDecline }: ConsentDialogP
     >
       {pending && <p className="muted">{t.text(pending.email)}</p>}
       <form id="consent-form" ref={form.formRef} className="consent-list" onSubmit={submit} noValidate>
-        <label className="consent-check">
-          <input type="checkbox" checked={form.values.documents === true} onChange={(e) => form.setValue('documents', e.target.checked as never)} />
-          <span>
-            {t.documentsBefore}{' '}
-            <Link to="/legal/terms" target="_blank">{t.terms(terms.version)}</Link> {t.and}{' '}
-            <Link to="/legal/privacy" target="_blank">{t.privacy(privacy.version)}</Link>.
+        {/* The links stay outside the <label> (a click on them must not tick the box); the sentence names the box. */}
+        <div className="consent-check">
+          <input
+            id={docsId}
+            type="checkbox"
+            required
+            aria-labelledby={`${docsId}-text`}
+            checked={form.values.documents === true}
+            onChange={(e) => form.setValue('documents', e.target.checked as never)}
+          />
+          <span id={`${docsId}-text`}>
+            <label htmlFor={docsId}>{t.documentsBefore}</label>{' '}
+            <Link to="/legal/terms" target="_blank">
+              {t.terms(terms.version)}
+              <NewTabNote />
+            </Link>{' '}
+            {t.and}{' '}
+            <Link to="/legal/privacy" target="_blank">
+              {t.privacy(privacy.version)}
+              <NewTabNote />
+            </Link>
+            .
           </span>
-        </label>
+        </div>
         <label className="consent-check">
-          <input type="checkbox" checked={form.values.adult === true} onChange={(e) => form.setValue('adult', e.target.checked as never)} />
+          <input type="checkbox" required checked={form.values.adult === true} onChange={(e) => form.setValue('adult', e.target.checked as never)} />
           <span>{t.adult(ACCOUNT_MIN_AGE)}</span>
         </label>
+        <p className="field-hint" id={hintId}>
+          {t.acceptHint}
+        </p>
         {accept.isError && (
           <Notice tone="danger" live="assertive">
             {accept.error.message || t.error}

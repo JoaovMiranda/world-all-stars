@@ -31,7 +31,13 @@ export function LanguageSwitcher() {
 
   return (
     <div className="menu lang-switch" ref={root}>
-      <Button className="header-lang" {...menu.buttonProps} aria-haspopup="true" aria-label={t.languageLabel(LOCALE_AUTONYMS[locale])} title={t.languageLabel(LOCALE_AUTONYMS[locale])}>
+      <Button
+        className="header-lang"
+        {...menu.buttonProps}
+        // The accessible name starts with the visible "PT" (WCAG 2.5.3 label in name).
+        aria-label={`${LOCALE_SHORT[locale]}: ${t.languageLabel(LOCALE_AUTONYMS[locale])}`}
+        title={t.languageLabel(LOCALE_AUTONYMS[locale])}
+      >
         {LOCALE_SHORT[locale]}
       </Button>
       {menu.open && (

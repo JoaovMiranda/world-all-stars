@@ -6,6 +6,7 @@ import { useText } from '@/i18n/use-text.hook';
 import { DataTable } from '@/shared-ui/data-table.component';
 import { DecisionBar } from '@/shared-ui/decision-bar.component';
 import { FormField } from '@/shared-ui/form-field.component';
+import { NewTabNote } from '@/shared-ui/new-tab-note.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { Section } from '@/shared-ui/section.component';
 import { Select } from '@/shared-ui/select.component';
@@ -93,7 +94,7 @@ export function AdminSourcesPage() {
                     rowKey={(l) => l.id}
                     columns={[
                       { key: 'athlete', header: adminText.common.athlete, cell: (l) => <b>{l.athleteName}</b>, sortValue: (l) => l.athleteName },
-                      { key: 'url', header: T.links, cell: (l) => <a href={l.url} target="_blank" rel="noopener noreferrer" className="admin-wrap">{l.url}</a> },
+                      { key: 'url', header: T.links, cell: (l) => <a href={l.url} target="_blank" rel="noopener noreferrer" className="admin-wrap">{l.url}<NewTabNote /></a> },
                       { key: 'source', header: adminText.common.source, cell: (l) => l.sourceName ?? '—' },
                       { key: 'origin', header: T.origin, cell: (l) => T.originLabel[l.origin] },
                       { key: 'at', header: adminText.common.created, cell: (l) => formatDateTime(l.createdAt), sortValue: (l) => l.createdAt },
@@ -113,7 +114,7 @@ export function AdminSourcesPage() {
                   rows={filterByStatus(sources, status, statusOf)}
                   rowKey={(s) => s.slug}
                   columns={[
-                    { key: 'name', header: T.name, cell: (s) => <a href={s.url} target="_blank" rel="noopener noreferrer"><b>{s.name}</b> ↗</a>, sortValue: (s) => s.name },
+                    { key: 'name', header: T.name, cell: (s) => <a href={s.url} target="_blank" rel="noopener noreferrer"><b>{s.name}</b> <span aria-hidden="true">↗</span><NewTabNote /></a>, sortValue: (s) => s.name },
                     { key: 'license', header: T.license, cell: (s) => <span className="admin-wrap">{s.license || '—'}</span> },
                     { key: 'usage', header: T.usage, cell: (s) => <StatusTag meta={meta.sourceUsage[s.usageStatus]} />, sortValue: (s) => s.usageStatus },
                     { key: 'review', header: T.licenseReview, cell: (s) => (s.licenseReviewedAt ? T.reviewedAt(formatDay(s.licenseReviewedAt)) : <span className="muted">{T.notReviewed}</span>) },

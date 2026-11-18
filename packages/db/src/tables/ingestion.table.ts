@@ -1,7 +1,7 @@
 // Ingestion runs and logs (doc 03 "Fontes e coleta") + AI-assisted collection runs (docs 11/18).
-import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { index, integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
-import { baseColumns, timestamptz } from '../columns/base.column';
+import { baseColumns, live, timestamptz } from '../columns/base.column';
 import { ingestionRunStatusEnum } from '../columns/pg-enum.column';
 import { sourceLinks, sources } from './source.table';
 
@@ -21,7 +21,9 @@ export const ingestionRuns = pgTable('ingestion_runs', {
   skipped: jsonb().$type<Record<string, number>>(),
   tokens: integer().notNull().default(0),
   parserVersion: text(),
-});
+},
+// Admin list (newest first) and "run now" (last run of a job).
+(t) => [index().on(t.startedAt).where(live(t.deletedAt)), index().on(t.jobKey, t.startedAt).where(live(t.deletedAt))]);
 
 export const ingestionLogs = pgTable('ingestion_logs', {
   ...baseColumns(),
@@ -32,7 +34,9 @@ export const ingestionLogs = pgTable('ingestion_logs', {
   message: text().notNull(),
   at: timestamptz().notNull(),
   durationMs: integer(),
-});
+},
+// Logs of one run, in order.
+(t) => [index().on(t.runId, t.at).where(live(t.deletedAt))]);
 
 /** One run of the AI-assisted collection: sources per gate, facts accepted/rejected, extractor tokens. */
 export const aiCollectionRuns = pgTable('ai_collection_runs', {

@@ -24,16 +24,16 @@ const athleteOrThrow = (view: CatalogView, slug: string) => {
 const tierId = (view: CatalogView, tier: Tier) => view.rows.tiers.find((t) => t.slug === tier)!.id;
 
 /** GET tier votes (doc 17): counts per tier, total, official tier and my vote. */
-export const getTierVotes = async ({ deps }: RequestContext, user: AuthUser, slug: string): Promise<TierVotesResponse> => {
-  const view = await deps.catalog.get();
+export const getTierVotes = async ({ deps, locale }: RequestContext, user: AuthUser, slug: string): Promise<TierVotesResponse> => {
+  const view = await deps.catalog.get(locale);
   const a = athleteOrThrow(view, slug);
   const votes = await votesOfAthlete(deps.db, a.id);
   return { counts: tierVoteCounts(votes.map((v) => v.tier)), total: votes.length, official: view.tierOf(a.championTierId), myVote: votes.find((v) => v.userId === user.id)?.tier ?? null };
 };
 
 /** PUT my vote: one per athlete; changing it does NOT change the user's counter (doc 17). */
-export const castTierVote = async ({ deps, actor }: RequestContext, user: AuthUser, slug: string, tier: Tier): Promise<CastTierVoteResponse> => {
-  const view = await deps.catalog.get();
+export const castTierVote = async ({ deps, actor, locale }: RequestContext, user: AuthUser, slug: string, tier: Tier): Promise<CastTierVoteResponse> => {
+  const view = await deps.catalog.get(locale);
   const a = athleteOrThrow(view, slug);
   const target = tierId(view, tier);
   return deps.repo.transaction(async (repo) => {
@@ -51,7 +51,7 @@ export const castTierVote = async ({ deps, actor }: RequestContext, user: AuthUs
 
 /** PATCH official tier (admin): shared rule (Mythic needs an approved dossier, same tier refused) + history + audit. */
 export const setOfficialTier = async ({ deps, actor, locale }: RequestContext, slug: string, body: SetOfficialTierRequest): Promise<{ official: Tier }> => {
-  const view = await deps.catalog.get();
+  const view = await deps.catalog.get(locale);
   const a = athleteOrThrow(view, slug);
   const current = view.tierOf(a.championTierId);
   const refusal = officialTierChangeError({ current, target: body.tier, dossierStatus: view.dossierOf(a.id)?.status ?? null }, locale);

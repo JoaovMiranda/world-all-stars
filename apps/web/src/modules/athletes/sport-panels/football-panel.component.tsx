@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 
 import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import { barsOption, donutOption } from '@/shared-ui/chart-presets.helper';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
@@ -20,6 +21,7 @@ type Cup = FootballStats['world_cups'][number];
 
 function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStats }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
+  const ui = useText(UI_MESSAGES);
   const n = stats.national_team;
   const cups = stats.world_cups;
   const hasWdl = n.wins != null && n.draws != null && n.losses != null;
@@ -58,7 +60,7 @@ function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStat
             {T.wdlMissing} {n.as_of ? T.asOf(formatDate(n.as_of)) : ''}
           </Notice>
         )}
-        {cups.length > 0 && <ChartContainer option={cupBars} ariaLabel={T.cupsChart} height={240} />}
+        {cups.length > 0 && <ChartContainer option={cupBars} ariaLabel={T.cupsChart} height={240} summary={ui.chartDataInTable} />}
       </div>
       {cups.length > 0 && (
         <div className="panel-gap">

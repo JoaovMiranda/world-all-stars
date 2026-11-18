@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
+
+import { useReveal } from './use-reveal.hook';
 
 export interface TimelineItem {
   key: string;
@@ -12,8 +14,10 @@ export interface TimelineItem {
 
 /** Vertical timeline with art-déco diamonds (career, milestones, versions). */
 export function Timeline({ items, label }: { items: readonly TimelineItem[]; label?: string }) {
+  const ref = useRef<HTMLOListElement>(null);
+  useReveal(ref, { stagger: true, settleMs: 2400 });
   return (
-    <ol className="timeline" aria-label={label}>
+    <ol ref={ref} className="timeline" aria-label={label}>
       {items.map((item) => (
         <li key={item.key}>
           <span className="when">{item.when}</span>

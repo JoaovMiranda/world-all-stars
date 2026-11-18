@@ -343,6 +343,7 @@ export const COOKIES_DOC: DocumentContent = {
           headers: ['Nome', 'Fornecedor', 'Finalidade', 'Duração'],
           rows: [
             ['was-theme', 'World All Stars', 'Lembrar o tema claro ou escuro escolhido (preferência estritamente necessária)', '12 meses'],
+            ['was-motion', 'World All Stars', 'Lembrar se você pausou as animações (preferência de acessibilidade, estritamente necessária)', '12 meses'],
             ['was_locale', 'World All Stars', 'Lembrar o idioma escolhido: português, inglês ou espanhol (preferência estritamente necessária)', '12 meses'],
             ['was.session_token', 'World All Stars', 'Manter você conectado depois do login com Google (estritamente necessário; HttpOnly)', 'Até sair ou 30 dias'],
             ['was.state', 'World All Stars', 'Proteger a volta do login com Google contra falsificação (estritamente necessário)', 'Alguns minutos, durante o login'],
@@ -392,7 +393,7 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
       blocks: [
         {
           kind: 'p',
-          text: 'Auditoria com Lighthouse 12.6.1 (perfil mobile) nos temas claro e escuro, em 03 e 04/11/2026, sobre o protótipo:',
+          text: 'Auditoria com Lighthouse 13.6.0 (perfil mobile, 4G lento simulado) e axe-core 4.14 (WCAG 2.2 A e AA) em 18/11/2026. O axe-core passa sem nenhuma violação em todas as páginas públicas; o contraste dos temas claro e escuro é verificado por um teste automático de todas as cores.',
         },
         {
           kind: 'table',
@@ -400,11 +401,10 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
           headers: ['Página', 'Acessibilidade', 'SEO'],
           rows: [
             ['Início', '100', '100'],
-            ['Perfil do atleta (claro e escuro)', '100', '100'],
-            ['Esporte', '100', '100'],
-            ['Hall of Greats', '100', '100'],
             ['Atletas', '100', '100'],
-            ['Fontes', '100', '100'],
+            ['Perfil do atleta', '100', '100'],
+            ['Esportes', '100', '100'],
+            ['Contato', '100', '100'],
           ],
         },
       ],
@@ -423,7 +423,12 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
             'Gráficos com tabela equivalente dos mesmos dados.',
             'Formulários com rótulos visíveis, erros em texto embaixo de cada campo e foco no primeiro erro.',
             'Layout sem rolagem horizontal até 320 px e texto ampliável até 200%.',
-            'Animações curtas, desligadas quando o sistema pede movimento reduzido.',
+            'Animações curtas, desligadas quando o sistema pede movimento reduzido ou pelo botão “Pausar animações” no topo de cada página.',
+            'Troca de página anunciada para leitores de tela, com o foco levado ao título da nova página.',
+            'Avisos de status (resultados de filtros, comentários carregados, envio de formulários) lidos sem tirar o foco do lugar.',
+            'Texto em unidades relativas: respeita o tamanho de fonte escolhido no navegador.',
+            'Atalho de busca com modificador (Ctrl+K ou ⌘K), que não dispara ao digitar ou ditar.',
+            'Se a sessão expirar enquanto você escreve um comentário, o texto é mantido.',
           ],
         },
       ],
@@ -449,7 +454,7 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
         {
           kind: 'list',
           items: [
-            'A cada mudança: Lighthouse e axe-core automáticos, com zero violações sérias ou críticas.',
+            'A cada mudança (CI): axe-core sobre todas as páginas públicas (WCAG 2.2 A e AA, zero violações), teste de contraste de todas as cores do tema, regras de acessibilidade do JSX e Lighthouse no perfil mobile exigindo nota 100 em acessibilidade.',
             'A cada versão: navegação só com teclado, leitores de tela NVDA e VoiceOver, zoom de 200% e 400%, alto contraste e celulares reais.',
           ],
         },
@@ -483,4 +488,4 @@ export const LEGAL_DOCS: Record<Locale, LegalDocs> = {
 };
 
 /** Date of the last accessibility audit (doc 14). */
-export const ACCESSIBILITY_AUDITED_AT = '2026-11-04';
+export const ACCESSIBILITY_AUDITED_AT = '2026-11-18';

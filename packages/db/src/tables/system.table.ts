@@ -39,5 +39,5 @@ export const auditLogs = pgTable(
     /** Admin decisions: { target, reason }. */
     metadata: jsonb().$type<Record<string, unknown>>().notNull().default({}),
   },
-  (t) => [index().on(t.action).where(live(t.deletedAt)), index().on(t.entityType, t.entityId).where(live(t.deletedAt))],
+  (t) => [index().on(t.action).where(live(t.deletedAt)), index().on(t.entityType, t.entityId).where(live(t.deletedAt)), index().on(t.createdAt).where(live(t.deletedAt))],
 );

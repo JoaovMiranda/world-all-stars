@@ -33,6 +33,19 @@ export interface DatabaseOptions {
   pgliteDataDir?: string | undefined;
   /** Folder of the SQL migrations (default: next to this module, `./migrations`). */
   migrationsFolder?: string | undefined;
+  /** node-postgres pool (ignored by PGlite, which has a single connection). */
+  pool?: PoolOptions | undefined;
+}
+
+export interface PoolOptions {
+  /** Connections per process (Neon free/pooler: keep processes × max under the plan's limit). Default 10. */
+  max?: number;
+  /** Server-side cap of one statement (Postgres `statement_timeout`), ms. Default 10 000. */
+  statementTimeoutMs?: number;
+  /** Waiting for a free/new connection, ms. Default 5 000 (fail fast instead of piling up requests). */
+  connectionTimeoutMs?: number;
+  /** Idle connection closed after, ms. Default 30 000. */
+  idleTimeoutMs?: number;
 }
 
 /** Repository root (folder with pnpm-workspace.yaml), so `.data/` lands in the same place whatever the cwd. */
@@ -69,7 +82,19 @@ const redact = (url: string): string => url.replace(/\/\/([^:@/]+):[^@/]*@/, '//
 export const createDatabase = async (options: DatabaseOptions = {}): Promise<DatabaseHandle> => {
   const migrationsFolder = options.migrationsFolder ?? defaultMigrationsFolder();
   if (options.databaseUrl) {
-    const pool = new pg.Pool({ connectionString: options.databaseUrl });
+    const p = options.pool ?? {};
+    const pool = new pg.Pool({
+      connectionString: options.databaseUrl,
+      max: p.max ?? 10,
+      connectionTimeoutMillis: p.connectionTimeoutMs ?? 5_000,
+      idleTimeoutMillis: p.idleTimeoutMs ?? 30_000,
+      // Sent as a startup parameter: Postgres cancels any statement running longer (a stuck query never holds a
+      // connection forever). query_timeout is the client-side backstop when the server does not answer at all.
+      statement_timeout: p.statementTimeoutMs ?? 10_000,
+      query_timeout: (p.statementTimeoutMs ?? 10_000) + 2_000,
+    });
+    // An idle client that loses its connection emits 'error' on the pool: log it instead of crashing the process.
+    pool.on('error', (error) => console.error('[db] idle Postgres client error', error));
     const db = drizzleNodePg(pool, { schema, casing: 'snake_case' });
     return {
       db: db as unknown as Database,

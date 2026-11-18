@@ -26,6 +26,22 @@ export const VALIDATION_TEXT = {
   contactEmailRequired: 'Informe um e-mail válido para a resposta.',
   contactTopicRequired: 'Escolha o assunto.',
   contactBodyEmpty: 'Escreva sua mensagem. Só espaços não valem.',
+  /** Generic messages of the Zod schemas (zodErrorMap): used when a schema has no message of its own. */
+  schema: {
+    invalid: 'Valor inválido.',
+    tooShort: (min: number) => `Use pelo menos ${min} caracteres.`,
+    tooLong: (max: number) => `Use no máximo ${max} caracteres.`,
+    tooFew: (min: number) => `Escolha pelo menos ${min}.`,
+    tooMany: (max: number) => `Escolha no máximo ${max}.`,
+    tooSmall: (min: number) => `O mínimo é ${min}.`,
+    tooBig: (max: number) => `O máximo é ${max}.`,
+    choose: 'Escolha uma das opções.',
+    mustAccept: 'Marque esta opção para continuar.',
+    date: 'Data inválida.',
+    unknownFields: (fields: string) => `Campos não reconhecidos: ${fields}.`,
+  },
+  /** Word typed to confirm the account deletion, per language (the server accepts the request language's word). */
+  accountDeleteWord: 'EXCLUIR',
   accountDeleteConfirmation: (word: string) => `Digite ${word} para confirmar.`,
 } as const;
 

@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router';
 import { useText } from '@/i18n/use-text.hook';
 import { SportCard } from '@/shared-ui/sport-card.component';
 import { Tag } from '@/shared-ui/tag.component';
+import { Reveal } from '@/shared-ui/reveal.component';
 
 import { SPORTS_MESSAGES, SPORTS_HASH } from './sports.const';
 
@@ -22,7 +23,7 @@ export function SportDirectory({ groups }: { groups: readonly SportGroup[] }) {
           {g.subgroups.map((sub) => (
             <div key={sub.slug} className="sport-subgroup">
               <h3 className="label">{sub.name}</h3>
-              <ul className="sport-grid">
+              <Reveal as="ul" className="sport-grid" stagger name="sports-dir">
                 {sub.sports.map((s) => {
                   const shown = featuredAssociations(s.associations, SPORT_CARD_ASSOCIATIONS_LIMIT);
                   const hasMore = s.associations.length > shown.length;
@@ -38,6 +39,7 @@ export function SportDirectory({ groups }: { groups: readonly SportGroup[] }) {
                             {s.associations.length === 0 && <p className="muted">{t.noAssociations}</p>}
                             <Link className="block mt-2" to="/sports/$slug" params={{ slug: s.slug }} {...(hasMore ? { hash: SPORTS_HASH.associations } : {})}>
                               {hasMore ? t.seeAll(s.associations.length) : t.seeSport}
+                              <span className="sr-only">: {s.name}</span>
                             </Link>
                           </>
                         }
@@ -45,7 +47,7 @@ export function SportDirectory({ groups }: { groups: readonly SportGroup[] }) {
                     </li>
                   );
                 })}
-              </ul>
+              </Reveal>
             </div>
           ))}
         </section>

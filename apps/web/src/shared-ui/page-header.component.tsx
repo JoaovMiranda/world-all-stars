@@ -16,13 +16,21 @@ interface PageHeaderProps {
   children?: ReactNode;
   /** Visual on the left of the header (e.g. athlete portrait). */
   media?: ReactNode;
+  /** Decorative layer behind the header (aria-hidden): tier stage light, aurora, particles. */
+  decor?: ReactNode;
 }
 
 /** Editorial page header: eyebrow · h1 · lead · actions, with the 1px rule below (doc 09 "esqueleto comum"). */
-export function PageHeader({ title, eyebrow, lead, badges, actions, children, media }: PageHeaderProps) {
+export function PageHeader({ title, eyebrow, lead, badges, actions, children, media, decor }: PageHeaderProps) {
   return (
     <header className={media ? 'page-header page-header-media' : 'page-header'}>
-      {media}
+      {decor && (
+        <div className="page-header-decor" aria-hidden="true">
+          {decor}
+        </div>
+      )}
+      {/* Own wrapper so the entrance pose never fights the media's own animation/transform (shimmer, tilt). */}
+      {media && <div className="page-header-media-slot">{media}</div>}
       <div className="page-header-main">
         {(eyebrow || badges) && (
           <div className="row">

@@ -2,10 +2,21 @@ import { createHash } from 'node:crypto';
 
 import { PERSONAL_QUERY_PARAMS, PRIVATE_PATH_PREFIXES, isPersonalCookieName } from '@was/shared';
 
+import { CATALOG_TABLES } from '../modules/catalog/catalog.repository';
+
 /** Shared caches (CDN) may keep an anonymous page 5 min and serve it stale for a day while revalidating. */
 export const PUBLIC_HTML_CACHE_CONTROL = 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400';
 /** Personalized or non-200 HTML: the browser revalidates, shared caches never store it. */
 export const PRIVATE_HTML_CACHE_CONTROL = 'private, no-cache';
+
+/** Reader content shown on anonymous pages besides the catalog: threads and reactions, tier-vote shares. */
+const PUBLIC_PARTICIPATION_TABLES = new Set(['comments', 'comment_reactions', 'tier_votes']);
+/**
+ * Whether a committed write to `table` can change an anonymous page (→ drop the HTML cache). Account data (users,
+ * notifications, consents, sessions) and the inboxes (contact, suggestions, privacy) never render there; a renamed
+ * author shows up when the page expires (SSR_CACHE_TTL_SECONDS).
+ */
+export const affectsPublicPages = (table: string): boolean => CATALOG_TABLES.has(table) || PUBLIC_PARTICIPATION_TABLES.has(table);
 
 const cookieNames = (header: string | undefined): string[] => (header ?? '').split(';').map((p) => p.split('=')[0]?.trim() ?? '').filter(Boolean);
 

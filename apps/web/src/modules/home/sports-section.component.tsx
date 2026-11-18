@@ -6,6 +6,7 @@ import { ButtonLink } from '@/shared-ui/button-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
 import { SportCard } from '@/shared-ui/sport-card.component';
+import { Reveal } from '@/shared-ui/reveal.component';
 
 import { HOME_MESSAGES } from './home.const';
 
@@ -30,13 +31,13 @@ export function SportsSection({ sports }: { sports: SportCardData[] | undefined 
           <p>{t.emptyText}</p>
         </EmptyState>
       ) : (
-        <ul className="sport-grid">
+        <Reveal as="ul" className="sport-grid" stagger>
           {sports.map((s) => (
             <li key={s.slug}>
               <SportCard sport={s} showAssociations={false} />
             </li>
           ))}
-        </ul>
+        </Reveal>
       )}
     </section>
   );

@@ -2,6 +2,17 @@
 @layer components {
   .page-header-media { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; align-items: end; }
   .page-header-media .page-actions { flex-direction: column; align-items: stretch; }
+  /* Decoration layer (PageHeader decor): behind the header, bleeding to the viewport edges. */
+  .page-header-decor { position: absolute; z-index: -1; inset: -40px calc(50% - 50vw) 0; overflow: hidden; pointer-events: none; }
+  /* Staging / pose to pose: três poses na ordem de leitura — retrato (o protagonista), depois nome e selos,
+     depois as ações. Cada uma chega da sua direção; com prefers-reduced-motion tudo aparece pronto. */
+  .page-header-media > .page-header-media-slot { animation: hero-pose-media var(--dur-4) var(--ease-snap) both; }
+  .page-header-media > .page-header-main { animation: hero-pose-main var(--dur-4) var(--ease-out) 90ms both; }
+  .page-header-media > .page-actions { animation: hero-pose-actions var(--dur-3) var(--ease-out) 200ms both; }
+  /* Photo and title are LCP candidates: they move in but are visible from the first frame (no opacity: 0). */
+  @keyframes hero-pose-media { from { transform: scale(.94) translateY(6px); } }
+  @keyframes hero-pose-main { from { transform: translateX(-10px); } }
+  @keyframes hero-pose-actions { from { opacity: 0; transform: translateY(6px); } }
   @media (max-width: 760px) {
     .page-header-media { grid-template-columns: minmax(0, 1fr); align-items: start; }
     .page-header-media .page-actions { flex-direction: row; }

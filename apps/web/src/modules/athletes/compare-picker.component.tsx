@@ -55,7 +55,19 @@ export function ComparePicker({ main, selected, candidates, onChange }: CompareP
           <span key={s.slug} className="compare-chip">
             <SeriesSwatch index={i + 1} />
             {s.knownAs}
-            <button type="button" aria-label={T.remove(s.knownAs)} onClick={() => onChange(slugs.filter((x) => x !== s.slug))}>
+            <button
+              type="button"
+              aria-label={T.remove(s.knownAs)}
+              onClick={(e) => {
+                const group = e.currentTarget.closest('.compare-picker') ?? document;
+                onChange(slugs.filter((x) => x !== s.slug));
+                // The chip and its focused × are gone: focus the next ×, else the athlete picker (WCAG 2.4.3).
+                requestAnimationFrame(() => {
+                  const buttons = group.querySelectorAll<HTMLElement>('.compare-chip button');
+                  (buttons[i] ?? buttons[i - 1] ?? group.querySelector<HTMLElement>('select'))?.focus();
+                });
+              }}
+            >
               ×
             </button>
           </span>

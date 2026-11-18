@@ -3,18 +3,37 @@ import type { MiddlewareHandler } from 'hono';
 
 import type { HonoEnv } from '../http/app-context.type';
 
+export type LogFormat = 'text' | 'json';
+
+export interface RequestLogOptions {
+  enabled: boolean;
+  /** `json` (production default): one object per line, for the log platform (Fly, Better Stack…). `text`: dev. */
+  format: LogFormat;
+  /** Requests slower than this are logged at `warn` (and always, even with LOG_REQUESTS=0). */
+  slowMs: number;
+}
+
 /**
  * Request id (x-request-id) + one log line per request: method, path, status, duration, session kind. The API calls a
- * page render makes in-process (header x-was-ssr) are logged indented as `ssr→api`, just before the page line.
+ * page render makes in-process (header x-was-ssr) are flagged `ssr` (text: indented `ssr→api`). Slow requests are
+ * `warn` so they can be alerted on; the matching browser-side view is the Server-Timing header (DevTools → Timing).
  */
-export const requestLog = (enabled: boolean): MiddlewareHandler<HonoEnv> => async (c, next) => {
+export const requestLog = ({ enabled, format, slowMs }: RequestLogOptions): MiddlewareHandler<HonoEnv> => async (c, next) => {
   const id = c.req.header('x-request-id') ?? uuidv7();
   c.set('requestId', id);
   c.header('x-request-id', id);
   const started = performance.now();
   await next();
-  if (!enabled) return;
+  const ms = performance.now() - started;
+  const slow = ms >= slowMs;
+  if (!enabled && !slow) return;
   const kind = c.get('request')?.session.kind ?? '-';
-  const line = `${c.req.method} ${c.req.path} ${c.res.status} ${(performance.now() - started).toFixed(1)}ms ${kind}`;
-  console.log(c.req.header(HTTP_HEADER.ssr) ? `[http]   ssr→api ${line}` : `[http] ${line}`);
+  const ssr = !!c.req.header(HTTP_HEADER.ssr);
+  if (format === 'json') {
+    const line = { t: new Date().toISOString(), level: slow ? 'warn' : 'info', msg: 'request', id, method: c.req.method, path: c.req.path, status: c.res.status, ms: Math.round(ms * 10) / 10, session: kind, ...(ssr ? { ssr } : {}), ...(slow ? { slow } : {}) };
+    console.log(JSON.stringify(line));
+    return;
+  }
+  const line = `${c.req.method} ${c.req.path} ${c.res.status} ${ms.toFixed(1)}ms ${kind}${slow ? ' SLOW' : ''}`;
+  console.log(ssr ? `[http]   ssr→api ${line}` : `[http] ${line}`);
 };

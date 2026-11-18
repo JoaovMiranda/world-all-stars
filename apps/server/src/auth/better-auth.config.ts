@@ -1,11 +1,13 @@
 import { type BaseRepository, type Database, SYSTEM_ACTOR, authAccounts, authSessions, authVerifications, users } from '@was/db';
-import { AUTH_BASE_PATH, AUTH_COOKIE_PREFIX, AuthAuditAction, LOCALE_COOKIE, resolveLocale, uuidv7 } from '@was/shared';
-import { betterAuth } from 'better-auth';
+import { API_ERROR_MESSAGES, ApiErrorCode, AUTH_BASE_PATH, AUTH_COOKIE_PREFIX, AuthAuditAction, LOCALE_COOKIE, resolveLocale, textFor, uuidv7 } from '@was/shared';
+import { APIError, betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { eq } from 'drizzle-orm';
 
 import type { ServerConfig } from '../config/env.config';
 import { hashIp } from '../middlewares/session.middleware';
+import type { RateLimitStore } from '../rate-limit/rate-limit.store';
+import { betterAuthRateLimitStorage } from '../rate-limit/rate-limiter';
 import { promoteAdminEmails } from './admin-bootstrap.helper';
 
 /** Path where Better Auth is mounted (app.ts): Google callback = `${BETTER_AUTH_URL}/api/auth/callback/google`. */
@@ -22,15 +24,16 @@ const cookieOf = (headers: Headers | undefined, name: string): string | undefine
     ?.split(';')
     .map((p) => p.trim().split('='))
     .find(([k]) => k === name)?.[1];
+const localeOf = (headers: Headers | undefined) => resolveLocale({ cookie: cookieOf(headers, LOCALE_COOKIE), acceptLanguage: headers?.get('accept-language') });
 const clientIp = (headers: Headers | undefined): string => headers?.get('x-forwarded-for')?.split(',')[0]?.trim() || headers?.get('x-real-ip') || 'unknown';
 
 /**
  * Better Auth (doc 04), Google only: the drizzle adapter writes `users` (name→displayName, image→avatarUrl) and the
  * ephemeral auth_* tables; ids are uuid v7; cookies `was.*` (HttpOnly, Lax, Secure in production). Database hooks:
- * new account → locale from the `was_locale` cookie, emailVerifiedAt, ADMIN_EMAILS role, audit; session → ip kept
- * only as the salted ip_hash + sign-in audit. E-mail/password and self-service deleteUser are off (E6 deletes).
+ * new account → locale from the `was_locale` cookie, emailVerifiedAt, ADMIN_EMAILS role, audit; session → refused for
+ * a banned account, ip kept only as the salted ip_hash + sign-in audit. E-mail/password and self-service deleteUser are off (E6 deletes).
  */
-export const createBetterAuth = (db: Database, repo: BaseRepository, config: ServerConfig) => {
+export const createBetterAuth = (db: Database, repo: BaseRepository, config: ServerConfig, rateLimitStore: RateLimitStore) => {
   const google = config.google;
   return betterAuth({
     appName: 'World All Stars',
@@ -60,12 +63,13 @@ export const createBetterAuth = (db: Database, repo: BaseRepository, config: Ser
       database: { generateId: () => uuidv7() },
     },
     telemetry: { enabled: false },
+    // Better Auth's own limits (production only, as its default), counted in our shared store (hashed keys).
+    rateLimit: { enabled: config.production && config.rateLimitEnabled, customStorage: betterAuthRateLimitStorage(rateLimitStore, config.ipHashSalt) },
     databaseHooks: {
       user: {
         create: {
           after: async (user, ctx) => {
-            const headers = headersOf(ctx);
-            const locale = resolveLocale({ cookie: cookieOf(headers, LOCALE_COOKIE), acceptLanguage: headers?.get('accept-language') });
+            const locale = localeOf(headersOf(ctx));
             const actor = { ...SYSTEM_ACTOR, userId: user.id, name: user.name, via: 'user' };
             await repo.update(users, user.id, { locale, emailVerifiedAt: user.emailVerified ? new Date() : null }, actor, { summary: 'signed up (Google)' });
             await repo.audit(actor, AuthAuditAction.SignedUp, { type: 'users', id: user.id }, { provider: 'google', actorName: user.name });
@@ -83,7 +87,14 @@ export const createBetterAuth = (db: Database, repo: BaseRepository, config: Ser
       },
       session: {
         create: {
-          before: async (session, ctx) => ({ data: { ...session, ipAddress: hashIp(session.ipAddress || clientIp(headersOf(ctx)), config.ipHashSalt) } }),
+          // A banned account never gets a session: the OAuth callback redirects back with `?error=banned` (the web
+          // shows the translated message). Existing sessions are revoked when the admin bans (updateUser).
+          before: async (session, ctx) => {
+            const headers = headersOf(ctx);
+            const [account] = await db.select({ bannedAt: users.bannedAt }).from(users).where(eq(users.id, session.userId));
+            if (account?.bannedAt) throw new APIError('FORBIDDEN', { code: ApiErrorCode.Banned, message: textFor(API_ERROR_MESSAGES, localeOf(headers)).banned });
+            return { data: { ...session, ipAddress: hashIp(session.ipAddress || clientIp(headers), config.ipHashSalt) } };
+          },
           after: async (session) => {
             await repo.audit({ userId: session.userId, via: 'user', ipHash: session.ipAddress ?? null, userAgent: session.userAgent ?? null }, AuthAuditAction.SignedIn, { type: 'users', id: session.userId });
           },

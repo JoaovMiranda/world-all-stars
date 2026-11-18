@@ -1,4 +1,4 @@
-import { PublicApi, composeCompare } from '@was/shared';
+import { PublicApi, composeCompare, pageOf } from '@was/shared';
 
 import { defineRoute } from '../../http/contract-route.helper';
 import { notFound } from '../../http/http-error.error';
@@ -6,8 +6,8 @@ import { notFound } from '../../http/http-error.error';
 /** P2/P4 + analysis (doc 16): everything read from the catalog snapshot. */
 export const athletesRoutes = [
   defineRoute(PublicApi.athletes, async ({ query }, { deps, locale }) => {
-    const items = (await deps.catalog.get(locale)).athletes(query);
-    return { items, total: items.length };
+    const { page, ...filters } = query;
+    return pageOf((await deps.catalog.get(locale)).athletes(filters), page);
   }),
   defineRoute(PublicApi.athleteProfile, async ({ params }, { deps, locale }) => {
     const profile = (await deps.catalog.get(locale)).profile(params.slug);

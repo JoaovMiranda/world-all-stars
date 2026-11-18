@@ -72,6 +72,7 @@ export const SPORTS_TEXT_EN = {
     reportTitle: 'No individual athlete identified in a public source.',
     reportFacts: 'What the collection found',
     evidence: (quote) => (quote ? `Verbatim excerpt: ${quote}` : 'See the source'),
+    evidenceToggle: (n) => `Verbatim excerpt of fact ${n}`,
     evidenceLabel: (n) => `Source of fact ${n} (opens in a new tab)`,
     competitions: 'Competitions and titles',
     competitionsEyebrow: 'by level',

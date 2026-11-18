@@ -15,6 +15,8 @@ export const ApiErrorCode = {
   EmailUnverified: 'email_unverified',
   /** The accepted legal versions are not the current ones (POST /api/account/consent). */
   ConsentOutdated: 'consent_outdated',
+  /** Request body above the API limit (BODY_LIMIT_KB). */
+  PayloadTooLarge: 'payload_too_large',
   Internal: 'internal',
 } as const;
 export type ApiErrorCode = (typeof ApiErrorCode)[keyof typeof ApiErrorCode];

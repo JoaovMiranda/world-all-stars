@@ -1,6 +1,6 @@
 import { AdminApi, ParticipationApi } from '@was/shared';
 
-import { defineMutation, defineQuery } from '../define-endpoint.helper';
+import { bySlug, defineMutation, defineQuery } from '../define-endpoint.helper';
 import { requireUser } from '../fixtures/require-user.fixture';
 import { buildTierVotes, castDemoVote, setDemoOfficialTier } from '../fixtures/tier-votes.fixture';
 import { athleteProfileQuery, athletesQuery } from './athletes.query';
@@ -16,7 +16,8 @@ export const tierVotesQuery = defineQuery(ParticipationApi.tierVotes, {
 export const castTierVote = defineMutation(
   ParticipationApi.castTierVote,
   ({ input, session }) => castDemoVote(requireUser(session), input.params.slug, input.body.tier),
-  { invalidates: [tierVotesQuery, sessionQuery, meQuery] },
+  // My vote changes the shares of that athlete only.
+  { invalidates: [bySlug(tierVotesQuery), sessionQuery, meQuery] },
 );
 
 /** PATCH /api/admin/athletes/:slug/tier: official tier (reason required; Mythic needs an approved dossier). */

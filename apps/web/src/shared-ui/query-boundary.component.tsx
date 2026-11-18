@@ -34,7 +34,10 @@ export function QueryBoundary<T>({ query, children, loading, isEmpty, empty, not
   const { requireLogin } = useSession();
   if (query.isPending) {
     return (
-      <div aria-busy="true" aria-label={ui.loadingLabel}>
+      <div aria-busy="true">
+        <p className="sr-only" role="status">
+          {ui.loadingLabel}
+        </p>
         {loading ?? <SkeletonList />}
       </div>
     );

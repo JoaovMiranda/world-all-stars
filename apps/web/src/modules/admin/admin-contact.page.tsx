@@ -7,6 +7,7 @@ import { useText } from '@/i18n/use-text.hook';
 import { type DecisionAction, DecisionBar } from '@/shared-ui/decision-bar.component';
 import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { FactList } from '@/shared-ui/fact-list.component';
+import { NewTabNote } from '@/shared-ui/new-tab-note.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { ReviewQueue } from '@/shared-ui/review-queue.component';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
@@ -54,7 +55,7 @@ function SuggestionDetail({ s }: { s: AdminSuggestion }) {
             const r = ctx.data ? checkSourceUrl(u, ctx.data.sources, locale) : null;
             return (
               <li key={u}>
-                <a href={u} target="_blank" rel="noopener noreferrer">{u}</a>{' '}
+                <a href={u} target="_blank" rel="noopener noreferrer">{u}<NewTabNote /></a>{' '}
                 {r && (r.ok ? <Tag tone="success">{r.source?.name ?? T.linkOk}</Tag> : <Tag tone="danger">{r.message}</Tag>)}
                 {r?.ok && r.note && <small className="muted block">{r.note}</small>}
               </li>

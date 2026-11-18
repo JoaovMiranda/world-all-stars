@@ -3,7 +3,7 @@ import type { Locale } from '@was/shared';
 
 import type { AuthProvider, AuthUser, SessionContext } from '../auth/auth-provider.type';
 import type { ServerConfig } from '../config/env.config';
-import type { RateLimiter } from '../middlewares/rate-limit.middleware';
+import type { RateLimiter } from '../rate-limit/rate-limiter';
 import type { CatalogCache } from '../modules/catalog/catalog.cache';
 
 /** Everything a handler/service needs, built once in createApp (tests build it with an in-memory PGlite). */
@@ -31,7 +31,16 @@ export interface RequestContext {
 /** Same as RequestContext, with the signed-in user guaranteed (contracts with access reader/admin). */
 export type SignedInContext = RequestContext & { user: AuthUser };
 
+/**
+ * One page render: the API calls the renderer makes in-process (`app.fetch(request, { ssrSession })`) carry the same
+ * cookies, so the session is resolved once per page instead of once per call.
+ */
+export interface SsrSessionMemo {
+  session?: Promise<SessionContext>;
+}
+
 export type HonoEnv = {
+  Bindings: { ssrSession?: SsrSessionMemo };
   Variables: {
     request: RequestContext;
     requestId: string;

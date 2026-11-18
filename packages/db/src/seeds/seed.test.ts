@@ -1,10 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { DEMO_SESSION_EMAILS, LEGAL_DOCUMENT_VERSIONS, REQUIRED_LEGAL_DOCUMENTS } from '@was/shared';
 import { sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createDatabase, type DatabaseHandle, findRepoRoot } from '../client';
+import { seedId } from '../helpers/seed-id.helper';
 import { seedDatabase } from './seed';
 
 const root = findRepoRoot();
@@ -37,6 +39,27 @@ describe('seed', () => {
     expect(first.athletes).toBe(18);
     await seedDatabase(h.db, root);
     expect(await counts(h)).toEqual(first);
+  });
+
+  it.skipIf(!hasPrototype)('demo accounts accept the CURRENT legal versions, also when an older seed is upgraded', async () => {
+    const accepted = async () =>
+      ((await h.db.execute(sql`
+        select u.email, la.document_kind as kind, la.document_version as version from legal_acceptances la join users u on u.id = la.user_id
+        where u.email in (${DEMO_SESSION_EMAILS.reader}, ${DEMO_SESSION_EMAILS.admin}) and la.deleted_at is null`)) as unknown as { rows: { email: string; kind: string; version: string }[] }).rows;
+    // A database seeded by an older version: one row per document (id without the version), an older version accepted.
+    for (const email of [DEMO_SESSION_EMAILS.reader, DEMO_SESSION_EMAILS.admin]) {
+      for (const kind of REQUIRED_LEGAL_DOCUMENTS) {
+        await h.db.execute(sql`update legal_acceptances set id = ${seedId('la', email, kind)}, document_version = '0.0-old' where id = ${seedId('la', email, kind, LEGAL_DOCUMENT_VERSIONS[kind].version)}`);
+      }
+    }
+    expect((await accepted()).every((r) => r.version === '0.0-old')).toBe(true);
+    await seedDatabase(h.db, root);
+    const rows = await accepted();
+    for (const email of [DEMO_SESSION_EMAILS.reader, DEMO_SESSION_EMAILS.admin]) {
+      for (const kind of REQUIRED_LEGAL_DOCUMENTS) {
+        expect(rows).toContainEqual({ email, kind, version: LEGAL_DOCUMENT_VERSIONS[kind].version });
+      }
+    }
   });
 
   // The trigger is FOR EACH ROW: target a table the configuration seed always fills (CI has no plan/).

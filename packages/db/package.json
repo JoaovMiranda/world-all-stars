@@ -12,7 +12,8 @@
     "generate": "drizzle-kit generate",
     "migrate": "tsx src/cli/migrate.cli.ts",
     "seed": "tsx src/cli/seed.cli.ts",
-    "reset": "tsx src/cli/reset.cli.ts"
+    "reset": "tsx src/cli/reset.cli.ts",
+    "cleanup": "tsx src/cli/cleanup.cli.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.15",

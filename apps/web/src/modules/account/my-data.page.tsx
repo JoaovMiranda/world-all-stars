@@ -1,7 +1,8 @@
-import { ACCOUNT_DELETE_CONFIRMATION, CONSENT_PURPOSE_VALUES, LEGAL_DOCUMENT_VERSIONS, type LegalAcceptance, toIsoDate } from '@was/shared';
+import { CONSENT_PURPOSE_VALUES, LEGAL_DOCUMENT_VERSIONS, type LegalAcceptance, toIsoDate, accountDeleteConfirmationError, accountDeleteWord } from '@was/shared';
 import { useState } from 'react';
 
 import { deleteAccount, exportMyData, myDataQuery, updateConsent } from '@/data/endpoints/account.query';
+import { useLocale } from '@/i18n/locale.store';
 import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
 import { useSession } from '@/session/use-session.hook';
@@ -154,7 +155,10 @@ function DeleteSection({ onDeleted }: { onDeleted: (pseudonym: string) => void }
   const t = useText(ACCOUNT_MESSAGES).data;
   const { signOut } = useSession();
   const [open, setOpen] = useState(false);
+  const locale = useLocale();
   const [word, setWord] = useState('');
+  // The word check is re-run on render (its hint follows a language switch); only the server's message is a string.
+  const [checkWord, setCheckWord] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const remove = deleteAccount.useMutation({
     onSuccess: ({ pseudonym }) => {
@@ -165,15 +169,15 @@ function DeleteSection({ onDeleted }: { onDeleted: (pseudonym: string) => void }
     onError: (e) => setError(e.message || t.deleteError),
   });
   const confirm = () => {
-    if (word.trim() !== ACCOUNT_DELETE_CONFIRMATION) {
-      setError(t.deleteConfirmLabel);
-      return;
-    }
+    setError(undefined);
+    setCheckWord(true);
+    if (accountDeleteConfirmationError(word, locale)) return;
     remove.mutate({ body: { confirmation: word } });
   };
   const close = () => {
     setOpen(false);
     setWord('');
+    setCheckWord(false);
     setError(undefined);
   };
   return (
@@ -195,7 +199,7 @@ function DeleteSection({ onDeleted }: { onDeleted: (pseudonym: string) => void }
         actions={
           <>
             <Button onClick={close}>{t.deleteCancel}</Button>
-            <Button variant="danger" onClick={confirm} disabled={remove.isPending}>
+            <Button variant="danger" onClick={confirm} pending={remove.isPending}>
               {remove.isPending ? t.deleting : t.deleteConfirm}
             </Button>
           </>
@@ -209,7 +213,7 @@ function DeleteSection({ onDeleted }: { onDeleted: (pseudonym: string) => void }
             confirm();
           }}
         >
-          <FormField label={t.deleteConfirmLabel} error={error} required>
+          <FormField label={t.deleteConfirmLabel(accountDeleteWord(locale))} error={(checkWord ? accountDeleteConfirmationError(word, locale) : null) ?? error} required>
             {(p) => <Input {...p} value={word} autoComplete="off" onChange={(e) => setWord(e.target.value)} />}
           </FormField>
         </form>

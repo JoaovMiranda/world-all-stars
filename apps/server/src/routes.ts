@@ -8,6 +8,7 @@ import { discoveryRoutes } from './modules/discovery/discovery.route';
 import { homeRoutes } from './modules/home/home.route';
 import { sessionRoutes } from './modules/session/session.route';
 import { sportsRoutes } from './modules/sports/sports.route';
+import { telemetryRoutes } from './modules/telemetry/telemetry.route';
 import { tierVotesRoutes } from './modules/tier-votes/tier-votes.route';
 
 /** Every API route, each one bound to a shared contract (a test asserts all contracts are served). */
@@ -22,4 +23,5 @@ export const ALL_ROUTES: readonly RouteDefinition[] = [
   ...contactRoutes,
   ...accountRoutes,
   ...adminRoutes,
+  ...telemetryRoutes,
 ];

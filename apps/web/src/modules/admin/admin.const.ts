@@ -9,6 +9,7 @@ export const ADMIN_TEXT = {
   eyebrow: 'Admin',
   lead: 'Filas de revisão da coleta, moderação e caixa de entrada.',
   sectionsLabel: 'Seções do painel',
+  navGroups: { moderation: 'Moderação', data: 'Dados', people: 'Pessoas' },
   pending: (n: number) => (n === 1 ? '1 pendente' : `${n} pendentes`),
   open: 'Abrir',
   sections: {

@@ -28,6 +28,8 @@ export default defineConfig(({ command, isSsrBuild }) => ({
         // One stylesheet for the whole app, linked in the server-rendered <head>: page CSS is there before the
         // lazy page chunk loads (no flash of unstyled content after SSR).
         cssCodeSplit: false,
+        // Fonts always as files: the CSP allows `font-src 'self'` only (a small subset inlined as data: is blocked).
+        assetsInlineLimit: (file: string) => (file.endsWith('.woff2') || file.endsWith('.woff') ? false : undefined),
         rollupOptions: { input: 'src/app/entry-client.tsx' },
       },
 }));

@@ -11,3 +11,6 @@ dist/
 plan/
 # Local database (embedded PGlite, pnpm db:seed)
 .data/
+
+# Lighthouse CI reports (pnpm perf:lighthouse)
+.lighthouseci/

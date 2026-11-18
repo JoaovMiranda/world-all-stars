@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { SOURCES_FIXTURE } from '../test/moderation.fixture';
-import { checkSourceUrl } from './source-url.helper';
+import { checkSourceUrl, withDefaultHttps } from './source-url.helper';
 
 const check = (raw: string) => checkSourceUrl(raw, SOURCES_FIXTURE);
 
@@ -39,5 +39,20 @@ describe('checkSourceUrl (doc 21)', () => {
   it('accepts active and unknown sources without a note', () => {
     expect(check(' https://en.wikipedia.org/wiki/Pel%C3%A9 ')).toMatchObject({ ok: true, note: null, source: { name: 'Wikipedia (en)' } });
     expect(check('https://www.example-news.com/a')).toMatchObject({ ok: true, source: null, note: null });
+  });
+});
+
+describe('withDefaultHttps (Postel)', () => {
+  it('adds https:// to a bare host or path', () => {
+    expect(withDefaultHttps(' pt.wikipedia.org/wiki/Pelé ')).toBe('https://pt.wikipedia.org/wiki/Pelé');
+    expect(withDefaultHttps('www.fifa.com')).toBe('https://www.fifa.com');
+    expect(withDefaultHttps('//olympics.com/en/athletes')).toBe('https://olympics.com/en/athletes');
+  });
+  it('keeps explicit schemes and non-links for checkSourceUrl to judge', () => {
+    expect(withDefaultHttps('http://example.com')).toBe('http://example.com');
+    expect(withDefaultHttps('https://example.com')).toBe('https://example.com');
+    expect(withDefaultHttps('pele wikipedia')).toBe('pele wikipedia');
+    expect(withDefaultHttps('intranet')).toBe('intranet');
+    expect(withDefaultHttps('')).toBe('');
   });
 });

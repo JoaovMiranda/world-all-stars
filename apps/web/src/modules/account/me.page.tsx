@@ -56,9 +56,9 @@ function MeContent() {
       {({ votes, comments }) => (
         <>
           <KpiGrid columns={3} label={t.kpis}>
-            <StatTile label={t.votesKpi} value={formatNumber(votes.length)} />
-            <StatTile label={t.commentsKpi} value={formatNumber(comments.filter((c) => !c.isReply).length)} />
-            <StatTile label={t.repliesKpi} value={formatNumber(comments.filter((c) => c.isReply).length)} />
+            <StatTile label={t.votesKpi} value={votes.length} />
+            <StatTile label={t.commentsKpi} value={comments.filter((c) => !c.isReply).length} />
+            <StatTile label={t.repliesKpi} value={comments.filter((c) => c.isReply).length} />
           </KpiGrid>
           <Section title={t.votesTitle} eyebrow={formatNumber(votes.length)}>
             {votes.length ? (

@@ -9,5 +9,9 @@ export const RATE_LIMITS = {
   reaction: { windowMs: 60_000, max: 60 },
   vote: { windowMs: 60_000, max: 30 },
   contact: { windowMs: 3_600_000, max: 5 },
+  /** RUM beacons (POST /api/vitals): a few per page view. */
+  vitals: { windowMs: 60_000, max: 30 },
+  /** Image proxy (/img/wm): only thumbnails not yet cached count (each one is a fetch to Wikimedia). */
+  imageFetch: { windowMs: 60_000, max: 120 },
 } as const;
 export type RateLimitKey = keyof typeof RATE_LIMITS;

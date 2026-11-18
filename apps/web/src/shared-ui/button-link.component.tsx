@@ -9,6 +9,8 @@ interface ButtonAnchorProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 const ButtonAnchor = forwardRef<HTMLAnchorElement, ButtonAnchorProps>(function ButtonAnchor({ variant, size, className, ...rest }, ref) {
+  // Content arrives through `rest.children` (the router link passes it along).
+  // oxlint-disable-next-line jsx-a11y/anchor-has-content
   return <a ref={ref} className={buttonClass(variant, size, className)} {...rest} />;
 });
 

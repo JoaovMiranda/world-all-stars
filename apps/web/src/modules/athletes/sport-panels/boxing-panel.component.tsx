@@ -38,7 +38,7 @@ function BoxingPanel({ stats }: { profile: AthleteProfile; stats: BoxingStats })
       eyebrow={T.recordLabel(stats.pro_debut ? formatDate(stats.pro_debut) : D, stats.last_fight ? formatDate(stats.last_fight) : D)}
     >
       <div className="panel-split">
-        <ChartContainer option={option} ariaLabel={T.recordChart} height={240} summary={`${r.wins}-${r.losses}-${r.draws}`} />
+        <ChartContainer option={option} ariaLabel={T.recordChart} height={240} summary={`${T.fightsCenter(r.fights).replace('\n', ' ')}: ${T.winsKo} ${r.wins_ko}, ${T.winsDecision} ${r.wins - r.wins_ko}, ${T.losses} ${r.losses}, ${T.noContest} ${r.no_contests}`} />
         <div>
           <FactList
             variant="split"

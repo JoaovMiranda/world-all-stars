@@ -2,11 +2,11 @@
 @layer components {
   .home-intro { padding: 72px 0 40px; border-bottom: 1px solid var(--border); box-shadow: 0 3px 0 -2px var(--border); margin-bottom: 40px; text-align: center; }
   .home-intro .ornament { max-width: 420px; margin: 0 auto; color: var(--accent-text); }
-  .home-intro h1 { font-size: clamp(36px, 6.4vw, 76px); font-weight: 500; line-height: 1.04; max-width: 980px; margin: 22px auto 0; }
+  .home-intro h1 { font-size: clamp(2.25rem, 6.4vw, 4.75rem); font-weight: 500; line-height: 1.04; max-width: 980px; margin: 22px auto 0; }
   .home-intro h1 em { font-style: italic; color: var(--accent-text); }
-  .home-intro-sub { max-width: 600px; margin: 20px auto 0; font-size: 17px; }
+  .home-intro-sub { max-width: 600px; margin: 20px auto 0; font-size: 1.0625rem; }
   .home-intro-actions { justify-content: center; margin-top: 32px; gap: 12px; }
-  .home-intro-note { min-height: 1.6em; margin-top: 12px; font-size: 13px; color: var(--muted); }
+  .home-intro-note { min-height: 1.6em; margin-top: 12px; font-size: 0.8125rem; color: var(--muted); }
   @media (max-width: 600px) { .home-intro { padding: 44px 0 28px; } .home-intro-actions .btn { width: 100%; white-space: normal; } }
 
   /* Globe */
@@ -20,29 +20,41 @@
   .country { stroke: var(--surface); stroke-width: .5; cursor: pointer; transition: fill var(--t-fast); }
   .country:hover { fill: var(--primary-hover) !important; }
   .country.sel { fill: var(--accent) !important; }
-  .globe-hint { text-align: center; color: var(--muted); font-size: 12px; margin-top: 4px; min-height: 1.6em; }
+  .globe-hint { text-align: center; color: var(--muted); font-size: 0.75rem; margin-top: 4px; min-height: 1.6em; }
   .globe-panel { display: grid; gap: 14px; min-width: 0; }
   .globe-selected { padding-bottom: 14px; border-bottom: 1px solid var(--border); }
   .globe-bars { display: grid; gap: 8px; margin: 12px 0; }
-  .globe-bar { display: grid; grid-template-columns: 110px 1fr 30px; gap: 8px; align-items: center; font-size: 13px; }
+  .globe-bar { display: grid; grid-template-columns: 110px 1fr 30px; gap: 8px; align-items: center; font-size: 0.8125rem; }
   .globe-bar .track { height: 6px; background: var(--surface-2); overflow: hidden; }
-  .globe-bar .fill { height: 100%; background: var(--primary); }
-  .globe-legend { display: flex; align-items: center; gap: 8px; justify-content: center; margin-top: 12px; font-size: 11px; color: var(--muted); }
+  .globe-bar .fill { height: 100%; background: var(--primary); transition: width var(--dur-5) var(--ease-settle); transition-delay: calc(var(--i, 0) * 50ms); }
+  /* Barras crescem do zero em cascata (também ao trocar de país). */
+  @starting-style { .globe-bar .fill { width: 0 !important; } }
+  .globe-legend { display: flex; align-items: center; gap: 8px; justify-content: center; margin-top: 12px; font-size: 0.6875rem; color: var(--muted); }
   .globe-legend-ramp { width: 96px; height: 8px; border-radius: var(--r-pill); border: 1px solid var(--border); background: linear-gradient(90deg, var(--land), var(--primary)); }
 
   /* Today in history */
   .otd-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; align-items: start; }
   @media (max-width: 760px) { .otd-layout { grid-template-columns: minmax(0, 1fr); } }
-  .otd-date { font: 500 40px/1.1 var(--font-display); margin-bottom: 6px; }
+  .otd-date { font: 500 2.5rem/1.1 var(--font-display); margin-bottom: 6px; }
+  /* A data "carimba" (squash) quando a seção chega. */
+  [data-reveal="in"] .otd-date { animation: otd-stamp var(--dur-5) var(--ease-snap) 150ms both; }
+  @keyframes otd-stamp { from { opacity: 0; transform: scale(1.18, .82); } 60% { opacity: 1; transform: scale(.97, 1.04); } }
+  /* Calendário: as células acendem em diagonal. */
+  [data-reveal="pending"] .cal-cell { opacity: 0; }
+  [data-reveal="in"] .cal-cell { animation: cal-cell-in var(--dur-4) var(--ease-cinematic) both; animation-delay: calc(200ms + var(--cd, 0) * 28ms); }
+  @keyframes cal-cell-in { from { opacity: 0; transform: translateY(6px) scale(.96); } }
+  /* Títulos de seção: o cabeçalho (com o filete) se desenha da esquerda antes do conteúdo subir. */
+  [data-reveal="pending"] :is(.card-head, .greats-head, .sports-head) { clip-path: inset(0 100% 0 0); }
+  [data-reveal="in"] :is(.card-head, .greats-head, .sports-head) { transition: clip-path var(--dur-6) var(--ease-cinematic) 80ms; }
   .otd-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
   @media (max-width: 760px) { .otd-list { grid-template-columns: minmax(0, 1fr); } }
   .otd-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); }
   .otd-item b { display: block; font-weight: 600; }
   .otd-item small { color: var(--muted); }
-  .otd-year { margin-left: auto; font: 600 20px var(--font-display); color: var(--accent-text); }
-  .observance { display: flex; gap: 10px; align-items: flex-start; background: var(--surface-2); border-radius: var(--r-md); padding: 10px 12px; margin-top: 12px; font-size: 14px; }
+  .otd-year { margin-left: auto; font: 600 1.25rem var(--font-display); color: var(--accent-text); }
+  .observance { display: flex; gap: 10px; align-items: flex-start; background: var(--surface-2); border-radius: var(--r-md); padding: 10px 12px; margin-top: 12px; font-size: 0.875rem; }
   .observance .mark { color: var(--accent-text); }
-  .observance-empty { color: var(--muted); font-size: 13px; }
+  .observance-empty { color: var(--muted); font-size: 0.8125rem; }
 
   /* Hall of Greats band (always-dark stage, tokens from .theme-stage) */
   .greats { border-radius: var(--r-lg); padding: 24px; border: 1px solid var(--border); box-shadow: inset 0 0 0 4px var(--midnight), inset 0 0 0 5px color-mix(in oklab, var(--accent) 35%, transparent); }
@@ -57,14 +69,91 @@
   @media (max-width: 520px) { .greats-pedestals { display: none; } }
   .great-card { display: block; border-radius: var(--r-lg); overflow: hidden; border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box; color: var(--text); transition: border-color var(--t-fast); }
   .great-card:hover { text-decoration: none; }
+  /* Inclui transform/box-shadow da inclinação (.tilt) e a borda: esta regra carrega depois e substituiria a lista. */
+  .great-card { transition: opacity var(--dur-3) var(--ease-out), filter var(--dur-3) var(--ease-out), transform var(--dur-4) var(--ease-out), box-shadow var(--dur-3) var(--ease-out), border-color var(--t-fast); }
+  @media (hover: hover) { .greats-grid:has(.great-card:hover) .great-card:not(:hover) { opacity: .55; filter: saturate(.6); } }   /* holofote */
   .great-card:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
   .great-card-plain { background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(var(--accent), var(--accent)) border-box; }
-  .great-card .photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface-2); display: grid; place-items: center; font: 700 34px var(--font-display); color: var(--muted); }
+  .great-card .photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface-2); display: grid; place-items: center; font: 700 2.125rem var(--font-display); color: var(--muted); }
   .great-card .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
   .great-card .body { padding: 14px; }
-  .great-card h3 { font-size: 18px; }
-  .great-card p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .great-card h3 { font-size: 1.125rem; }
+  .great-card p { font-size: 0.8125rem; color: var(--muted); margin-top: 6px; }
 
   /* Sports */
   .sports-head { margin: 8px 0 14px; }
+  .random-diamond { display: inline-block; font-size: 0.6875rem; line-height: 1; }
+
+  /* ───────── Palco dos Míticos (home-stage.component) ─────────
+     Sempre escuro, sangra até as bordas. Camadas: fundo (faixas de retratos, véu, holofote, ◆) e conteúdo. */
+  .stage-pause { position: absolute; z-index: 3; right: 16px; bottom: 16px; color: var(--muted); }
+  .home-stage { position: relative; isolation: isolate; overflow: hidden; margin-inline: calc(50% - 50vw); margin-top: -1px; margin-bottom: 40px;
+    min-height: min(86vh, 860px); display: grid; place-items: center; padding: 72px max(16px, calc(50vw - 584px)) 56px; text-align: center; --sx: 50%; --sy: 40%; }
+  .stage-bg { position: absolute; inset: 0; z-index: -1; display: grid; align-content: center; gap: 18px; }
+  .stage-reel { display: flex; gap: 18px; width: max-content; animation: stage-reel 80s linear infinite; }
+  .stage-reel-rev { animation-direction: reverse; animation-duration: 95s; margin-left: -90px; }
+  .home-stage:hover .stage-reel, .home-stage.is-offscreen .stage-reel { animation-play-state: paused; }
+  @keyframes stage-reel { to { transform: translateX(-50%); } }
+  .stage-face { margin: 0; width: 180px; aspect-ratio: 4 / 5; border-radius: var(--r-lg); overflow: hidden; flex: none; background: var(--surface-2);
+    filter: grayscale(1) brightness(.42) contrast(1.1); transition: filter var(--dur-5) var(--ease-cinematic), transform var(--dur-5) var(--ease-cinematic); }
+  .stage-face img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; display: block; }
+  .stage-face:hover { filter: grayscale(0) brightness(.95); transform: scale(1.04); }
+  .stage-veil { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 62% 58% at 50% 48%, color-mix(in oklab, var(--midnight) 90%, transparent), color-mix(in oklab, var(--midnight) 60%, transparent) 75%),
+                linear-gradient(var(--midnight), transparent 18%, transparent 82%, var(--midnight)); }
+  /* Holofote: segue o mouse devagar (a transição suaviza o salto entre frames). */
+  .stage-spot { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+    background: radial-gradient(circle 360px at var(--sx) var(--sy), color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%); transition: background-position var(--dur-5) var(--ease-cinematic); }
+  /* ◆ sobem em arco: o pai sobe em linha reta, o filho oscila de lado (dois movimentos = curva). */
+  .stage-spark { position: absolute; left: var(--x); bottom: -20px; color: var(--accent); font-size: 0.625rem; opacity: 0; pointer-events: none;
+    animation: spark-rise var(--dur) linear var(--delay) infinite; }
+  .stage-spark > span { display: block; animation: spark-sway calc(var(--dur) / 2) var(--ease-in-out) var(--delay) infinite alternate; text-shadow: 0 0 8px currentColor; }
+  @keyframes spark-rise { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: .9; } 80% { opacity: .5; } 100% { transform: translateY(calc(-1 * min(86vh, 860px))); opacity: 0; } }
+  @keyframes spark-sway { from { transform: translateX(0) rotate(0); } to { transform: translateX(var(--drift)) rotate(180deg); } }
+
+  .stage-content { position: relative; max-width: 980px; display: grid; justify-items: center; }
+  .stage-content .ornament { max-width: 420px; width: 100%; color: var(--accent-text); animation: stage-fade var(--dur-5) var(--ease-cinematic) both; }
+  .home-stage h1 { font-size: clamp(2.375rem, 6.6vw, 5.25rem); font-weight: 500; line-height: 1.04; margin: 22px auto 0; color: var(--text); }
+  /* Título monta palavra por palavra: cada palavra sobe de dentro da própria máscara. */
+  .home-stage h1 .w { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .08em; margin-bottom: -.08em; }
+  .home-stage h1 .w > span { display: inline-block; animation: word-in var(--dur-5) var(--ease-cinematic) both; animation-delay: calc(120ms + var(--w) * 70ms); }
+  @keyframes word-in { from { transform: translateY(105%); } }
+  /* O gradiente vai em cada palavra (não no <em>): o recorte de texto não atravessa as palavras animadas. */
+  .home-stage h1 em { font-style: italic; }
+  .home-stage h1 em .w { padding-right: .06em; }
+  .home-stage h1 .w > .w-tail { font-style: normal; }
+  .home-stage h1 em .w > span:not(.w-tail) { color: transparent; -webkit-background-clip: text; background-clip: text;
+    background-image: linear-gradient(100deg, var(--accent-text) 40%, var(--primary-hover) 50%, var(--accent-text) 60%); background-size: 300% 100%; background-position: 0 0;
+    animation: word-in var(--dur-5) var(--ease-cinematic) calc(120ms + var(--w) * 70ms) both, em-sheen 1.6s var(--ease-in-out) 1.1s both; }
+  @keyframes em-sheen { from { background-position: 100% 0; } to { background-position: 0 0; } }
+  .stage-sub { max-width: 620px; margin: 22px auto 0; font-size: 1.0625rem; color: var(--muted); animation: stage-fade var(--dur-5) var(--ease-cinematic) .7s both; }
+  .home-stage .home-intro-actions { animation: stage-fade var(--dur-5) var(--ease-cinematic) .85s both; }
+  .home-stage .home-intro-actions .btn-primary { min-height: 52px; padding-inline: 26px; font-size: 0.8125rem; box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 50%, transparent); }
+  .home-stage .home-intro-actions .btn-primary:hover { box-shadow: 0 0 28px -4px color-mix(in oklab, var(--primary) 60%, transparent); }
+  @keyframes stage-fade { from { opacity: 0; transform: translateY(12px); } }
+
+  /* Números do acervo: contam ao aparecer; finos filetes dourados entre eles. */
+  .stage-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 40px 0 0; width: min(760px, 100%); border-top: 1px solid var(--border); padding-top: 20px;
+    animation: stage-fade var(--dur-5) var(--ease-cinematic) 1s both; }
+  .stage-stats > div { display: flex; flex-direction: column-reverse; gap: 2px; padding: 0 12px; border-left: 1px solid var(--border); }
+  .stage-stats > div:first-child { border-left: 0; }
+  .stage-stats dd { margin: 0; font-size: clamp(1.75rem, 3.6vw, 2.75rem); color: var(--text); }
+  .stage-stats dt { font: 600 0.6875rem var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--accent-text); }
+  @media (max-width: 600px) {
+    .home-stage { min-height: 0; padding-top: 48px; }
+    .stage-face { width: 120px; }
+    .stage-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 18px; }
+    .stage-stats > div:nth-child(3) { border-left: 0; }
+  }
+
+  /* Scroll: o conteúdo sai mais rápido que o fundo (parallax de 2 camadas) e uma linha de progresso nasce no topo. */
+  .home-progress { position: fixed; z-index: 40; left: 0; right: 0; top: var(--header-h); height: 2px; background: var(--grad); transform-origin: left; transform: scaleX(0); pointer-events: none; display: none; }
+  @supports (animation-timeline: scroll()) {
+    .home-progress { display: block; animation: home-progress linear both; animation-timeline: scroll(root); }
+    @keyframes home-progress { to { transform: scaleX(1); } }
+    .stage-content { animation: stage-out linear both; animation-timeline: view(); animation-range: exit 0% exit 90%; }
+    .stage-bg { animation: stage-bg-out linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+    @keyframes stage-out { to { opacity: 0; transform: translateY(-90px) scale(.97); } }
+    @keyframes stage-bg-out { to { transform: translateY(70px) scale(1.06); opacity: .4; } }
+  }
 }

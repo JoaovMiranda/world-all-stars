@@ -31,7 +31,7 @@ export function SessionMenu() {
 
   return (
     <div className="menu" ref={root}>
-      <Button variant={isSignedIn ? 'secondary' : 'primary'} className="session-btn" {...menu.buttonProps} aria-haspopup="true" aria-label={user ? t.accountMenu(user.name) : undefined}>
+      <Button variant={isSignedIn ? 'secondary' : 'primary'} className="session-btn" {...menu.buttonProps} aria-label={user ? t.accountMenu(user.name) : undefined}>
         {user?.avatarUrl && <img className="session-avatar" src={user.avatarUrl} alt="" referrerPolicy="no-referrer" />}
         {user?.name.split(' ')[0] ?? t.signIn} <span aria-hidden="true">▾</span>
       </Button>
@@ -63,7 +63,7 @@ export function SessionMenu() {
               <p className="menu-hint">{t.hint}</p>
               <div role="group" aria-label={t.menuLabel}>
                 {SESSION_KIND_VALUES.map((k) => (
-                  <button key={k} type="button" className="menu-item" aria-checked={k === kind} role="menuitemradio" onClick={() => { setKind(k); menu.close(); }}>
+                  <button key={k} type="button" className="menu-item" aria-pressed={k === kind} onClick={() => { setKind(k); menu.close(); }}>
                     {t.profiles[k]}
                   </button>
                 ))}

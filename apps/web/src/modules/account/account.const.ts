@@ -1,4 +1,4 @@
-import { ACCOUNT_DELETE_CONFIRMATION, type ConsentPurpose, type LegalDocumentKind, type NotificationKind, defineMessages } from '@was/shared';
+import { type ConsentPurpose, type LegalDocumentKind, type NotificationKind, defineMessages } from '@was/shared';
 
 import { ACCOUNT_TEXT_EN } from './account.const.en';
 import { ACCOUNT_TEXT_ES } from './account.const.es';
@@ -94,7 +94,7 @@ export const ACCOUNT_TEXT = {
     deleteDialogKicker: 'Ação permanente',
     deleteDialogTitle: 'Excluir a conta?',
     deleteDialogText: 'Seu nome e e-mail serão removidos e você sairá da conta. Comentários e votos ficam sob um pseudônimo.',
-    deleteConfirmLabel: `Digite ${ACCOUNT_DELETE_CONFIRMATION} para confirmar`,
+    deleteConfirmLabel: (word: string) => `Digite ${word} para confirmar`,
     deleteCancel: 'Cancelar',
     deleteConfirm: 'Excluir definitivamente',
     deleting: 'Excluindo…',

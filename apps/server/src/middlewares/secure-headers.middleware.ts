@@ -11,7 +11,7 @@ const COMMON = { referrerPolicy: 'strict-origin-when-cross-origin', xFrameOption
 export const apiSecureHeaders = (): MiddlewareHandler<HonoEnv> =>
   secureHeaders({ ...COMMON, contentSecurityPolicy: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } });
 
-/** Images are links to Wikimedia (doc 02: never copied); fonts from Google Fonts. */
+/** Images are links to Wikimedia (doc 02: never copied); fonts are self-hosted (/assets). */
 const IMG_SRC = ["'self'", 'data:', 'https://upload.wikimedia.org', 'https://thumb.wikimedia.org', 'https://commons.wikimedia.org', 'https://lh3.googleusercontent.com' /* Google profile photos */];
 
 /**
@@ -27,9 +27,9 @@ export const pageSecureHeaders = ({ dev }: { dev: boolean }): MiddlewareHandler<
   const directives = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'`,
-    `style-src 'self' https://fonts.googleapis.com${dev ? " 'unsafe-inline'" : ` 'nonce-${nonce}'`}`,
+    `style-src 'self'${dev ? " 'unsafe-inline'" : ` 'nonce-${nonce}'`}`,
     "style-src-attr 'unsafe-inline'",
-    'font-src https://fonts.gstatic.com',
+    "font-src 'self'",
     `img-src ${IMG_SRC.join(' ')}`,
     `connect-src 'self'${dev ? ' ws: wss:' : ''}`,
     // Dev: the Vite client pings the restarted server from a blob SharedWorker.

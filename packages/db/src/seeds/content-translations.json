@@ -1,0 +1,5583 @@
+{
+  "about": "en/es of the catalog content (scripts/translations/content-translations.mjs). source: wikidata:<QID> = names from Wikidata labels; manual = translated by hand.",
+  "tables": {
+    "athlete_translations": {
+      "019a3f2c-7d00-7000-8000-00000000007f": {
+        "ref": "pele",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Considerado por muitos o maior jogador de futebol de todos os tempos. Único atleta tricampeão mundial como jogador (1958, 1962 e 1970), defendeu o Santos por quase duas décadas e levou o futebol aos Estados Unidos pelo New York Cosmos."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000152": {
+        "ref": "michael-phelps",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "O atleta mais condecorado da história olímpica, com 28 medalhas (23 de ouro). Em Pequim 2008 ganhou 8 ouros numa só edição, superando os 7 de Mark Spitz em 1972. Treinado desde os 11 anos por Bob Bowman no North Baltimore Aquatic Club."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000224": {
+        "ref": "mike-tyson",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Aos 20 anos tornou-se o mais jovem campeão mundial dos pesados da história (1986) e, em 1987, o primeiro a unificar os cinturões WBA, WBC e IBF. Seu estilo agressivo e os nocautes rápidos fizeram dele um dos lutadores mais conhecidos de todos os tempos."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000293": {
+        "ref": "fallen",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Capitão e AWPer da Luminosity e da SK Gaming, levou o Brasil a dois Majors seguidos em 2016 (MLG Columbus e ESL One Cologne). Chamado de \"Professor\", ajudou a profissionalizar o CS brasileiro com a Games Academy. Joga há mais de duas décadas, do CS 1.6 ao CS2."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000030b": {
+        "ref": "neymar",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Maior artilheiro da história da Seleção Brasileira desde 2023, quando superou Pelé. Campeão da Libertadores pelo Santos, da Champions League pelo Barcelona e da medalha de ouro olímpica no Maracanã, em 2016. Protagonizou a transferência mais cara da história, para o PSG, em 2017."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003c2": {
+        "ref": "anderson-silva",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Lutador brasileiro de MMA nascido em São Paulo, Anderson Silva conquistou o cinturão peso-médio do UFC em 2006 e o manteve por 2.457 dias, o reinado mais longo da história da organização. Fez dez defesas de título antes de perder para Chris Weidman em 2013 e entrou para o Hall da Fama do UFC em 2023."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000418": {
+        "ref": "ben-ainslie",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Velejador britânico, é o atleta mais bem-sucedido da história da vela olímpica, com medalhas em cinco Jogos seguidos (1996–2012), quatro delas de ouro, nas classes Laser e Finn. Venceu a America's Cup de 2013 como tático da Oracle Team USA e depois liderou desafios britânicos à competição."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004b1": {
+        "ref": "faker",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Lee Sang-hyeok, o Faker, é um jogador sul-coreano de League of Legends que atua como mid laner da T1 (antiga SK Telecom T1) desde a estreia, em 2013. Recordista com seis títulos mundiais e dez títulos da LCK, também venceu duas vezes o Mid-Season Invitational. É amplamente apontado como o maior jogador da história do jogo."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000570": {
+        "ref": "gary-hunt",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Gary Hunt é um saltador britânico, naturalizado francês em 2020, especializado em saltos de grande altura. Venceu a Red Bull Cliff Diving World Series 11 vezes e é bicampeão mundial de high diving pela World Aquatics (2015 e 2019). Ficou conhecido por introduzir saltos de altíssimo grau de dificuldade no circuito."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005bf": {
+        "ref": "hakuho",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Lutador de sumô nascido na Mongólia, promovido a yokozuna em 2007, aos 22 anos. Venceu 45 torneios da divisão makuuchi, recorde absoluto, e detém as marcas de mais vitórias na carreira e de mais títulos invictos. Aposentou-se em 2021 e naturalizou-se japonês em 2019."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000646": {
+        "ref": "levan-saginashvili",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Atleta georgiano de queda de braço, conhecido como 'Georgian Hulk', que chegou a ser o nº 1 do mundo no braço direito. Venceu o Campeonato Mundial sete vezes e o Europeu seis vezes, e conquistou o cinturão de superpesados do East vs West em 2024. Anunciou que deixaria o título vago, com retorno previsto para 2027."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000690": {
+        "ref": "magnus-carlsen",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Grande mestre norueguês que se tornou campeão mundial de xadrez em 2013 e defendeu o título quatro vezes antes de abrir mão dele em 2023. Lidera o ranking da FIDE de forma contínua desde 2011 e alcançou o rating de 2882, o mais alto da história. Também acumula vários títulos mundiais de xadrez rápido e blitz."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000737": {
+        "ref": "novak-djokovic",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Tenista sérvio profissional desde 2003, detém o recorde masculino de 24 títulos de Grand Slam em simples, dez deles no Australian Open. Foi número 1 do ranking da ATP por um recorde de 428 semanas e conquistou o ouro olímpico em Paris 2024."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007d6": {
+        "ref": "roger-gracie",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Neto de Carlos Gracie, Roger Gracie é um lutador brasileiro de jiu-jitsu nascido no Rio de Janeiro. Conquistou dez títulos mundiais da IBJJF na faixa-preta entre 2004 e 2010, três deles no absoluto, além de dois ouros e uma superluta no ADCC. Também foi campeão dos meio-pesados do ONE no MMA antes de se aposentar em 2017."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000852": {
+        "ref": "ronnie-coleman",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Fisiculturista norte-americano que venceu o Mr. Olympia oito vezes seguidas, de 1998 a 2005, dividindo o recorde de títulos com Lee Haney. Ex-policial em Arlington, no Texas, ficou conhecido pelo volume muscular e pelos treinos extremamente pesados. Somou 26 títulos profissionais da IFBB."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008ac": {
+        "ref": "saenchai",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Saenchai é um lutador tailandês de Muay Thai nascido em Maha Sarakham, seis vezes campeão do Estádio Lumpinee em quatro divisões. Eleito lutador do ano pela associação de jornalistas esportivos da Tailândia em 1999 e 2008, também conquistou cinturões mundiais da WMC e da WPMF e vários títulos da King's Cup no THAI FIGHT."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000946": {
+        "ref": "themista",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Themistoklis Bonidis, o TheMista, é um jogador grego de estratégia em tempo real, ativo em Age of Mythology desde 2007 e também competidor de Age of Empires IV. Na era Age of Mythology: Retold venceu cinco torneios S-Tier entre 2024 e 2026, incluindo o Red Bull Wololo: El Reinado e o Gameathlon 2026 em Atenas."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000096d": {
+        "ref": "tiger-woods",
+        "source": "manual",
+        "pt-BR": {
+          "short_bio": "Golfista norte-americano profissional desde 1996, venceu 15 torneios major e 82 eventos do PGA Tour, marca que divide com Sam Snead. Foi o único a deter os quatro majors ao mesmo tempo (o \"Tiger Slam\", 2000–2001) e voltou a vencer o Masters em 2019."
+        },
+        "en": {
+          "short_bio": null
+        },
+        "es": {
+          "short_bio": null
+        }
+      }
+    },
+    "athlete_milestone_translations": {
+      "019a3f2c-7d00-7000-8000-000000000132": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Três Corações (MG)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000135": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Estreia pelo Santos, com gol"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000138": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Estreia pela Seleção, com gol, contra a Argentina no Maracanã"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000013a": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Campeão mundial na Suécia, com 2 gols na final"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000013d": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "O \"gol de placa\" contra o Fluminense, no Maracanã"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000140": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Milésimo gol, de pênalti, contra o Vasco no Maracanã"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000142": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Tricampeão mundial no México, com gol na final"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000145": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Despedida da Seleção, contra a Iugoslávia"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000148": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Jogo de despedida: Cosmos × Santos"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000014a": {
+        "ref": "death",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Morre em São Paulo, aos 82 anos"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000212": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Baltimore (Maryland)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000215": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Aos 15 anos e 9 meses, o homem mais jovem a bater um recorde mundial (200 m borboleta)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000217": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "7º ouro em Pequim nos 100 m borboleta, por 0s01"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000219": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "8º ouro em Pequim: supera os 7 de Mark Spitz (1972)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000021c": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Torna-se o maior medalhista olímpico da história (19ª medalha)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000021e": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Última prova da carreira: 23º ouro olímpico, no 4×100 m medley"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000277": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce no Brooklyn, Nova York"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000027a": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Estreia profissional, com vitória por nocaute no 1º round"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000027c": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Aos 20 anos, o campeão mundial dos pesados mais jovem da história (WBC)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000027e": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Unifica WBA, WBC e IBF: campeão indiscutível"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000280": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nocauteia Michael Spinks em 91 segundos"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000282": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Perde os títulos para Buster Douglas, em Tóquio"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000284": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Recupera o cinturão WBC contra Frank Bruno"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000287": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Desclassificado na revanche contra Holyfield (a \"luta da mordida\")"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000289": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Entra para o International Boxing Hall of Fame"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000028c": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Volta aos 58 anos e perde por decisão para Jake Paul"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002f6": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Itararé (SP)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002f9": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Primeiro time internacional: compLexity Gaming"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002fb": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "MLG Columbus: primeiro título de Major do Brasil"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002fd": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Bicampeão de Major na ESL One Cologne 2016"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002ff": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Eleito o 2º melhor jogador do mundo em 2016 pela HLTV"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000301": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Campeão da ESL One Cologne 2017 e MVP do torneio"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000304": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Entra na FURIA"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003a5": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Mogi das Cruzes (SP)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003a7": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Estreia profissional pelo Santos"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003aa": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Campeão da Libertadores pelo Santos"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003ac": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Campeão da Copa das Confederações e melhor jogador do torneio"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003af": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Campeão da Champions League pelo Barcelona, com gol na final"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003b1": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Ouro olímpico no Maracanã, com o pênalti decisivo"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003b3": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Transferência mais cara da história, para o PSG"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003b6": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Supera Pelé como maior artilheiro da Seleção"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000405": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em São Paulo"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000407": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Estreia no UFC com nocaute sobre Chris Leben"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000409": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Conquista o cinturão peso-médio do UFC contra Rich Franklin"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000040b": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Fim do reinado mais longo da história do UFC (2.457 dias)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000040d": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Deixa o UFC"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000049e": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Macclesfield, Inglaterra"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004a0": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Campeão da America's Cup com a Oracle Team USA"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004a3": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Vence a Louis Vuitton Cup e leva o Reino Unido à final da America's Cup pela 1ª vez desde 1964"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000547": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Seul, Coreia do Sul"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000549": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Estreia profissional pela SK Telecom T1 2"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000054b": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Primeiro título mundial (Worlds 2013)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000054d": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Primeiro jogador a chegar a 1.000 abates na LCK"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000550": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Milésima partida profissional"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000552": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Quarto título mundial, recorde à época"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000554": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Induzido como primeiro membro do Hall of Legends"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000556": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Sexto título mundial, terceiro consecutivo"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005b0": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Londres"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000627": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Ulaanbaatar, Mongólia"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000629": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Promovido a yokozuna, o 69º da história"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000062c": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Aposentadoria oficializada pela Associação de Sumô"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000067d": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Tbilisi, Geórgia"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000067f": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Conquista o cinturão de superpesados do East vs West contra Devon Larratt"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000717": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Tønsberg, Noruega"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000071a": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Início do reinado contínuo como nº 1 do mundo"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000071c": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Conquista o título mundial clássico contra Anand"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007ba": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Belgrado"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007bd": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "102º título da carreira (China Open)"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000833": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce no Rio de Janeiro"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000836": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Campeão inaugural dos meio-pesados do ONE"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000839": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Finaliza Buchecha e se aposenta do jiu-jitsu"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000083b": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Aposenta-se do MMA"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000089c": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Monroe, Louisiana"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000938": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Maha Sarakham"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000093a": {
+        "ref": "record",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Vence dois adversários na mesma luta no Lumpinee"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000093c": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Conquista o cinturão mundial da MTAA em Los Angeles"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000962": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nascimento"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000964": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Vence o Red Bull Wololo: El Reinado, primeira competição de Age of Mythology: Retold"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009ef": {
+        "ref": "birth",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Nasce em Cypress, Califórnia"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009f1": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Primeiro major: o Masters, com recorde de 12 tacadas de vantagem"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009f3": {
+        "ref": "title",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Volta a vencer o Masters, 15º major"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009f6": {
+        "ref": "career",
+        "source": "manual",
+        "pt-BR": {
+          "title": "Grave acidente de carro e cirurgia na perna direita"
+        },
+        "en": {
+          "title": null
+        },
+        "es": {
+          "title": null
+        }
+      }
+    },
+    "sport_translations": {
+      "019a3f2c-7d00-7000-8000-000000000050": {
+        "ref": "futebol",
+        "source": "wikidata:Q2736+manual",
+        "pt-BR": {
+          "name": "Futebol",
+          "description": "Esporte coletivo em que duas equipes de onze jogadores tentam colocar a bola no gol adversário usando principalmente os pés. É o esporte mais popular do planeta.",
+          "rules_summary": "Partidas de 90 minutos em dois tempos. Vence quem marcar mais gols; em mata-mata pode haver prorrogação e pênaltis.",
+          "pinnacle": "Copa do Mundo da FIFA e UEFA Champions League"
+        },
+        "en": {
+          "name": "Football",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Fútbol",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000006a": {
+        "ref": "xadrez",
+        "source": "wikidata:Q718+manual",
+        "pt-BR": {
+          "name": "Xadrez",
+          "description": "Jogo de estratégia entre dois jogadores em um tabuleiro de 64 casas. A FIDE controla o rating oficial; plataformas privadas criam circuitos paralelos milionários.",
+          "rules_summary": "Vence quem der xeque-mate. Modalidades por ritmo: clássico, rápido e blitz.",
+          "pinnacle": "Campeonato Mundial de Xadrez da FIDE"
+        },
+        "en": {
+          "name": "Chess",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Ajedrez",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000157": {
+        "ref": "natacao",
+        "source": "wikidata:Q31920+manual",
+        "pt-BR": {
+          "name": "Natação",
+          "description": "Provas de velocidade na água em quatro estilos (livre, costas, peito e borboleta), além do medley e dos revezamentos, em piscinas de 50 m e 25 m.",
+          "rules_summary": "Vence o menor tempo. Piscinas homologadas pela federação fazem os tempos valerem para rankings e índices olímpicos.",
+          "pinnacle": "Medalha de ouro olímpica"
+        },
+        "en": {
+          "name": "Swimming",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Natación",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000229": {
+        "ref": "boxe",
+        "source": "wikidata:Q32112+manual",
+        "pt-BR": {
+          "name": "Boxe",
+          "description": "Combate de socos entre dois lutadores da mesma categoria de peso. Quatro organizações rivais concedem cinturões mundiais.",
+          "rules_summary": "Até 12 rounds de 3 minutos. Vitória por nocaute, nocaute técnico, desqualificação ou decisão dos juízes.",
+          "pinnacle": "Campeão indiscutível (os 4 cinturões ao mesmo tempo)"
+        },
+        "en": {
+          "name": "Boxing",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Boxeo",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000029b": {
+        "ref": "counter-strike",
+        "source": "wikidata:Q1062474+manual",
+        "pt-BR": {
+          "name": "Counter-Strike",
+          "description": "Jogo de tiro tático em equipes de cinco. Ligas privadas organizam o calendário; a Valve dita as regras e o ranking.",
+          "rules_summary": "Partidas em melhor de 24 rounds (MR12 no CS2), com economia por round.",
+          "pinnacle": "Vencer um Major da Valve"
+        },
+        "en": {
+          "name": "Counter-Strike",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Eriko Hara",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003bb": {
+        "ref": "esportes-indigenas",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Esportes indígenas",
+          "description": "Corrida de tora, arco e flecha, xikunahity (futebol de cabeça) e huka-huka, entre outras. Atletas defendem a honra e a cultura de suas aldeias.",
+          "rules_summary": "Regras próprias de cada etnia e modalidade; premiações com troféus e artesanato tradicional.",
+          "pinnacle": "Jogos Mundiais dos Povos Indígenas"
+        },
+        "en": {
+          "name": "Indigenous sports",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": null,
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003c6": {
+        "ref": "mma",
+        "source": "wikidata:Q114466+manual",
+        "pt-BR": {
+          "name": "MMA",
+          "description": "Artes marciais mistas: golpes em pé e luta no chão. Empresas privadas comandam o esporte profissional, por isso ele não é olímpico.",
+          "rules_summary": "Rounds de 5 minutos (3 ou 5 rounds). Vitória por nocaute, finalização ou decisão.",
+          "pinnacle": "Cinturão linear do UFC"
+        },
+        "en": {
+          "name": "Mixed martial arts",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Artes marciales mixtas",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000041d": {
+        "ref": "vela",
+        "source": "wikidata:Q192520+manual",
+        "pt-BR": {
+          "name": "Vela",
+          "description": "Regatas de barcos a vela, divididas por classes de barco. A federação define quais classes vão às Olimpíadas.",
+          "rules_summary": "Pontuação por posição em cada regata da série; vence quem soma menos pontos, com descarte do pior resultado.",
+          "pinnacle": "Medalha de ouro olímpica ou America's Cup"
+        },
+        "en": {
+          "name": "Sailing",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Navegación a vela",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004b6": {
+        "ref": "league-of-legends",
+        "source": "wikidata:Q223341+manual",
+        "pt-BR": {
+          "name": "League of Legends",
+          "description": "MOBA de equipes de cinco. A Riot Games controla tudo, com ligas regionais por franquia que levam ao Worlds.",
+          "rules_summary": "Destruir o Nexus adversário; séries em melhor de 1, 3 ou 5 partidas.",
+          "pinnacle": "Vencer o Worlds"
+        },
+        "en": {
+          "name": "League of Legends",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": null,
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000576": {
+        "ref": "salto-de-penhasco",
+        "source": "wikidata:Q1100917+manual",
+        "pt-BR": {
+          "name": "Salto de penhasco",
+          "description": "Saltos ornamentais de 20 a 27 metros em penhascos e plataformas. Um caso especial: a Red Bull criou o circuito e dita as regras.",
+          "rules_summary": "Juízes dão notas de execução; a dificuldade multiplica a nota.",
+          "pinnacle": "Red Bull Cliff Diving World Series"
+        },
+        "en": {
+          "name": "Cliff diving",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Flez-Cuzy",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005c3": {
+        "ref": "sumo",
+        "source": "wikidata:Q11420+manual",
+        "pt-BR": {
+          "name": "Sumô",
+          "description": "Luta tradicional japonesa. O sumô profissional é um monopólio cultural e religioso que só existe no Japão.",
+          "rules_summary": "Perde quem sair do círculo (dohyō) ou tocar o chão com qualquer parte do corpo além da sola dos pés.",
+          "pinnacle": "Alcançar a graduação de Yokozuna"
+        },
+        "en": {
+          "name": "Sumo",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Judo",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000064b": {
+        "ref": "queda-de-braco",
+        "source": "wikidata:Q1138329+manual",
+        "pt-BR": {
+          "name": "Queda de braço",
+          "description": "Duelo de força de braço sobre uma mesa. A federação amadora cuida da base; a elite ganha nome nas superlutas profissionais.",
+          "rules_summary": "Supermatches em vários rounds contra o mesmo rival; vence quem leva o braço adversário ao apoio.",
+          "pinnacle": "Cinturão superpesado da East vs West"
+        },
+        "en": {
+          "name": "Arm wrestling",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": null,
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000073c": {
+        "ref": "tenis",
+        "source": "wikidata:Q847+manual",
+        "pt-BR": {
+          "name": "Tênis",
+          "description": "Duelo de raquetes em quadra dividida por rede, em simples ou duplas. A elite joga os circuitos comerciais ATP e WTA.",
+          "rules_summary": "Pontos, games e sets; partidas em melhor de 3 ou 5 sets nos Grand Slams masculinos.",
+          "pinnacle": "Vencer um Grand Slam"
+        },
+        "en": {
+          "name": "Tennis",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Tenis",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007d9": {
+        "ref": "jiu-jitsu",
+        "source": "wikidata:Q217434+manual",
+        "pt-BR": {
+          "name": "Jiu-jitsu",
+          "description": "Luta de solo baseada em alavancas, estrangulamentos e chaves. Não há federação dona do esporte: o prestígio vem dos campeonatos mais difíceis.",
+          "rules_summary": "Vitória por finalização, pontos ou vantagens; com quimono (IBJJF) ou sem (ADCC).",
+          "pinnacle": "Mundial absoluto faixa-preta (IBJJF) ou ADCC"
+        },
+        "en": {
+          "name": "Brazilian jiu-jitsu",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Grant Wood",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000855": {
+        "ref": "fisiculturismo",
+        "source": "wikidata:Q124100+manual",
+        "pt-BR": {
+          "name": "Fisiculturismo",
+          "description": "Competição de estética física julgada por um painel. A elite busca o cartão profissional das ligas norte-americanas.",
+          "rules_summary": "Juízes avaliam massa muscular, simetria, definição e apresentação em poses obrigatórias.",
+          "pinnacle": "Vencer o Mr. Olympia"
+        },
+        "en": {
+          "name": "Bodybuilding",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Culturismo",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008af": {
+        "ref": "muay-thai",
+        "source": "wikidata:Q192924+manual",
+        "pt-BR": {
+          "name": "Muay thai",
+          "description": "A \"arte das oito armas\" da Tailândia: socos, chutes, joelhadas e cotoveladas. A glória está nos estádios de Bangkok.",
+          "rules_summary": "Cinco rounds de 3 minutos; vitória por nocaute ou decisão.",
+          "pinnacle": "Cinturão do Rajadamnern ou do Lumpinee"
+        },
+        "en": {
+          "name": "Muay Thai",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Tratado de Saint-Germain-en-Laye",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000094b": {
+        "ref": "age-of-mythology",
+        "source": "wikidata:Q271879+manual",
+        "pt-BR": {
+          "name": "Age of Mythology",
+          "description": "Estratégia em tempo real com mitologias. Cenário descentralizado, movido por torneios da comunidade com suporte da Microsoft.",
+          "rules_summary": "Duelos 1v1 (e times) em séries; vence quem destrói ou rende o adversário.",
+          "pinnacle": "Vencer os torneios S-Tier da comunidade"
+        },
+        "en": {
+          "name": "Age of Mythology",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Marion Lorne",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000972": {
+        "ref": "golfe",
+        "source": "wikidata:Q5377+manual",
+        "pt-BR": {
+          "name": "Golfe",
+          "description": "Completar o percurso com o menor número de tacadas. O esporte vive de circuitos privados bilionários.",
+          "rules_summary": "Torneios de 72 buracos em quatro rodadas; vence o menor total de tacadas.",
+          "pinnacle": "Vencer um dos quatro Majors (ex.: The Masters)"
+        },
+        "en": {
+          "name": "Golf",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        },
+        "es": {
+          "name": "Golf",
+          "description": null,
+          "rules_summary": null,
+          "pinnacle": null
+        }
+      }
+    },
+    "sport_group_translations": {
+      "019a3f2c-7d00-7000-8000-00000000004b": {
+        "ref": "fisico",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Físico"
+        },
+        "en": {
+          "name": "Physical"
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000065": {
+        "ref": "mental",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Mental"
+        },
+        "en": {
+          "name": "Mind"
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000296": {
+        "ref": "eletronico",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Eletrônico"
+        },
+        "en": {
+          "name": "Electronic"
+        },
+        "es": {
+          "name": null
+        }
+      }
+    },
+    "sport_subgroup_translations": {
+      "019a3f2c-7d00-7000-8000-00000000004e": {
+        "ref": "coletivos",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Coletivos"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000068": {
+        "ref": "tabuleiro",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Tabuleiro"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000155": {
+        "ref": "aquaticos",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Aquáticos"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000227": {
+        "ref": "combate",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Combate"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000299": {
+        "ref": "fps",
+        "source": "manual",
+        "pt-BR": {
+          "name": "FPS tático"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003b9": {
+        "ref": "tradicionais",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Tradicionais e indígenas"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000041b": {
+        "ref": "nauticos",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Náuticos"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004b4": {
+        "ref": "moba",
+        "source": "manual",
+        "pt-BR": {
+          "name": "MOBA"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000574": {
+        "ref": "radicais",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Radicais"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000649": {
+        "ref": "forca",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Força"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000073a": {
+        "ref": "raquete",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Raquete"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000949": {
+        "ref": "rts",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Estratégia em tempo real"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000970": {
+        "ref": "precisao",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Precisão"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      }
+    },
+    "sport_category_translations": {
+      "019a3f2c-7d00-7000-8000-000000000082": {
+        "ref": "futebol-masculino",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Masculino"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000015e": {
+        "ref": "natacao-borboleta",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Borboleta"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000017a": {
+        "ref": "natacao-100-borboleta",
+        "source": "manual",
+        "pt-BR": {
+          "name": "100 m borboleta"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000017d": {
+        "ref": "natacao-200-borboleta",
+        "source": "manual",
+        "pt-BR": {
+          "name": "200 m borboleta"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000180": {
+        "ref": "natacao-medley",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Medley"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000182": {
+        "ref": "natacao-200-medley",
+        "source": "manual",
+        "pt-BR": {
+          "name": "200 m medley"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000185": {
+        "ref": "natacao-400-medley",
+        "source": "manual",
+        "pt-BR": {
+          "name": "400 m medley"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000188": {
+        "ref": "natacao-revezamento",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Revezamento"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000018a": {
+        "ref": "natacao-4x200-livre",
+        "source": "manual",
+        "pt-BR": {
+          "name": "4×200 m livre"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000018d": {
+        "ref": "natacao-4x100-medley",
+        "source": "manual",
+        "pt-BR": {
+          "name": "4×100 m medley"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000190": {
+        "ref": "natacao-livre",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Livre"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000192": {
+        "ref": "natacao-200-livre",
+        "source": "manual",
+        "pt-BR": {
+          "name": "200 m livre"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000195": {
+        "ref": "natacao-4x100-livre",
+        "source": "manual",
+        "pt-BR": {
+          "name": "4×100 m livre"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000234": {
+        "ref": "boxe-pesado",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Peso-pesado"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002a4": {
+        "ref": "cs-csgo",
+        "source": "manual",
+        "pt-BR": {
+          "name": "CS:GO"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003d1": {
+        "ref": "mma-peso-medio",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Peso-médio"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000426": {
+        "ref": "vela-finn",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Finn (monotipo individual pesado)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000444": {
+        "ref": "vela-laser",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Laser (monotipo individual)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004bb": {
+        "ref": "lol-5v5",
+        "source": "manual",
+        "pt-BR": {
+          "name": "5x5 (Summoner's Rift)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000057c": {
+        "ref": "high-diving-masculino",
+        "source": "manual",
+        "pt-BR": {
+          "name": "High diving masculino (27 m)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005ca": {
+        "ref": "sumo-makuuchi",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Makuuchi (divisão principal)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000654": {
+        "ref": "queda-de-braco-superpesado",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Superpesado (braço direito)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000693": {
+        "ref": "xadrez-classico",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Clássico"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000006b3": {
+        "ref": "xadrez-rapido",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Rápido"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000006ca": {
+        "ref": "xadrez-blitz",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Blitz"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000745": {
+        "ref": "tenis-simples-masculino",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Simples masculino"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007e4": {
+        "ref": "bjj-faixa-preta",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Faixa-preta adulto"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000085c": {
+        "ref": "fisiculturismo-open",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Open (masculino)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008b9": {
+        "ref": "muay-thai-profissional",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Muay Thai profissional"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000952": {
+        "ref": "aom-1v1",
+        "source": "manual",
+        "pt-BR": {
+          "name": "1x1"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000979": {
+        "ref": "golfe-masculino",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Golfe masculino (profissional)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      }
+    },
+    "country_translations": {
+      "019a3f2c-7d00-7000-8000-000000000042": {
+        "ref": "BR",
+        "source": "wikidata:Q155",
+        "pt-BR": {
+          "name": "Brasil"
+        },
+        "en": {
+          "name": "Brazil"
+        },
+        "es": {
+          "name": "Brasil"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000093": {
+        "ref": "US",
+        "source": "wikidata:Q30",
+        "pt-BR": {
+          "name": "Estados Unidos"
+        },
+        "en": {
+          "name": "United States"
+        },
+        "es": {
+          "name": "Estados Unidos"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000009f": {
+        "ref": "SE",
+        "source": "wikidata:Q34",
+        "pt-BR": {
+          "name": "Suécia"
+        },
+        "en": {
+          "name": "Sweden"
+        },
+        "es": {
+          "name": "Suecia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000a6": {
+        "ref": "CL",
+        "source": "wikidata:Q298",
+        "pt-BR": {
+          "name": "Chile"
+        },
+        "en": {
+          "name": "Chile"
+        },
+        "es": {
+          "name": "Chile"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000ad": {
+        "ref": "MX",
+        "source": "wikidata:Q96",
+        "pt-BR": {
+          "name": "México"
+        },
+        "en": {
+          "name": "Mexico"
+        },
+        "es": {
+          "name": "México"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000b4": {
+        "ref": "GB",
+        "source": "wikidata:Q145",
+        "pt-BR": {
+          "name": "Reino Unido"
+        },
+        "en": {
+          "name": "United Kingdom"
+        },
+        "es": {
+          "name": "Reino Unido"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000170": {
+        "ref": "AU",
+        "source": "wikidata:Q408",
+        "pt-BR": {
+          "name": "Austrália"
+        },
+        "en": {
+          "name": "Australia"
+        },
+        "es": {
+          "name": "Australia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000176": {
+        "ref": "GR",
+        "source": "wikidata:Q41",
+        "pt-BR": {
+          "name": "Grécia"
+        },
+        "en": {
+          "name": "Greece"
+        },
+        "es": {
+          "name": "Grecia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000019a": {
+        "ref": "CN",
+        "source": "wikidata:Q148",
+        "pt-BR": {
+          "name": "China"
+        },
+        "en": {
+          "name": "China"
+        },
+        "es": {
+          "name": "República Popular China"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000001bc": {
+        "ref": "JP",
+        "source": "wikidata:Q17",
+        "pt-BR": {
+          "name": "Japão"
+        },
+        "en": {
+          "name": "Japan"
+        },
+        "es": {
+          "name": "Japón"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000001c1": {
+        "ref": "ES",
+        "source": "wikidata:Q29",
+        "pt-BR": {
+          "name": "Espanha"
+        },
+        "en": {
+          "name": "Spain"
+        },
+        "es": {
+          "name": "España"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000001c9": {
+        "ref": "CA",
+        "source": "wikidata:Q16",
+        "pt-BR": {
+          "name": "Canadá"
+        },
+        "en": {
+          "name": "Canada"
+        },
+        "es": {
+          "name": "Canadá"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000001da": {
+        "ref": "IT",
+        "source": "wikidata:Q38",
+        "pt-BR": {
+          "name": "Itália"
+        },
+        "en": {
+          "name": "Italy"
+        },
+        "es": {
+          "name": "Italia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002b3": {
+        "ref": "DE",
+        "source": "wikidata:Q183",
+        "pt-BR": {
+          "name": "Alemanha"
+        },
+        "en": {
+          "name": "Germany"
+        },
+        "es": {
+          "name": "Alemania"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000319": {
+        "ref": "FR",
+        "source": "wikidata:Q142",
+        "pt-BR": {
+          "name": "França"
+        },
+        "en": {
+          "name": "France"
+        },
+        "es": {
+          "name": "Francia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000031d": {
+        "ref": "SA",
+        "source": "wikidata:Q851",
+        "pt-BR": {
+          "name": "Arábia Saudita"
+        },
+        "en": {
+          "name": "Saudi Arabia"
+        },
+        "es": {
+          "name": "Arabia Saudí"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000391": {
+        "ref": "UY",
+        "source": "wikidata:Q77",
+        "pt-BR": {
+          "name": "Uruguai"
+        },
+        "en": {
+          "name": "Uruguay"
+        },
+        "es": {
+          "name": "Uruguay"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000433": {
+        "ref": "NZ",
+        "source": "wikidata:Q664",
+        "pt-BR": {
+          "name": "Nova Zelândia"
+        },
+        "en": {
+          "name": "New Zealand"
+        },
+        "es": {
+          "name": "Nueva Zelanda"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004aa": {
+        "ref": "KR",
+        "source": "wikidata:Q884",
+        "pt-BR": {
+          "name": "Coreia do Sul"
+        },
+        "en": {
+          "name": "South Korea"
+        },
+        "es": {
+          "name": "Corea del Sur"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005b8": {
+        "ref": "MN",
+        "source": "wikidata:Q711",
+        "pt-BR": {
+          "name": "Mongólia"
+        },
+        "en": {
+          "name": "Mongolia"
+        },
+        "es": {
+          "name": "Mongolia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000640": {
+        "ref": "GE",
+        "source": "wikidata:Q230",
+        "pt-BR": {
+          "name": "Geórgia"
+        },
+        "en": {
+          "name": "Georgia"
+        },
+        "es": {
+          "name": "Georgia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000689": {
+        "ref": "NO",
+        "source": "wikidata:Q20",
+        "pt-BR": {
+          "name": "Noruega"
+        },
+        "en": {
+          "name": "Norway"
+        },
+        "es": {
+          "name": "Noruega"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000730": {
+        "ref": "RS",
+        "source": "wikidata:Q403",
+        "pt-BR": {
+          "name": "Sérvia"
+        },
+        "en": {
+          "name": "Serbia"
+        },
+        "es": {
+          "name": "Serbia"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008a6": {
+        "ref": "TH",
+        "source": "wikidata:Q869",
+        "pt-BR": {
+          "name": "Tailândia"
+        },
+        "en": {
+          "name": "Thailand"
+        },
+        "es": {
+          "name": "Tailandia"
+        }
+      }
+    },
+    "city_translations": {
+      "019a3f2c-7d00-7000-8000-000000000078": {
+        "ref": "Q1439211",
+        "source": "wikidata:Q1439211",
+        "pt-BR": {
+          "name": "Três Corações"
+        },
+        "en": {
+          "name": "Três Corações"
+        },
+        "es": {
+          "name": "Três Corações"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000007a": {
+        "ref": "Q174",
+        "source": "wikidata:Q174",
+        "pt-BR": {
+          "name": "São Paulo"
+        },
+        "en": {
+          "name": "São Paulo"
+        },
+        "es": {
+          "name": "São Paulo"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000014e": {
+        "ref": "Q5092",
+        "source": "wikidata:Q5092",
+        "pt-BR": {
+          "name": "Baltimore"
+        },
+        "en": {
+          "name": "Baltimore"
+        },
+        "es": {
+          "name": "Baltimore"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000221": {
+        "ref": "Q18419",
+        "source": "wikidata:Q18419",
+        "pt-BR": {
+          "name": "Brooklyn"
+        },
+        "en": {
+          "name": "Brooklyn"
+        },
+        "es": {
+          "name": "Brooklyn"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000290": {
+        "ref": "Q985581",
+        "source": "wikidata:Q985581",
+        "pt-BR": {
+          "name": "Itararé"
+        },
+        "en": {
+          "name": "Itararé"
+        },
+        "es": {
+          "name": "Itararé"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000307": {
+        "ref": "Q194332",
+        "source": "wikidata:Q194332",
+        "pt-BR": {
+          "name": "Mogi das Cruzes"
+        },
+        "en": {
+          "name": "Mogi das Cruzes"
+        },
+        "es": {
+          "name": "Mogi das Cruzes"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000415": {
+        "ref": "Q868637",
+        "source": "wikidata:Q868637",
+        "pt-BR": {
+          "name": "Macclesfield"
+        },
+        "en": {
+          "name": "Macclesfield"
+        },
+        "es": {
+          "name": "Macclesfield"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004ad": {
+        "ref": "Q8684",
+        "source": "wikidata:Q8684",
+        "pt-BR": {
+          "name": "Seul"
+        },
+        "en": {
+          "name": "Seoul"
+        },
+        "es": {
+          "name": "Seúl"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000056c": {
+        "ref": "Q84",
+        "source": "wikidata:Q84",
+        "pt-BR": {
+          "name": "Londres"
+        },
+        "en": {
+          "name": "London"
+        },
+        "es": {
+          "name": "Londres"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005bb": {
+        "ref": "Q23430",
+        "source": "wikidata:Q23430",
+        "pt-BR": {
+          "name": "Ulaanbaatar"
+        },
+        "en": {
+          "name": "Ulaanbaatar"
+        },
+        "es": {
+          "name": "Ulán Bator"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000643": {
+        "ref": "Q994",
+        "source": "wikidata:Q994",
+        "pt-BR": {
+          "name": "Tbilisi"
+        },
+        "en": {
+          "name": "Tbilisi"
+        },
+        "es": {
+          "name": "Tiflis"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000068c": {
+        "ref": "Q107392",
+        "source": "wikidata:Q107392",
+        "pt-BR": {
+          "name": "Tønsberg"
+        },
+        "en": {
+          "name": "Tønsberg"
+        },
+        "es": {
+          "name": "Tønsberg"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000733": {
+        "ref": "Q3711",
+        "source": "wikidata:Q3711",
+        "pt-BR": {
+          "name": "Belgrado"
+        },
+        "en": {
+          "name": "Belgrade"
+        },
+        "es": {
+          "name": "Belgrado"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007d2": {
+        "ref": "Q8678",
+        "source": "wikidata:Q8678",
+        "pt-BR": {
+          "name": "Rio de Janeiro"
+        },
+        "en": {
+          "name": "Rio de Janeiro"
+        },
+        "es": {
+          "name": "Río de Janeiro"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000084e": {
+        "ref": "Q947115",
+        "source": "wikidata:Q947115",
+        "pt-BR": {
+          "name": "Monroe"
+        },
+        "en": {
+          "name": "Monroe"
+        },
+        "es": {
+          "name": "Monroe"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008a9": {
+        "ref": "Q468554",
+        "source": "wikidata:Q468554",
+        "pt-BR": {
+          "name": "Maha Sarakham"
+        },
+        "en": {
+          "name": "Maha Sarakham"
+        },
+        "es": {
+          "name": "Provincia de Maha Sarakham"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000969": {
+        "ref": "Q685224",
+        "source": "wikidata:Q685224",
+        "pt-BR": {
+          "name": "Cypress"
+        },
+        "en": {
+          "name": "Cypress"
+        },
+        "es": {
+          "name": "Cypress"
+        }
+      }
+    },
+    "competition_translations": {
+      "019a3f2c-7d00-7000-8000-00000000009b": {
+        "ref": "copa-do-mundo-fifa",
+        "source": "wikidata:Q19317",
+        "pt-BR": {
+          "name": "Copa do Mundo FIFA"
+        },
+        "en": {
+          "name": "FIFA World Cup"
+        },
+        "es": {
+          "name": "Copa Mundial de Fútbol"
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000b8": {
+        "ref": "copa-intercontinental",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa Intercontinental"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000be": {
+        "ref": "copa-libertadores",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa Libertadores da América"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000c4": {
+        "ref": "campeonato-brasileiro",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Brasileiro"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000d3": {
+        "ref": "nasl",
+        "source": "manual",
+        "pt-BR": {
+          "name": "North American Soccer League"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000d7": {
+        "ref": "campeonato-paulista",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Paulista"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000ed": {
+        "ref": "torneio-rio-sao-paulo",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Torneio Rio-São Paulo"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000016d": {
+        "ref": "jogos-olimpicos-natacao",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogos Olímpicos (natação)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000001ba": {
+        "ref": "mundial-de-natacao",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Esportes Aquáticos"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000240": {
+        "ref": "cinturao-wbc-pesado",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão mundial dos pesados WBC"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000247": {
+        "ref": "cinturao-wba-pesado",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão mundial dos pesados WBA"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000024d": {
+        "ref": "cinturao-ibf-pesado",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão mundial dos pesados IBF"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000254": {
+        "ref": "the-ring-pesado",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Título linear The Ring (pesados)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000263": {
+        "ref": "junior-olympics-boxe",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Junior Olympics (boxe amador)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002c4": {
+        "ref": "major-cs",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Major de Counter-Strike"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002ce": {
+        "ref": "esl-one-cologne",
+        "source": "manual",
+        "pt-BR": {
+          "name": "ESL One Cologne"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002d3": {
+        "ref": "esl-pro-league",
+        "source": "manual",
+        "pt-BR": {
+          "name": "ESL Pro League (finais)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002d8": {
+        "ref": "dreamhack-open",
+        "source": "manual",
+        "pt-BR": {
+          "name": "DreamHack Open"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000327": {
+        "ref": "jogos-olimpicos-futebol",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogos Olímpicos (futebol)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000032d": {
+        "ref": "copa-das-confederacoes",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa das Confederações"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000331": {
+        "ref": "mundial-de-clubes",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Mundial de Clubes da FIFA"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000336": {
+        "ref": "champions-league",
+        "source": "manual",
+        "pt-BR": {
+          "name": "UEFA Champions League"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000033c": {
+        "ref": "recopa-sul-americana",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Recopa Sul-Americana"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000340": {
+        "ref": "copa-do-brasil",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa do Brasil"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000346": {
+        "ref": "la-liga",
+        "source": "manual",
+        "pt-BR": {
+          "name": "La Liga"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000034c": {
+        "ref": "copa-del-rey",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa do Rei"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000354": {
+        "ref": "supercopa-espanha",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Supercopa da Espanha"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000035a": {
+        "ref": "ligue-1",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Ligue 1"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000366": {
+        "ref": "coupe-de-france",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa da França"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000036c": {
+        "ref": "coupe-de-la-ligue",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa da Liga Francesa"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000374": {
+        "ref": "saudi-pro-league",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Saudi Pro League"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003de": {
+        "ref": "cinturao-ufc-medio",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão peso-médio do UFC"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003e5": {
+        "ref": "cinturao-shooto-medio",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão peso-médio do Shooto"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000441": {
+        "ref": "jogos-olimpicos-vela",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogos Olímpicos – Vela"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000454": {
+        "ref": "americas-cup",
+        "source": "manual",
+        "pt-BR": {
+          "name": "America's Cup"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000045a": {
+        "ref": "mundial-laser",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Laser"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000462": {
+        "ref": "finn-gold-cup",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Finn Gold Cup (Mundial da classe Finn)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000476": {
+        "ref": "mundial-match-racing",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Match Racing"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004cf": {
+        "ref": "worlds-lol",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de League of Legends (Worlds)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004e6": {
+        "ref": "msi-lol",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Mid-Season Invitational (MSI)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000004ee": {
+        "ref": "lck",
+        "source": "manual",
+        "pt-BR": {
+          "name": "League of Legends Champions Korea (LCK)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000050f": {
+        "ref": "asian-games-esports",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogos Asiáticos – esports (League of Legends)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000058a": {
+        "ref": "red-bull-cliff-diving-world-series",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Red Bull Cliff Diving World Series"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005a5": {
+        "ref": "mundial-high-diving",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Esportes Aquáticos – High Diving"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000005d7": {
+        "ref": "honbasho-makuuchi",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Honbasho – Divisão Makuuchi"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000660": {
+        "ref": "world-police-fire-games",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogos Mundiais de Policiais e Bombeiros"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000665": {
+        "ref": "mundial-de-queda-de-braco",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Queda de Braço"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000066b": {
+        "ref": "europeu-de-queda-de-braco",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Europeu de Queda de Braço (EuroArm)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000671": {
+        "ref": "vendetta-all-stars",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Vendetta All Stars / Top 8"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000676": {
+        "ref": "east-vs-west",
+        "source": "manual",
+        "pt-BR": {
+          "name": "East vs West"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000069d": {
+        "ref": "mundial-de-xadrez",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Xadrez"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000006b0": {
+        "ref": "mundial-de-xadrez-rapido",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Xadrez Rápido"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000006c7": {
+        "ref": "mundial-de-xadrez-blitz",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Xadrez Blitz"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000006e7": {
+        "ref": "copa-do-mundo-de-xadrez",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Copa do Mundo de Xadrez"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000006ec": {
+        "ref": "mundial-de-xadrez-freestyle",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Xadrez Freestyle"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000752": {
+        "ref": "australian-open",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Australian Open"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000075a": {
+        "ref": "wimbledon",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Wimbledon"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000075f": {
+        "ref": "us-open",
+        "source": "manual",
+        "pt-BR": {
+          "name": "US Open"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000779": {
+        "ref": "roland-garros",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Roland Garros"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007a3": {
+        "ref": "jogos-olimpicos-tenis",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogos Olímpicos – Tênis"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007f3": {
+        "ref": "mundial-ibjjf",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Jiu-Jitsu (IBJJF)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007f8": {
+        "ref": "adcc",
+        "source": "manual",
+        "pt-BR": {
+          "name": "ADCC Submission Fighting World Championship"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000868": {
+        "ref": "mr-olympia",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Mr. Olympia"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000885": {
+        "ref": "arnold-classic",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Arnold Classic"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000088b": {
+        "ref": "ifbb-world-amateur-championships",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial Amador da IFBB"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008ca": {
+        "ref": "cinturao-lumpinee",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão do Estádio Lumpinee"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008dc": {
+        "ref": "cinturao-mtaa-mundial",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão mundial da MTAA"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008e3": {
+        "ref": "cinturao-wmc-mundial",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão mundial da WMC"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008e9": {
+        "ref": "cinturao-wbc-muaythai-diamond",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão WBC Muay Thai Diamond"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008ef": {
+        "ref": "cinturao-wpmf-mundial",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão mundial da WPMF"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000008f5": {
+        "ref": "toyota-marathon",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Torneio Toyota Marathon"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000901": {
+        "ref": "thai-fight-kings-cup",
+        "source": "manual",
+        "pt-BR": {
+          "name": "King's Cup do THAI FIGHT"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000916": {
+        "ref": "cinturao-yokkao",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão YOKKAO"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000091c": {
+        "ref": "cinturao-paba-pena",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão peso-pena da PABA (boxe)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000098b": {
+        "ref": "the-masters",
+        "source": "manual",
+        "pt-BR": {
+          "name": "The Masters"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000992": {
+        "ref": "pga-championship",
+        "source": "manual",
+        "pt-BR": {
+          "name": "PGA Championship"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000998": {
+        "ref": "us-open-golfe",
+        "source": "manual",
+        "pt-BR": {
+          "name": "US Open de Golfe"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000099e": {
+        "ref": "the-open-championship",
+        "source": "manual",
+        "pt-BR": {
+          "name": "The Open Championship"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000a09": {
+        "ref": "mundial-de-natacao-25m",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Campeonato Mundial de Natação (25 m)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000a10": {
+        "ref": "mundial-rapido-blitz",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Mundial de Xadrez Rápido e Blitz"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000a15": {
+        "ref": "trofeu-jose-finkel",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Troféu José Finkel"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      }
+    },
+    "award_translations": {
+      "019a3f2c-7d00-7000-8000-0000000000f7": {
+        "ref": "fifa-jogador-do-seculo",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogador do Século (FIFA)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000fb": {
+        "ref": "coi-atleta-do-seculo",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Atleta do Século (COI)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000000ff": {
+        "ref": "bola-de-ouro-honra",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Bola de Ouro FIFA: Prêmio de Honra"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000103": {
+        "ref": "bola-de-ouro-da-copa",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Bola de Ouro da Copa do Mundo"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000107": {
+        "ref": "melhor-jovem-da-copa",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Melhor Jogador Jovem da Copa do Mundo"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000010b": {
+        "ref": "artilheiro-paulista",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Artilheiro do Campeonato Paulista"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000001e9": {
+        "ref": "nadador-do-ano-sw",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Nadador Mundial do Ano (Swimming World)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000001fb": {
+        "ref": "nadador-do-ano-fina",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Nadador do Ano (FINA)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000202": {
+        "ref": "si-sportsman",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Sportsman of the Year (Sports Illustrated)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000269": {
+        "ref": "ring-fighter-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Lutador do Ano (The Ring)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000270": {
+        "ref": "ibhof",
+        "source": "manual",
+        "pt-BR": {
+          "name": "International Boxing Hall of Fame"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002de": {
+        "ref": "hltv-top20",
+        "source": "manual",
+        "pt-BR": {
+          "name": "HLTV Top 20 do ano"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002e6": {
+        "ref": "hltv-mvp",
+        "source": "manual",
+        "pt-BR": {
+          "name": "MVP de torneio (HLTV)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000002f1": {
+        "ref": "esports-personality",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Personalidade do Ano (Esports Awards)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000037e": {
+        "ref": "puskas",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Prêmio Puskás (FIFA)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000383": {
+        "ref": "ballon-dor",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Ballon d'Or (pódio)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000389": {
+        "ref": "bola-de-ouro-confederacoes",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Bola de Ouro da Copa das Confederações"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000038d": {
+        "ref": "melhor-libertadores",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Melhor jogador da Libertadores"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000395": {
+        "ref": "futebolista-sul-americano",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Futebolista Sul-Americano do Ano"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000039b": {
+        "ref": "bola-de-ouro-copa-america",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Melhor jogador da Copa América"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000039f": {
+        "ref": "melhor-ligue-1",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Melhor jogador da Ligue 1"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003eb": {
+        "ref": "ufc-hall-of-fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da Fama do UFC"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003f4": {
+        "ref": "wrestling-observer-mma-mvp",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Lutador de MMA Mais Valioso (Wrestling Observer)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000003fa": {
+        "ref": "fight-matrix-male-fighter-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Lutador do Ano (Fight Matrix)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000047b": {
+        "ref": "world-sailor-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Velejador do Ano da World Sailing (ISAF)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000048a": {
+        "ref": "british-yachtsman-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Iatista Britânico do Ano"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000499": {
+        "ref": "knight-bachelor",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cavaleiro (Knight Bachelor) – título de Sir"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000051a": {
+        "ref": "worlds-finals-mvp",
+        "source": "manual",
+        "pt-BR": {
+          "name": "MVP da final do Worlds"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000522": {
+        "ref": "msi-mvp",
+        "source": "manual",
+        "pt-BR": {
+          "name": "MVP do MSI"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000527": {
+        "ref": "lck-player-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogador do Ano da LCK"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000052f": {
+        "ref": "lol-hall-of-legends",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall of Legends do LoL Esports"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000534": {
+        "ref": "esl-esports-hall-of-fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da Fama dos Esports da ESL"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000053a": {
+        "ref": "tga-best-esports-athlete",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Melhor Atleta de Esports – The Game Awards"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000542": {
+        "ref": "esports-awards-pc-player-of-the-decade",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogador de PC da Década – Esports Awards"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000618": {
+        "ref": "sansho-fighting-spirit",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Sanshō – Prêmio de Espírito de Luta (Kantō-shō)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000061d": {
+        "ref": "sansho-outstanding-performance",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Sanshō – Prêmio de Desempenho Excepcional (Shukun-shō)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000622": {
+        "ref": "sansho-technique",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Sanshō – Prêmio de Técnica (Ginō-shō)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000006f2": {
+        "ref": "chess-oscar",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Oscar do Xadrez"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000703": {
+        "ref": "chesscom-player-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Jogador do Ano (Chess.com Awards)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000711": {
+        "ref": "fide-best-player-of-the-century",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Melhor jogador do século (FIDE)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007a9": {
+        "ref": "laureus-sportsman",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Prêmio Laureus de Desportista do Ano"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000829": {
+        "ref": "ibjjf-hall-of-fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da Fama da IBJJF"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000082e": {
+        "ref": "adcc-hall-of-fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da Fama do ADCC"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000891": {
+        "ref": "international-sports-hall-of-fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "International Sports Hall of Fame"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000897": {
+        "ref": "arnold-classic-lifetime-achievement",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Prêmio pelo conjunto da obra do Arnold Classic"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000923": {
+        "ref": "swat-fighter-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Lutador do Ano da Associação de Jornalistas Esportivos da Tailândia"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000092c": {
+        "ref": "sat-fighter-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Lutador do Ano da Autoridade de Esportes da Tailândia"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000931": {
+        "ref": "rajadamnern-hall-of-fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da Fama do Estádio Rajadamnern"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009c4": {
+        "ref": "si-sportsman-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Desportista do Ano da Sports Illustrated"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009c9": {
+        "ref": "pga-tour-rookie-of-the-year",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Estreante do Ano do PGA Tour"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009d8": {
+        "ref": "bbc-overseas-spoty",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Personalidade Esportiva Estrangeira do Ano da BBC"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009de": {
+        "ref": "california-hall-of-fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da Fama da Califórnia"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009e4": {
+        "ref": "ap-athlete-of-the-decade",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Atleta da Década da Associated Press"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009ea": {
+        "ref": "presidential-medal-of-freedom",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Medalha Presidencial da Liberdade"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      }
+    },
+    "observance_day_translations": {
+      "019a3f2c-7d00-7000-8000-000000000045": {
+        "ref": "dia-do-esportista",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dia do Esportista"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000048": {
+        "ref": "dia-esporte-desenvolvimento-paz",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dia Internacional do Esporte para o Desenvolvimento e a Paz"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000005c": {
+        "ref": "dia-mundial-do-futebol",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dia Mundial do Futebol"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000005f": {
+        "ref": "dia-olimpico",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dia Olímpico"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000062": {
+        "ref": "dia-nacional-do-futebol",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dia Nacional do Futebol"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000073": {
+        "ref": "dia-mundial-do-xadrez",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dia Mundial do Xadrez"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000076": {
+        "ref": "dia-esporte-universitario",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dia Internacional do Esporte Universitário"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      }
+    },
+    "greats_dossier_translations": {
+      "019a3f2c-7d00-7000-8000-000000000126": {
+        "ref": "019a3f2c-7d00-7000-8000-00000000007f",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "O jogador que transformou o futebol em linguagem universal."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000208": {
+        "ref": "019a3f2c-7d00-7000-8000-000000000152",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "Redefiniu o que é possível numa piscina e numa Olimpíada."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000561": {
+        "ref": "019a3f2c-7d00-7000-8000-0000000004b1",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "Recordista absoluto de títulos mundiais (6) e da LCK (10), primeiro tricampeão consecutivo do Worlds, primeiro membro do Hall of Legends da Riot e referência cultural reconhecida até pelo governo sul-coreano."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000637": {
+        "ref": "019a3f2c-7d00-7000-8000-0000000005bf",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "Recordista absoluto de títulos da makuuchi (45), de títulos invictos (16) e de vitórias na carreira, com recordes reconhecidos pelo Guinness; amplamente considerado o maior lutador de sumô da história."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000727": {
+        "ref": "019a3f2c-7d00-7000-8000-000000000690",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "Cinco títulos mundiais clássicos, recordes de títulos mundiais de rápido e blitz, rating mais alto da história e o mais longo reinado contínuo como nº 1 da FIDE."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007c9": {
+        "ref": "019a3f2c-7d00-7000-8000-000000000737",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "Recordista masculino de títulos de Grand Slam (24), de semanas como nº 1 (428) e de ATP Finals (7), com ouro olímpico e Laureus cinco vezes; domínio estatístico ao longo de quase duas décadas."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000845": {
+        "ref": "019a3f2c-7d00-7000-8000-0000000007d6",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "Dez títulos mundiais IBJJF na faixa-preta, ouro duplo e superluta no ADCC, nunca finalizado em 20 anos de competição e primeiro membro do Hall da Fama do ADCC; considerado por muitos o maior competidor de jiu-jitsu da história."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000009ff": {
+        "ref": "019a3f2c-7d00-7000-8000-00000000096d",
+        "source": "manual",
+        "pt-BR": {
+          "headline": "15 majors, recorde de 82 vitórias no PGA Tour e o único a deter os quatro majors simultaneamente; transformou a audiência, as premiações e até o desenho dos campos de golfe."
+        },
+        "en": {
+          "headline": null
+        },
+        "es": {
+          "headline": null
+        }
+      }
+    },
+    "greats_evidence_translations": {
+      "019a3f2c-7d00-7000-8000-000000000128": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Único jogador tricampeão da Copa do Mundo (1958, 1962 e 1970)."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000012a": {
+        "ref": "institutional_recognition",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Eleito Atleta do Século pelo COI (1999) e Jogador do Século pela FIFA (2000)."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000012c": {
+        "ref": "technique_named",
+        "source": "manual",
+        "pt-BR": {
+          "description": "A expressão \"gol de placa\" nasceu de um gol dele contra o Fluminense no Maracanã, em 1961, homenageado com uma placa no estádio."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000012e": {
+        "ref": "rule_or_market_change",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Como ministro do Esporte, deu nome à Lei 9.615/1998 (Lei Pelé), que mudou a legislação esportiva brasileira."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000130": {
+        "ref": "global_popularization",
+        "source": "manual",
+        "pt-BR": {
+          "description": "No New York Cosmos (1975–1977), foi o rosto da popularização do futebol nos Estados Unidos."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000020a": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "23 ouros olímpicos: recorde absoluto, quase o dobro do segundo colocado."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000020c": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "8 ouros em Pequim 2008, superando os 7 de Mark Spitz que duravam desde 1972."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000020e": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "39 recordes mundiais (29 individuais e 10 em revezamentos)."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000210": {
+        "ref": "rule_or_market_change",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Mudou a conversa sobre saúde mental de atletas de elite, tema do documentário \"The Weight of Gold\" (2020)."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000563": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Recordista de títulos mundiais (seis) e primeiro a vencer três Worlds consecutivos, em carreira iniciada em 2013 e ainda ativa."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000565": {
+        "ref": "institutional_recognition",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Escolhido pela Riot Games como primeiro integrante do Hall of Legends do LoL Esports."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000567": {
+        "ref": "global_popularization",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Descrito pelo Ministério da Cultura sul-coreano como o profissional mais icônico da história dos esports."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000569": {
+        "ref": "global_popularization",
+        "source": "manual",
+        "pt-BR": {
+          "description": "John Needham, presidente de esports da Riot Games, chamou-o de figura mais icônica e influente da história do LoL e dos esports."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000639": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Quebrou em 2015 o recorde de títulos de Taihō, que durava décadas, e chegou a 45 yūshō."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000063b": {
+        "ref": "institutional_recognition",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Teve seus recordes de carreira reconhecidos oficialmente pelo Guinness World Records em 2021."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000063d": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Detém 16 títulos invictos, oito a mais do que qualquer outro lutador."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000729": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Nº 1 do ranking FIDE de forma contínua desde julho de 2011, o período consecutivo mais longo da história."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000072b": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Rating máximo de 2882, o mais alto desde a criação do sistema pela FIDE em 1970."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000072d": {
+        "ref": "institutional_recognition",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Recebeu da FIDE, no centenário da entidade, o prêmio de melhor jogador do século."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007cb": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Recorde de semanas como nº 1 e de temporadas terminadas no topo do ranking."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007cd": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Recorde de títulos de Grand Slam no simples masculino."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-0000000007cf": {
+        "ref": "institutional_recognition",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Cinco prêmios Laureus de Desportista do Ano, empatado com Federer como recordista."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000847": {
+        "ref": "institutional_recognition",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Primeiro atleta induzido ao Hall da Fama do ADCC (2021)."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000849": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Nunca foi finalizado em duas décadas de competição."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000084b": {
+        "ref": "global_popularization",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Considerado por muitos o maior competidor de jiu-jitsu de todos os tempos."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000a01": {
+        "ref": "decades_record",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Recorde de vitórias no PGA Tour e único a deter os quatro majors de uma vez."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000a03": {
+        "ref": "rule_or_market_change",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Campos do circuito foram alongados para conter sua vantagem (\"Tiger-proofing\")."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000a05": {
+        "ref": "global_popularization",
+        "source": "manual",
+        "pt-BR": {
+          "description": "Creditado por elevar premiações e as maiores audiências de TV da história do golfe."
+        },
+        "en": {
+          "description": null
+        },
+        "es": {
+          "description": null
+        }
+      }
+    },
+    "governance_model_translations": {
+      "019a3f2c-7d00-7000-8000-000000000022": {
+        "ref": "pyramid",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Pirâmide tradicional única",
+          "summary": "Uma federação dita as regras de cima para baixo; só vale o que está dentro do sistema oficial."
+        },
+        "en": {
+          "name": null,
+          "summary": null
+        },
+        "es": {
+          "name": null,
+          "summary": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000023": {
+        "ref": "condominium",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Condomínio de associações",
+          "summary": "Ligas e associações comerciais dividem o poder e o calendário com a federação."
+        },
+        "en": {
+          "name": null,
+          "summary": null
+        },
+        "es": {
+          "name": null,
+          "summary": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000024": {
+        "ref": "free_market",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Livre mercado",
+          "summary": "Organizações e empresas rivais criam seus próprios cinturões, rankings e circuitos."
+        },
+        "en": {
+          "name": null,
+          "summary": null
+        },
+        "es": {
+          "name": null,
+          "summary": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000025": {
+        "ref": "publisher",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Pirâmide invertida (dona da marca)",
+          "summary": "Uma empresa é dona do jogo ou do formato e controla regras e calendário."
+        },
+        "en": {
+          "name": null,
+          "summary": null
+        },
+        "es": {
+          "name": null,
+          "summary": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000026": {
+        "ref": "cultural",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Identidade e cultura",
+          "summary": "O esporte existe para preservar tradições; prestígio e honra valem mais que dinheiro."
+        },
+        "en": {
+          "name": null,
+          "summary": null
+        },
+        "es": {
+          "name": null,
+          "summary": null
+        }
+      }
+    },
+    "organization_kind_translations": {
+      "019a3f2c-7d00-7000-8000-000000000013": {
+        "ref": "multisport_committee",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Comitê multiesportivo"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000014": {
+        "ref": "federation",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Federação / confederação"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000015": {
+        "ref": "athlete_association",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Associação de atletas (circuito)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000016": {
+        "ref": "league",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Liga / circuito comercial"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000017": {
+        "ref": "sanctioning_body",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Entidade de cinturão"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000018": {
+        "ref": "promoter",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Promotora de eventos"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000019": {
+        "ref": "publisher",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Dona do jogo (publisher)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000001a": {
+        "ref": "event_organizer",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Organizadora licenciada"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000001b": {
+        "ref": "brand",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Marca"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000001c": {
+        "ref": "stadium",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Estádio / arena"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000001d": {
+        "ref": "media",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Mídia / premiação editorial"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000001e": {
+        "ref": "hall_of_fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da fama"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000001f": {
+        "ref": "cultural_body",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Entidade cultural / comunitária"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000020": {
+        "ref": "community",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Comunidade organizadora"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000021": {
+        "ref": "unknown",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Não classificada (curadoria)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      }
+    },
+    "prize_form_translations": {
+      "019a3f2c-7d00-7000-8000-000000000027": {
+        "ref": "medal",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Medalha"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000028": {
+        "ref": "belt",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cinturão"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-000000000029": {
+        "ref": "championship_trophy",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Troféu de campeão"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000002a": {
+        "ref": "title_rank",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Graduação / título vitalício"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000002b": {
+        "ref": "ranking",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Posição em ranking"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000002c": {
+        "ref": "individual_award",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Prêmio individual (eleição)"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000002d": {
+        "ref": "hall_of_fame",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Hall da fama"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000002e": {
+        "ref": "pro_card",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Cartão profissional"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      },
+      "019a3f2c-7d00-7000-8000-00000000002f": {
+        "ref": "traditional_trophy",
+        "source": "manual",
+        "pt-BR": {
+          "name": "Troféu ou artesanato tradicional"
+        },
+        "en": {
+          "name": null
+        },
+        "es": {
+          "name": null
+        }
+      }
+    }
+  }
+}

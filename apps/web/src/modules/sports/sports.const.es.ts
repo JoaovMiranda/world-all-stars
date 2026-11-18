@@ -72,6 +72,7 @@ export const SPORTS_TEXT_ES = {
     reportTitle: 'Ningún atleta individual identificado en una fuente pública.',
     reportFacts: 'Lo que encontró la recopilación',
     evidence: (quote) => (quote ? `Fragmento literal: ${quote}` : 'Ver la fuente'),
+    evidenceToggle: (n) => `Fragmento literal del dato ${n}`,
     evidenceLabel: (n) => `Fuente del dato ${n} (se abre en una pestaña nueva)`,
     competitions: 'Competiciones y títulos',
     competitionsEyebrow: 'por nivel',

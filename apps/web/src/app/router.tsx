@@ -1,4 +1,4 @@
-import { type AdminSection, AdminCommentsSearchSchema, AdminContactSearchSchema, AdminIngestionSearchSchema, AdminQueueSearchSchema, AdminReviewSearchSchema, AdminSourcesSearchSchema, AdminUsersSearchSchema, AthleteFiltersSchema, AthleteProfileSearchSchema, AthleteProfileTab, ContactSearchSchema, HomeSearchSchema, MonthDaySchema, monthDayToIso, NotificationsSearchSchema, SourcesFiltersSchema, SportPageFiltersSchema, SportsFiltersSchema, athleteJsonLd, breadcrumbJsonLd, itemListJsonLd, organizationJsonLd, sportJsonLd, webSiteJsonLd } from '@was/shared';
+import { type AdminSection, AdminCommentsSearchSchema, AdminContactSearchSchema, AdminIngestionSearchSchema, AdminQueueSearchSchema, AdminReviewSearchSchema, AdminSourcesSearchSchema, AdminUsersSearchSchema, AthleteListQuerySchema, AthleteProfileSearchSchema, AthleteProfileTab, ContactSearchSchema, HomeSearchSchema, MonthDaySchema, monthDayToIso, NotificationsSearchSchema, SourcesFiltersSchema, SportPageFiltersSchema, SportsFiltersSchema, athleteJsonLd, breadcrumbJsonLd, itemListJsonLd, organizationJsonLd, sportJsonLd, webSiteJsonLd } from '@was/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ComponentType } from 'react';
 import { createRootRouteWithContext, createRoute, lazyRouteComponent, notFound, redirect } from '@tanstack/react-router';
@@ -7,10 +7,12 @@ import { sessionQuery } from '@/data/endpoints/session.query';
 import { NotFoundPage } from '@/modules/errors/not-found.page';
 import { currentLocalized } from '@/i18n/use-localized.hook';
 import { currentText } from '@/i18n/text-for.helper';
+import { sessionIdentity } from '@/session/session-identity.helper';
+import { identityStore } from '@/session/session.store';
 import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 
 import { buildHead, type PageMeta, rootHead } from './head.helper';
-import { getBoot } from './request-scope';
+import { getBoot, IS_SERVER } from './request-scope';
 import { RootDocument } from './root-document.component';
 import { RootLayout } from './root-layout.component';
 import { ensureOr404, prefetchQueries } from './route-prefetch.helper';
@@ -87,8 +89,15 @@ const rootRoute = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
   notFoundComponent: NotFoundPage,
   head: rootHead,
-  // The header shows the session (name, admin links) in the first paint.
-  loader: ({ context }) => prefetchQueries(context.queryClient, [sessionQuery.queryOptions()]),
+  // Server: the session first (beforeLoad runs before every page loader): the header shows it in the first paint and
+  // its identity goes into the keys of the personalized queries the page loaders prefetch. The browser keeps the
+  // identity in sync from the session query (SessionProvider).
+  beforeLoad: async ({ context }) => {
+    if (!IS_SERVER) return;
+    const session = sessionQuery.queryOptions();
+    await prefetchQueries(context.queryClient, [session]);
+    identityStore.set(sessionIdentity(context.queryClient.getQueryData(session.queryKey)));
+  },
 });
 const page = <P extends string>(path: P, component: LazyPage, load: () => Promise<PageMeta>) =>
   createRoute({ getParentRoute: () => rootRoute, path, ...component, ...staticMeta(load) });
@@ -145,7 +154,7 @@ const hallRoute = createRoute({
 const athletesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/athletes',
-  validateSearch: AthleteFiltersSchema,
+  validateSearch: AthleteListQuerySchema,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
     const [{ athletesQuery }, { ALL_ATHLETES_INPUT, athletesListInput }, { ATHLETES_MESSAGES }] = await Promise.all([
@@ -172,13 +181,16 @@ const athleteRoute = createRoute({
   validateSearch: AthleteProfileSearchSchema,
   loaderDeps: ({ search }) => ({ sort: search.sort, tab: search.tab }),
   loader: async ({ context, deps, params }) => {
-    const [{ athleteProfileQuery, athletesQuery, analysisDimensionsQuery }, { commentsQuery }, input, { ATHLETE_PROFILE_MESSAGES }] = await Promise.all([
+    const [{ athleteProfileQuery, athletesQuery, analysisDimensionsQuery }, { commentsQuery }, { tierVotesQuery }, input, { ATHLETE_PROFILE_MESSAGES }] = await Promise.all([
       import('@/data/endpoints/athletes.query'),
       import('@/data/endpoints/comments.query'),
+      import('@/data/endpoints/tier-votes.query'),
       import('@/modules/athletes/athletes-query.helper'),
       import('@/modules/athletes/athletes.const'),
     ]);
     const extra: { queryKey: readonly unknown[] }[] = [commentsQuery.queryOptions(input.commentsInput(params.slug, deps.sort))];
+    // Signed in: the vote card's shares come with the page instead of a second round-trip after it renders.
+    if (context.queryClient.getQueryData(sessionQuery.queryOptions().queryKey)?.user) extra.push(tierVotesQuery.queryOptions({ params: { slug: params.slug } }));
     if (deps.tab === AthleteProfileTab.Analysis) extra.push(athletesQuery.queryOptions(input.ALL_ATHLETES_INPUT), analysisDimensionsQuery.queryOptions());
     const [athlete] = await Promise.all([
       ensureOr404(context.queryClient, athleteProfileQuery.queryOptions(input.athleteProfileInput(params.slug))),

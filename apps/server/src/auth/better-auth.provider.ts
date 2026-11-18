@@ -1,7 +1,7 @@
 import type { Database } from '@was/db';
 
 import type { AuthProvider } from './auth-provider.type';
-import { ANON_SESSION, accountSession, loadAuthUser } from './auth-user.helper';
+import { ANON_SESSION, sessionForUserId } from './auth-user.helper';
 
 /** The part of Better Auth the provider needs (tests stub it). */
 export interface SessionLookup {
@@ -20,7 +20,6 @@ export const createBetterAuthProvider = (db: Database, lookup: SessionLookup): A
       return null;
     });
     if (!found) return ANON_SESSION;
-    const user = await loadAuthUser(db, { id: found.user.id });
-    return user ? accountSession(db, user, 'better-auth') : ANON_SESSION;
+    return sessionForUserId(db, found.user.id, 'better-auth');
   },
 });

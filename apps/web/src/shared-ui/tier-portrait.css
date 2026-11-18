@@ -7,7 +7,7 @@
   .tier-portrait-elite { border-color: var(--tier-elite-fill); }
   .tier-portrait-champion { border-color: var(--tier-champion-fill); }
   .tier-portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; z-index: 1; }
-  .tier-portrait-fallback { font: 700 40px var(--font-display); color: var(--muted); }
-  .tier-portrait figcaption { position: absolute; z-index: 2; inset: auto 0 0 0; font-size: 10px; line-height: 1.3; padding: 14px 6px 4px; background: linear-gradient(transparent, color-mix(in oklab, var(--midnight) 85%, transparent)); color: var(--text); }
+  .tier-portrait-fallback { font: 700 2.5rem var(--font-display); color: var(--muted); }
+  .tier-portrait figcaption { position: absolute; z-index: 2; inset: auto 0 0 0; font-size: 0.75rem; line-height: 1.3; padding: 6px 8px 5px; background: color-mix(in oklab, var(--midnight) 82%, transparent); color: var(--on-midnight); }
   .tier-portrait figcaption a { color: inherit; text-decoration: underline; }
 }

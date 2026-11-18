@@ -1,4 +1,5 @@
 import { useText } from '@/i18n/use-text.hook';
+import { CountUp } from '@/shared-ui/count-up.component';
 import { KpiGrid } from '@/shared-ui/kpi-grid.component';
 import { StatTile } from '@/shared-ui/stat-tile.component';
 
@@ -14,7 +15,7 @@ export function AthleteKpis({ kpis }: { kpis: readonly SportKpi[] }) {
     <div className="athlete-kpis">
     <KpiGrid columns={kpis.length >= 4 ? 4 : (Math.max(kpis.length, 2) as 2 | 3)} label={profileText.hero.kpisLabel}>
       {kpis.map((k) => (
-        <StatTile key={k.label} label={k.label} value={<span className={k.gold ? 'kpi-gold' : undefined}>{formatValue(k.value)}</span>} hint={k.hint} />
+        <StatTile key={k.label} label={k.label} value={<span className={k.gold ? 'kpi-gold' : undefined}>{typeof k.value === 'number' ? <CountUp value={k.value} format={formatValue} /> : formatValue(k.value)}</span>} hint={k.hint} />
       ))}
     </KpiGrid>
     </div>

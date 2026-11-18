@@ -21,6 +21,7 @@ export const API_ERROR_TEXT_EN = {
   rateLimited: 'Too many attempts. Wait a moment and try again.',
   internal: 'Something went wrong on our side. Please try again.',
   invalidJson: 'Invalid JSON.',
+  payloadTooLarge: 'The content sent is too large.',
   emailUnverified: 'Your e-mail has not been verified by the sign-in provider yet. Verify it and sign in again.',
   consentOutdated: 'The Terms or the Privacy notice changed. Reload the page and accept the current versions.',
   consentNotPending: 'There is no pending acceptance for this session.',

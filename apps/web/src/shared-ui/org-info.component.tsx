@@ -2,7 +2,9 @@
 import { useText } from '@/i18n/use-text.hook';
 
 import { DOMAIN_LABELS_MESSAGES } from './domain-labels.const';
+import { NewTabNote } from './new-tab-note.component';
 import type { OrgLike } from './org.type';
+import { ResponsiveImg } from './responsive-img.component';
 import { UI_MESSAGES } from './ui-text.const';
 
 /** Summary panel of an organization (opened by OrgInfoButton): kind, nature, scope, country, hierarchy, links. */
@@ -11,7 +13,7 @@ export function OrgInfo({ org, id }: { org: OrgLike; id: string }) {
   const ui = useText(UI_MESSAGES);
   return (
     <div className="org-info" id={id}>
-      {org.image && <img src={org.image} alt="" loading="lazy" referrerPolicy="no-referrer" />}
+      {org.image && <ResponsiveImg url={org.image} displayWidth={72} width={72} height={72} loading="lazy" />}
       <div>
         <p>
           <b>{org.name}</b>
@@ -30,6 +32,7 @@ export function OrgInfo({ org, id }: { org: OrgLike; id: string }) {
           {org.wikipedia ? (
             <a href={org.wikipedia} target="_blank" rel="noopener noreferrer">
               {ui.readOnWikipedia}
+              <NewTabNote />
             </a>
           ) : (
             <span className="muted">{ui.noWikipedia}</span>
@@ -38,7 +41,8 @@ export function OrgInfo({ org, id }: { org: OrgLike; id: string }) {
             <>
               {' · '}
               <a href={`https://www.wikidata.org/wiki/${org.qid}`} target="_blank" rel="noopener noreferrer">
-                Wikidata {org.qid} ↗
+                Wikidata {org.qid} <span aria-hidden="true">↗</span>
+                <NewTabNote />
               </a>
             </>
           )}

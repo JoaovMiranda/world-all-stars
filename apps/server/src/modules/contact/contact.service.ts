@@ -17,9 +17,9 @@ import { getSuggestionContext } from '../moderation/validation-context.service';
 
 /** POST /api/suggestions (doc 21): shared validateSuggestion (https, anti-SSRF, rejected sources, duplicates) → 422. */
 export const submitSuggestion = async (ctx: RequestContext, body: SuggestionRequest): Promise<SubmissionResponse> => {
-  const result = validateSuggestion(body, await getSuggestionContext(ctx.deps), ctx.locale);
+  const [context, view] = await Promise.all([getSuggestionContext(ctx.deps), ctx.deps.catalog.get(ctx.locale)]);
+  const result = validateSuggestion(body, context, ctx.locale);
   if (!result.ok) throw invalidFields(result.errors);
-  const view = await ctx.deps.catalog.get(ctx.locale);
   const sport = body.sport && body.sport !== 'outro' ? view.sportBySlug(body.sport) : null;
   const protocol = submissionProtocol('SUG');
   await ctx.deps.repo.insert(

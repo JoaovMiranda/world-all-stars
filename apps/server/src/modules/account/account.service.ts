@@ -1,6 +1,5 @@
-import { active, authAccounts, authSessions, legalAcceptances, userConsents, users } from '@was/db';
+import { active, authAccounts, legalAcceptances, userConsents, users } from '@was/db';
 import {
-  ACCOUNT_DELETE_CONFIRMATION,
   type AcceptConsentRequest,
   AuthAuditAction,
   CONSENT_PURPOSE_VALUES,
@@ -11,13 +10,13 @@ import {
   type MyDataExport,
   type MyDataResponse,
   ApiErrorCode,
-  textFor,
-  VALIDATION_MESSAGES,
+  accountDeleteConfirmationError,
   anonymizedUserName,
 } from '@was/shared';
 import { and, eq } from 'drizzle-orm';
 
 import type { AuthUser } from '../../auth/auth-provider.type';
+import { revokeAuthSessions } from '../../auth/auth-user.helper';
 import type { RequestContext } from '../../http/app-context.type';
 import { httpError, unprocessable } from '../../http/http-error.error';
 import { getMe, getNotifications } from '../session/session.service';
@@ -81,16 +80,14 @@ export const exportMyData = async (ctx: RequestContext, user: AuthUser): Promise
 
 /** DELETE /api/me: anonymization (doc 13): pseudonym + e-mail erased, account soft-deleted; comments/votes stay. */
 export const deleteAccount = async ({ deps, actor, locale }: RequestContext, user: AuthUser, confirmation: string): Promise<DeleteAccountResponse> => {
-  if (confirmation.trim() !== ACCOUNT_DELETE_CONFIRMATION) {
-    const message = textFor(VALIDATION_MESSAGES, locale).accountDeleteConfirmation(ACCOUNT_DELETE_CONFIRMATION);
-    throw unprocessable(ApiErrorCode.Validation, message, { confirmation: message });
-  }
+  const invalid = accountDeleteConfirmationError(confirmation, locale);
+  if (invalid) throw unprocessable(ApiErrorCode.Validation, invalid, { confirmation: invalid });
   const pseudonym = anonymizedUserName(Date.now());
   await deps.repo.transaction(async (repo) => {
     await repo.update(users, user.id, { displayName: pseudonym, email: `removed+${user.id}@anon.invalid`, avatarUrl: null }, actor, { summary: 'anonymized' });
     await repo.softDelete(users, user.id, actor, { summary: 'account deleted' });
     // Ephemeral Better Auth rows (exempt from forbid_delete): every browser is signed out, the Google link is gone.
-    await repo.db.delete(authSessions).where(eq(authSessions.userId, user.id));
+    await revokeAuthSessions(repo.db, user.id);
     await repo.db.delete(authAccounts).where(eq(authAccounts.userId, user.id));
   });
   return { pseudonym };

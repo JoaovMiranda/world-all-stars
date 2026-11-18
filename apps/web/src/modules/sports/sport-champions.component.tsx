@@ -3,6 +3,7 @@ import type { AthleteSummary, CollectionReport } from '@was/shared';
 import { useText } from '@/i18n/use-text.hook';
 import { AthleteGrid } from '@/shared-ui/athlete-grid.component';
 import { Notice } from '@/shared-ui/notice.component';
+import { useDisclosure } from '@/shared-ui/use-disclosure.hook';
 
 import { SPORTS_MESSAGES } from './sports.const';
 
@@ -19,24 +20,39 @@ function CollectionReportView({ report }: { report: CollectionReport }) {
           <h3 className="label mt-4">{t.reportFacts}</h3>
           <ul className="facts-list">
             {report.facts.map((f, i) => (
-              <li key={f.source_url + i}>
-                {f.text_pt}
-                <a
-                  className="src"
-                  href={f.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={t.evidenceLabel(i + 1)}
-                  title={t.evidence(f.evidence_quote)}
-                >
-                  i
-                </a>
-              </li>
+              <FactItem key={f.source_url + i} fact={f} n={i + 1} />
             ))}
           </ul>
         </>
       )}
     </>
+  );
+}
+
+/** One fact: the source link plus a toggle that shows the literal evidence (not hover-only: WCAG 1.4.13 / 2.1.1). */
+function FactItem({ fact, n }: { fact: CollectionReport['facts'][number]; n: number }) {
+  const t = useText(SPORTS_MESSAGES).page;
+  const quote = useDisclosure();
+  return (
+    <li>
+      {fact.text_pt}
+      <a className="src" href={fact.source_url} target="_blank" rel="noopener noreferrer" aria-label={t.evidenceLabel(n)}>
+        i
+      </a>
+      {fact.evidence_quote && (
+        <>
+          {' '}
+          <button type="button" className="info-btn" aria-label={t.evidenceToggle(n)} {...quote.buttonProps}>
+            “
+          </button>
+          {quote.open && (
+            <blockquote id={quote.contentId} className="evidence-quote">
+              {t.evidence(fact.evidence_quote)}
+            </blockquote>
+          )}
+        </>
+      )}
+    </li>
   );
 }
 

@@ -88,7 +88,7 @@ export function ConfirmDialog({ open, onClose, title, kicker, children, confirmL
           <Button variant="ghost" onClick={onClose}>
             {kit.cancel}
           </Button>
-          <Button type="submit" variant={confirmVariant} disabled={pending} aria-busy={pending || undefined}>
+          <Button type="submit" variant={confirmVariant} pending={pending}>
             {pending ? kit.working : confirmLabel}
           </Button>
         </div>

@@ -1,7 +1,8 @@
-import { FIXTURE_MODE_VALUES, FixtureMode, type IsoDate, LOCALE_COOKIE, SESSION_KIND_VALUES, SessionKind, resolveLocale } from '@was/shared';
+import { APP_COOKIE, FIXTURE_MODE_VALUES, FixtureMode, type IsoDate, LOCALE_COOKIE, SESSION_KIND_VALUES, SessionKind, resolveLocale } from '@was/shared';
 
 import { FIXTURE_MODE_COOKIE, FIXTURE_MODE_PARAM } from '@/data/data-layer.const';
 import { SESSION_COOKIE, SESSION_URL_PARAM } from '@/session/session.const';
+import { ANON_IDENTITY } from '@/session/session-identity.helper';
 import { readCookie } from '@/shared-ui/cookie.helper';
 import { THEME_COOKIE, isThemeName } from '@/shared-ui/theme.const';
 
@@ -34,14 +35,18 @@ export const resolveBoot = ({ url, cookie, timeZone, publicUrl, acceptLanguage, 
   const kindParam = url.searchParams.get(SESSION_URL_PARAM);
   const kindCookie = readCookie(cookie, SESSION_COOKIE);
   const theme = readCookie(cookie, THEME_COOKIE);
+  const motion = readCookie(cookie, APP_COOKIE.motion);
   return {
     fixtureMode: isMode(modeParam) ? modeParam : isMode(modeCookie) ? modeCookie : FixtureMode.Sample,
     sessionKind: isKind(kindParam) ? kindParam : isKind(kindCookie) ? kindCookie : SessionKind.Anon,
+    // Known once GET /api/session answers (root route beforeLoad), before any page query is prefetched.
+    identity: ANON_IDENTITY,
     today: isoDateIn(now, timeZone),
     now: now.toISOString(),
     timeZone,
     publicUrl: publicUrl.replace(/\/+$/, ''),
     theme: isThemeName(theme) ? theme : null,
+    motionPaused: motion === 'reduced',
     locale: resolveLocale({ cookie: readCookie(cookie, LOCALE_COOKIE), acceptLanguage }),
   };
 };

@@ -4,7 +4,7 @@
 import { createHmac } from 'node:crypto';
 
 import { authAccounts, authSessions, createDatabase, type DatabaseHandle, legalAcceptances, SYSTEM_ACTOR, users } from '@was/db';
-import { ACCOUNT_DELETE_CONFIRMATION, LEGAL_DOCUMENT_VERSIONS, LOCALE_HEADER, uuidv7 } from '@was/shared';
+import { LEGAL_DOCUMENT_VERSIONS, LOCALE_HEADER, accountDeleteWord, uuidv7 } from '@was/shared';
 import { eq, sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -104,15 +104,33 @@ describe('Better Auth provider + consent', () => {
     expect((await call('POST', '/api/account/consent', ids.pending, body)).status).toBe(409);
   });
 
-  it('account deletion removes the Better Auth sessions and accounts (physical DELETE allowed there)', async () => {
+  it('account deletion (word of the request language) removes the Better Auth sessions and accounts (physical DELETE allowed there)', async () => {
     const now = new Date();
     await handle.db.insert(authSessions).values({ id: uuidv7(), userId: ids.reader, token: `t-${uuidv7()}`, expiresAt: new Date(now.getTime() + 86_400_000) });
     await handle.db.insert(authAccounts).values({ id: uuidv7(), userId: ids.reader, accountId: 'google-sub-1', providerId: 'google' });
-    const res = await call('DELETE', '/api/me', ids.reader, { confirmation: ACCOUNT_DELETE_CONFIRMATION });
+    // The confirmation word is the request language's (EXCLUIR · DELETE · ELIMINAR): another language's word is a 422.
+    const en = { [LOCALE_HEADER]: 'en' };
+    const wrong = await call('DELETE', '/api/me', ids.reader, { confirmation: accountDeleteWord('pt-BR') }, en);
+    expect([wrong.status, wrong.json.errors]).toEqual([422, { confirmation: 'Type DELETE to confirm.' }]);
+    const res = await call('DELETE', '/api/me', ids.reader, { confirmation: accountDeleteWord('en') }, en);
     expect(res.status).toBe(200);
     expect(await handle.db.select().from(authSessions).where(eq(authSessions.userId, ids.reader))).toHaveLength(0);
     expect(await handle.db.select().from(authAccounts).where(eq(authAccounts.userId, ids.reader))).toHaveLength(0);
     expect((await call('GET', '/api/session', ids.reader)).json.kind).toBe('anon'); // soft-deleted account
+  });
+
+  it('banning an account revokes its Better Auth sessions (every browser is signed out)', async () => {
+    const target = await created.deps.repo.insert(users, { email: 'to-ban@test.invalid', displayName: 'To Ban', emailVerified: true }, SYSTEM_ACTOR);
+    const expiresAt = new Date(Date.now() + 86_400_000);
+    await handle.db.insert(authSessions).values([
+      { id: uuidv7(), userId: target.id, token: `t-${uuidv7()}`, expiresAt },
+      { id: uuidv7(), userId: target.id, token: `t-${uuidv7()}`, expiresAt },
+    ]);
+    const res = await call('PATCH', `/api/admin/users/${target.id}`, ids.admin, { banned: true, reason: 'Spam repetido nos comentários' });
+    expect(res.status).toBe(200);
+    expect(await handle.db.select().from(authSessions).where(eq(authSessions.userId, target.id))).toHaveLength(0);
+    const [row] = await handle.db.select({ bannedAt: users.bannedAt }).from(users).where(eq(users.id, target.id));
+    expect(row?.bannedAt).toBeInstanceOf(Date);
   });
 
   it('ADMIN_EMAILS promotes once (idempotent) and audits role_changed', async () => {
@@ -153,6 +171,22 @@ describe('real Better Auth (drizzle adapter on users + auth_* tables, signed coo
 
     const out = await app.request('/api/auth/sign-out', { method: 'POST', headers: { cookie, origin: config.betterAuthUrl, 'content-type': 'application/json' }, body: '{}' });
     expect(out.status).toBe(200);
+    expect(await handle.db.select().from(authSessions)).toHaveLength(0);
+    await handle.close();
+  });
+});
+
+describe('banned accounts cannot sign in (Better Auth session.create.before)', () => {
+  it('refuses the session with the translated `banned` error (the OAuth callback redirects with ?error=banned)', async () => {
+    const handle = await createDatabase({ pgliteDataDir: 'memory://' });
+    await handle.migrate();
+    const config = { ...loadConfig({}), authSimulated: false, logRequests: false, rateLimitEnabled: false };
+    const { betterAuth } = createApp({ db: handle.db, config });
+    const ctx = await betterAuth.$context;
+    const { user } = await ctx.internalAdapter.createOAuthUser({ email: 'bia@test.invalid', name: 'Bia', emailVerified: true }, { providerId: 'google', accountId: 'google-sub-bia' });
+    await handle.db.update(users).set({ bannedAt: new Date() }).where(eq(users.id, user.id));
+    const refused = ctx.internalAdapter.createSession(user.id);
+    await expect(refused).rejects.toMatchObject({ body: { code: 'banned', message: 'Sua conta está suspensa.' } });
     expect(await handle.db.select().from(authSessions)).toHaveLength(0);
     await handle.close();
   });

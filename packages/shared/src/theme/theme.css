@@ -1,13 +1,14 @@
 /* World All Stars · theme tokens (single source of truth, doc 08 v3.1 "Noite de gala").
    Copied from plan/front-prototype/assets/css/tokens.css. Light = "programa impresso", dark = "noite de gala".
    Theme selection: prefers-color-scheme by default; manual override via <html data-theme="light|dark">.
-   Every text pair is AA (see doc 14). Do not hard-code colors in apps: use these variables. */
+   Every text pair is AA (see doc 14), checked by apps/web/src/app/theme-contrast.test.ts. Do not hard-code colors in apps: use these variables. */
 :root {
   /* Claro: "programa impresso" (papel marfim e tinta preta) */
   --primary: #7A5A1C; --primary-hover: #5F4512; --primary-soft: #F1E6CC;   /* dourado escuro: links, ações, foco */
   --accent: #B8913F; --accent-soft: #F3E9D2; --on-accent: #17140F;         /* dourado decorativo: filetes, ornamentos */
-  --success: #3E8A5E; --danger: #B5483B; --info: #3D6E9C; --pink: #9C5B7A;
+  --success: #357A52; --danger: #B5483B; --info: #3D6E9C; --pink: #9C5B7A;
   --bg: #F6F1E7; --surface: #FFFDF8; --surface-2: #EFE8DA; --border: #DDD2BE; --border-strong: #B8A47E;
+  --border-control: #8C7A58;   /* borda de campos e controles: ≥ 3:1 sobre bg/surface/surface-2 (WCAG 1.4.11) */
   --text: #17140F; --muted: #5E5648;
   --ocean: #EAE2D2; --land: #CDBF9F; --metal: #B8913F; --metal-2: #8C6A2C;
   --midnight: #0C0B09; --bronze: #A0652F; --platinum: #8E8B84;
@@ -23,13 +24,14 @@
   /* "Sign in with Google" button (Google identity guidelines: neutral light/dark) and the 4-colour G mark. */
   --google-btn-bg: #ffffff; --google-btn-border: #747775; --google-btn-text: #1f1f1f;
   --google-blue: #4285f4; --google-red: #ea4335; --google-yellow: #fbbc05; --google-green: #34a853;
-  --logo-bg: #FFFFFF;   /* paper behind third-party logos (Commons), same in both themes */
+  --logo-bg: #FFFFFF;
+  --on-midnight: #F2ECDF;   /* text over a dark scrim on photos (credits), same in both themes */   /* paper behind third-party logos (Commons), same in both themes */
 
   /* Medalhas: ouro, prata e bronze com as cores reais (preenchimento) + versões de TEXTO com contraste AA */
   --medal-gold: #D4AF37; --medal-silver: #C0C0C0; --medal-bronze: #CD7F32; --on-medal: #17140F;
   --grad-gold: linear-gradient(135deg, #9C7A1E 0%, #F1D774 45%, #B8921F 100%);
   --grad-silver: linear-gradient(135deg, #8C8C8C 0%, #F2F2F2 45%, #A6A6A6 100%);
-  --grad-bronze: linear-gradient(135deg, #8A4F1F 0%, #E8A86A 45%, #9C5A24 100%);
+  --grad-bronze: linear-gradient(135deg, #B87A3F 0%, #E8A86A 45%, #B47536 100%);   /* stops ≥ 4.5:1 with --on-medal */
   --gold-text: #7A5A1C; --silver-text: #595959; --bronze-text: #8A4B17;
 
   --lvl-world: var(--medal-gold); --lvl-continental: #6E7F8D; --lvl-national: var(--medal-bronze); --lvl-local: var(--muted);
@@ -44,10 +46,21 @@
   --tier-champion-grad: linear-gradient(135deg, #0F5E45 0%, #6FD3A8 45%, #167A58 100%);
 
   --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-pill: 999px;   /* cantos suaves: cartões 12, botões e campos 8, selos 4 */
-  --font-ui: Manrope, "Helvetica Neue", system-ui, sans-serif;            /* texto e interface: moderna e legível */
-  --font-display: Fraunces, "Iowan Old Style", Georgia, serif;           /* títulos e números: serifa moderna de alto contraste */
+  --font-ui: "Manrope Variable", Manrope, "Helvetica Neue", system-ui, sans-serif;            /* texto e interface: moderna e legível */
+  --font-display: "Fraunces Variable", Fraunces, "Iowan Old Style", Georgia, serif;           /* títulos e números: serifa moderna de alto contraste */
   --track: .1em;                                           /* espaçamento das versaletes (rótulos, botões, menu) */
-  --t-fast: 160ms ease-out;
+  /* Motion: durações (frequente = curto, raro = teatral) e curvas. Animar só transform/opacity quando houver movimento.
+     --ease-out: entradas e respostas · --ease-in-out: deslocamentos · --ease-snap: overshoot (squash, follow-through)
+     --ease-anticip: recua antes de ir (anticipation). Tudo é zerado por prefers-reduced-motion (apps/web styles.css). */
+  --dur-1: 90ms; --dur-2: 160ms; --dur-3: 240ms; --dur-4: 420ms; --dur-5: 700ms; --dur-6: 1100ms;
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-snap: cubic-bezier(.3, 1.4, .5, 1);
+  --ease-anticip: cubic-bezier(.6, -.28, .735, .045);
+  --ease-cinematic: cubic-bezier(.16, 1, .3, 1);   /* revelações longas (scroll, palcos): sai rápido e pousa devagar */
+  --ease-settle: cubic-bezier(.25, 1.12, .5, 1);   /* overshoot leve: indicadores que deslizam e assentam */
+  --t-fast: var(--dur-2) var(--ease-out);   /* atalho histórico: cor/borda em hover */
+  --t-press: var(--dur-1) var(--ease-out);  /* resposta ao toque (:active) */
   --header-h: 64px;
 }
 /* Escuro: "noite de gala" (preto quente, marfim e ouro) */
@@ -55,7 +68,7 @@
   --primary: #D9B96E; --primary-hover: #E8CC86; --primary-soft: #2A2316;
   --accent: #C9A35C; --accent-soft: #241E13;
   --success: #6FB08A; --danger: #D9776A; --info: #7FA6CC;
-  --bg: #0C0B09; --surface: #14120E; --surface-2: #1C1915; --border: #2F2A21; --border-strong: #5C4C2E;
+  --bg: #0C0B09; --surface: #14120E; --surface-2: #1C1915; --border: #2F2A21; --border-strong: #5C4C2E; --border-control: #7D6A48;
   --text: #F2ECDF; --muted: #A99F8C;
   --ocean: #14120E; --land: #3A3125; --metal: #8C6A2C; --metal-2: #C9A35C;
   --accent-text: #D9B96E; --success-text: #8CC7A1; --danger-text: #E8968A; --info-text: #9DBEDD;
@@ -69,7 +82,7 @@
     --primary: #D9B96E; --primary-hover: #E8CC86; --primary-soft: #2A2316;
     --accent: #C9A35C; --accent-soft: #241E13;
     --success: #6FB08A; --danger: #D9776A; --info: #7FA6CC;
-    --bg: #0C0B09; --surface: #14120E; --surface-2: #1C1915; --border: #2F2A21; --border-strong: #5C4C2E;
+    --bg: #0C0B09; --surface: #14120E; --surface-2: #1C1915; --border: #2F2A21; --border-strong: #5C4C2E; --border-control: #7D6A48;
     --text: #F2ECDF; --muted: #A99F8C;
     --ocean: #14120E; --land: #3A3125; --metal: #8C6A2C; --metal-2: #C9A35C;
     --accent-text: #D9B96E; --success-text: #8CC7A1; --danger-text: #E8968A; --info-text: #9DBEDD;
@@ -89,7 +102,7 @@
   --accent-text: #E1C27A; --success-text: #8CC7A1; --info-text: #9DBEDD; --danger-text: #E8968A;
   --tier-mythic: #C9B2FF; --tier-legendary: #E2C15A; --tier-elite: #9DBBF2; --tier-champion: #86D6B4;
   --primary: #E1C27A; --primary-hover: #EDD39A; --on-primary: #0C0B09; --accent: #C9A35C; --accent-soft: #241E13;
-  --bg: #0C0B09; --surface: #14110D; --surface-2: #1C1813; --border: #3A3123; --border-strong: #5C4C2E;
+  --bg: #0C0B09; --surface: #14110D; --surface-2: #1C1813; --border: #3A3123; --border-strong: #5C4C2E; --border-control: #7D6A48;
   --muted: #B3A893; --text: #F2ECDF;
   color-scheme: dark;
   background: var(--midnight); color: var(--text);

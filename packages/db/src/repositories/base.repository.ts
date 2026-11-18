@@ -93,6 +93,23 @@ export class BaseRepository {
     });
   }
 
+  /**
+   * Several rows of one table in a single INSERT, with the same versioning + audit as `insert` (also batched): three
+   * statements whatever the number of rows, instead of three per row.
+   */
+  async insertMany<T extends BaseTable>(table: T, values: readonly Insert<T>[], actor: Actor, meta: ChangeMeta = {}): Promise<Row<T>[]> {
+    if (!values.length) return [];
+    return this.transaction(async (repo) => {
+      const stamp = () => ({ id: uuidv7(), createdBy: actor.userId, updatedBy: actor.userId, createdVia: actor.via ?? 'user' });
+      const rows = (await repo.db
+        .insert(table as PgTable)
+        .values(values.map((v) => ({ ...stamp(), ...(v as object) })) as never)
+        .returning()) as Row<T>[];
+      await repo.trackMany(table, rows.map((after) => ({ before: null, after })), actor, 'create', meta);
+      return rows;
+    });
+  }
+
   async update<T extends BaseTable>(table: T, id: string, patch: Patch<T>, actor: Actor, meta: ChangeMeta = {}): Promise<Row<T>> {
     return this.transaction(async (repo) => {
       const before = await repo.mustFind(table, id);
@@ -190,7 +207,11 @@ export class BaseRepository {
 
   /** Domain audit entry (admin decisions): action + target label + reason in metadata. */
   async audit(actor: Actor, action: string, entity: { type: string; id: string | null; version?: number | null } | null, metadata: Record<string, unknown> = {}): Promise<void> {
-    await this.db.insert(auditLogs).values({
+    await this.db.insert(auditLogs).values(this.auditRow(actor, action, entity, metadata));
+  }
+
+  private auditRow(actor: Actor, action: string, entity: { type: string; id: string | null; version?: number | null } | null, metadata: Record<string, unknown> = {}) {
+    return {
       id: uuidv7(),
       createdBy: actor.userId,
       createdVia: actor.via ?? 'user',
@@ -203,7 +224,7 @@ export class BaseRepository {
       ipHash: actor.ipHash ?? null,
       userAgent: actor.userAgent ?? null,
       metadata: { actorName: actor.name ?? null, ...metadata },
-    });
+    };
   }
 
   private async mustFind<T extends BaseTable>(table: T, id: string): Promise<Row<T>> {
@@ -212,27 +233,35 @@ export class BaseRepository {
     return row as Row<T>;
   }
 
-  private async track<T extends BaseTable>(table: T, before: Row<T> | null, after: Row<T>, actor: Actor, action: string, meta: ChangeMeta): Promise<void> {
+  private track<T extends BaseTable>(table: T, before: Row<T> | null, after: Row<T>, actor: Actor, action: string, meta: ChangeMeta): Promise<void> {
+    return this.trackMany(table, [{ before, after }], actor, action, meta);
+  }
+
+  /** Version snapshots + audit entries of several changes of one table: one INSERT each. */
+  private async trackMany<T extends BaseTable>(table: T, changes: readonly { before: Row<T> | null; after: Row<T> }[], actor: Actor, action: string, meta: ChangeMeta): Promise<void> {
     const entityType = getTableName(table);
     this.written(entityType);
-    if (NOT_VERSIONED.has(entityType)) return;
-    const snapshot = toJson(after);
-    const version = snapshot.version as number;
-    const entityId = snapshot.id as string;
-    await this.db.insert(entityVersions).values({
-      id: uuidv7(),
-      createdBy: actor.userId,
-      createdVia: actor.via ?? 'user',
-      entityType,
-      entityId,
-      versionNumber: version,
-      snapshot,
-      diff: jsonPatchDiff(before ? toJson(before) : null, snapshot),
-      summary: meta.summary ?? action,
-      author: actor.name ?? (actor.userId ? `user:${actor.userId}` : 'system'),
-      reason: meta.reason ?? null,
+    if (NOT_VERSIONED.has(entityType) || !changes.length) return;
+    const tracked = changes.map(({ before, after }) => {
+      const snapshot = toJson(after);
+      return { before, snapshot, version: snapshot.version as number, entityId: snapshot.id as string };
     });
-    await this.audit(actor, action, { type: entityType, id: entityId, version });
+    await this.db.insert(entityVersions).values(
+      tracked.map(({ before, snapshot, version, entityId }) => ({
+        id: uuidv7(),
+        createdBy: actor.userId,
+        createdVia: actor.via ?? 'user',
+        entityType,
+        entityId,
+        versionNumber: version,
+        snapshot,
+        diff: jsonPatchDiff(before ? toJson(before) : null, snapshot),
+        summary: meta.summary ?? action,
+        author: actor.name ?? (actor.userId ? `user:${actor.userId}` : 'system'),
+        reason: meta.reason ?? null,
+      })),
+    );
+    await this.db.insert(auditLogs).values(tracked.map(({ entityId, version }) => this.auditRow(actor, action, { type: entityType, id: entityId, version })));
   }
 }
 

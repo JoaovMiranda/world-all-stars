@@ -12,8 +12,6 @@ export const LEGAL_DOCUMENT_VERSIONS: Record<LegalDocumentKind, { version: strin
 };
 /** Documents a signed-in account must have accepted in their CURRENT version before voting/commenting (doc 13). */
 export const REQUIRED_LEGAL_DOCUMENTS = ['terms', 'privacy'] as const satisfies readonly LegalDocumentKind[];
-/** Word the user types to confirm account deletion (anonymization, doc 13). Checked by the server too. */
-export const ACCOUNT_DELETE_CONFIRMATION = 'EXCLUIR';
 /** Minimum age to create an account (doc 13). */
 export const ACCOUNT_MIN_AGE = 18;
 /** Access logs (Marco Civil art. 15) and contact submissions retention, in months (docs 13, 21). */

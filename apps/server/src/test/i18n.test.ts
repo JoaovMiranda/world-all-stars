@@ -50,6 +50,20 @@ describe('API in the request locale', () => {
     expect(((await pt.json()) as { errors: Record<string, string> }).errors.name).toBe(VALIDATION_MESSAGES['pt-BR'].contactNameRequired);
   });
 
+  it('generic Zod messages of the contract schemas (malformed body) follow the locale (en, es)', async () => {
+    // Wrong types: no shared validator runs, only the contract schema → zodErrorMap of the request locale.
+    const malformed = { name: 42, topic: 'nope', body: 7 };
+    for (const locale of ['en', 'es'] as const) {
+      const res = await post(malformed, { [LOCALE_HEADER]: locale });
+      expect(res.status).toBe(422);
+      const { errors } = (await res.json()) as { errors: Record<string, string> };
+      const m = textFor(VALIDATION_MESSAGES, locale);
+      expect(errors.name).toBe(m.schema.invalid);
+      expect(errors.email).toBe(m.required);
+      expect(errors.body).toBe(m.schema.invalid);
+    }
+  });
+
   it('404 and 401 messages follow the locale', async () => {
     const missing = await t.app.request('/api/nao-existe', { headers: { [LOCALE_HEADER]: 'es' } });
     expect(((await missing.json()) as { message: string }).message).toBe(textFor(API_ERROR_MESSAGES, 'es').notFound);
@@ -108,7 +122,7 @@ describe('anonymous pages cached per language', () => {
     const en = await app.request('/athletes', { headers: { 'accept-language': 'en-US,en;q=0.9' } });
     expect(pt.headers.get('content-language')).toBe('pt-BR');
     expect(en.headers.get('content-language')).toBe('en');
-    expect(en.headers.get('vary')).toBe('Cookie, Accept-Language');
+    expect(en.headers.get('vary')).toBe('Cookie, Accept-Language, Accept-Encoding'); // + compression middleware
     expect(en.headers.get('cache-control')).toBe(PUBLIC_HTML_CACHE_CONTROL);
     expect(await pt.text()).toContain('lang="pt-BR"');
     expect(await en.text()).toContain('lang="en"');

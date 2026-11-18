@@ -1,6 +1,6 @@
 import { type Database, active, athletes, championTiers, comments, notifications, tierVotes, users } from '@was/db';
-import { type AthleteRef, type MeResponse, type NotificationsResponse, type SessionResponse, type SessionUser } from '@was/shared';
-import { and, desc, eq, inArray } from 'drizzle-orm';
+import { type AthleteRef, type MeResponse, NOTIFICATIONS_LIMIT, type NotificationsResponse, type SessionResponse, type SessionUser } from '@was/shared';
+import { and, count, desc, eq, inArray, isNull } from 'drizzle-orm';
 
 import type { AuthUser, SessionContext } from '../../auth/auth-provider.type';
 import type { AppDeps } from '../../http/app-context.type';
@@ -43,9 +43,13 @@ export const getMe = async (deps: AppDeps, user: AuthUser): Promise<MeResponse> 
       .orderBy(desc(tierVotes.updatedAt)),
     deps.db.select().from(comments).where(active(comments, eq(comments.userId, user.id))).orderBy(desc(comments.createdAt)),
   ]);
-  const refs = await athleteRefs(deps.db, [...new Set([...votes.map((v) => v.athleteId), ...mine.map((c) => c.athleteId)])]);
+  // Independent reads: athlete refs of my votes/comments and the fresh counters.
+  const [refs, fresh] = await Promise.all([
+    athleteRefs(deps.db, [...new Set([...votes.map((v) => v.athleteId), ...mine.map((c) => c.athleteId)])]),
+    freshSessionUser(deps.db, user),
+  ]);
   return {
-    user: await freshSessionUser(deps.db, user),
+    user: fresh,
     votes: votes.flatMap((v) => (refs.has(v.athleteId) ? [{ athlete: refs.get(v.athleteId)!, tier: v.tier, at: v.at.toISOString() }] : [])),
     comments: mine.flatMap((c) =>
       refs.has(c.athleteId) ? [{ id: c.id, athlete: refs.get(c.athleteId)!, body: c.body, at: c.createdAt.toISOString(), isReply: c.parentCommentId !== null }] : [],
@@ -55,12 +59,18 @@ export const getMe = async (deps: AppDeps, user: AuthUser): Promise<MeResponse> 
 
 /** GET /api/notifications (E4). */
 export const getNotifications = async (deps: AppDeps, user: AuthUser): Promise<NotificationsResponse> => {
-  const rows = await deps.db
-    .select({ n: notifications, actor: users.displayName })
-    .from(notifications)
-    .leftJoin(users, eq(users.id, notifications.actorId))
-    .where(active(notifications, eq(notifications.userId, user.id)))
-    .orderBy(desc(notifications.createdAt));
+  const mine = active(notifications, eq(notifications.userId, user.id));
+  // The newest NOTIFICATIONS_LIMIT are listed; the unread counter covers all of them (one indexed count).
+  const [rows, [unread]] = await Promise.all([
+    deps.db
+      .select({ n: notifications, actor: users.displayName })
+      .from(notifications)
+      .leftJoin(users, eq(users.id, notifications.actorId))
+      .where(mine)
+      .orderBy(desc(notifications.createdAt))
+      .limit(NOTIFICATIONS_LIMIT),
+    deps.db.select({ n: count() }).from(notifications).where(and(mine, isNull(notifications.readAt))),
+  ]);
   const refs = await athleteRefs(deps.db, rows.map((r) => r.n.payload.athleteId).filter((id): id is string => !!id));
   const items = rows.map(({ n, actor }) => ({
     id: n.id,
@@ -72,7 +82,7 @@ export const getNotifications = async (deps: AppDeps, user: AuthUser): Promise<N
     athlete: n.payload.athleteId ? (refs.get(n.payload.athleteId) ?? null) : null,
     commentId: n.payload.commentId ?? null,
   }));
-  return { items, unread: items.filter((n) => !n.read).length };
+  return { items, unread: unread?.n ?? 0 };
 };
 
 /** PATCH /api/notifications/:id/read — only my own notifications. */

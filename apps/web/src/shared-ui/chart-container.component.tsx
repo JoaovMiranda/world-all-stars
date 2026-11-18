@@ -18,10 +18,10 @@ interface ChartContainerProps {
   summary?: ReactNode;
 }
 
-type EChartsModule = typeof import('echarts');
+type EChartsModule = typeof import('./echarts-setup');
 let echartsPromise: Promise<EChartsModule> | null = null;
-/** ECharts (~1 MB) is loaded on demand, once, in its own chunk (doc 14: LCP/TBT). */
-const loadECharts = () => (echartsPromise ??= import('echarts'));
+/** ECharts is loaded on demand, once, in its own tree-shaken chunk (doc 14: LCP/TBT). */
+const loadECharts = () => (echartsPromise ??= import('./echarts-setup'));
 
 /** ECharts wrapper: lazy library, SVG renderer, theme from CSS variables, re-render on theme change and resize. */
 export function ChartContainer({ option, ariaLabel, height = 280, summary }: ChartContainerProps) {
@@ -31,11 +31,27 @@ export function ChartContainer({ option, ariaLabel, height = 280, summary }: Cha
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
   const theme = useEffectiveTheme();
+  // ECharts (~160 KB) is fetched only when the chart gets near the viewport: on a phone the charts sit below the
+  // fold, and downloading them during the first paint delays the LCP image (doc 12).
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === 'undefined') return setNear(true);
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        setNear(true);
+        io.disconnect();
+      }
+    }, { rootMargin: '400px 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     let disposed = false;
     const el = ref.current;
-    if (!el) return;
+    if (!el || !near) return;
     loadECharts()
       .then((echarts) => {
         if (disposed) return;
@@ -51,7 +67,7 @@ export function ChartContainer({ option, ariaLabel, height = 280, summary }: Cha
       chart.current?.dispose();
       chart.current = null;
     };
-  }, []);
+  }, [near]);
 
   useEffect(() => {
     if (!ready || !chart.current) return;

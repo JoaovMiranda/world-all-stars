@@ -34,6 +34,7 @@ import {
   CastTierVoteResponseSchema,
   TierVotesResponseSchema,
 } from '../schemas/tier-vote.schema';
+import { WebVitalsRequestSchema } from '../schemas/web-vital.schema';
 
 /** Votes, comments, contact/suggestion, session and account (docs 17, 20, 21). */
 export const ParticipationApi = {
@@ -53,5 +54,7 @@ export const ParticipationApi = {
   updateConsent: defineContract({ method: HttpMethod.Put, access: ApiAccess.Reader, path: '/api/me/consents/:purpose', summary: 'Grant or revoke an optional consent (E6)', params: ConsentPurposeParamsSchema, body: UpdateConsentRequestSchema, response: ConsentSchema }),
   exportMyData: defineContract({ method: HttpMethod.Post, access: ApiAccess.Reader, path: '/api/me/export', summary: 'Export my data as JSON (LGPD portability, E6)', response: MyDataExportSchema }),
   deleteAccount: defineContract({ method: HttpMethod.Delete, access: ApiAccess.Reader, path: '/api/me', summary: 'Delete my account (anonymization, E6)', body: DeleteAccountRequestSchema, response: DeleteAccountResponseSchema }),
+  /** RUM (doc 12): Web Vitals of real visitors, anonymous, logged by the server for p75 dashboards. */
+  reportWebVitals: defineContract({ method: HttpMethod.Post, access: ApiAccess.Public, path: '/api/vitals', summary: 'Web Vitals of a page view (RUM)', body: WebVitalsRequestSchema, response: OkResponseSchema }),
   submitContact: defineContract({ method: HttpMethod.Post, access: ApiAccess.Public, path: '/api/contact', summary: 'Message to the curators', body: ContactRequestSchema, response: SubmissionResponseSchema }),
 } as const;

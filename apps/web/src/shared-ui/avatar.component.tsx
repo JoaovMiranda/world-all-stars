@@ -3,6 +3,7 @@ import { type CSSProperties, useState } from 'react';
 
 import { cx } from './class-names.helper';
 import { initials } from './format.helper';
+import { ResponsiveImg } from './responsive-img.component';
 
 interface AvatarProps {
   name: string;
@@ -26,7 +27,7 @@ export function Avatar({ name, tier, photoUrl, size = 40, decorative = true }: A
       {...(decorative ? { 'aria-hidden': true } : { role: 'img', 'aria-label': name })}
     >
       {showImage ? (
-        <img src={photoUrl} alt="" referrerPolicy="no-referrer" loading="lazy" decoding="async" onError={() => setBroken(true)} />
+        <ResponsiveImg url={photoUrl} displayWidth={size} width={size} height={size} loading="lazy" onBroken={() => setBroken(true)} />
       ) : (
         initials(name)
       )}

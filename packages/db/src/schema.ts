@@ -10,6 +10,7 @@ export * from './tables/ingestion.table';
 export * from './tables/observance.table';
 export * from './tables/organization.table';
 export * from './tables/participation.table';
+export * from './tables/rate-limit.table';
 export * from './tables/source.table';
 export * from './tables/sport.table';
 export * from './tables/system.table';

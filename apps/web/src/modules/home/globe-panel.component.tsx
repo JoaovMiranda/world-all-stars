@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { GlobeCountry } from '@was/shared';
 
 import { useText } from '@/i18n/use-text.hook';
@@ -5,6 +6,7 @@ import { ButtonLink } from '@/shared-ui/button-link.component';
 import { Chip } from '@/shared-ui/chip.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
+import { CountUp } from '@/shared-ui/count-up.component';
 
 import { HOME_MESSAGES } from './home.const';
 
@@ -41,13 +43,15 @@ function SelectedCountryCard({ selected, data }: { selected: SelectedCountry; da
         {data?.flag ? `${data.flag} ` : ''}
         {data?.name ?? selected.name}
       </h3>
-      <div className="display-num mt-1.5 text-3xl">{data?.totalTitles ?? 0}</div>
+      <div className="display-num mt-1.5 text-3xl">
+        <CountUp value={data?.totalTitles ?? 0} />
+      </div>
       <span className="label">{t.titles}</span>
       {data && entries.length > 0 ? (
         <>
           <div className="globe-bars">
-            {entries.map(({ sport, titles }) => (
-              <div className="globe-bar" key={sport.slug}>
+            {entries.map(({ sport, titles }, i) => (
+              <div className="globe-bar" key={sport.slug} style={{ '--i': i } as CSSProperties}>
                 <span>{sport.name}</span>
                 <div className="track">
                   <div className="fill" style={{ width: `${(titles / max) * 100}%` }} />
@@ -85,8 +89,9 @@ export function GlobePanel({ countries, selected, onSelectCountry }: GlobePanelP
   const selectedData = selected ? countries.find((c) => c.isoNumeric === selected.id) : undefined;
 
   return (
-    <div className="globe-panel" aria-live="polite">
-      {selected && <SelectedCountryCard selected={selected} data={selectedData} />}
+    <div className="globe-panel">
+      {/* Only the chosen country is announced, not the whole list of chips. */}
+      <div aria-live="polite">{selected && <SelectedCountryCard selected={selected} data={selectedData} />}</div>
       {countries.length === 0 ? (
         <EmptyState title={t.emptyTitle} compact>
           <p>{t.emptyText}</p>

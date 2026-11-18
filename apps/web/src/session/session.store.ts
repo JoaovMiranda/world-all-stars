@@ -40,3 +40,22 @@ export const sessionStore = {
 };
 
 export const useSessionKind = (): SessionKind => useSyncExternalStore(sessionStore.subscribe, sessionStore.get, sessionStore.get);
+
+const identityListeners = new Set<() => void>();
+
+/** Identity of the API session (kind + account), kept in the boot so the server and the browser build the same keys. */
+export const identityStore = {
+  get: (): string => getBoot().identity,
+  set(identity: string): void {
+    const boot = getBoot();
+    if (identity === boot.identity) return;
+    boot.identity = identity;
+    identityListeners.forEach((l) => l());
+  },
+  subscribe(listener: () => void): () => void {
+    identityListeners.add(listener);
+    return () => identityListeners.delete(listener);
+  },
+};
+
+export const useSessionIdentity = (): string => useSyncExternalStore(identityStore.subscribe, identityStore.get, identityStore.get);

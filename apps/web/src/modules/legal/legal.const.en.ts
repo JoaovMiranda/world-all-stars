@@ -332,6 +332,7 @@ export const LEGAL_DOCS_EN: LegalDocs = {
             headers: ['Name', 'Provider', 'Purpose', 'Duration'],
             rows: [
               ['was-theme', 'World All Stars', 'Remember the light or dark theme you chose (strictly necessary preference)', '12 months'],
+              ['was-motion', 'World All Stars', 'Remember whether you paused animations (accessibility preference, strictly necessary)', '12 months'],
               ['was_locale', 'World All Stars', 'Remember the language you chose: Portuguese, English or Spanish (strictly necessary preference)', '12 months'],
               ['was.session_token', 'World All Stars', 'Keep you signed in after Google sign-in (strictly necessary; HttpOnly)', 'Until you sign out or 30 days'],
               ['was.state', 'World All Stars', 'Protect the return from Google sign-in against forgery (strictly necessary)', 'A few minutes, during sign-in'],
@@ -378,18 +379,17 @@ export const LEGAL_DOCS_EN: LegalDocs = {
         id: 'auditoria',
         title: 'Latest audit',
         blocks: [
-          { kind: 'p', text: 'Audit with Lighthouse 12.6.1 (mobile profile) in the light and dark themes, on 3 and 4 November 2026, on the prototype:' },
+          { kind: 'p', text: 'Audit with Lighthouse 13.6.0 (mobile profile, simulated slow 4G) and axe-core 4.14 (WCAG 2.2 A and AA) on 18 November 2026. axe-core finds no violation on any public page; the contrast of the light and dark themes is checked by an automated test of every color.' },
           {
             kind: 'table',
             caption: 'Lighthouse results per page (accessibility and SEO)',
             headers: ['Page', 'Accessibility', 'SEO'],
             rows: [
               ['Home', '100', '100'],
-              ['Athlete profile (light and dark)', '100', '100'],
-              ['Sport', '100', '100'],
-              ['Hall of Greats', '100', '100'],
               ['Athletes', '100', '100'],
-              ['Sources', '100', '100'],
+              ['Athlete profile', '100', '100'],
+              ['Sports', '100', '100'],
+              ['Contact', '100', '100'],
             ],
           },
         ],
@@ -408,7 +408,12 @@ export const LEGAL_DOCS_EN: LegalDocs = {
               'Charts with an equivalent table of the same data.',
               'Forms with visible labels, text errors below each field and focus on the first error.',
               'No horizontal scrolling down to 320 px and text that scales up to 200%.',
-              'Short animations, turned off when the system asks for reduced motion.',
+              'Short animations, turned off when the system asks for reduced motion or with the “Pause animations” button at the top of every page.',
+              'Page changes announced to screen readers, with focus moved to the new page heading.',
+              'Status messages (filter results, loaded comments, form submissions) read out without moving focus.',
+              'Text in relative units: it follows the font size chosen in the browser.',
+              'Search shortcut with a modifier (Ctrl+K or ⌘K), which never fires while typing or dictating.',
+              'If your session expires while you write a comment, the text is kept.',
             ],
           },
         ],
@@ -434,7 +439,7 @@ export const LEGAL_DOCS_EN: LegalDocs = {
           {
             kind: 'list',
             items: [
-              'On every change: automated Lighthouse and axe-core, with zero serious or critical violations.',
+              'On every change (CI): axe-core on every public page (WCAG 2.2 A and AA, zero violations), a contrast test of every theme color, JSX accessibility rules and Lighthouse on the mobile profile requiring a 100 accessibility score.',
               'On every release: keyboard-only navigation, NVDA and VoiceOver screen readers, 200% and 400% zoom, high contrast and real phones.',
             ],
           },

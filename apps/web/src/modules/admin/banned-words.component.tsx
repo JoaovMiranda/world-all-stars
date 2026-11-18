@@ -59,7 +59,7 @@ function AddWordForm({ locales }: { locales: string[] }) {
       </FormField>
       {done && <Notice tone="success" live="polite">{done}</Notice>}
       <div className="form-actions">
-        <Button type="submit" variant="primary" disabled={add.isPending}>
+        <Button type="submit" variant="primary" pending={add.isPending}>
           {T.add}
         </Button>
       </div>

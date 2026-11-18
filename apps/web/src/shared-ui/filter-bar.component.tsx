@@ -24,7 +24,8 @@ export function FilterBar({ label, children, resultCount, activeCount = 0, onRes
     <section className="filter-bar" aria-label={label}>
       {children}
       <div className="filter-bar-meta">
-        {resultCount !== undefined && <span aria-live="polite">{ui.results(resultCount)}</span>}
+        {/* Always mounted (empty when there is no count): the new count is announced reliably (WCAG 4.1.3). */}
+        <span aria-live="polite">{resultCount !== undefined ? ui.results(resultCount) : ''}</span>
         {onReset && activeCount > 0 && (
           <Button variant="ghost" size="sm" onClick={onReset}>
             {ui.clearFilters}

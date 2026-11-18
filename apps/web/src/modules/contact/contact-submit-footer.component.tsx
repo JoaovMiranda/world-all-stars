@@ -23,7 +23,7 @@ export function ContactSubmitFooter({ label, isPending, failed }: ContactSubmitF
       )}
       <div className="contact-foot">
         <p className="turnstile">{contactText.turnstile}</p>
-        <Button type="submit" variant="primary" disabled={isPending} aria-busy={isPending || undefined}>
+        <Button type="submit" variant="primary" pending={isPending}>
           {isPending ? contactText.sending : label}
         </Button>
       </div>

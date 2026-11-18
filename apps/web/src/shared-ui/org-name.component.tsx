@@ -1,5 +1,6 @@
 import { useText } from '@/i18n/use-text.hook';
 
+import { NewTabNote } from './new-tab-note.component';
 import type { OrgIdentity } from './org.type';
 import { UI_MESSAGES } from './ui-text.const';
 
@@ -14,6 +15,7 @@ export function OrgName({ org }: { org: OrgIdentity }) {
         ↗
       </span>
       <span className="sr-only"> ({ui.wikipedia})</span>
+      <NewTabNote />
     </a>
   );
 }

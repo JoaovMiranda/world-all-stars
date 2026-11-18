@@ -7,6 +7,7 @@ import { formatDate } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
 import { SourceInfo } from '@/shared-ui/source-info.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
+import { Reveal } from '@/shared-ui/reveal.component';
 
 import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
@@ -28,12 +29,14 @@ export function LegacyCard({ profile }: { profile: AthleteProfile }) {
     return (
       <Section variant="mythic" title={T.mythicTitle} eyebrow={T.approved(d.approvals)}>
         {d.headline && <p className="legacy-headline">{d.headline}</p>}
-        {d.evidences.map((e, i) => (
-          <Evidence key={i} type={T.evidence[e.type] ?? e.type}>
-            {e.text}
-            <SourceInfo source={e.source} field={T.evidence[e.type] ?? e.type} />
-          </Evidence>
-        ))}
+        <Reveal className="legacy-evidences" stagger name="legacy-evidences">
+          {d.evidences.map((e, i) => (
+            <Evidence key={i} type={T.evidence[e.type] ?? e.type}>
+              {e.text}
+              <SourceInfo source={e.source} field={T.evidence[e.type] ?? e.type} />
+            </Evidence>
+          ))}
+        </Reveal>
       </Section>
     );
   }

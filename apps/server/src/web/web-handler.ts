@@ -5,9 +5,10 @@ import { serveStatic } from '@hono/node-server/serve-static';
 import { type Locale, LOCALE_COOKIE, resolveLocale } from '@was/shared';
 import type { Context, Hono } from 'hono';
 import { getCookie } from 'hono/cookie';
+import { endTime, startTime } from 'hono/timing';
 
 import type { ServerConfig } from '../config/env.config';
-import type { HonoEnv } from '../http/app-context.type';
+import type { HonoEnv, SsrSessionMemo } from '../http/app-context.type';
 import { pageSecureHeaders } from '../middlewares/secure-headers.middleware';
 import { type CachedPage, etagMatches, type HtmlCache, htmlEtag, isShareablePageRequest, PRIVATE_HTML_CACHE_CONTROL, PUBLIC_HTML_CACHE_CONTROL } from './html-cache';
 import type { DocumentAssets, WebRenderModule } from './web-assets.helper';
@@ -33,6 +34,15 @@ const PAGE_VARY = 'Cookie, Accept-Language';
 export const pageLocale = (c: Context<HonoEnv>): Locale => resolveLocale({ cookie: getCookie(c, LOCALE_COOKIE), acceptLanguage: c.req.header('accept-language') });
 /** In-process cache key: one entry per language of each path + search. */
 export const pageCacheKey = (locale: Locale, url: URL): string => `${locale}|${url.pathname}${url.search}`;
+class SsrTimeoutError extends Error {}
+/** Rejects when the render has not produced its Response in time (the client gets a 503 instead of a hung socket). */
+const withTimeout = <T>(ms: number, work: Promise<T>): Promise<T> => {
+  let timer: NodeJS.Timeout | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new SsrTimeoutError()), ms);
+  });
+  return Promise.race([work, timeout]).finally(() => clearTimeout(timer));
+};
 const isApi = (p: string) => p === '/api' || p.startsWith('/api/');
 
 /** A shareable page (fresh render or cache hit): CDN-ready headers, 304 when the client already has these bytes. */
@@ -58,7 +68,8 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
     const root = path.relative(process.cwd(), web.clientDir) || '.';
     app.use(
       '/assets/*',
-      serveStatic({ root, onFound: (_path, c) => c.header('Cache-Control', IMMUTABLE) }),
+      // precompressed: the web build writes .br/.gz next to each JS/CSS/SVG file (scripts/precompress.mjs).
+      serveStatic({ root, precompressed: true, onFound: (_path, c) => c.header('Cache-Control', IMMUTABLE) }),
       // A missing hashed asset is a 404, never a page.
       async (c) => c.text('Not Found', 404),
     );
@@ -87,19 +98,24 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
     const cached = shareable && !web.dev ? cache.get(key) : undefined;
     if (cached) {
       c.set('cspNonce', cached.nonce); // the stored body carries this nonce
-      return respond(c, cached, ifNoneMatch);
+      const hit = respond(c, cached, ifNoneMatch);
+      hit.headers.set('x-cache', 'HIT'); // in-process cache: no render (no `ssr` in Server-Timing)
+      return hit;
     }
     try {
       const [renderer, assets] = await Promise.all([web.loadRenderer(), web.assets(c.req.path)]);
       const nonce = c.var.cspNonce;
-      const response = await renderer.render({
+      const ssrSession: SsrSessionMemo = {};
+      startTime(c, 'ssr', 'render');
+      const response = await withTimeout(config.ssrTimeoutMs, renderer.render({
         request: c.req.raw,
         nonce,
-        apiFetch: (request) => Promise.resolve(app.fetch(request)),
+        apiFetch: (request) => Promise.resolve(app.fetch(request, { ssrSession })),
         timeZone: config.appTimeZone,
         publicUrl: config.publicUrl,
         assets,
-      });
+      }));
+      endTime(c, 'ssr');
       const headers = new Headers(response.headers);
       headers.set('Vary', PAGE_VARY);
       headers.set('Content-Language', locale);
@@ -116,6 +132,10 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
       if (!web.dev) cache.set(key, page);
       return respond(c, page, ifNoneMatch);
     } catch (error) {
+      if (error instanceof SsrTimeoutError) {
+        console.error(`[web] SSR timed out after ${config.ssrTimeoutMs}ms for ${c.req.path}`);
+        return c.text('Service Unavailable', 503, { 'Retry-After': '5', 'Cache-Control': PRIVATE_HTML_CACHE_CONTROL });
+      }
       web.fixStacktrace?.(error);
       console.error(`[web] SSR failed for ${c.req.path}`, error);
       return c.text('Internal Server Error', 500);

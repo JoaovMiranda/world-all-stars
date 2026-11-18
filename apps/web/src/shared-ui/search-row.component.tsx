@@ -23,7 +23,7 @@ export function SearchRow() {
   return (
     <div className="search-row">
       <div className="wrap">
-        <form role="search" onSubmit={onSubmit}>
+        <form role="search" aria-label={layout.searchLabel} onSubmit={onSubmit}>
           <SearchInput ref={inputRef} name="q" label={layout.searchLabel} placeholder={layout.searchPlaceholder} shortcut />
         </form>
       </div>

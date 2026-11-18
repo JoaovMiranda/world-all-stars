@@ -1,5 +1,7 @@
 import { type KeyboardEvent, type ReactNode, useId, useRef } from 'react';
 
+import { useSlidingIndicator } from './use-sliding-indicator.hook';
+
 export interface TabItem<V extends string> {
   value: V;
   label: ReactNode;
@@ -26,6 +28,7 @@ export function Tabs<V extends string>({ label, tabs, value, onChange, children 
   const listRef = useRef<HTMLDivElement>(null);
   const tabId = (v: V) => `${base}-tab-${v}`;
   const panelId = `${base}-panel`;
+  useSlidingIndicator(listRef, '[role="tab"][aria-selected="true"]', value);
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const index = tabs.findIndex((t) => t.value === value);
@@ -50,7 +53,8 @@ export function Tabs<V extends string>({ label, tabs, value, onChange, children 
               type="button"
               role="tab"
               aria-selected={selected}
-              aria-controls={panelId}
+              // Only the active tab controls the (single) rendered panel.
+              aria-controls={selected ? panelId : undefined}
               tabIndex={selected ? 0 : -1}
               onClick={() => onChange(t.value)}
             >
@@ -61,7 +65,10 @@ export function Tabs<V extends string>({ label, tabs, value, onChange, children 
         })}
       </div>
       <div id={panelId} role="tabpanel" aria-labelledby={tabId(value)} tabIndex={0}>
-        {children}
+        {/* Keyed by tab so the new panel fades in (CSS .tab-panel-in); only the active panel is rendered anyway. */}
+        <div key={value} className="tab-panel-in">
+          {children}
+        </div>
       </div>
     </>
   );

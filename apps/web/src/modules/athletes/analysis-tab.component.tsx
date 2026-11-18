@@ -6,6 +6,7 @@ import { analysisDimensionsQuery, athleteProfileQuery, athletesQuery } from '@/d
 import { currentText } from '@/i18n/text-for.helper';
 import { useLocale } from '@/i18n/locale.store';
 import { useText } from '@/i18n/use-text.hook';
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
 import { DataTable } from '@/shared-ui/data-table.component';
@@ -90,7 +91,17 @@ function Charts({ profiles }: { profiles: readonly AthleteProfile[] }) {
         <ChartContainer option={ageOption} ariaLabel={T.ageAria} height={240} summary={profiles.map((p) => `${p.knownAs}: ${titlesByAge(p).length}`).join(', ')} />
       </Section>
       <Section title={T.levelsTitle} eyebrow={T.ageLabel}>
-        <ChartContainer option={levelsOption} ariaLabel={T.levelsAria} height={240} />
+        <ChartContainer
+          option={levelsOption}
+          ariaLabel={T.levelsAria}
+          height={240}
+          summary={profiles
+            .map((p) => {
+              const counts = titlesPerLevel(p, LEVELS_ASC);
+              return `${p.knownAs}: ${LEVELS_ASC.map((l, i) => `${labels.level[l]} ${counts[i] ?? 0}`).join(', ')}`;
+            })
+            .join('; ')}
+        />
       </Section>
     </>
   );
@@ -183,6 +194,7 @@ function SameSport({ group }: { group: readonly AthleteProfile[] }) {
 
 function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteProfile; profiles: AthleteProfile[]; dims: AnalysisDimensionsResponse; total: number }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
+  const ui = useText(UI_MESSAGES);
   const profileText = useText(ATHLETE_PROFILE_MESSAGES);
   const others = profiles.slice(1);
   const mixed = others.some((o) => o.sport.slug !== profile.sport.slug);
@@ -242,7 +254,7 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
   return (
     <div className="stack">
       <Section title={others.length ? T.titleVs(profile.knownAs, others.length) : T.title(profile.knownAs)}>
-        <ChartContainer option={radar} ariaLabel={T.radarAria} height={360} />
+        <ChartContainer option={radar} ariaLabel={T.radarAria} height={360} summary={ui.chartDataInTable} />
         <div className="panel-gap">
           <CompareMatrix caption={T.dimsCaption} rowHeader={T.dimension} athletes={profiles} rows={dimsRows} />
         </div>
