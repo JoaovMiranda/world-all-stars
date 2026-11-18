@@ -1,6 +1,10 @@
-// pt-BR messages of the shared validators (same text on the server 422 and in the form). Ready for i18n.
+import { defineMessages } from '../i18n/messages.helper';
+import { VALIDATION_TEXT_EN } from './validation-messages.const.en';
+import { VALIDATION_TEXT_ES } from './validation-messages.const.es';
+
+// pt-BR messages of the shared validators (same text on the server 422 and in the form); en/es next to it.
 // Never reveal WHICH banned word matched (doc 20).
-export const VALIDATION_MESSAGES = {
+export const VALIDATION_TEXT = {
   required: 'Campo obrigatório.',
   commentEmpty: 'Escreva algo antes de publicar. Só espaços ou linhas em branco não valem.',
   tooLong: (max: number, length: number) => `O limite é de ${max} caracteres (o seu texto tem ${length}).`,
@@ -24,3 +28,5 @@ export const VALIDATION_MESSAGES = {
   contactBodyEmpty: 'Escreva sua mensagem. Só espaços não valem.',
   accountDeleteConfirmation: (word: string) => `Digite ${word} para confirmar.`,
 } as const;
+
+export const VALIDATION_MESSAGES = defineMessages(VALIDATION_TEXT, { en: VALIDATION_TEXT_EN, es: VALIDATION_TEXT_ES });

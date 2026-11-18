@@ -11,6 +11,10 @@ export const ApiErrorCode = {
   SameTier: 'same_tier',
   AlreadyDecided: 'already_decided',
   RateLimited: 'rate_limited',
+  /** Signed in with an e-mail the identity provider did not verify (doc 05). */
+  EmailUnverified: 'email_unverified',
+  /** The accepted legal versions are not the current ones (POST /api/account/consent). */
+  ConsentOutdated: 'consent_outdated',
   Internal: 'internal',
 } as const;
 export type ApiErrorCode = (typeof ApiErrorCode)[keyof typeof ApiErrorCode];

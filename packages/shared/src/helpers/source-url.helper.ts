@@ -1,4 +1,6 @@
 import { FORBIDDEN_SOURCE_HOSTS } from '../consts/source-url.const';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
+import { textFor } from '../i18n/messages.helper';
 import { VALIDATION_MESSAGES } from '../consts/validation-messages.const';
 import { SourceUsageStatus } from '../enums/source-usage-status.enum';
 import type { SourceDomainRule } from '../types/source-rule.type';
@@ -46,23 +48,24 @@ export const findSourceForUrl = (url: URL, sources: readonly SourceDomainRule[])
  * Validates a suggested source link (doc 21): valid URL, https, anti-SSRF host rules, rejected sources refused,
  * link-only sources accepted with a note. Same code on the server (before any crawl) and in the form.
  */
-export const checkSourceUrl = (raw: unknown, sources: readonly SourceDomainRule[]): SourceUrlCheck => {
+export const checkSourceUrl = (raw: unknown, sources: readonly SourceDomainRule[], locale: Locale = DEFAULT_LOCALE): SourceUrlCheck => {
+  const m = textFor(VALIDATION_MESSAGES, locale);
   let url: URL;
   try {
     url = new URL(String(raw ?? '').trim());
   } catch {
-    return { ok: false, error: 'invalid_url', message: VALIDATION_MESSAGES.urlInvalid };
+    return { ok: false, error: 'invalid_url', message: m.urlInvalid };
   }
-  if (url.protocol !== 'https:') return { ok: false, error: 'not_https', message: VALIDATION_MESSAGES.urlNotHttps };
-  if (isForbiddenSourceHost(url)) return { ok: false, error: 'forbidden_host', message: VALIDATION_MESSAGES.urlForbiddenHost };
+  if (url.protocol !== 'https:') return { ok: false, error: 'not_https', message: m.urlNotHttps };
+  if (isForbiddenSourceHost(url)) return { ok: false, error: 'forbidden_host', message: m.urlForbiddenHost };
   const source = findSourceForUrl(url, sources);
   if (source?.usageStatus === SourceUsageStatus.Rejected) {
-    return { ok: false, error: 'rejected_source', message: VALIDATION_MESSAGES.urlRejectedSource(source.name) };
+    return { ok: false, error: 'rejected_source', message: m.urlRejectedSource(source.name) };
   }
   return {
     ok: true,
     url: url.href,
     source: source ? { name: source.name, usageStatus: source.usageStatus } : null,
-    note: source?.usageStatus === SourceUsageStatus.LinkOnly ? VALIDATION_MESSAGES.noteLinkOnly(source.name) : null,
+    note: source?.usageStatus === SourceUsageStatus.LinkOnly ? m.noteLinkOnly(source.name) : null,
   };
 };

@@ -4,6 +4,7 @@ import { ON_THIS_DAY_KIND_VALUES } from '../enums/on-this-day-kind.enum';
 import { AthleteSummarySchema } from './athlete-summary.schema';
 import { MonthDaySchema } from './month-day.schema';
 import { ObservanceSchema } from './observance.schema';
+import { ContentLocaleSchema } from './locale.schema';
 
 /** A dated milestone of an athlete (birth, title, record…) shown in "Hoje na história". */
 export const OnThisDayItemSchema = z.object({
@@ -19,6 +20,7 @@ export const OnThisDayResponseSchema = z.object({
   md: MonthDaySchema,
   items: z.array(OnThisDayItemSchema),
   observance: ObservanceSchema.nullable(),
+  contentLocale: ContentLocaleSchema,
 });
 export type OnThisDayResponse = z.infer<typeof OnThisDayResponseSchema>;
 export const MonthDayParamsSchema = z.object({ md: MonthDaySchema });

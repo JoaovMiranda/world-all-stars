@@ -6,6 +6,7 @@ import { CompetitionEventSchema } from './calendar-event.schema';
 import { ObservanceSchema } from './observance.schema';
 import { OrganizationSchema, SportAssociationSchema } from './organization.schema';
 import { SportInfoSchema } from './sport-ref.schema';
+import { ContentLocaleSchema } from './locale.schema';
 
 /** Report of a simulated collection that found no athlete (doc 18): reason + facts with evidence. */
 export const CollectionReportSchema = z.object({
@@ -31,6 +32,7 @@ export type SportCompetition = z.infer<typeof SportCompetitionSchema>;
 
 /** Response of GET /api/sports/:slug (doc 09 P7). */
 export const SportPageSchema = SportInfoSchema.extend({
+  contentLocale: ContentLocaleSchema,
   description: z.string().nullable(),
   rules: z.string().nullable(),
   wikipedia: z.url().nullable(),

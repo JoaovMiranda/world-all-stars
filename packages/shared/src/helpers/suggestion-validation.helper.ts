@@ -4,6 +4,8 @@ import {
   SUGGESTION_URLS_MAX,
   SUGGESTION_WHY_MAX_LENGTH,
 } from '../consts/text-limits.const';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
+import { textFor } from '../i18n/messages.helper';
 import { VALIDATION_MESSAGES } from '../consts/validation-messages.const';
 import { TextValidationError } from '../enums/text-validation-error.enum';
 import type { BannedWordRule } from '../types/banned-word.type';
@@ -45,40 +47,41 @@ export interface SuggestionValidation {
 }
 
 /** Validates an athlete suggestion (doc 21). Same function on the server (422 body) and in the form. */
-export const validateSuggestion = (draft: SuggestionDraft, ctx: SuggestionContext): SuggestionValidation => {
+export const validateSuggestion = (draft: SuggestionDraft, ctx: SuggestionContext, locale: Locale = DEFAULT_LOCALE): SuggestionValidation => {
+  const m = textFor(VALIDATION_MESSAGES, locale);
   const errors: FieldErrors = {};
   const notes: string[] = [];
   const name = cleanText(draft.athleteName);
-  if (!name) errors.athleteName = VALIDATION_MESSAGES.athleteNameRequired;
-  else if (codePointLength(name) > SUGGESTION_NAME_MAX_LENGTH) errors.athleteName = VALIDATION_MESSAGES.athleteNameTooLong(SUGGESTION_NAME_MAX_LENGTH);
+  if (!name) errors.athleteName = m.athleteNameRequired;
+  else if (codePointLength(name) > SUGGESTION_NAME_MAX_LENGTH) errors.athleteName = m.athleteNameTooLong(SUGGESTION_NAME_MAX_LENGTH);
 
   const urls: string[] = [];
   const typed = draft.urls.map((u, index) => ({ raw: cleanText(u), index })).filter((u) => u.raw);
-  if (typed.length === 0) errors.urls = VALIDATION_MESSAGES.urlsRequired;
-  else if (typed.length > SUGGESTION_URLS_MAX) errors.urls = VALIDATION_MESSAGES.urlsTooMany(SUGGESTION_URLS_MAX);
+  if (typed.length === 0) errors.urls = m.urlsRequired;
+  else if (typed.length > SUGGESTION_URLS_MAX) errors.urls = m.urlsTooMany(SUGGESTION_URLS_MAX);
   for (const { raw, index } of typed) {
-    const check = checkSourceUrl(raw, ctx.sources);
+    const check = checkSourceUrl(raw, ctx.sources, locale);
     if (!check.ok) errors[`urls.${index}`] = check.message;
     else {
       urls.push(check.url);
       if (check.note) notes.push(check.note);
     }
   }
-  if (new Set(urls).size !== urls.length) errors.urls = VALIDATION_MESSAGES.urlsDuplicated;
+  if (new Set(urls).size !== urls.length) errors.urls = m.urlsDuplicated;
   if (urls.length > 0 && !errors.urls && !urls.some((u) => WIKI_SOURCE_HOST_REGEX.test(new URL(u).hostname))) {
-    notes.push(VALIDATION_MESSAGES.noteNoWiki);
+    notes.push(m.noteNoWiki);
   }
 
   if (cleanText(draft.why)) {
-    const why = validateFreeText(draft.why, { maxLength: SUGGESTION_WHY_MAX_LENGTH, bannedWords: ctx.bannedWords });
+    const why = validateFreeText(draft.why, { maxLength: SUGGESTION_WHY_MAX_LENGTH, bannedWords: ctx.bannedWords, locale });
     if (!why.ok && why.error !== TextValidationError.Empty) errors.why = why.message;
   }
-  if (cleanText(draft.email) && !isEmail(draft.email)) errors.email = VALIDATION_MESSAGES.emailInvalid;
+  if (cleanText(draft.email) && !isEmail(draft.email)) errors.email = m.emailInvalid;
 
   const key = normalizeForSearch(name);
   const found = key ? ctx.knownAthletes.find((a) => [a.knownAs, a.fullName].some((n) => n && normalizeForSearch(n) === key)) : undefined;
   const existing = found ? { slug: found.slug, knownAs: found.knownAs } : null;
-  if (existing && !errors.athleteName) errors.athleteName = VALIDATION_MESSAGES.athleteExists(existing.knownAs);
+  if (existing && !errors.athleteName) errors.athleteName = m.athleteExists(existing.knownAs);
 
   return { ok: Object.keys(errors).length === 0, errors, notes, name, urls, existing };
 };

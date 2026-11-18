@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { AthleteSummarySchema } from './athlete-summary.schema';
+import { ContentLocaleSchema } from './locale.schema';
 
 /** A Mythic in the Hall of Greats: summary + dossier headline and counters. */
 export const HallOfGreatsEntrySchema = AthleteSummarySchema.extend({
@@ -14,5 +15,6 @@ export type HallOfGreatsEntry = z.infer<typeof HallOfGreatsEntrySchema>;
 export const HallOfGreatsResponseSchema = z.object({
   greats: z.array(HallOfGreatsEntrySchema),
   candidates: z.array(AthleteSummarySchema),
+  contentLocale: ContentLocaleSchema,
 });
 export type HallOfGreatsResponse = z.infer<typeof HallOfGreatsResponseSchema>;

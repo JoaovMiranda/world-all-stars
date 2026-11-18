@@ -1,4 +1,6 @@
 import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
+import { textFor } from '../i18n/messages.helper';
 import { VALIDATION_MESSAGES } from '../consts/validation-messages.const';
 import { TextValidationError } from '../enums/text-validation-error.enum';
 import type { BannedWordRule } from '../types/banned-word.type';
@@ -10,18 +12,21 @@ interface FreeTextOptions {
   maxLength: number;
   bannedWords: readonly BannedWordRule[];
   emptyMessage?: string;
+  /** Language of the messages (the request locale on the server, the page locale in the form). */
+  locale?: Locale;
 }
 
 /** Shared rule for any free text (comment, justification, message): empty → too long → banned word. */
-export const validateFreeText = (raw: unknown, { maxLength, bannedWords, emptyMessage }: FreeTextOptions): TextValidationResult => {
+export const validateFreeText = (raw: unknown, { maxLength, bannedWords, emptyMessage, locale = DEFAULT_LOCALE }: FreeTextOptions): TextValidationResult => {
+  const m = textFor(VALIDATION_MESSAGES, locale);
   const text = cleanText(raw);
   const length = codePointLength(text);
-  if (!text) return { ok: false, error: TextValidationError.Empty, message: emptyMessage ?? VALIDATION_MESSAGES.commentEmpty, length };
-  if (length > maxLength) return { ok: false, error: TextValidationError.TooLong, message: VALIDATION_MESSAGES.tooLong(maxLength, length), length };
-  if (hasBannedWord(text, bannedWords)) return { ok: false, error: TextValidationError.BannedWord, message: VALIDATION_MESSAGES.bannedWord, length };
+  if (!text) return { ok: false, error: TextValidationError.Empty, message: emptyMessage ?? m.commentEmpty, length };
+  if (length > maxLength) return { ok: false, error: TextValidationError.TooLong, message: m.tooLong(maxLength, length), length };
+  if (hasBannedWord(text, bannedWords)) return { ok: false, error: TextValidationError.BannedWord, message: m.bannedWord, length };
   return { ok: true, text, length };
 };
 
 /** Comment body (doc 20): ≤ 500 code points after cleaning, not empty, no banned words. */
-export const validateComment = (body: unknown, bannedWords: readonly BannedWordRule[]): TextValidationResult =>
-  validateFreeText(body, { maxLength: COMMENT_MAX_LENGTH, bannedWords });
+export const validateComment = (body: unknown, bannedWords: readonly BannedWordRule[], locale: Locale = DEFAULT_LOCALE): TextValidationResult =>
+  validateFreeText(body, { maxLength: COMMENT_MAX_LENGTH, bannedWords, locale });

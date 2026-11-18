@@ -11,6 +11,7 @@ export * from './enums/api-access.enum';
 export * from './enums/api-error-code.enum';
 export * from './enums/athlete-profile-tab.enum';
 export * from './enums/athlete-status.enum';
+export * from './enums/auth-audit-action.enum';
 export * from './enums/banned-word-match-mode.enum';
 export * from './enums/calendar-event-type.enum';
 export * from './enums/comment-reaction.enum';
@@ -49,6 +50,12 @@ export * from './enums/text-validation-error.enum';
 export * from './enums/tier.enum';
 export * from './enums/user-role.enum';
 
+// i18n (pt-BR source + en/es, same URL: the locale comes from a cookie/header)
+export * from './i18n/formatters.helper';
+export * from './i18n/locale.const';
+export * from './i18n/locale.helper';
+export * from './i18n/messages.helper';
+
 // Consts
 export * from './consts/admin-rules.const';
 export * from './consts/achievement.const';
@@ -56,6 +63,7 @@ export * from './consts/analysis.const';
 export * from './consts/api-error-messages.const';
 export * from './consts/competition-level.const';
 export * from './consts/demo-session.const';
+export * from './consts/http-header.const';
 export * from './consts/home.const';
 export * from './consts/legacy-score.const';
 export * from './consts/legal-documents.const';
@@ -97,6 +105,7 @@ export * from './schemas/globe-country.schema';
 export * from './schemas/hall-of-greats.schema';
 export * from './schemas/home.schema';
 export * from './schemas/iso-date.schema';
+export * from './schemas/locale.schema';
 export * from './schemas/media-link.schema';
 export * from './schemas/moderation-rules.schema';
 export * from './schemas/month-day.schema';
@@ -150,3 +159,8 @@ export * from './helpers/text-validation.helper';
 export * from './helpers/tier-rules.helper';
 export * from './helpers/tier-votes.helper';
 export * from './helpers/uuid.helper';
+
+// SEO (doc 12): structured data, sitemap and robots, shared by the SSR (apps/web) and the server (apps/server)
+export * from './seo/json-ld.helper';
+export * from './seo/seo.const';
+export * from './seo/sitemap.helper';

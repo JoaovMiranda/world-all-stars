@@ -11,6 +11,7 @@ import { AthleteSummarySchema } from './athlete-summary.schema';
 import { CountryRefSchema } from './country-ref.schema';
 import { IsoDateSchema } from './iso-date.schema';
 import { SourceRefSchema } from './source-ref.schema';
+import { ContentLocaleSchema } from './locale.schema';
 
 const level = z.enum(COMPETITION_LEVEL_VALUES);
 const achievementBase = {
@@ -124,6 +125,7 @@ export const EntityVersionSchema = z.object({ n: z.number().int().positive(), su
 
 /** Response of GET /api/athletes/:slug: every tab of the profile (doc 09 P2). */
 export const AthleteProfileSchema = AthleteSummarySchema.extend({
+  contentLocale: ContentLocaleSchema,
   wikidataQid: z.string().nullable(),
   fullName: z.string().nullable(),
   nicknames: z.array(z.string()),

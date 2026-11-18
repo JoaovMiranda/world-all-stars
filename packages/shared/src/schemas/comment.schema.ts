@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
 import { z } from 'zod';
 
 import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
@@ -51,9 +52,9 @@ export type PostCommentRequest = z.infer<typeof PostCommentRequestSchema>;
 export const PostCommentResponseSchema = z.object({ id: z.string().min(1) });
 
 /** Form/server validation of a comment: same rules on both sides (doc 20). */
-export const createCommentInputSchema = (bannedWords: readonly BannedWordRule[]) =>
+export const createCommentInputSchema = (bannedWords: readonly BannedWordRule[], locale: Locale = DEFAULT_LOCALE) =>
   PostCommentRequestSchema.superRefine((value, ctx) => {
-    const result = validateComment(value.body, bannedWords);
+    const result = validateComment(value.body, bannedWords, locale);
     if (!result.ok) ctx.addIssue({ code: 'custom', path: ['body'], message: result.message, params: { error: result.error } });
   });
 

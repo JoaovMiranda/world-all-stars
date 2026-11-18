@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
 import { z } from 'zod';
 
 import { validateContact } from '../helpers/contact-validation.helper';
@@ -34,10 +35,10 @@ const addFieldErrors = (ctx: z.RefinementCtx, errors: Record<string, string>) =>
 };
 
 /** Form/server validation of the message tab (same rules on both sides). */
-export const createContactInputSchema = (bannedWords: readonly BannedWordRule[]) =>
-  ContactRequestSchema.superRefine((value, ctx) => addFieldErrors(ctx, validateContact(value, bannedWords).errors));
+export const createContactInputSchema = (bannedWords: readonly BannedWordRule[], locale: Locale = DEFAULT_LOCALE) =>
+  ContactRequestSchema.superRefine((value, ctx) => addFieldErrors(ctx, validateContact(value, bannedWords, locale).errors));
 
 /** Form/server validation of the suggestion tab (https, anti-SSRF, rejected/link-only sources, duplicates). */
-export const createSuggestionInputSchema = (context: SuggestionContext) =>
-  SuggestionRequestSchema.superRefine((value, ctx) => addFieldErrors(ctx, validateSuggestion(value, context).errors));
+export const createSuggestionInputSchema = (context: SuggestionContext, locale: Locale = DEFAULT_LOCALE) =>
+  SuggestionRequestSchema.superRefine((value, ctx) => addFieldErrors(ctx, validateSuggestion(value, context, locale).errors));
 

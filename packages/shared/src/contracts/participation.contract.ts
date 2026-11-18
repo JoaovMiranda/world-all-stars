@@ -23,6 +23,7 @@ import {
   UpdateConsentRequestSchema,
 } from '../schemas/my-data.schema';
 import {
+  AcceptConsentRequestSchema,
   MeResponseSchema,
   NotificationIdParamsSchema,
   NotificationsResponseSchema,
@@ -37,6 +38,7 @@ import {
 /** Votes, comments, contact/suggestion, session and account (docs 17, 20, 21). */
 export const ParticipationApi = {
   session: defineContract({ method: HttpMethod.Get, access: ApiAccess.Public, path: '/api/session', summary: 'Current session', response: SessionResponseSchema }),
+  acceptConsent: defineContract({ method: HttpMethod.Post, access: ApiAccess.Public, path: '/api/account/consent', summary: 'Accept the current Terms + Privacy and declare 18+ (pending Google sign-in, doc 13)', body: AcceptConsentRequestSchema, response: OkResponseSchema }),
   me: defineContract({ method: HttpMethod.Get, access: ApiAccess.Reader, path: '/api/me', summary: 'My votes and comments (E2)', response: MeResponseSchema }),
   notifications: defineContract({ method: HttpMethod.Get, access: ApiAccess.Reader, path: '/api/notifications', summary: 'My notifications (E4)', response: NotificationsResponseSchema }),
   markNotificationRead: defineContract({ method: HttpMethod.Patch, access: ApiAccess.Reader, path: '/api/notifications/:id/read', summary: 'Mark a notification as read', params: NotificationIdParamsSchema, response: OkResponseSchema }),

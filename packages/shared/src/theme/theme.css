@@ -20,6 +20,9 @@
   /* dourado metálico: só em Mítico, logo e filetes de honra */
   --grad: linear-gradient(135deg, #8C6A2C 0%, #E6CB86 45%, #A8833A 100%);
   --float-shadow: 0 12px 32px rgba(12, 11, 9, .14);
+  /* "Sign in with Google" button (Google identity guidelines: neutral light/dark) and the 4-colour G mark. */
+  --google-btn-bg: #ffffff; --google-btn-border: #747775; --google-btn-text: #1f1f1f;
+  --google-blue: #4285f4; --google-red: #ea4335; --google-yellow: #fbbc05; --google-green: #34a853;
   --logo-bg: #FFFFFF;   /* paper behind third-party logos (Commons), same in both themes */
 
   /* Medalhas: ouro, prata e bronze com as cores reais (preenchimento) + versões de TEXTO com contraste AA */
@@ -59,6 +62,7 @@
   --on-primary: #0C0B09; --on-success: #0C0B09; --on-info: #0C0B09; --on-danger: #0C0B09;
   --lvl-continental: #A9B7C4; --gold-text: #E2C15A; --silver-text: #D4D4D4; --bronze-text: #DE9558; --tier-mythic: #C9B2FF; --tier-legendary: #E2C15A; --tier-elite: #9DBBF2; --tier-champion: #86D6B4;
   --float-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+  --google-btn-bg: #131314; --google-btn-border: #8e918f; --google-btn-text: #e3e3e3;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -72,6 +76,7 @@
     --on-primary: #0C0B09; --on-success: #0C0B09; --on-info: #0C0B09; --on-danger: #0C0B09;
     --lvl-continental: #A9B7C4; --gold-text: #E2C15A; --silver-text: #D4D4D4; --bronze-text: #DE9558; --tier-mythic: #C9B2FF; --tier-legendary: #E2C15A; --tier-elite: #9DBBF2; --tier-champion: #86D6B4;
     --float-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+    --google-btn-bg: #131314; --google-btn-border: #8e918f; --google-btn-text: #e3e3e3;
   }
 }
 

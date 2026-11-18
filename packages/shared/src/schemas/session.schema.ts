@@ -9,14 +9,28 @@ import { AthleteRefSchema } from './athlete-summary.schema';
 export const SessionUserSchema = z.object({
   email: z.string().min(3),
   name: z.string().min(1),
+  /** Profile photo from the identity provider (Google), shown in the session menu. */
+  avatarUrl: z.url().nullable().optional(),
   role: z.enum(USER_ROLE_VALUES),
   tierVotesCount: z.number().int().nonnegative(),
   commentsCount: z.number().int().nonnegative(),
 });
 export type SessionUser = z.infer<typeof SessionUserSchema>;
 
-/** Response of GET /api/session: who is browsing (anon has no user). */
-export const SessionResponseSchema = z.object({ kind: z.enum(SESSION_KIND_VALUES), user: SessionUserSchema.nullable() });
+/**
+ * Response of GET /api/session: who is browsing (anon has no user).
+ * - `pendingConsent`: signed in (Google) but the current Terms/Privacy (and the 18+ declaration) are not accepted yet;
+ *   until then the session counts as anonymous (kind anon, user null) and the web shows the blocking consent dialog.
+ * - `simulated`: the dev session switcher is available (AUTH_SIMULATED on the server; always true with fixtures).
+ * - `googleEnabled`: Google sign-in is configured (GOOGLE_CLIENT_ID/SECRET); false = the login dialog says so.
+ */
+export const SessionResponseSchema = z.object({
+  kind: z.enum(SESSION_KIND_VALUES),
+  user: SessionUserSchema.nullable(),
+  pendingConsent: z.object({ email: z.string().min(3), name: z.string().min(1) }).nullable(),
+  simulated: z.boolean(),
+  googleEnabled: z.boolean(),
+});
 export type SessionResponse = z.infer<typeof SessionResponseSchema>;
 
 /** Response of GET /api/me (E2): votes given and comments written. */
@@ -42,3 +56,15 @@ export type Notification = z.infer<typeof NotificationSchema>;
 export const NotificationsResponseSchema = z.object({ items: z.array(NotificationSchema), unread: z.number().int().nonnegative() });
 export type NotificationsResponse = z.infer<typeof NotificationsResponseSchema>;
 export const NotificationIdParamsSchema = z.object({ id: z.string().min(1) });
+
+/** Body of POST /api/account/consent: the versions shown in the consent dialog + the 18+ self-declaration. */
+export const AcceptConsentRequestSchema = z.object({
+  termsVersion: z.string().min(1),
+  privacyVersion: z.string().min(1),
+  adult: z.literal(true),
+});
+export type AcceptConsentRequest = z.infer<typeof AcceptConsentRequestSchema>;
+
+/** Consent dialog (web): both boxes start unchecked and must be ticked (Terms + Privacy; 18+). */
+export const ConsentFormSchema = z.object({ documents: z.literal(true), adult: z.literal(true) });
+export type ConsentForm = z.input<typeof ConsentFormSchema>;
