@@ -5,3 +5,10 @@ packages:
 # esbuild (server bundle, drizzle-kit, tsx) needs its postinstall to fetch the native binary.
 allowBuilds:
   esbuild: true
+
+# Exceção de auditoria aprovada em 2026-11-17 (follow-up em plan/docs/22):
+# GHSA-fc5q-39xc-vjpf (picomatch 4.0.7, ReDoS) só entra via vitest/drizzle-kit, peers opcionais
+# do better-auth; o servidor em produção não carrega esse código. Remover quando sair o picomatch 4.0.8.
+auditConfig:
+  ignoreGhsas:
+    - GHSA-fc5q-39xc-vjpf

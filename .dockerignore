@@ -1,0 +1,23 @@
+# Build context of the Dockerfile: sources only. Dependencies and builds are produced inside the image.
+**/node_modules
+**/dist
+**/.turbo
+**/.vite
+**/.vitest-cache
+**/*.tsbuildinfo
+**/coverage
+**/test-results
+**/playwright-report
+.data
+plan
+.git
+.github
+.claude
+.DS_Store
+**/.DS_Store
+# Secrets never enter the image (pass them at run time: docker run --env-file).
+.env
+.env.*
+!.env.example
+Dockerfile
+.dockerignore

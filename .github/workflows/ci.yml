@@ -1,0 +1,98 @@
+# CI (doc 05): typecheck, tests, production build + smoke, dependency audit, and a Docker build without push.
+# Actions are pinned by full commit SHA (the comment says which release); bump SHA and comment together.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [development, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TELEMETRY_DISABLED: '1'
+
+jobs:
+  verify:
+    name: Typecheck, test, build, smoke, audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm (version from packageManager)
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: Set up Node (.nvmrc)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      # plan/ is gitignored: the prototype-based tests and the db seed skip without it; web fixtures are committed.
+      - name: Test
+        run: pnpm test
+
+      - name: Build (production, real API)
+        run: pnpm build
+        env:
+          VITE_DATA_SOURCE: http
+
+      # Starts apps/server/dist/main.js with NODE_ENV=production on an in-memory PGlite and dummy CI secrets.
+      - name: Smoke test of the production build
+        run: bash scripts/ci/smoke.sh
+
+      - name: Audit production dependencies
+        run: pnpm audit --prod --audit-level=high
+
+  docker:
+    name: Docker image (build only, no push)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Build image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          push: false
+          load: true
+          tags: world-all-stars:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Same smoke as the verify job, against the container (empty PGlite volume, dummy CI secrets).
+      - name: Smoke test of the image
+        run: |
+          docker run -d --name was -p 8799:8787 \
+            -e IP_HASH_SALT=ci-smoke-salt-not-a-secret \
+            -e BETTER_AUTH_SECRET=ci-smoke-better-auth-secret-not-a-secret-000 \
+            -e PUBLIC_URL=http://127.0.0.1:8799 \
+            world-all-stars:ci
+          BASE_URL=http://127.0.0.1:8799 bash scripts/ci/smoke.sh || { docker logs was; exit 1; }
+          docker inspect --format '{{.Config.User}} {{json .Config.Healthcheck.Test}}' world-all-stars:ci
+
+      - name: Stop container
+        if: always()
+        run: docker rm -f was || true
