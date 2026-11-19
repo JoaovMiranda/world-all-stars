@@ -10,3 +10,4 @@ export * from './providers/football-champions.provider';
 export * from './providers/olympic-medalists.provider';
 export * from './providers/wikidata.provider';
 export * from './enrich/ai';
+export * from './providers/wikidata-profile.provider';

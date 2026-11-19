@@ -34,3 +34,21 @@ describe('wikidata facts', () => {
     expect(wikidataFacts({ id: 'Q1', claims: { P569: [{ mainsnak: { datavalue: { value: { time: '+1880-00-00T00:00:00Z', precision: 9 } } } }] } }).birthDate).toBeNull();
   });
 });
+
+import { profileFacts } from './wikidata-profile.provider';
+
+describe('wikidata profile facts', () => {
+  it('reads description, birth place, height in cm, position, clubs with periods and the photo', () => {
+    const f = profileFacts({
+      id: 'Q12', descriptions: { en: { value: 'Brazilian footballer' }, pt: { value: 'futebolista brasileiro' } },
+      claims: {
+        P19: [{ mainsnak: { datavalue: { value: { id: 'Q1' } } } }],
+        P2048: [{ mainsnak: { datavalue: { value: { amount: '+1.76', unit: 'http://www.wikidata.org/entity/Q11573' } } } }],
+        P413: [{ mainsnak: { datavalue: { value: { id: 'Q2' } } } }],
+        P18: [{ mainsnak: { datavalue: { value: 'Cafu 2010.jpg' } } }],
+        P54: [{ mainsnak: { datavalue: { value: { id: 'Q3' } } }, qualifiers: { P580: [{ datavalue: { value: { time: '+1990-01-01T00:00:00Z', precision: 9 } } }], P582: [{ datavalue: { value: { time: '+1995-01-01T00:00:00Z', precision: 9 } } }] } }],
+      },
+    });
+    expect(f).toMatchObject({ description: { en: 'Brazilian footballer', pt: 'futebolista brasileiro', es: null }, birthPlace: 'Q1', heightCm: 176, position: 'Q2', image: 'Cafu 2010.jpg', clubs: [{ qid: 'Q3', from: 1990, to: 1995 }] });
+  });
+});

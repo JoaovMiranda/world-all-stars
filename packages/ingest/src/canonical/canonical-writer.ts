@@ -3,6 +3,7 @@
 // Idempotent: every write is an `ensure` on a natural key. It never approves anything: values it writes are
 // `auto_accepted` (deterministic + SoT) and ambiguous identities go to identity_candidates for a human.
 import {
+  athleteTeams, athleteTranslations, cities, cityTranslations, mediaLinks, sources,
   type Actor, BaseRepository, type Database, active, athleteSports, athletes, categoryDimensions, categorySetValues, categorySets, categoryValues, championTiers,
   competitionEditions, competitionEntries, competitionEvents, competitionLevels, competitionResults, competitions, competitionTranslations, competitorRepresentations,
   competitorGroups, competitorMemberships, competitors, contestParticipations, contests, countries, countryTranslations, domainValues, entityAliases, entityExternalIds, entryMembers, fieldConflicts, fieldProvenance,
@@ -209,10 +210,13 @@ export class CanonicalWriter {
 
   /** Wikidata facts (§5.2: Wikidata is the SoT for birth and ids): fill empty fields; a different value opens a conflict. */
   private async applyEvidence(e: Extract<Observation, { contract: 'evidence' }>['record'], row: typeof sourceObservations.$inferSelect) {
-    const [entityId, field] = e.field.split(':') as [string, string];
+    const cut = e.field.indexOf(':');
+    const entityId = e.field.slice(0, cut);
+    const field = e.field.slice(cut + 1);
     const [person] = await this.db.select().from(athletes).where(eq(athletes.id, entityId));
     if (!person) return;
     const value = e.value.value;
+    if (await this.applyProfile(person, field, e.value.original, row)) return;
     if (field === 'wikidata' && typeof value === 'string') {
       await this.repo.ensure(entityExternalIds, { provider: 'wikidata', externalId: value }, { entityId, provider: 'wikidata', externalId: value, url: `https://www.wikidata.org/wiki/${value}` } as never, CANONICAL_ACTOR);
       if (!person.wikidataQid) await this.repo.update(athletes, entityId, { wikidataQid: value } as never, CANONICAL_ACTOR, { summary: 'Wikidata QID (sitelink)' });
@@ -229,6 +233,81 @@ export class CanonicalWriter {
         entityType: 'athletes', entityId, fieldName: column, baseValue: String(current), chosenValue: String(current), otherValue: String(value), resolution: 'pending',
       } as never, CANONICAL_ACTOR);
     }
+  }
+
+  /** Profile facts (wikidata-profile): only EMPTY fields are filled; curated values are never overwritten. */
+  private async applyProfile(person: typeof athletes.$inferSelect, field: string, raw: string, row: typeof sourceObservations.$inferSelect): Promise<boolean> {
+    const json = () => JSON.parse(raw) as Record<string, unknown>;
+    const names = (n: unknown) => (n ?? {}) as Record<'en' | 'pt' | 'es', string | null>;
+    const setIfEmpty = async (column: keyof typeof athletes.$inferSelect, v: unknown) => {
+      if (person[column] !== null && person[column] !== undefined && person[column] !== '') return;
+      await this.repo.update(athletes, person.id, { [column]: v } as never, CANONICAL_ACTOR, { summary: `${String(column)} from Wikidata` });
+      (person as Record<string, unknown>)[column] = v;
+      await this.provenance('athletes', person.id, String(column), row);
+    };
+    if (field === 'bio') {
+      const d = names(json());
+      for (const [lang, locale] of [['en', 'en'], ['pt', 'pt-BR'], ['es', 'es']] as const) {
+        const text = d[lang];
+        if (!text) continue;
+        const bio = text.charAt(0).toUpperCase() + text.slice(1) + (text.endsWith('.') ? '' : '.');
+        const [existing] = await this.db.select().from(athleteTranslations).where(and(eq(athleteTranslations.athleteId, person.id), eq(athleteTranslations.locale, locale)));
+        if (!existing) await this.repo.insert(athleteTranslations, { athleteId: person.id, locale, shortBio: bio } as never, CANONICAL_ACTOR);
+        else if (!existing.shortBio) await this.repo.update(athleteTranslations, existing.id, { shortBio: bio } as never, CANONICAL_ACTOR);
+      }
+      return true;
+    }
+    if (field === 'full_name') return await setIfEmpty('fullName', raw), true;
+    if (field === 'death_date') return await setIfEmpty('deathDate', raw), true;
+    if (field === 'death_year') return await setIfEmpty('deathYear', Number(raw)), true;
+    if (field === 'height_cm') return await setIfEmpty('heightCm', Number(raw)), true;
+    if (field === 'career_start') return await setIfEmpty('careerStartYear', Number(raw)), true;
+    if (field === 'career_end') return await setIfEmpty('careerEndYear', Number(raw)), true;
+    if (field === 'birth_place') {
+      const v = json();
+      if (!person.birthCityId) await setIfEmpty('birthCityId', await this.city(String(v.qid), names(v.names)));
+      return true;
+    }
+    if (field === 'position') {
+      const label = names(json().names).en;
+      if (label) for (const link of await this.db.select().from(athleteSports).where(eq(athleteSports.athleteId, person.id))) if (!link.position) await this.repo.update(athleteSports, link.id, { position: label } as never, CANONICAL_ACTOR);
+      return true;
+    }
+    if (field.startsWith('club:')) {
+      const v = json();
+      const label = names(v.names).en;
+      if (!label) return true;
+      const slug = `${slugify(label)}-${String(v.qid).toLowerCase()}`;
+      const team = await this.repo.ensure(teams, { slug }, { slug, name: label, kind: 'club', wikidataQid: String(v.qid) } as never, CANONICAL_ACTOR);
+      await this.db.update(competitors).set({ profileVisibility: 'none', visibilityReason: 'teams have no profile page yet' }).where(eq(competitors.id, team.id));
+      const fromYear = (v.from as number | null) ?? null;
+      const [existing] = await this.db.select().from(athleteTeams).where(and(eq(athleteTeams.athleteId, person.id), eq(athleteTeams.teamId, team.id)));
+      if (!existing) await this.repo.insert(athleteTeams, { athleteId: person.id, teamId: team.id, fromYear, toYear: (v.to as number | null) ?? null } as never, CANONICAL_ACTOR);
+      return true;
+    }
+    if (field === 'photo') {
+      if (person.photoMediaLinkId) return true;
+      const v = json();
+      const commons = await this.memo('source:commons', async () => (await this.db.select().from(sources).where(eq(sources.slug, 'commons')))[0]?.id ?? '');
+      const media = await this.repo.insert(mediaLinks, { url: v.url, thumbUrl: v.thumb, filePageUrl: v.page, kind: 'photo', author: v.author ?? null, license: v.license ?? null, status: 'ok', sourceId: commons || null } as never, CANONICAL_ACTOR);
+      await setIfEmpty('photoMediaLinkId', media.id);
+      return true;
+    }
+    return false;
+  }
+
+  /** City by Wikidata QID (aspect on demand) with its en/pt-BR/es names. */
+  private async city(qid: string, n: Record<'en' | 'pt' | 'es', string | null>) {
+    return this.memo(`city:${qid}`, async () => {
+      const [found] = await this.db.select().from(cities).where(eq(cities.wikidataQid, qid));
+      if (found) return found.id;
+      const row = await this.repo.insert(cities, { wikidataQid: qid } as never, CANONICAL_ACTOR);
+      for (const [lang, locale] of [['en', 'en'], ['pt', 'pt-BR'], ['es', 'es']] as const) {
+        const name = n[lang] ?? n.en;
+        if (name) await this.repo.insert(cityTranslations, { cityId: row.id, locale, name } as never, CANONICAL_ACTOR);
+      }
+      return row.id;
+    });
   }
 
   private async group(c: DiscoveredCompetitor, sport: string, row: typeof sourceObservations.$inferSelect) {

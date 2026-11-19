@@ -3,6 +3,7 @@
 //   bjj [--only adcc:2019,...]                                  ADCC + IBJJF champions with year and division
 //   olympics --sport swimming --list "List of Olympic medalists in swimming" [--year 2016]
 //   wikidata [--limit 500]                                      QIDs, birth and gender through enwiki sitelinks
+//   profiles [--limit N]                                        profile from Wikidata + Commons photo (bio, birthplace, clubs…)
 //   write [--providers football-champions,bjj-champions,...]    canonical writer (identity + domain)
 //   enqueue <provider> [--only …]                               queue a job; `worker` processes queued jobs
 //   worker [--max N]                                            claims and runs job items (retries, dead-letter)
@@ -24,6 +25,7 @@ import { createContext, type IngestContext } from '../providers/context';
 import { FOOTBALL_PROVIDER, runFootballChampions } from '../providers/football-champions.provider';
 import { OLYMPIC_PROVIDER, runOlympicMedalists } from '../providers/olympic-medalists.provider';
 import { runWikidata, WIKIDATA_PROVIDER } from '../providers/wikidata.provider';
+import { runWikidataProfile, WIKIDATA_PROFILE_PROVIDER } from '../providers/wikidata-profile.provider';
 
 const args = process.argv.slice(2);
 const command = args[0] ?? 'report';
@@ -46,6 +48,7 @@ const discovery: Record<string, (c: IngestContext, params: Record<string, unknow
   [BJJ_PROVIDER]: (c, p) => runBjjChampions(c, { only: p.only as string[] | undefined }),
   [OLYMPIC_PROVIDER]: (c, p) => runOlympicMedalists(c, { sport: String(p.sport), listTitle: String(p.list), year: p.year ? Number(p.year) : undefined }),
   [WIKIDATA_PROVIDER]: (c, p) => runWikidata(c, { limit: p.limit ? Number(p.limit) : undefined }),
+  [WIKIDATA_PROFILE_PROVIDER]: (c, p) => runWikidataProfile(c, { limit: p.limit ? Number(p.limit) : undefined }),
 };
 const write = async (providers: string[]) => {
   const report = await new CanonicalWriter(db).writeProviders(providers);
@@ -65,6 +68,9 @@ try {
   } else if (command === 'wikidata') {
     (await discovery[WIKIDATA_PROVIDER]!(ctx, { limit: flag('limit') })).forEach((l) => log(l));
     await write([WIKIDATA_PROVIDER]);
+  } else if (command === 'profiles') {
+    (await discovery[WIKIDATA_PROFILE_PROVIDER]!(ctx, { limit: flag('limit') })).forEach((l) => log(l));
+    await write([WIKIDATA_PROFILE_PROVIDER]);
   } else if (command === 'write') {
     await write(list('providers') ?? Object.keys(discovery));
   } else if (command === 'enqueue') {

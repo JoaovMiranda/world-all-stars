@@ -2,7 +2,7 @@
 // worker drains it in the background (the request never waits for the crawl). Job keys of the prototype map to the
 // provider that replaces them; a key without a provider keeps the simulated run (said explicitly in its log).
 import { type BaseRepository, type Database } from '@was/db';
-import { BJJ_PROVIDER, CanonicalWriter, createContext, enqueueJob, FOOTBALL_PROVIDER, runBjjChampions, runFootballChampions, runWikidata, runWorker, WIKIDATA_PROVIDER } from '@was/ingest';
+import { BJJ_PROVIDER, CanonicalWriter, createContext, enqueueJob, FOOTBALL_PROVIDER, runBjjChampions, runFootballChampions, runWikidata, runWikidataProfile, runWorker, WIKIDATA_PROFILE_PROVIDER, WIKIDATA_PROVIDER } from '@was/ingest';
 
 /** Admin job key → provider. */
 export const PROVIDER_OF_JOB: Record<string, string> = {
@@ -14,7 +14,8 @@ export const PROVIDER_OF_JOB: Record<string, string> = {
 const DISCOVERY: Record<string, (ctx: ReturnType<typeof createContext>) => Promise<string[]>> = {
   [FOOTBALL_PROVIDER]: (ctx) => runFootballChampions(ctx),
   [BJJ_PROVIDER]: (ctx) => runBjjChampions(ctx),
-  [WIKIDATA_PROVIDER]: (ctx) => runWikidata(ctx),
+  // Identity (QID) first, then the profile (bio, photo, birthplace, clubs…).
+  [WIKIDATA_PROVIDER]: async (ctx) => [...(await runWikidata(ctx)), ...(await runWikidataProfile(ctx))],
 };
 
 let draining: Promise<unknown> | null = null;
@@ -26,7 +27,7 @@ export const startIngestion = async (db: Database, repo: BaseRepository, jobKey:
   const { run, created } = await enqueueJob(db, { jobKey: provider, params: {}, items: [{ key: 'discover' }, { key: 'write' }], requestedBy, mode: 'manual' });
   draining ??= runWorker(db, Object.fromEntries(Object.entries(DISCOVERY).map(([key, discover]) => [key, async (item, r) => {
     if (item.itemKey === 'discover') return { report: await discover(createContext(db, { jobId: r.id })) };
-    return { report: await new CanonicalWriter(db, repo).writeProviders([key]) } as Record<string, unknown>;
+    return { report: await new CanonicalWriter(db, repo).writeProviders(key === WIKIDATA_PROVIDER ? [key, WIKIDATA_PROFILE_PROVIDER] : [key]) } as Record<string, unknown>;
   }])))
     .catch((error) => console.error('[ingest] worker failed', error))
     .finally(() => { draining = null; });
