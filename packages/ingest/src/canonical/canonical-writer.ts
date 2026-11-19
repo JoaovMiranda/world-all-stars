@@ -57,12 +57,21 @@ export class CanonicalWriter {
   private readonly publicPeople = new Set<string>();
   private readonly touchedPeople = new Set<string>();
 
-  constructor(private readonly db: Database) {
-    this.repo = new BaseRepository(db);
+  /** Pass the app's repository to keep its write hooks (catalog cache invalidation). */
+  constructor(private readonly db: Database, repo?: BaseRepository) {
+    this.repo = repo ?? new BaseRepository(db);
   }
+
+  /** Human identity decisions by observation (+ discovered name): match → entity id, create → 'create', reject → null. */
+  private decisions = new Map<string, string | null>();
 
   private async init() {
     this.people = await PersonIndex.load(this.db);
+    for (const d of await this.db.select().from(identityCandidates).where(active(identityCandidates))) {
+      if (d.status === 'matched' && d.proposedEntityId) this.decisions.set(`${d.observationId}|${d.discoveredName}`, d.proposedEntityId);
+      else if (d.status === 'created') this.decisions.set(`${d.observationId}|${d.discoveredName}`, 'create');
+      else if (d.status === 'rejected') this.decisions.set(`${d.observationId}|${d.discoveredName}`, null);
+    }
     for (const d of await this.db.select().from(domainValues).where(active(domainValues))) this.domain.set(`${d.domain}:${d.slug}`, d.id);
   }
   private dv(kind: DomainKind, slug: string) {
@@ -247,7 +256,9 @@ export class CanonicalWriter {
   // ── identities ──
   private async person(c: DiscoveredCompetitor, sport: string | null, row: typeof sourceObservations.$inferSelect): Promise<string | null> {
     const externalIds = Object.fromEntries(Object.entries(c.externalIds).filter(([, v]) => v));
-    const decision = this.people.resolve({ name: c.name, externalIds, sport, birthDate: c.birthDate });
+    const human = this.decisions.get(`${row.id}|${c.name}`);
+    if (human === null) return null;
+    const decision = human === 'create' ? ({ kind: 'new' } as const) : human ? ({ kind: 'match', entityId: human, confidence: 1, signals: ['human'] } as const) : this.people.resolve({ name: c.name, externalIds, sport, birthDate: c.birthDate });
     let id: string;
     if (decision.kind === 'match') {
       id = decision.entityId;

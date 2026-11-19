@@ -7,3 +7,6 @@ export * from './jobs/queue';
 export * from './providers/bjj-champions.provider';
 export * from './providers/context';
 export * from './providers/football-champions.provider';
+export * from './providers/olympic-medalists.provider';
+export * from './providers/wikidata.provider';
+export * from './enrich/ai';

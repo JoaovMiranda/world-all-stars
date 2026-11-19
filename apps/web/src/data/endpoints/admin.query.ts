@@ -41,6 +41,12 @@ export const reviewProposal = defineMutation(
   { invalidates: [adminProposalsQuery, adminSummaryQuery] },
 );
 
+/** GET /api/admin/identities (A1, handoff v3 §7.1): ambiguous competitors (the fixture mode has none). */
+export const adminIdentitiesQuery = defineQuery(AdminApi.identities, { sample: () => ({ items: [] }) });
+
+/** PATCH /api/admin/identities/:id: match / create / reject with reason. */
+export const decideIdentity = defineMutation(AdminApi.decideIdentity, () => ({ ok: true as const }), { invalidates: [adminIdentitiesQuery, adminSummaryQuery] });
+
 /** GET /api/admin/tier-signals (A1, doc 17): reader votes vs official tier. */
 export const adminTierSignalsQuery = defineQuery(AdminApi.tierSignals, { sample: ({ sample }) => buildTierSignals(sample) });
 

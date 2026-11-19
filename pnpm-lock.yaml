@@ -40,6 +40,9 @@ importers:
       '@was/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@was/ingest':
+        specifier: workspace:*
+        version: link:../../packages/ingest
       '@was/shared':
         specifier: workspace:*
         version: link:../../packages/shared

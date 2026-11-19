@@ -2,6 +2,7 @@ import { AdminApi, adminPendingCounts } from '@was/shared';
 
 import type { RequestContext } from '../../http/app-context.type';
 import { defineRoute } from '../../http/contract-route.helper';
+import { decideIdentity, listIdentities } from './admin-identity.service';
 import { addCollectionLinks, listAdminSources, listIngestion, runIngestion, updateSource } from './admin-collection.service';
 import {
   addBannedWord,
@@ -35,6 +36,8 @@ export const adminRoutes = [
   defineRoute(AdminApi.reviewProposal, ({ params, body }, ctx) => reviewProposal(ctx, params.id, body.decision, body.reason)),
   defineRoute(AdminApi.tierSignals, (_, ctx) => listTierSignals(ctx)),
   defineRoute(AdminApi.ingestion, (_, ctx) => listIngestion(ctx)),
+  defineRoute(AdminApi.identities, (_input, ctx) => listIdentities(ctx)),
+  defineRoute(AdminApi.decideIdentity, ({ params, body }, ctx) => decideIdentity(ctx, params.id, body)),
   defineRoute(AdminApi.runIngestion, ({ body }, ctx) => runIngestion(ctx, body.jobKey)),
   defineRoute(AdminApi.sources, (_, ctx) => listAdminSources(ctx)),
   defineRoute(AdminApi.updateSource, ({ params, body }, ctx) => updateSource(ctx, params.id, body)),

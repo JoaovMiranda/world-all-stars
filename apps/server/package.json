@@ -23,7 +23,8 @@
     "drizzle-orm": "0.45.4",
     "hono": "4.13.16",
     "pg": "8.23.1",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "@was/ingest": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

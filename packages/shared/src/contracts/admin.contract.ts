@@ -25,6 +25,7 @@ import {
   UpdateSourceRequestSchema,
   UpdateUserRequestSchema,
 } from '../schemas/admin-curation.schema';
+import { AdminIdentitiesResponseSchema, DecideIdentityRequestSchema } from '../schemas/admin-identity.schema';
 import { OkResponseSchema } from '../schemas/api-error.schema';
 import { BannedWordSchema } from '../schemas/moderation-rules.schema';
 import { AthleteSlugParamsSchema } from '../schemas/athlete-profile.schema';
@@ -45,6 +46,8 @@ export const AdminApi = {
   reviewSuggestion: defineContract({ ...admin, method: HttpMethod.Patch, path: '/api/admin/suggestions/:id', summary: 'Approve/reject/mark duplicate', params: IdParams, body: ReviewSuggestionRequestSchema, response: OkResponseSchema }),
   summary: defineContract({ ...admin, method: HttpMethod.Get, path: '/api/admin/summary', summary: 'Pending items per admin section (navigation badges)', response: AdminSummaryResponseSchema }),
   reviewProposal: defineContract({ ...admin, method: HttpMethod.Patch, path: '/api/admin/proposals/:id', summary: 'Approve/reject a crawler or AI proposal with reason (A1)', params: IdParams, body: AdminDecisionRequestSchema, response: OkResponseSchema }),
+  identities: defineContract({ ...admin, method: HttpMethod.Get, path: '/api/admin/identities', summary: 'Identity review queue: ambiguous competitors (A1, handoff v3 §7.1)', response: AdminIdentitiesResponseSchema }),
+  decideIdentity: defineContract({ ...admin, method: HttpMethod.Patch, path: '/api/admin/identities/:id', summary: 'Match / create / reject an ambiguous identity with reason', params: IdParams, body: DecideIdentityRequestSchema, response: OkResponseSchema }),
   tierSignals: defineContract({ ...admin, method: HttpMethod.Get, path: '/api/admin/tier-signals', summary: 'Reader votes vs official tier (A1, doc 17)', response: TierSignalsResponseSchema }),
   runIngestion: defineContract({ ...admin, method: HttpMethod.Post, path: '/api/admin/ingestion-runs', summary: 'Run a job now (A2)', body: RunIngestionRequestSchema, response: OkResponseSchema }),
   sources: defineContract({ ...admin, method: HttpMethod.Get, path: '/api/admin/sources', summary: 'Source registry + links queued for collection (A3)', response: AdminSourcesResponseSchema }),

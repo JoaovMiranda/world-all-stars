@@ -20,6 +20,7 @@ import type { AppDeps, RequestContext } from '../../http/app-context.type';
 import { invalidFields, notFound } from '../../http/http-error.error';
 import { isoOf } from '../catalog/catalog.mapper';
 import { loadSourceRules } from '../moderation/moderation.repository';
+import { startIngestion } from './ingestion-runner';
 
 const emptyGates = () => Object.fromEntries(INGESTION_GATE_VALUES.map((g) => [g, 0])) as Record<(typeof INGESTION_GATE_VALUES)[number], number>;
 type LogLevel = 'info' | 'warn' | 'error';
@@ -75,8 +76,16 @@ export const listIngestion = async ({ deps, locale }: RequestContext): Promise<A
   };
 };
 
-/** POST /api/admin/ingestion-runs: "rodar agora" (SIMULATED until packages/ingest exists: nothing changed upstream). */
+/**
+ * POST /api/admin/ingestion-runs: "rodar agora". Jobs with a real provider (football, BJJ, Wikidata) are queued and
+ * drained in the background by @was/ingest; the others keep the simulated run until their provider exists.
+ */
 export const runIngestion = async (ctx: RequestContext, jobKey: string) => {
+  const real = await startIngestion(ctx.deps.db, ctx.deps.repo, jobKey, ctx.actor.userId);
+  if (real) {
+    await ctx.deps.repo.audit(ctx.actor, AdminAuditAction.IngestionTriggered, { type: 'ingestion_runs', id: real.runId }, { target: jobKey, reason: null });
+    return { ok: true as const };
+  }
   const [last] = await ctx.deps.db.select().from(ingestionRuns).where(active(ingestionRuns, eq(ingestionRuns.jobKey, jobKey))).orderBy(desc(ingestionRuns.startedAt)).limit(1);
   if (!last) throw notFound();
   const at = new Date();
@@ -86,7 +95,7 @@ export const runIngestion = async (ctx: RequestContext, jobKey: string) => {
       { jobKey, sourceId: last.sourceId, mode: 'manual', startedAt: at, finishedAt: at, status: IngestionRunStatus.Success, checked: last.checked, unchanged: last.checked, updated: 0, errors: 0, skipped: { ...emptyGates(), unchanged: last.checked }, tokens: 0 },
       { ...ctx.actor, via: 'system:manual' },
     );
-    const messages = [`${last.checked} link(s) verificados (manual, simulado)`, `${last.checked} sem mudança: portão "sem mudança", 0 tokens`];
+    const messages = [`${last.checked} link(s) checked (manual, simulated: no provider for this job yet)`, `${last.checked} unchanged: "unchanged" gate, 0 tokens`];
     await repo.insertMany(ingestionLogs, messages.map((message) => ({ runId: run.id, level: 'info', message, at })), ctx.actor);
     await repo.audit(ctx.actor, AdminAuditAction.IngestionTriggered, { type: 'ingestion_runs', id: run.id }, { target: jobKey, reason: null });
   });

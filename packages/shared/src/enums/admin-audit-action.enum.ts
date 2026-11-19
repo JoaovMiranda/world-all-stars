@@ -17,6 +17,10 @@ export const AdminAuditAction = {
   BannedWordAdded: 'banned_word_added',
   BannedWordRemoved: 'banned_word_removed',
   IngestionTriggered: 'ingestion_triggered',
+  IdentityDecided: 'identity_decided',
+  RankingCalculated: 'ranking_calculated',
+  RankingApproved: 'ranking_approved',
+  RankingPublished: 'ranking_published',
 } as const;
 export type AdminAuditAction = (typeof AdminAuditAction)[keyof typeof AdminAuditAction];
 export const ADMIN_AUDIT_ACTION_VALUES = Object.values(AdminAuditAction) as [AdminAuditAction, ...AdminAuditAction[]];

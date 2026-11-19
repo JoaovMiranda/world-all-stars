@@ -104,6 +104,7 @@ export * from './types/validation-result.type';
 
 // Schemas (API contracts and URL filters)
 export * from './schemas/admin-curation.schema';
+export * from './schemas/admin-identity.schema';
 export * from './schemas/admin-search.schema';
 export * from './schemas/admin.schema';
 export * from './schemas/analysis.schema';

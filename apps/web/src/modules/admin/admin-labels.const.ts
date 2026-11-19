@@ -145,6 +145,10 @@ export const ADMIN_LABELS_TEXT: {
     banned_word_added: 'Palavra proibida adicionada',
     banned_word_removed: 'Palavra proibida removida',
     ingestion_triggered: 'Coleta disparada',
+    identity_decided: 'Identidade decidida',
+    ranking_calculated: 'Ranking calculado',
+    ranking_approved: 'Ranking aprovado',
+    ranking_published: 'Ranking publicado',
   },
   matchMode: {
     word: 'Palavra inteira',
