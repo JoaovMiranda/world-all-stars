@@ -10,6 +10,7 @@ export const NAV_ITEMS = [
   { to: '/hall-of-greats', labelKey: 'hallOfGreats', featured: true },
   { to: '/athletes', labelKey: 'athletes', featured: false },
   { to: '/sports', labelKey: 'sports', featured: false },
+  { to: '/rankings', labelKey: 'rankings', featured: false },
   { to: '/sources', labelKey: 'sources', featured: false },
   { to: '/contact', labelKey: 'contact', featured: false },
 ] as const;
@@ -49,6 +50,7 @@ export const LAYOUT_TEXT = {
   menuClose: 'Fechar menu',
   links: {
     hallOfGreats: 'Hall of Greats',
+    rankings: 'Rankings',
     athletes: 'Atletas',
     sports: 'Esportes',
     sources: 'Fontes',

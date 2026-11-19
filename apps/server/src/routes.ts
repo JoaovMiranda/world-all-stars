@@ -6,6 +6,7 @@ import { commentsRoutes } from './modules/comments/comments.route';
 import { contactRoutes } from './modules/contact/contact.route';
 import { discoveryRoutes } from './modules/discovery/discovery.route';
 import { homeRoutes } from './modules/home/home.route';
+import { rankingsRoutes } from './modules/rankings/rankings.route';
 import { sessionRoutes } from './modules/session/session.route';
 import { sportsRoutes } from './modules/sports/sports.route';
 import { telemetryRoutes } from './modules/telemetry/telemetry.route';
@@ -24,4 +25,5 @@ export const ALL_ROUTES: readonly RouteDefinition[] = [
   ...accountRoutes,
   ...adminRoutes,
   ...telemetryRoutes,
+  ...rankingsRoutes,
 ];

@@ -36,7 +36,7 @@ export const scoreCandidate = (
   for (const [provider, id] of Object.entries(q.externalIds)) {
     const theirs = c.externalIds[provider];
     if (theirs === undefined) continue;
-    if (normalizeName(theirs) === normalizeName(id)) return ID_WEIGHT[provider] ?? 0.95;
+    if (normalizeName(theirs) === normalizeName(id)) return ID_WEIGHT[provider] ?? (provider.startsWith('key:') ? 0.99 : 0.95);
     // Same provider, different id: a strong NEGATIVE signal (homonyms with distinct Wikipedia pages).
     if (provider === 'wikidata' || provider === 'wikipedia_en' || provider === 'fjelstul') return 0;
   }

@@ -23,6 +23,7 @@ export const LAYOUT_TEXT_EN = {
   menuClose: 'Close menu',
   links: {
     hallOfGreats: 'Hall of Greats',
+    rankings: 'Rankings',
     athletes: 'Athletes',
     sports: 'Sports',
     sources: 'Sources',

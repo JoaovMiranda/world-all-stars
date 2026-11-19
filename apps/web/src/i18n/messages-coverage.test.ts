@@ -22,13 +22,14 @@ const dictionaries = Object.entries(modules).flatMap(([file, mod]) =>
 /** Strings that are legitimately the same as pt-BR in a translation (brands, names, symbols, cognates). */
 const ALLOWED_SAME = new Set([
   'World All Stars', 'Hall of Greats', 'Admin', 'Wikidata', 'Legal', 'Cookies', 'Majors', 'MVP', 'Ranking', 'OK', 'Log', 'Jobs', 'Tokens', 'Parser',
-  'Disciplinas', 'confirmado', 'opcional', 'Wikipedia, Liquipedia, TheSportsDB copiando de 1 a 4.', '—', '404', '!', 'https://', 'Elite', 'Continental', 'Local', 'Bronze', 'Hall of Fame', 'Wikipedia', 'Total', 'Status', 'Headline', 'Links', 'Link', '.',
+  'Disciplinas', 'confirmado', 'opcional', 'Rankings', 'Wikipedia, Liquipedia, TheSportsDB copiando de 1 a 4.', '—', '404', '!', 'https://', 'Elite', 'Continental', 'Local', 'Bronze', 'Hall of Fame', 'Wikipedia', 'Total', 'Status', 'Headline', 'Links', 'Link', '.',
 ]);
 /**
  * Every string with letters identical to pt-BR is flagged in en and es, short ones included. Spanish shares many
  * words with Portuguese: ALLOWED_SAME_ES lists the ones that are correct Spanish as they are.
  */
 const ALLOWED_SAME_ES = new Set([
+  'Ranking calculado', 'Ranking publicado', 'Identificadores', 'Descartar', 'Identidades', 'Competidor', 'Créditos', 'Anteriores', 'empate',
   'globo', 'Resultados', 'título', 'títulos', 'Títulos', 'Míticos', 'Política de cookies', 'Todos', 'todos', 'Todas', 'Ver todas', 'Ver todos',
   'individual', 'Legacy score bruto', 'Métrica', 'Percentil', 'Tipo', 'Atletas', 'atletas', 'Atleta', 'sáb', 'dom',
   'Cancelar', 'Reinados por período', 'Reinados de título', 'Oculto', 'Ocultar', 'Autor', 'Forma comparada',

@@ -13,6 +13,8 @@ export const HAS_PROTOTYPE = fs.existsSync(path.join(findRepoRoot(), 'plan/front
 export interface TestApp {
   handle: DatabaseHandle;
   app: ReturnType<typeof createApp>['app'];
+  /** The app's dependencies (db, repository with its cache hooks…) for service-level tests. */
+  deps: ReturnType<typeof createApp>['deps'];
   /** Calls an endpoint BY ITS CONTRACT (same path builder as the web http client). */
   call(contract: ApiContract, input?: { params?: Record<string, unknown>; query?: Record<string, unknown>; body?: unknown }, as?: SessionKind): Promise<{ status: number; json: any }>;
   close(): Promise<void>;
@@ -24,10 +26,11 @@ export const createTestApp = async ({ seed = true, rateLimit = false } = {}): Pr
   await handle.migrate();
   if (seed) await seedDatabase(handle.db, findRepoRoot());
   const config = { ...loadConfig({}), rateLimitEnabled: rateLimit, logRequests: false };
-  const { app } = createApp({ db: handle.db, config });
+  const { app, deps } = createApp({ db: handle.db, config });
   return {
     handle,
     app,
+    deps,
     async call(contract, input = {}, as) {
       const url = `${buildApiPath(contract.path, input.params)}${buildQueryString(input.query)}`;
       const res = await app.request(url, {

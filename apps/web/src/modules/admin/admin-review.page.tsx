@@ -6,6 +6,7 @@ import { Tabs } from '@/shared-ui/tabs.component';
 import { ADMIN_MESSAGES } from './admin.const';
 import { AdminLayout } from './admin-layout.component';
 import { IdentityQueue } from './identity-queue.component';
+import { RankingAdmin } from './ranking-admin.component';
 import { DossierQueue } from './dossier-queue.component';
 import { ProposalQueue } from './proposal-queue.component';
 import { TierSignals } from './tier-signals.component';
@@ -26,12 +27,14 @@ export function AdminReviewPage() {
         tabs={[
           { value: AdminReviewTab.Proposals, label: T.tabs.proposals },
           { value: AdminReviewTab.Identities, label: T.tabs.identities },
+          { value: AdminReviewTab.Rankings, label: T.tabs.rankings },
           { value: AdminReviewTab.Dossiers, label: T.tabs.dossiers },
           { value: AdminReviewTab.Tiers, label: T.tabs.tiers },
         ]}
       >
         {tab === AdminReviewTab.Proposals && <ProposalQueue state={state} />}
         {tab === AdminReviewTab.Identities && <IdentityQueue state={state} />}
+        {tab === AdminReviewTab.Rankings && <RankingAdmin />}
         {tab === AdminReviewTab.Dossiers && <DossierQueue state={state} />}
         {tab === AdminReviewTab.Tiers && <TierSignals state={state} />}
       </Tabs>

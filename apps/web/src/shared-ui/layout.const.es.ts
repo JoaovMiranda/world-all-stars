@@ -23,6 +23,7 @@ export const LAYOUT_TEXT_ES = {
   menuClose: 'Cerrar menú',
   links: {
     hallOfGreats: 'Hall of Greats',
+    rankings: 'Clasificaciones',
     athletes: 'Atletas',
     sports: 'Deportes',
     sources: 'Fuentes',

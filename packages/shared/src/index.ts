@@ -134,6 +134,7 @@ export * from './schemas/observance.schema';
 export * from './schemas/on-this-day.schema';
 export * from './schemas/organization.schema';
 export * from './schemas/page-search.schema';
+export * from './schemas/ranking.schema';
 export * from './schemas/session.schema';
 export * from './schemas/source-overview.schema';
 export * from './schemas/source-ref.schema';
@@ -152,6 +153,7 @@ export * from './schemas/web-vital.schema';
 export * from './contracts/admin.contract';
 export * from './contracts/participation.contract';
 export * from './contracts/public.contract';
+export * from './contracts/rankings.contract';
 
 // Helpers (pure, shared by server and web)
 export * from './helpers/admin-rules.helper';

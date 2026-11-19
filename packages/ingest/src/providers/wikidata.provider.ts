@@ -40,7 +40,17 @@ export const runWikidata = async (ctx: IngestContext, opts: { limit?: number | u
   for (let i = 0; i < todo.length; i += 50) {
     const batch = todo.slice(i, i + 50);
     const url = `https://www.wikidata.org/w/api.php?${new URLSearchParams({ action: 'wbgetentities', sites: 'enwiki', titles: batch.map((b) => b.title).join('|'), props: 'sitelinks|claims', sitefilter: 'enwiki', redirects: 'yes', format: 'json' })}`;
-    const doc = await ctx.document('wikidata', url);
+    let doc: Awaited<ReturnType<IngestContext['document']>> = null;
+    for (let attempt = 0; attempt < 4 && !doc; attempt++) {
+      try {
+        doc = await ctx.document('wikidata', url);
+      } catch (error) {
+        const wait = (error as { retryAfterMs?: number }).retryAfterMs;
+        if (!wait || attempt === 3) throw error;
+        ctx.log(`wikidata: rate limited, waiting ${Math.round(wait / 1000)} s (Retry-After)`);
+        await new Promise((r) => setTimeout(r, wait));
+      }
+    }
     if (!doc) continue;
     const entities = Object.values((JSON.parse(doc.text) as { entities?: Record<string, WdEntity> }).entities ?? {}).filter((e) => e.id?.startsWith('Q'));
     for (const e of entities) {

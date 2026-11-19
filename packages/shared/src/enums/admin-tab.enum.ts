@@ -1,5 +1,5 @@
 /** Tabs of the admin pages (kept in the URL as `?tab=`). */
-export const AdminReviewTab = { Proposals: 'proposals', Identities: 'identities', Dossiers: 'dossiers', Tiers: 'tiers' } as const;
+export const AdminReviewTab = { Proposals: 'proposals', Identities: 'identities', Rankings: 'rankings', Dossiers: 'dossiers', Tiers: 'tiers' } as const;
 export type AdminReviewTab = (typeof AdminReviewTab)[keyof typeof AdminReviewTab];
 export const ADMIN_REVIEW_TAB_VALUES = Object.values(AdminReviewTab) as [AdminReviewTab, ...AdminReviewTab[]];
 

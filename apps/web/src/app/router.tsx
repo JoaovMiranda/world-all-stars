@@ -50,6 +50,8 @@ const CookiesPage = lazyPage('legal/cookies', 'CookiesPage');
 const PrivacyPage = lazyPage('legal/privacy', 'PrivacyPage');
 const TermsPage = lazyPage('legal/terms', 'TermsPage');
 const OnThisDayPage = lazyPage('on-this-day/on-this-day', 'OnThisDayPage');
+const RankingPage = lazyPage('rankings/ranking', 'RankingPage');
+const RankingsPage = lazyPage('rankings/rankings', 'RankingsPage');
 const SourcesPage = lazyPage('sources/sources', 'SourcesPage');
 const SportPage = lazyPage('sports/sport', 'SportPage');
 const SportsPage = lazyPage('sports/sports', 'SportsPage');
@@ -273,6 +275,29 @@ const calendarRoute = createRoute({
     throw redirect({ to: '/', hash: 'calendario', replace: true });
   },
 });
+const rankingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/rankings',
+  loader: async ({ context }) => {
+    const [{ rankingsQuery }, { RANKINGS_MESSAGES }] = await Promise.all([import('@/data/endpoints/rankings.query'), import('@/modules/rankings/rankings.const')]);
+    await prefetchQueries(context.queryClient, [rankingsQuery.queryOptions()]);
+    const t = currentText(RANKINGS_MESSAGES).list;
+    return { title: t.title, description: t.lead } satisfies PageMeta;
+  },
+  head,
+  ...RankingsPage,
+});
+const rankingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/rankings/$id',
+  loader: async ({ context, params }) => {
+    const [{ rankingDetailQuery }, { RANKINGS_MESSAGES }] = await Promise.all([import('@/data/endpoints/rankings.query'), import('@/modules/rankings/rankings.const')]);
+    await prefetchQueries(context.queryClient, [rankingDetailQuery.queryOptions({ params: { id: params.id }, query: { page: 1, pageSize: 50 } })]);
+    return { title: currentText(RANKINGS_MESSAGES).list.title } satisfies PageMeta;
+  },
+  head,
+  ...RankingPage,
+});
 const sourcesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/sources',
@@ -371,6 +396,8 @@ export const routeTree = rootRoute.addChildren([
   sportRoute,
   organizationsRoute,
   calendarRoute,
+  rankingsRoute,
+  rankingRoute,
   sourcesRoute,
   contactRoute,
   onThisDayRoute,

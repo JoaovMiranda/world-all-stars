@@ -24,7 +24,8 @@
     "hono": "4.13.16",
     "pg": "8.23.1",
     "zod": "4.6.7",
-    "@was/ingest": "workspace:*"
+    "@was/ingest": "workspace:*",
+    "@was/ranking": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

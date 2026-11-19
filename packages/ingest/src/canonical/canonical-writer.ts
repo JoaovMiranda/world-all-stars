@@ -255,7 +255,10 @@ export class CanonicalWriter {
 
   // ── identities ──
   private async person(c: DiscoveredCompetitor, sport: string | null, row: typeof sourceObservations.$inferSelect): Promise<string | null> {
-    const externalIds = Object.fromEntries(Object.entries(c.externalIds).filter(([, v]) => v));
+    const externalIds: Record<string, string> = Object.fromEntries(Object.entries(c.externalIds).filter(([, v]) => v));
+    // Without a stable id, the provider's own key for the person INSIDE ONE competition table identifies them
+    // across rows of that table (the same unlinked name in the IBJJF table is one athlete). Never across tables.
+    if (!externalIds.wikipedia_en && !externalIds.wikidata && !externalIds.fjelstul) externalIds[`key:${row.providerKey}:${row.recordKey.split(':')[0]}`] = c.recordKey;
     const human = this.decisions.get(`${row.id}|${c.name}`);
     if (human === null) return null;
     const decision = human === 'create' ? ({ kind: 'new' } as const) : human ? ({ kind: 'match', entityId: human, confidence: 1, signals: ['human'] } as const) : this.people.resolve({ name: c.name, externalIds, sport, birthDate: c.birthDate });
