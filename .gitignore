@@ -14,3 +14,6 @@ plan/
 
 # Lighthouse CI reports (pnpm perf:lighthouse)
 .lighthouseci/
+
+# cache do crawler de seeds
+data/seeds/.cache/

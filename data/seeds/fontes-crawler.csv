@@ -1,0 +1,15 @@
+url,esporte,papel,cobre,status
+https://www.rsssf.org/miscellaneous/wcwinners.html,futebol,conferência,Elencos campeões da Copa masculina 1930–2026,Acessado. Usado para conferir os campeões (23 edições)
+https://datahub.io/football/worldcup,futebol,identificar atletas,Fjelstul World Cup Database (espelho),Acessado. Os CSVs foram baixados da origem (GitHub)
+https://github.com/jfjelstul/worldcup,futebol,identificar atletas,"Copas masc. 1930–2022 e fem. 1991–2019: elencos, titulares (desde 1970) e link da Wikipedia",Usado: squads.csv · player_appearances.csv · players.csv · matches.csv · tournament_standings.csv
+https://www.worldcups.ai/,futebol,conferência,Banco histórico de Copas,Acessado. Não usado como fonte de dados
+https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=848633&parentDocumentId=72685&skipCopyright=true&skipWatermark=true,futebol,conferência,IOC/FIFA Men's Olympic Football Statistical Kit (1908–2012),Bloqueado: exige JavaScript e cookies (anti-robô). Não contornado
+https://www.fifatrainingcentre.com/en/,futebol,conferência,Relatórios técnicos de partidas,Acessado. Não usado como fonte de dados
+https://www.rfef.es/en,futebol,conferência,Escalações oficiais da Espanha,Não acessado (a Wikipedia já cita a FIFA para a final de 2026)
+https://www.englandfootball.com,futebol,conferência,Escalação da final da Copa feminina 2023,Não acessado
+https://www.ussoccer.com,futebol,conferência,Escalação dos EUA (Olimpíadas femininas 2024),Não acessado
+https://en.wikipedia.org/wiki/Football_at_the_Summer_Olympics,futebol,identificar atletas,Campeão de cada edição olímpica (tabela de finais),Usado
+https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final,futebol,identificar atletas,Final e elenco da Copa 2026 (+ 2026 FIFA World Cup squads),Usado
+https://en.wikipedia.org/wiki/2023_FIFA_Women%27s_World_Cup_final,futebol,identificar atletas,Final e elenco da Copa feminina 2023 (+ squads),Usado
+https://en.wikipedia.org/wiki/ADCC_Submission_Fighting_World_Championship,jiu-jitsu,identificar atletas,Campeões ADCC 1998–2026,Usado
+https://en.wikipedia.org/wiki/World_IBJJF_Jiu-Jitsu_Championship,jiu-jitsu,identificar atletas,Campeões mundiais IBJJF faixa-preta 1996–hoje,Usado

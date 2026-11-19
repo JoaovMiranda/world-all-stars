@@ -1,0 +1,4155 @@
+{
+ "generatedAt": "2026-11-19",
+ "source": "Wikidata (CC0) via enwiki sitelinks; curated list in scripts/catalog/sports.seed.mjs",
+ "subgroups": [
+  [
+   "winter",
+   "physical",
+   "Winter sports",
+   "Esportes de inverno",
+   "Deportes de invierno"
+  ],
+  [
+   "athletics-endurance",
+   "physical",
+   "Athletics and endurance",
+   "Atletismo e resistência",
+   "Atletismo y resistencia"
+  ],
+  [
+   "gymnastics-artistic",
+   "physical",
+   "Gymnastics and artistic",
+   "Ginástica e artísticos",
+   "Gimnasia y artísticos"
+  ],
+  [
+   "wheels",
+   "physical",
+   "Wheels",
+   "Sobre rodas",
+   "Sobre ruedas"
+  ],
+  [
+   "equestrian",
+   "physical",
+   "Equestrian",
+   "Equestres",
+   "Ecuestres"
+  ],
+  [
+   "card-games",
+   "mental",
+   "Card games",
+   "Jogos de cartas",
+   "Juegos de cartas"
+  ]
+ ],
+ "events": {
+  "OS": [
+   "olympic-games-summer",
+   "ioc",
+   "Summer Olympic Games",
+   "Jogos Olímpicos de Verão",
+   "Juegos Olímpicos de Verano"
+  ],
+  "OW": [
+   "olympic-games-winter",
+   "ioc",
+   "Winter Olympic Games",
+   "Jogos Olímpicos de Inverno",
+   "Juegos Olímpicos de Invierno"
+  ],
+  "YOG": [
+   "youth-olympic-games",
+   "ioc",
+   "Youth Olympic Games",
+   "Jogos Olímpicos da Juventude",
+   "Juegos Olímpicos de la Juventud"
+  ],
+  "WG": [
+   "world-games",
+   "iwga",
+   "The World Games",
+   "Jogos Mundiais",
+   "Juegos Mundiales"
+  ],
+  "CG": [
+   "commonwealth-games",
+   "cgf",
+   "Commonwealth Games",
+   "Jogos da Commonwealth",
+   "Juegos de la Mancomunidad"
+  ],
+  "AG": [
+   "asian-games",
+   "oca",
+   "Asian Games",
+   "Jogos Asiáticos",
+   "Juegos Asiáticos"
+  ],
+  "MS": [
+   "mind-sports-games",
+   "imsa",
+   "Mind Sports Games",
+   "Jogos de Esportes da Mente",
+   "Juegos de Deportes Mentales"
+  ]
+ },
+ "organizations": {
+  "ioc": "International Olympic Committee",
+  "iwga": "International World Games Association",
+  "cgf": "Commonwealth Games Federation",
+  "oca": "Olympic Council of Asia",
+  "imsa": "International Mind Sports Association"
+ },
+ "sports": [
+  {
+   "slug": "aquatics",
+   "subgroup": "aquatics",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q4782818",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Aquatics",
+   "names": {
+    "en": "Aquatics",
+    "pt-BR": "Aquatics",
+    "es": "Aquatics"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "swimming",
+   "subgroup": "aquatics",
+   "format": "individual",
+   "environment": "closed",
+   "parent": "aquatics",
+   "wikidataQid": "Q6388",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Swimming",
+   "names": {
+    "en": "Swimming",
+    "pt-BR": "Natação",
+    "es": "Natación"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "marathon-swimming",
+   "subgroup": "aquatics",
+   "format": "individual",
+   "environment": "open",
+   "parent": "aquatics",
+   "wikidataQid": "Q631004",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Open_water_swimming",
+   "names": {
+    "en": "Open water swimming",
+    "pt-BR": "Natação de águas abertas",
+    "es": "Natación en aguas abiertas"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "artistic-swimming",
+   "subgroup": "aquatics",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "aquatics",
+   "wikidataQid": "Q180692",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Synchronised_swimming",
+   "names": {
+    "en": "Synchronized swimming",
+    "pt-BR": "Natação sincronizada",
+    "es": "Natación artística"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Synchronized swimming",
+     "kind": "former"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "diving",
+   "subgroup": "aquatics",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "aquatics",
+   "wikidataQid": "Q7735",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Diving_(sport)",
+   "names": {
+    "en": "Diving (sport)",
+    "pt-BR": "Salto ornamental",
+    "es": "Salto"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "water-polo",
+   "subgroup": "aquatics",
+   "format": "team",
+   "environment": "closed",
+   "parent": "aquatics",
+   "wikidataQid": "Q7707",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Water_polo",
+   "names": {
+    "en": "Water polo",
+    "pt-BR": "Polo aquático",
+    "es": "Waterpolo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cliff-diving",
+   "subgroup": "extreme",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "aquatics",
+   "wikidataQid": "Q98959563",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/High_diving",
+   "names": {
+    "en": "High diving",
+    "pt-BR": "Saltos de grande altura",
+    "es": "Salto de gran altura"
+   },
+   "programmes": [],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "archery",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q108429",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Archery",
+   "names": {
+    "en": "Archery",
+    "pt-BR": "Tiro com arco",
+    "es": "Tiro con arco"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "athletics",
+   "subgroup": "athletics-endurance",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q542",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Sport_of_athletics",
+   "names": {
+    "en": "Athletics",
+    "pt-BR": "Atletismo",
+    "es": "Atletismo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "badminton",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q7291",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Badminton",
+   "names": {
+    "en": "Badminton",
+    "pt-BR": "Badmínton",
+    "es": "Bádminton"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "basketball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q5372",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Basketball",
+   "names": {
+    "en": "Basketball",
+    "pt-BR": "Basquetebol",
+    "es": "Baloncesto"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "basketball-3x3",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": "basketball",
+   "wikidataQid": "Q210550",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/3x3_basketball",
+   "names": {
+    "en": "3x3 basketball",
+    "pt-BR": "Basquetebol 3x3",
+    "es": "Baloncesto 3x3"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "boxing",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q32112",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Boxing",
+   "names": {
+    "en": "Boxing",
+    "pt-BR": "Boxe",
+    "es": "Boxeo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "breaking",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "dancesport",
+   "wikidataQid": "Q169737",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Breakdancing",
+   "names": {
+    "en": "Breakdance",
+    "pt-BR": "Breakdance",
+    "es": "Breakdance"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": "Relation to dancesport (WDSF) as a discipline."
+  },
+  {
+   "slug": "canoe",
+   "subgroup": "nautical",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q20856109",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Canoeing",
+   "names": {
+    "en": "Canoeing",
+    "pt-BR": "Canoagem",
+    "es": "Canotaje"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Paddlesport",
+     "kind": "former"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "canoe-sprint",
+   "subgroup": "nautical",
+   "format": "individual",
+   "environment": "open",
+   "parent": "canoe",
+   "wikidataQid": "Q1141850",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Canoe_sprint",
+   "names": {
+    "en": "Canoe sprint",
+    "pt-BR": "Canoagem de velocidade",
+    "es": "Piragüismo en aguas tranquilas"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Sprint Paddle",
+     "kind": "former"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "canoe-slalom",
+   "subgroup": "nautical",
+   "format": "individual",
+   "environment": "open",
+   "parent": "canoe",
+   "wikidataQid": "Q31874",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Canoe_slalom",
+   "names": {
+    "en": "Canoe slalom",
+    "pt-BR": "Canoagem slalom",
+    "es": "Piragüismo en eslalon"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Slalom Paddle",
+     "kind": "former"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "cycling",
+   "subgroup": "wheels",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q2215841",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Cycle_sport",
+   "names": {
+    "en": "Cycle sport",
+    "pt-BR": "Ciclismo de competição",
+    "es": "Ciclismo de competición"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cycling-bmx-freestyle",
+   "subgroup": "wheels",
+   "format": "judged",
+   "environment": "open",
+   "parent": "cycling",
+   "wikidataQid": "Q2192643",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Freestyle_BMX",
+   "names": {
+    "en": "Freestyle BMX",
+    "pt-BR": "Ciclismo BMX freestyle",
+    "es": "BMX estilo libre"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cycling-bmx-racing",
+   "subgroup": "wheels",
+   "format": "individual",
+   "environment": "open",
+   "parent": "cycling",
+   "wikidataQid": "Q16240947",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/BMX_racing",
+   "names": {
+    "en": "BMX racing",
+    "pt-BR": "Ciclismo BMX racing",
+    "es": "BMX race"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cycling-mountain-bike",
+   "subgroup": "wheels",
+   "format": "individual",
+   "environment": "open",
+   "parent": "cycling",
+   "wikidataQid": "Q11112275",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Mountain_bike_racing",
+   "names": {
+    "en": "Mountain bike racing",
+    "pt-BR": "Ciclismo mountain bike",
+    "es": "Ciclismo de montaña"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cycling-road",
+   "subgroup": "wheels",
+   "format": "individual",
+   "environment": "open",
+   "parent": "cycling",
+   "wikidataQid": "Q3609",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Road_bicycle_racing",
+   "names": {
+    "en": "Road bicycle racing",
+    "pt-BR": "Ciclismo de estrada",
+    "es": "Ciclismo en ruta"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cycling-track",
+   "subgroup": "wheels",
+   "format": "individual",
+   "environment": "closed",
+   "parent": "cycling",
+   "wikidataQid": "Q221635",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Track_cycling",
+   "names": {
+    "en": "Track cycling",
+    "pt-BR": "Ciclismo de pista",
+    "es": "Ciclismo en pista"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "equestrian",
+   "subgroup": "equestrian",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q179226",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Equestrianism",
+   "names": {
+    "en": "Equestrianism",
+    "pt-BR": "Equitação",
+    "es": "Equitación"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "equestrian-dressage",
+   "subgroup": "equestrian",
+   "format": "judged",
+   "environment": "open",
+   "parent": "equestrian",
+   "wikidataQid": "Q216033",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Dressage",
+   "names": {
+    "en": "Dressage",
+    "pt-BR": "Adestramento",
+    "es": "Doma clásica"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "equestrian-eventing",
+   "subgroup": "equestrian",
+   "format": "individual",
+   "environment": "open",
+   "parent": "equestrian",
+   "wikidataQid": "Q838781",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Eventing",
+   "names": {
+    "en": "Eventing",
+    "pt-BR": "Concurso completo de equitação",
+    "es": "Concurso completo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "equestrian-jumping",
+   "subgroup": "equestrian",
+   "format": "individual",
+   "environment": "open",
+   "parent": "equestrian",
+   "wikidataQid": "Q211773",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Show_jumping",
+   "names": {
+    "en": "Show jumping",
+    "pt-BR": "Saltos",
+    "es": "Salto ecuestre"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "fencing",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q12100",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Fencing",
+   "names": {
+    "en": "Fencing",
+    "pt-BR": "Esgrima",
+    "es": "Esgrima"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "football",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q2736",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Association_football",
+   "names": {
+    "en": "Association football",
+    "pt-BR": "Futebol",
+    "es": "Fútbol"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "golf",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q5377",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Golf",
+   "names": {
+    "en": "Golf",
+    "pt-BR": "Golfe",
+    "es": "Golf"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "gymnastics",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q43450",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Gymnastics",
+   "names": {
+    "en": "Gymnastics",
+    "pt-BR": "Ginástica",
+    "es": "Gimnasia"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "gymnastics-artistic",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "gymnastics",
+   "wikidataQid": "Q326827",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Artistic_gymnastics",
+   "names": {
+    "en": "Artistic gymnastics",
+    "pt-BR": "Ginástica artística",
+    "es": "Gimnasia artística"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "gymnastics-rhythmic",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "gymnastics",
+   "wikidataQid": "Q61465",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Rhythmic_gymnastics",
+   "names": {
+    "en": "Rhythmic gymnastics",
+    "pt-BR": "Ginástica rítmica",
+    "es": "Gimnasia rítmica"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "gymnastics-trampoline",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "gymnastics",
+   "wikidataQid": "Q465014",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Trampolining",
+   "names": {
+    "en": "Trampoline gymnastics",
+    "pt-BR": "Trampolim acrobático",
+    "es": "Gimnasia en trampolín"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Trampoline",
+     "kind": "international"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "handball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q8418",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Handball",
+   "names": {
+    "en": "Handball",
+    "pt-BR": "Andebol",
+    "es": "Balonmano"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "field-hockey",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q1455",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Field_hockey",
+   "names": {
+    "en": "Field hockey",
+    "pt-BR": "Hóquei em campo",
+    "es": "Hockey sobre hierba"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "judo",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q11420",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Judo",
+   "names": {
+    "en": "Judo",
+    "pt-BR": "Judo",
+    "es": "Judo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "modern-pentathlon",
+   "subgroup": "athletics-endurance",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q32485",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Modern_pentathlon",
+   "names": {
+    "en": "Modern pentathlon",
+    "pt-BR": "Pentatlo moderno",
+    "es": "Pentatlón moderno"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "rowing",
+   "subgroup": "nautical",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q159354",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Rowing_(sport)",
+   "names": {
+    "en": "Rowing",
+    "pt-BR": "Remo",
+    "es": "Remo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "rugby-sevens",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": "rugby",
+   "wikidataQid": "Q270102",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Rugby_sevens",
+   "names": {
+    "en": "Rugby sevens",
+    "pt-BR": "Râguebi de sete",
+    "es": "Rugby a 7"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "sailing",
+   "subgroup": "nautical",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q14085739",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Sailing_(sport)",
+   "names": {
+    "en": "Sailing",
+    "pt-BR": "Vela",
+    "es": "Vela"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "shooting",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q206989",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Shooting_sports",
+   "names": {
+    "en": "Shooting sports",
+    "pt-BR": "Desportos de tiro",
+    "es": "Tiro deportivo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "skateboarding",
+   "subgroup": "wheels",
+   "format": "judged",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q842284",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Skateboarding",
+   "names": {
+    "en": "Skateboarding",
+    "pt-BR": "Skate",
+    "es": "Monopatinaje"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "sport-climbing",
+   "subgroup": "extreme",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q1541373",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Sport_climbing",
+   "names": {
+    "en": "Sport climbing",
+    "pt-BR": "Escalada desportiva",
+    "es": "Escalada deportiva"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "surfing",
+   "subgroup": "nautical",
+   "format": "judged",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q159992",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Surfing",
+   "names": {
+    "en": "Surfing",
+    "pt-BR": "Surfe",
+    "es": "Surf"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "table-tennis",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q3930",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Table_tennis",
+   "names": {
+    "en": "Table tennis",
+    "pt-BR": "Tênis de mesa",
+    "es": "Tenis de mesa"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "taekwondo",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q36389",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Taekwondo",
+   "names": {
+    "en": "Taekwondo",
+    "pt-BR": "Taekwondo",
+    "es": "Taekwondo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "tennis",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q847",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Tennis",
+   "names": {
+    "en": "Tennis",
+    "pt-BR": "Ténis",
+    "es": "Tenis"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "triathlon",
+   "subgroup": "athletics-endurance",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q10980",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Triathlon",
+   "names": {
+    "en": "Triathlon",
+    "pt-BR": "Triatlo",
+    "es": "Triatlón"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "volleyball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q1734",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Volleyball",
+   "names": {
+    "en": "Volleyball",
+    "pt-BR": "Voleibol",
+    "es": "Voleibol"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "beach-volleyball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": "volleyball",
+   "wikidataQid": "Q4543",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Beach_volleyball",
+   "names": {
+    "en": "Beach volleyball",
+    "pt-BR": "Voleibol de praia",
+    "es": "Voleibol de playa"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "weightlifting",
+   "subgroup": "strength",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q83462",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Olympic_weightlifting",
+   "names": {
+    "en": "Weightlifting",
+    "pt-BR": "Halterofilismo",
+    "es": "Halterofilia"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "wrestling",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q42486",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Wrestling",
+   "names": {
+    "en": "Wrestling",
+    "pt-BR": "Luta",
+    "es": "Lucha"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "wrestling-freestyle",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": "wrestling",
+   "wikidataQid": "Q327223",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Freestyle_wrestling",
+   "names": {
+    "en": "Freestyle wrestling",
+    "pt-BR": "Luta livre olímpica",
+    "es": "Lucha libre olímpica"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "wrestling-greco-roman",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": "wrestling",
+   "wikidataQid": "Q389654",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Greco-Roman_wrestling",
+   "names": {
+    "en": "Greco-Roman wrestling",
+    "pt-BR": "Luta greco-romana",
+    "es": "Lucha grecorromana"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "baseball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q5369",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Baseball",
+   "names": {
+    "en": "Baseball",
+    "pt-BR": "Basebol",
+    "es": "Béisbol"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1992,
+      1996,
+      2000,
+      2004,
+      2008,
+      2020
+     ]
+    },
+    {
+     "event": "OS",
+     "status": "confirmed_future",
+     "years": [
+      2028
+     ]
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "softball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q171038",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Softball",
+   "names": {
+    "en": "Softball",
+    "pt-BR": "Softbol",
+    "es": "Sóftbol"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1996,
+      2000,
+      2004,
+      2008,
+      2020
+     ]
+    },
+    {
+     "event": "OS",
+     "status": "confirmed_future",
+     "years": [
+      2028
+     ]
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cricket",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q5375",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Cricket",
+   "names": {
+    "en": "Cricket",
+    "pt-BR": "Críquete",
+    "es": "Críquet"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1900
+     ]
+    },
+    {
+     "event": "OS",
+     "status": "confirmed_future",
+     "years": [
+      2028
+     ]
+    },
+    {
+     "event": "CG",
+     "status": "optional",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "flag-football",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": "american-football",
+   "wikidataQid": "Q692853",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Flag_football",
+   "names": {
+    "en": "Flag football",
+    "pt-BR": "Flag football",
+    "es": "Fútbol bandera"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "confirmed_future",
+     "years": [
+      2028
+     ]
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "lacrosse",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q185851",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Lacrosse",
+   "names": {
+    "en": "Lacrosse",
+    "pt-BR": "Lacrosse",
+    "es": "Lacrosse"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1904,
+      1908
+     ]
+    },
+    {
+     "event": "OS",
+     "status": "confirmed_future",
+     "years": [
+      2028
+     ]
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "squash",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q133201",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Squash_(sport)",
+   "names": {
+    "en": "Squash",
+    "pt-BR": "Squash",
+    "es": "Squash"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "confirmed_future",
+     "years": [
+      2028
+     ]
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "coastal-rowing",
+   "subgroup": "nautical",
+   "format": "individual",
+   "environment": "open",
+   "parent": "rowing",
+   "wikidataQid": null,
+   "wikipediaUrl": null,
+   "names": {
+    "en": "Coastal and ocean rowing",
+    "pt-BR": "Remo costeiro (beach sprint)",
+    "es": "Remo de mar (beach sprint)"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "confirmed_future",
+     "years": [
+      2028
+     ]
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Coastal Rowing Beach Sprint",
+     "kind": "official"
+    }
+   ],
+   "reviewNote": "Confirmed for LA 2028 (beach sprint)."
+  },
+  {
+   "slug": "baseball5",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": "baseball",
+   "wikidataQid": "Q65070970",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Baseball5",
+   "names": {
+    "en": "Baseball 5",
+    "pt-BR": "Baseball5",
+    "es": "Baseball 5"
+   },
+   "programmes": [
+    {
+     "event": "YOG",
+     "status": "youth_only",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": "Youth Olympic Games (Dakar 2026), not the main Games."
+  },
+  {
+   "slug": "beach-wrestling",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "open",
+   "parent": "wrestling",
+   "wikidataQid": "Q3637155",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Beach_wrestling",
+   "names": {
+    "en": "Beach wrestling",
+    "pt-BR": "Luta de praia",
+    "es": "Lucha playa"
+   },
+   "programmes": [
+    {
+     "event": "YOG",
+     "status": "youth_only",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": "Youth Olympic Games programme."
+  },
+  {
+   "slug": "wushu",
+   "subgroup": "combat",
+   "format": "judged",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q3479346",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Wushu_(sport)",
+   "names": {
+    "en": "Wushu",
+    "pt-BR": "Wushu",
+    "es": "Wushu"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "wushu-taolu",
+   "subgroup": "combat",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "wushu",
+   "wikidataQid": "Q25247368",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Taolu",
+   "names": {
+    "en": "Taolu",
+    "pt-BR": "Wushu taolu",
+    "es": "Wushu taolu"
+   },
+   "programmes": [
+    {
+     "event": "YOG",
+     "status": "youth_only",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": "Youth Olympic Games programme; Asian Games for wushu."
+  },
+  {
+   "slug": "futsal",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": "football",
+   "wikidataQid": "Q171401",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Futsal",
+   "names": {
+    "en": "Futsal",
+    "pt-BR": "Futsal",
+    "es": "Fútbol sala"
+   },
+   "programmes": [
+    {
+     "event": "YOG",
+     "status": "youth_only",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "beach-handball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": "handball",
+   "wikidataQid": "Q535116",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Beach_handball",
+   "names": {
+    "en": "Beach handball",
+    "pt-BR": "Andebol de praia",
+    "es": "Balonmano playa"
+   },
+   "programmes": [
+    {
+     "event": "YOG",
+     "status": "youth_only",
+     "years": []
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "inline-speed-skating",
+   "subgroup": "wheels",
+   "format": "individual",
+   "environment": "closed",
+   "parent": "roller-sports",
+   "wikidataQid": "Q618786",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Inline_speed_skating",
+   "names": {
+    "en": "Inline speed skating",
+    "pt-BR": "Patinagem de velocidade em patins em linha",
+    "es": "Patinaje de velocidad sobre patines en línea"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "gymnastics-acrobatic",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "gymnastics",
+   "wikidataQid": "Q1049443",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Acrobatic_gymnastics",
+   "names": {
+    "en": "Acrobatic gymnastics",
+    "pt-BR": "Ginástica acrobática",
+    "es": "Gimnasia acrobática"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "karate",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q11419",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Karate",
+   "names": {
+    "en": "Karate",
+    "pt-BR": "Caraté",
+    "es": "Karate"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      2020
+     ]
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "biathlon",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q166788",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Biathlon",
+   "names": {
+    "en": "Biathlon",
+    "pt-BR": "Biatlo",
+    "es": "Biatlón"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "bobsleigh",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q177275",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Bobsleigh",
+   "names": {
+    "en": "Bobsleigh",
+    "pt-BR": "Bobsleigh",
+    "es": "Bobsleigh"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "skeleton",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": "bobsleigh",
+   "wikidataQid": "Q186190",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Skeleton_(sport)",
+   "names": {
+    "en": "Skeleton",
+    "pt-BR": "Skeleton",
+    "es": "Skeleton"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "curling",
+   "subgroup": "winter",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q136851",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Curling",
+   "names": {
+    "en": "Curling",
+    "pt-BR": "Curling",
+    "es": "Curling"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "ice-hockey",
+   "subgroup": "winter",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q41466",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Ice_hockey",
+   "names": {
+    "en": "Ice hockey",
+    "pt-BR": "Hóquei no gelo",
+    "es": "Hockey sobre hielo"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1920
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "luge",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q273285",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Luge",
+   "names": {
+    "en": "Luge",
+    "pt-BR": "Luge",
+    "es": "Luge"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "skating",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q779272",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Ice_skating",
+   "names": {
+    "en": "Ice skating",
+    "pt-BR": "Patinagem no gelo",
+    "es": "Patinaje sobre hielo"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "figure-skating",
+   "subgroup": "winter",
+   "format": "judged",
+   "environment": "closed",
+   "parent": "skating",
+   "wikidataQid": "Q38108",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Figure_skating",
+   "names": {
+    "en": "Figure skating",
+    "pt-BR": "Patinagem artística no gelo",
+    "es": "Patinaje artístico sobre hielo"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1908,
+      1920
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "speed-skating",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "closed",
+   "parent": "skating",
+   "wikidataQid": "Q192431",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Speed_skating",
+   "names": {
+    "en": "Speed skating",
+    "pt-BR": "Patinação de velocidade no gelo",
+    "es": "Patinaje de velocidad"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "short-track-speed-skating",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "closed",
+   "parent": "skating",
+   "wikidataQid": "Q193654",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Short-track_speed_skating",
+   "names": {
+    "en": "Short-track speed skating",
+    "pt-BR": "Patinagem de velocidade de pista curta",
+    "es": "Patinaje de velocidad sobre pista corta"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "skiing",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q130949",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Skiing",
+   "names": {
+    "en": "Skiing",
+    "pt-BR": "Esqui",
+    "es": "Esquí"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "alpine-skiing",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": "skiing",
+   "wikidataQid": "Q186222",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Alpine_skiing",
+   "names": {
+    "en": "Alpine skiing",
+    "pt-BR": "Esqui alpino",
+    "es": "Esquí alpino"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cross-country-skiing",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": "skiing",
+   "wikidataQid": "Q18544844",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Cross-country_skiing",
+   "names": {
+    "en": "Cross-country skiing",
+    "pt-BR": "Esqui cross-country",
+    "es": "Esquí de fondo"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "freestyle-skiing",
+   "subgroup": "winter",
+   "format": "judged",
+   "environment": "open",
+   "parent": "skiing",
+   "wikidataQid": "Q189472",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Freestyle_skiing",
+   "names": {
+    "en": "Freestyle skiing",
+    "pt-BR": "Esqui estilo livre",
+    "es": "Esquí acrobático"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "nordic-combined",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": "skiing",
+   "wikidataQid": "Q201965",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Nordic_combined",
+   "names": {
+    "en": "Nordic combined",
+    "pt-BR": "Combinado nórdico",
+    "es": "Combinada nórdica"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "ski-jumping",
+   "subgroup": "winter",
+   "format": "judged",
+   "environment": "open",
+   "parent": "skiing",
+   "wikidataQid": "Q7718",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Ski_jumping",
+   "names": {
+    "en": "Ski jumping",
+    "pt-BR": "Salto de esqui",
+    "es": "Salto de esquí"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "snowboarding",
+   "subgroup": "winter",
+   "format": "judged",
+   "environment": "open",
+   "parent": "skiing",
+   "wikidataQid": "Q178131",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Snowboarding",
+   "names": {
+    "en": "Snowboarding",
+    "pt-BR": "Snowboard",
+    "es": "Snowboarding"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "ski-mountaineering",
+   "subgroup": "winter",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q1075998",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Ski_mountaineering",
+   "names": {
+    "en": "Ski mountaineering",
+    "pt-BR": "Esqui-alpinismo",
+    "es": "Esquí de travesía"
+   },
+   "programmes": [
+    {
+     "event": "OW",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "basque-pelota",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q212845",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Basque_pelota",
+   "names": {
+    "en": "Basque pelota",
+    "pt-BR": "Pelota basca",
+    "es": "Pelota vasca"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1900
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "croquet",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q193387",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Croquet",
+   "names": {
+    "en": "Croquet",
+    "pt-BR": "Croquet",
+    "es": "Croquet"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1900
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "jeu-de-paume",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q2360406",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Real_tennis",
+   "names": {
+    "en": "Real tennis",
+    "pt-BR": "Ténis real",
+    "es": null
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1908
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "motorboating",
+   "subgroup": "nautical",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": null,
+   "wikipediaUrl": null,
+   "names": {
+    "en": "Motorboat racing",
+    "pt-BR": "Motonáutica",
+    "es": "Motonáutica"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1908
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "polo",
+   "subgroup": "equestrian",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q134211",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Polo",
+   "names": {
+    "en": "Polo",
+    "pt-BR": "Polo",
+    "es": "Polo"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1900,
+      1908,
+      1920,
+      1924,
+      1936
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "rackets",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": null,
+   "wikipediaUrl": null,
+   "names": {
+    "en": "Racquets (sport)",
+    "pt-BR": "Raquetes",
+    "es": "Raquetas"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1908
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "roque",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q1143202",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Roque",
+   "names": {
+    "en": "Roque",
+    "pt-BR": "Roque",
+    "es": "Roque"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1904
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "rugby-union",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": "rugby",
+   "wikidataQid": "Q5849",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Rugby_union",
+   "names": {
+    "en": "Rugby union",
+    "pt-BR": "Râguebi de quinze",
+    "es": "Rugby a 15"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1900,
+      1908,
+      1920,
+      1924
+     ]
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "tug-of-war",
+   "subgroup": "strength",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q102843",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Tug_of_war",
+   "names": {
+    "en": "Tug of war",
+    "pt-BR": "Cabo de guerra",
+    "es": "Juego de la soga"
+   },
+   "programmes": [
+    {
+     "event": "OS",
+     "status": "discontinued",
+     "years": [
+      1900,
+      1904,
+      1906,
+      1908,
+      1912,
+      1920
+     ]
+    },
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "aikido",
+   "subgroup": "combat",
+   "format": "judged",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q43114",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Aikido",
+   "names": {
+    "en": "Aikido",
+    "pt-BR": "Aikido",
+    "es": "Aikidō"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "air-sports",
+   "subgroup": "extreme",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q644628",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Air_sports",
+   "names": {
+    "en": "Aerial sport",
+    "pt-BR": "Desportos aéreos",
+    "es": "Deporte aeronáutico"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "american-football",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q41323",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/American_football",
+   "names": {
+    "en": "American football",
+    "pt-BR": "Futebol americano",
+    "es": "Fútbol americano"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cue-sports",
+   "subgroup": "precision",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q3341285",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Cue_sports",
+   "names": {
+    "en": "Cue sports",
+    "pt-BR": "Bilhar",
+    "es": "Billar"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Billiards",
+     "kind": "international"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "boules",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q895060",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Boules",
+   "names": {
+    "en": "Bocce",
+    "pt-BR": "Boules",
+    "es": "Deporte de bolas"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "bowling",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q3177899",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Bowling",
+   "names": {
+    "en": "Bowling",
+    "pt-BR": "Boliche",
+    "es": "Bolos"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "casting",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q933235",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Casting_(fishing)",
+   "names": {
+    "en": "Casting",
+    "pt-BR": "Casting (arremesso de pesca)",
+    "es": "Casting"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "cheerleading",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q61391",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Cheerleading",
+   "names": {
+    "en": "Cheerleading",
+    "pt-BR": "Animadora de torcida",
+    "es": "Animación"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "dancesport",
+   "subgroup": "gymnastics-artistic",
+   "format": "judged",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q738622",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Dancesport",
+   "names": {
+    "en": "Dancesport",
+    "pt-BR": "Dança esportiva",
+    "es": "Baile deportivo"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "fistball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q1050588",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Fistball",
+   "names": {
+    "en": "Fistball",
+    "pt-BR": "Faustebol",
+    "es": "Faustball"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "floorball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q206763",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Floorball",
+   "names": {
+    "en": "Floorball",
+    "pt-BR": "Floorball",
+    "es": "Floorball"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "flying-disc",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": null,
+   "wikipediaUrl": null,
+   "names": {
+    "en": "Ultimate (sport)",
+    "pt-BR": "Disco voador (ultimate)",
+    "es": "Disco volador (ultimate)"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Ultimate",
+     "kind": "international"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "ju-jitsu",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q163770",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Jujutsu",
+   "names": {
+    "en": "Jujutsu",
+    "pt-BR": "Jiu-jitsu",
+    "es": "Jūjutsu"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "kickboxing",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q178678",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Kickboxing",
+   "names": {
+    "en": "Kickboxing",
+    "pt-BR": "Kickboxing",
+    "es": "Kick boxing"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "korfball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q192937",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Korfball",
+   "names": {
+    "en": "Korfball",
+    "pt-BR": "Corfebol",
+    "es": "Korfbal"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "lifesaving",
+   "subgroup": "aquatics",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q10751894",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Lifesaving",
+   "names": {
+    "en": "Lifesaving",
+    "pt-BR": "Salvamento de vidas",
+    "es": "Salvamento"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "minigolf",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q754796",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Miniature_golf",
+   "names": {
+    "en": "Miniature golf",
+    "pt-BR": "Minigolfe",
+    "es": "Minigolf"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "muay-thai",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q120931",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Muay_Thai",
+   "names": {
+    "en": "Muay Thai",
+    "pt-BR": "Muay thai",
+    "es": "Muay thai"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "orienteering",
+   "subgroup": "athletics-endurance",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q29358",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Orienteering",
+   "names": {
+    "en": "Orienteering",
+    "pt-BR": "Orientação",
+    "es": "Orientación"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "powerlifting",
+   "subgroup": "strength",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q213796",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Powerlifting",
+   "names": {
+    "en": "Powerlifting",
+    "pt-BR": "Levantamento de peso básico",
+    "es": "Levantamiento de potencia"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "racquetball",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q754586",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Racquetball",
+   "names": {
+    "en": "Racquetball",
+    "pt-BR": "Raquetebol",
+    "es": "Raquetbol"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "roller-sports",
+   "subgroup": "wheels",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q2164355",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Roller_sports",
+   "names": {
+    "en": "Roller sport",
+    "pt-BR": "Patinação sobre rodas",
+    "es": "Deporte sobre ruedas"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "rugby",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q5378",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Rugby_football",
+   "names": {
+    "en": "Rugby",
+    "pt-BR": "Râguebi",
+    "es": "Rugby"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "sambo",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q106500",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Sambo_(martial_art)",
+   "names": {
+    "en": "Sambo",
+    "pt-BR": "Sambo",
+    "es": "Sambo"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "sumo",
+   "subgroup": "combat",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q40561",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Sumo",
+   "names": {
+    "en": "Sumo",
+    "pt-BR": "Sumô",
+    "es": "Sumo"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "underwater-sports",
+   "subgroup": "aquatics",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q2369170",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Underwater_sports",
+   "names": {
+    "en": "Underwater sport",
+    "pt-BR": "Desportos subaquáticos",
+    "es": "Deportes subacuáticos"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "water-skiing",
+   "subgroup": "nautical",
+   "format": "judged",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q472827",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Water_skiing",
+   "names": {
+    "en": "Water skiing",
+    "pt-BR": "Esqui aquático",
+    "es": "Esquí acuático"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "bodybuilding",
+   "subgroup": "strength",
+   "format": "judged",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q124100",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Bodybuilding",
+   "names": {
+    "en": "Bodybuilding",
+    "pt-BR": "Fisiculturismo",
+    "es": "Culturismo"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "chess",
+   "subgroup": "board-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q718",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Chess",
+   "names": {
+    "en": "Chess",
+    "pt-BR": "Xadrez",
+    "es": "Ajedrez"
+   },
+   "programmes": [
+    {
+     "event": "WG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "lawn-bowls",
+   "subgroup": "precision",
+   "format": "individual",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q895471",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Bowls",
+   "names": {
+    "en": "Bowls",
+    "pt-BR": "Lawn bowls",
+    "es": "Bowls"
+   },
+   "programmes": [
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "netball",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q231200",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Netball",
+   "names": {
+    "en": "Netball",
+    "pt-BR": "Netball",
+    "es": "Netball"
+   },
+   "programmes": [
+    {
+     "event": "CG",
+     "status": "core",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "bridge",
+   "subgroup": "card-games",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q188966",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Contract_bridge",
+   "names": {
+    "en": "Contract bridge",
+    "pt-BR": "Bridge",
+    "es": "Bridge"
+   },
+   "programmes": [
+    {
+     "event": "CG",
+     "status": "recognized",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "kabaddi",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q148636",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Kabaddi",
+   "names": {
+    "en": "Kabaddi",
+    "pt-BR": "Kabaddi",
+    "es": "Kabaddi"
+   },
+   "programmes": [
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "sepak-takraw",
+   "subgroup": "team-sports",
+   "format": "team",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q188818",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Sepak_takraw",
+   "names": {
+    "en": "Sepak takraw",
+    "pt-BR": "Sepaktakraw",
+    "es": "Sepak takraw"
+   },
+   "programmes": [
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "soft-tennis",
+   "subgroup": "racket",
+   "format": "duel",
+   "environment": "open",
+   "parent": null,
+   "wikidataQid": "Q1515947",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Soft_tennis",
+   "names": {
+    "en": "Soft tennis",
+    "pt-BR": "Soft tênis",
+    "es": "Tenis suave"
+   },
+   "programmes": [
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "dragon-boat",
+   "subgroup": "nautical",
+   "format": "team",
+   "environment": "open",
+   "parent": "canoe",
+   "wikidataQid": "Q57589",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Dragon_boat",
+   "names": {
+    "en": "Dragon boat",
+    "pt-BR": "Barco dragão",
+    "es": "Barco-dragón"
+   },
+   "programmes": [
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "draughts",
+   "subgroup": "board-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": null,
+   "wikipediaUrl": null,
+   "names": {
+    "en": "Draughts",
+    "pt-BR": "Damas",
+    "es": "Damas"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "shogi",
+   "subgroup": "board-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q131375",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Shogi",
+   "names": {
+    "en": "Shogi",
+    "pt-BR": "Shogi",
+    "es": "Shōgi"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "backgammon",
+   "subgroup": "board-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q11411",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Backgammon",
+   "names": {
+    "en": "Backgammon",
+    "pt-BR": "Gamão",
+    "es": "Backgammon"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "xiangqi",
+   "subgroup": "board-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q191448",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Xiangqi",
+   "names": {
+    "en": "Xiangqi",
+    "pt-BR": "Xiangqi",
+    "es": "Xiangqi"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "othello",
+   "subgroup": "board-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q748139",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Reversi",
+   "names": {
+    "en": "Othello",
+    "pt-BR": "Reversi",
+    "es": "Reversi"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [
+    {
+     "name": "Othello",
+     "kind": "international"
+    }
+   ],
+   "reviewNote": null
+  },
+  {
+   "slug": "poker",
+   "subgroup": "card-games",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q80131",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Poker",
+   "names": {
+    "en": "Poker",
+    "pt-BR": "Pôquer",
+    "es": "Póquer"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": "Mind sport recognition (IMSA) to confirm."
+  },
+  {
+   "slug": "cribbage",
+   "subgroup": "card-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q1139885",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Cribbage",
+   "names": {
+    "en": "Cribbage",
+    "pt-BR": "Cribbage",
+    "es": "Cribbage"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": null
+  },
+  {
+   "slug": "mastermind",
+   "subgroup": "board-games",
+   "format": "individual",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q17286",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Mastermind_(board_game)",
+   "names": {
+    "en": "Mastermind",
+    "pt-BR": "Mastermind",
+    "es": "Mastermind"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": "Mind sport recognition to confirm."
+  },
+  {
+   "slug": "go",
+   "subgroup": "board-games",
+   "format": "duel",
+   "environment": "closed",
+   "parent": null,
+   "wikidataQid": "Q11413",
+   "wikipediaUrl": "https://en.wikipedia.org/wiki/Go_(game)",
+   "names": {
+    "en": "Go",
+    "pt-BR": "Go",
+    "es": "Go"
+   },
+   "programmes": [
+    {
+     "event": "MS",
+     "status": "current",
+     "years": []
+    },
+    {
+     "event": "AG",
+     "status": "current",
+     "years": []
+    }
+   ],
+   "aliases": [],
+   "reviewNote": "Not in the user list; suggested for confirmation (Asian Games 2010/2022)."
+  }
+ ]
+}
