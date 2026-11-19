@@ -426,7 +426,7 @@ export const LEGAL_DOCS_EN: LegalDocs = {
             kind: 'list',
             items: [
               'The gold chart bars have low contrast in the light theme: the same data is in a table next to them.',
-              'Photos come from external links (Wikimedia) and may load slowly; the athlete’s name is always in text.',
+              'Photos come from Wikimedia Commons (served through our own server) and may load slowly on a first visit; the athlete’s name is always in text.',
               'The interface is available in Portuguese, English and Spanish; part of the athlete content still exists only in Portuguese (the site says so when that happens).',
             ],
           },

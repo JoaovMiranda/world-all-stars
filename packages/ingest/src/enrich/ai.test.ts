@@ -45,3 +45,32 @@ describe('AI layer (D03/D04)', () => {
     expect(r.proposals).toBe(0);
   });
 });
+
+import { aiExtractionQueue as queueTable } from '@was/db';
+import { eq as eqOp } from 'drizzle-orm';
+
+import { copiesSource, runBiography } from './ai';
+
+describe('Biography Enricher (§7.2 task 3)', () => {
+  let h2: DatabaseHandle;
+  beforeAll(async () => {
+    h2 = await createDatabase({ pgliteDataDir: 'memory://' });
+    await h2.migrate();
+  });
+  afterAll(() => h2.close());
+  const item = { entityId: '00000000-0000-7000-8000-000000000009', name: 'Pelé', sourceText: SOURCE, sourceUrl: 'https://en.wikipedia.org/wiki/Pel%C3%A9', sectionKey: 'article', facts: 'titles: FIFA World Cup 1958' };
+  const bio = (en: string, quote: string) => ({ bio_en: en, bio_pt: `${en} (pt)`, bio_es: `${en} (es)`, claims: [{ text: 'world cups', evidence_quote: quote }, { text: 'nickname', evidence_quote: 'Edson Arantes do Nascimento, known as Pelé' }] });
+
+  it('queues an original bio whose claims quote the source literally', async () => {
+    const r = await runBiography(h2.db, fake(bio('Pelé is a Brazilian footballer who lifted three world titles with his national team.', 'won the FIFA World Cup in 1958, 1962 and 1970')), [item]);
+    expect(r).toMatchObject({ proposals: 1, rejected: 0 });
+    const [q] = await h2.db.select().from(queueTable).where(eqOp(queueTable.sectionKey, 'biography'));
+    expect(q?.resultJson).toMatchObject({ type: 'biography', copied: false });
+  });
+
+  it('rejects invented quotes; flags copied text', async () => {
+    const invented = { bio_en: 'Pelé is a Brazilian footballer who lifted several world titles in his long career.', bio_pt: 'x'.repeat(50), bio_es: 'y'.repeat(50), claims: [{ text: 'a', evidence_quote: 'he won five World Cups for Brazil' }, { text: 'b', evidence_quote: 'he scored two thousand goals in total' }] };
+    expect((await runBiography(h2.db, fake(invented), [item])).rejected).toBe(1);
+    expect(copiesSource('known as Pelé, won the FIFA World Cup in 1958, 1962 and 1970 with Brazil.', SOURCE)).toBe(true);
+  });
+});

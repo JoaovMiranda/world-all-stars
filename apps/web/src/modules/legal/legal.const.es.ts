@@ -426,7 +426,7 @@ export const LEGAL_DOCS_ES: LegalDocs = {
             kind: 'list',
             items: [
               'Las barras doradas de los gráficos tienen poco contraste en el tema claro: los mismos datos están en una tabla al lado.',
-              'Las fotos vienen de enlaces externos (Wikimedia) y pueden tardar en cargar; el nombre del atleta siempre está en texto.',
+              'Las fotos vienen de Wikimedia Commons (servidas por nuestro propio servidor) y pueden tardar en la primera visita; el nombre del atleta siempre está en texto.',
               'La interfaz está en portugués, inglés y español; parte del contenido de los atletas todavía existe solo en portugués (el sitio lo avisa cuando ocurre).',
             ],
           },

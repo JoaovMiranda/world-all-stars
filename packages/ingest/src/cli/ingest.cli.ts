@@ -9,14 +9,14 @@
 //   worker [--max N]                                            claims and runs job items (retries, dead-letter)
 //   report                                                      counts per stage, last runs, AI usage
 //   identity-eval                                               precision/recall of the identity thresholds
-//   enrich [--limit 20]                                         optional AI extraction (OLLAMA_URL) → human queue
+//   enrich [--athlete slug] [--task biography|facts|all] [--limit 20]   optional AI (OLLAMA_URL) → admin queue
 //   ai-report                                                   calls, tokens, latency, approvals per model × task
 // Flags: --offline (crawler cache only, no network). PGlite is single-process: stop `pnpm dev` first.
 import { createDatabase, findRepoRoot, ingestionRuns, loadRootEnv } from '@was/db';
 import { desc, sql } from 'drizzle-orm';
 
 import { CanonicalWriter } from '../canonical/canonical-writer';
-import { aiReport, OllamaProvider, runEnrichment } from '../enrich/ai';
+import { aiReport, OllamaProvider, runBiography, runEnrichment } from '../enrich/ai';
 import { IDENTITY_SAMPLE } from '../identity/identity-sample';
 import { IDENTITY_THRESHOLDS, scoreCandidate } from '../identity/resolver';
 import { enqueueJob, runWorker } from '../jobs/queue';
@@ -101,16 +101,35 @@ try {
     for (const r of counts.rows) log(`${r.k.padEnd(32)} ${String(r.n).padStart(7)}`);
     for (const r of await db.select().from(ingestionRuns).orderBy(desc(ingestionRuns.startedAt)).limit(5)) log(`run ${r.jobKey} ${r.status} ${r.startedAt.toISOString()} checked=${r.checked} errors=${r.errors}`);
   } else if (command === 'enrich') {
-    // Optional AI layer: needs OLLAMA_URL (+ OLLAMA_MODEL). Without it the pipeline goes on without enrichment.
+    // Optional AI layer: needs OLLAMA_URL (+ OLLAMA_MODEL). Proposals go to the admin queue; nothing is published.
     const provider = OllamaProvider.fromEnv();
     if (!provider) log('enrich: OLLAMA_URL not set: skipped (the deterministic pipeline does not depend on it)');
-    const people = (await db.execute(sql`select x.entity_id id, x.external_id title, a.known_as name from entity_external_ids x join athletes a on a.id = x.entity_id where x.provider = 'wikipedia_en' and x.deleted_at is null limit ${Number(flag('limit') ?? 20)}`)) as unknown as { rows: { id: string; title: string; name: string }[] };
+    const athlete = flag('athlete');
+    const people = (await db.execute(sql`
+      select a.id, a.known_as name, a.full_name, a.birth_date, a.height_cm, x.external_id title
+      from athletes a join entity_external_ids x on x.entity_id = a.id and x.provider = 'wikipedia_en' and x.deleted_at is null and x.is_current
+      where a.deleted_at is null ${athlete ? sql`and a.slug = ${athlete}` : sql``}
+      limit ${Number(flag('limit') ?? 20)}`)) as unknown as { rows: { id: string; name: string; full_name: string | null; birth_date: string | null; height_cm: number | null; title: string }[] };
     const items = [];
     for (const p of provider ? people.rows : []) {
-      const page = await ctx.wiki(p.title);
-      if (page) items.push({ entityId: p.id, name: p.name, sourceText: page.text.split(/\n==/)[0] ?? page.text, sourceUrl: page.url, sectionKey: 'lead' });
+      const url = `https://en.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', prop: 'extracts|revisions', rvprop: 'ids', explaintext: '1', redirects: '1', titles: p.title, format: 'json', formatversion: '2' })}`;
+      const doc = await ctx.document('wikipedia-en', url);
+      const page = doc && (JSON.parse(doc.text) as { query?: { pages?: { extract?: string }[] } }).query?.pages?.[0];
+      if (!page?.extract) continue;
+      const titles = (await db.execute(sql`
+        select coalesce(t.name, d.slug) name, g.year from recognition_grants g join recognition_definitions d on d.id = g.definition_id
+        left join recognition_definition_translations t on t.definition_id = d.id and t.locale = 'en' where g.competitor_id = ${p.id} and g.deleted_at is null order by g.year`)) as unknown as { rows: { name: string; year: number }[] };
+      const clubs = (await db.execute(sql`select t.name, at.from_year, at.to_year from athlete_teams at join teams t on t.id = at.team_id where at.athlete_id = ${p.id} and at.deleted_at is null order by at.from_year`)) as unknown as { rows: { name: string; from_year: number | null; to_year: number | null }[] };
+      const facts = [
+        p.full_name && `full name ${p.full_name}`, p.birth_date && `born ${p.birth_date}`, p.height_cm && `height ${p.height_cm} cm`,
+        titles.rows.length && `titles: ${titles.rows.map((t) => `${t.name} ${t.year}`).join(', ')}`,
+        clubs.rows.length && `teams: ${clubs.rows.map((c) => `${c.name} (${c.from_year ?? '?'}–${c.to_year ?? '?'})`).join(', ')}`,
+      ].filter(Boolean).join('; ');
+      items.push({ entityId: p.id, name: p.name, sourceText: page.extract, sourceUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replaceAll(' ', '_'))}`, sectionKey: 'article', facts });
     }
-    log(`enrich: ${JSON.stringify(await runEnrichment(db, provider, items))}`);
+    const task = flag('task') ?? 'biography';
+    if (task === 'biography' || task === 'all') log(`biography: ${JSON.stringify(await runBiography(db, provider, items))}`);
+    if (task === 'facts' || task === 'all') log(`facts: ${JSON.stringify(await runEnrichment(db, provider, items.map((i) => ({ ...i, sourceText: i.sourceText.slice(0, 6000) }))))}`);
   } else if (command === 'ai-report') {
     for (const r of await aiReport(db)) log(JSON.stringify(r));
   } else if (command === 'identity-eval') {

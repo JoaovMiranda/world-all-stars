@@ -1,5 +1,5 @@
 // A1 (proposals + tier signals) and A6 (dossiers).
-import { active, aiExtractionQueue, fieldConflicts, greatsDossierApprovals, greatsDossiers, users } from '@was/db';
+import { active, aiExtractionQueue, athleteTranslations, type BaseRepository, fieldConflicts, fieldProvenance, greatsDossierApprovals, greatsDossiers, sourceLinks, users } from '@was/db';
 import {
   type AdminDecision,
   AdminAuditAction,
@@ -13,7 +13,7 @@ import {
   tierSignalOf,
   tierVoteCounts,
 } from '@was/shared';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import type { RequestContext } from '../../http/app-context.type';
 import { notFound, unprocessable, unprocessableKey } from '../../http/http-error.error';
@@ -58,8 +58,29 @@ export const listProposals = async ({ deps, locale }: RequestContext): Promise<{
     skippedAtGate: null,
     createdAt: c.createdAt.toISOString(),
   }));
+  const bioOf = (athleteId: string | null | undefined) => (athleteId ? view.rows.athleteTr.find((t) => t.athleteId === athleteId && t.locale === 'en')?.shortBio ?? null : null);
   const ai: CrawlerProposal[] = queue.map((q) => {
     const link = view.sourceLink(q.sourceLinkId);
+    const r = (q.resultJson ?? {}) as { type?: string; en?: string; pt?: string; es?: string; claims?: { evidence_quote: string }[]; field?: string; value?: unknown; evidence_quote?: string };
+    if (r.type === 'biography' || r.type === 'fact') {
+      return {
+        id: q.id,
+        origin: 'ai_extraction' as const,
+        entity: { type: link?.entityType ?? 'athletes', id: link?.entityId ?? q.id, label: link ? label(link.entityType, link.entityId) : q.sectionKey },
+        field: r.type === 'biography' ? 'biography (en / pt-BR / es)' : String(r.field),
+        base: null,
+        current: r.type === 'biography' ? bioOf(link?.entityId) : null,
+        proposed: r.type === 'biography' ? `${r.en}\n\n[pt-BR] ${r.pt}\n\n[es] ${r.es}` : String(r.value),
+        source: view.source(q.sourceLinkId),
+        evidenceQuote: r.type === 'biography' ? (r.claims ?? []).map((c) => `${(c as { literal?: boolean }).literal === false ? '[NOT VERIFIED] ' : ''}${c.evidence_quote}`).join(' … ') : (r.evidence_quote ?? null),
+        extractedByAi: true,
+        model: q.model,
+        status: queueStatus(q.status),
+        reviewNote: q.reviewNote,
+        skippedAtGate: q.skippedAtGate,
+        createdAt: q.createdAt.toISOString(),
+      };
+    }
     return {
       id: q.id,
       origin: 'ai_extraction',
@@ -113,7 +134,11 @@ export const reviewProposal = async (ctx: RequestContext, id: string, decision: 
   const review = { reviewNote: reason, reviewedBy: ctx.actor.userId, reviewedAt: new Date() };
   await ctx.deps.repo.transaction(async (repo) => {
     if (item.origin === 'field_conflict') await repo.update(fieldConflicts, id, { resolution: approve ? 'approved' : 'rejected', ...review }, ctx.actor, { reason });
-    else await repo.update(aiExtractionQueue, id, { status: approve ? 'approved' : 'rejected', ...review }, ctx.actor, { reason });
+    else {
+      await repo.update(aiExtractionQueue, id, { status: approve ? 'approved' : 'rejected', ...review }, ctx.actor, { reason });
+      // An approved AI proposal is applied to the profile, with an approved provenance row (G03: a human decided).
+      if (approve) await applyAiProposal(repo, ctx, id, reason);
+    }
     await repo.audit(ctx.actor, approve ? AdminAuditAction.ProposalApproved : AdminAuditAction.ProposalRejected, { type: item.origin, id }, { target: `${item.entity.label} · ${item.field}`, reason });
   });
   return { ok: true as const };
@@ -179,4 +204,24 @@ export const reviewDossier = async (ctx: RequestContext, id: string, decision: A
     });
   });
   return { ok: true as const };
+};
+
+/** Applies an approved AI proposal: a biography becomes the short bio (en/pt-BR/es) — never over a curated text. */
+const applyAiProposal = async (repo: BaseRepository, ctx: RequestContext, id: string, reason: string) => {
+  const [q] = await repo.db.select().from(aiExtractionQueue).where(eq(aiExtractionQueue.id, id));
+  const [link] = q ? await repo.db.select().from(sourceLinks).where(eq(sourceLinks.id, q.sourceLinkId)) : [];
+  const r = (q?.resultJson ?? {}) as { type?: string; en?: string; pt?: string; es?: string; claims?: { evidence_quote: string }[] };
+  if (!q || !link?.entityId || link.entityType !== 'athletes' || r.type !== 'biography') return;
+  for (const [locale, text] of [['en', r.en], ['pt-BR', r.pt], ['es', r.es]] as const) {
+    if (!text) continue;
+    const [existing] = await repo.db.select().from(athleteTranslations).where(and(eq(athleteTranslations.athleteId, link.entityId), eq(athleteTranslations.locale, locale)));
+    // Curated bios (seed / manual) are kept; the short Wikidata description is replaced.
+    if (existing && existing.createdVia === 'seed') continue;
+    if (existing) await repo.update(athleteTranslations, existing.id, { shortBio: text } as never, ctx.actor, { reason, summary: `biography (${q.model})` });
+    else await repo.insert(athleteTranslations, { athleteId: link.entityId, locale, shortBio: text } as never, ctx.actor);
+  }
+  await repo.insert(fieldProvenance, {
+    entityType: 'athletes', entityId: link.entityId, fieldName: 'short_bio', sourceLinkId: link.id, extractionMethod: 'ai', model: q.model,
+    evidenceQuote: (r.claims ?? []).map((c) => c.evidence_quote).join(' … ').slice(0, 2000), reviewStatus: 'approved', approvedBy: ctx.actor.userId, approvedAt: new Date(), isCurrent: true,
+  } as never, ctx.actor);
 };

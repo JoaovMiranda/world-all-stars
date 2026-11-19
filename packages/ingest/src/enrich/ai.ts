@@ -65,13 +65,99 @@ export const extractionPrompt = (name: string, section: string) =>
     section.slice(0, 6000),
   ].join('\n');
 
+/** Biography Enricher (§7.2 task 3): original, factual text; every claim cites a literal quote of the source. */
+export const BiographyOutputSchema = z.object({
+  bio_en: z.string().min(40).max(1200),
+  bio_pt: z.string().min(40).max(1300),
+  bio_es: z.string().min(40).max(1300),
+  claims: z.array(z.object({ text: z.string().min(3), evidence_quote: z.string().min(10).max(400) })).min(1).max(12),
+});
+export type BiographyOutput = z.infer<typeof BiographyOutputSchema>;
+export const BIOGRAPHY_PROMPT_VERSION = 'biography@2';
+export const biographyPrompt = (name: string, facts: string, section: string) =>
+  [
+    'You write a short factual biography (3–4 sentences, neutral tone, no superlatives that the source does not state) of the athlete below.',
+    'Write it with YOUR OWN words — never copy sentences from the text. Use only facts present in the text or in the facts list.',
+    'Answer ONLY JSON: {"bio_en": "...", "bio_pt": "... (Brazilian Portuguese)", "bio_es": "... (Spanish)", "claims": [{"text": "a fact you used", "evidence_quote": "5–30 words COPIED LITERALLY from the TEXT (preferred) or from the known facts line that support it"}]}.',
+    `Athlete: ${name}`,
+    `Known facts (database): ${facts}`,
+    '--- TEXT ---',
+    section.slice(0, 7000),
+  ].join('\n');
+
 export interface EnrichItem {
   entityId: string;
   name: string;
   sourceText: string;
   sourceUrl: string;
   sectionKey: string;
+  /** Database facts given to the biography task (titles, clubs, birth…). */
+  facts?: string;
 }
+
+const queue = async (db: Database, linkId: string, sectionKey: string, hashKey: string, result: Record<string, unknown>, model: string, promptVersion: string, tokens: { tokensIn: number; tokensOut: number }, invocationId: string) =>
+  db.execute(sql`
+    insert into ai_extraction_queue (id, created_via, source_link_id, section_key, section_hash, status, result_json, model, prompt_version, tokens_in, tokens_out, invocation_id)
+    values (${uuidv7()}, 'system:enrich', ${linkId}, ${sectionKey}, ${createHash('sha256').update(hashKey).digest('hex')}, 'pending', ${JSON.stringify(result)}::jsonb, ${model}, ${promptVersion}, ${tokens.tokensIn}, ${tokens.tokensOut}, ${invocationId})
+    on conflict do nothing`);
+
+/** Runs the Biography Enricher; the proposal reaches the human queue only when every claim quote is literal (level 2). */
+export const runBiography = async (db: Database, provider: AiProvider | null, items: EnrichItem[]) => {
+  if (!provider) return { skipped: true, invocations: 0, proposals: 0, rejected: 0 };
+  const modelId = seedId('ai_model', provider.provider, provider.model, provider.version);
+  await db.insert(aiModels).values({ id: modelId, createdVia: 'system:enrich', provider: provider.provider, name: provider.model, version: provider.version }).onConflictDoNothing();
+  const promptId = seedId('prompt', BIOGRAPHY_PROMPT_VERSION);
+  await db.insert(promptVersions).values({ id: promptId, createdVia: 'system:enrich', task: 'biography', version: BIOGRAPHY_PROMPT_VERSION, templateHash: createHash('sha256').update(biographyPrompt('', '', '')).digest('hex') }).onConflictDoNothing();
+  let proposals = 0;
+  let rejected = 0;
+  for (const item of items) {
+    const started = Date.now();
+    let output: unknown = null;
+    let error: string | null = null;
+    let tokens = { tokensIn: 0, tokensOut: 0 };
+    try {
+      const r = await provider.generate(biographyPrompt(item.name, item.facts ?? '', item.sourceText));
+      output = r.output;
+      tokens = { tokensIn: r.tokensIn, tokensOut: r.tokensOut };
+    } catch (e) {
+      error = String((e as Error).message ?? e);
+    }
+    const parsed = BiographyOutputSchema.safeParse(output);
+    // Evidence may come from the article OR from the database facts (already verified, with their own provenance).
+    const corpus = `${item.sourceText}\n${item.facts ?? ''}`;
+    const checked = parsed.success ? parsed.data.claims.map((c) => ({ ...c, literal: quoteExists(c.evidence_quote, corpus) })) : [];
+    const verified = checked.filter((c) => c.literal).length;
+    // Level 2: at least 2 literal quotes and ≥ 2/3 of them; the unverified ones are shown to the reviewer as such.
+    const literal = parsed.success && verified >= 2 && verified * 3 >= checked.length * 2;
+    // Level 3 (deterministic): the bio must not be a copy of the source (no 12-word run taken verbatim).
+    const copied = parsed.success && copiesSource(parsed.data.bio_en, item.sourceText);
+    const level = !parsed.success ? 0 : literal && !copied ? 3 : literal ? 2 : 1;
+    const invocationId = uuidv7();
+    await db.insert(aiInvocations).values({
+      id: invocationId, createdVia: 'system:enrich', modelId, promptVersionId: promptId, task: 'biography', inputRef: `${item.sourceUrl}#${item.sectionKey}`,
+      inputHash: createHash('sha256').update(`${BIOGRAPHY_PROMPT_VERSION}\n${item.sourceText}`).digest('hex'), output: (output ?? null) as Record<string, unknown> | null,
+      tokensIn: tokens.tokensIn, tokensOut: tokens.tokensOut, latencyMs: Date.now() - started, estimatedCost: 0, status: error ? 'error' : 'ok', error, validationLevel: level,
+      evidence: parsed.success ? parsed.data.claims.map((c) => c.evidence_quote) : [],
+    });
+    if (level < 2 || !parsed.success) {
+      rejected++;
+      continue;
+    }
+    const linkId = seedId('ai-link', item.entityId, item.sourceUrl);
+    await db.insert(sourceLinks).values({ id: linkId, createdVia: 'system:enrich', entityType: 'athletes', entityId: item.entityId, url: item.sourceUrl, origin: 'system' }).onConflictDoNothing();
+    await queue(db, linkId, 'biography', `biography|${item.entityId}|${parsed.data.bio_en}`, { type: 'biography', en: parsed.data.bio_en, pt: parsed.data.bio_pt, es: parsed.data.bio_es, claims: checked, copied }, provider.model, BIOGRAPHY_PROMPT_VERSION, tokens, invocationId);
+    proposals++;
+  }
+  return { skipped: false, invocations: items.length, proposals, rejected };
+};
+
+/** True when `text` reuses a run of 12+ words of `source` (the bio must be original writing). */
+export const copiesSource = (text: string, source: string) => {
+  const words = squash(text).split(' ');
+  const src = squash(source);
+  for (let i = 0; i + 12 <= words.length; i++) if (src.includes(words.slice(i, i + 12).join(' '))) return true;
+  return false;
+};
 
 /** Runs one extraction per item; records every invocation and queues the proposals that pass levels 1–2. */
 export const runEnrichment = async (db: Database, provider: AiProvider | null, items: EnrichItem[]) => {
@@ -119,7 +205,7 @@ export const runEnrichment = async (db: Database, provider: AiProvider | null, i
       const sectionHash = createHash('sha256').update(`${item.sectionKey}|${f.field}|${f.value}`).digest('hex');
       await db.execute(sql`
         insert into ai_extraction_queue (id, created_via, source_link_id, section_key, section_hash, status, result_json, model, prompt_version, tokens_in, tokens_out, invocation_id)
-        values (${uuidv7()}, 'system:enrich', ${linkId}, ${item.sectionKey}, ${sectionHash}, 'pending', ${JSON.stringify({ ...f, supported: quoteSupports(f) })}::jsonb, ${provider.model}, ${PROMPT_VERSION}, ${tokens.tokensIn}, ${tokens.tokensOut}, ${invocationId})
+        values (${uuidv7()}, 'system:enrich', ${linkId}, ${item.sectionKey}, ${sectionHash}, 'pending', ${JSON.stringify({ type: 'fact', ...f, supported: quoteSupports(f) })}::jsonb, ${provider.model}, ${PROMPT_VERSION}, ${tokens.tokensIn}, ${tokens.tokensOut}, ${invocationId})
         on conflict do nothing`);
       proposals++;
     }

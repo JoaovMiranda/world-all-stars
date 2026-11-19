@@ -441,7 +441,7 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
           kind: 'list',
           items: [
             'Barras douradas dos gráficos têm contraste baixo no tema claro: os mesmos dados estão em tabela ao lado.',
-            'Fotos vêm de links externos (Wikimedia) e podem demorar a carregar; o nome do atleta está sempre em texto.',
+            'Fotos vêm do Wikimedia Commons (servidas pelo nosso próprio servidor) e podem demorar na primeira visita; o nome do atleta está sempre em texto.',
             'A interface está em português, inglês e espanhol; parte do conteúdo dos atletas ainda existe só em português (o site avisa quando isso acontece).',
           ],
         },
