@@ -218,7 +218,8 @@ export class CatalogView {
     return { slug: a.slug, knownAs: a.knownAs, tier: this.tierOf(a.championTierId) };
   }
   athleteBySlug(slug: string) {
-    return this.rows.athletes.find((a) => a.slug === slug) ?? null;
+    const a = this.rows.athletes.find((x) => x.slug === slug) ?? null;
+    return a && this.visibility(a.id) !== 'none' ? a : null;
   }
   athleteNames(id: string): string[] {
     const a = this.maps.athletes.get(id)!;
@@ -321,9 +322,15 @@ export class CatalogView {
       isHallOfGreats: tier === Tier.Mythic,
     };
   }
-  /** Athletes with a sport (a row without athlete_sports is incomplete and never listed). */
+  /** Profile visibility (C02/F02): public → listed + page; unlisted → page only; none → no page (squad reserves…). */
+  private visibility(id: string) {
+    this.visibilityById ??= new Map(this.rows.competitorRows.map((c) => [c.id, c.profileVisibility]));
+    return this.visibilityById.get(id) ?? 'public';
+  }
+  private visibilityById: Map<string, string> | undefined;
+  /** Public athletes with a sport (a row without athlete_sports is incomplete and never listed). */
   private listable() {
-    return this.rows.athletes.filter((a) => this.maps.athleteSportsByAthlete.has(a.id));
+    return this.rows.athletes.filter((a) => this.maps.athleteSportsByAthlete.has(a.id) && this.visibility(a.id) === 'public');
   }
   /** Indexable entity pages with their last change (sitemaps, doc 12): listable athletes and every sport. */
   sitemapEntries(): { athletes: { slug: string; updatedAt: Date }[]; sports: { slug: string; updatedAt: Date }[] } {
@@ -622,7 +629,19 @@ export class CatalogView {
         .map((d) => ({ slug: d.slug, name: d.name, colorToken: d.colorToken }))
         .sort((a, b) => a.name.localeCompare(b.name)),
       programmes: this.sportProgrammes(s.id),
+      sections: this.rows.contentSections
+        .filter((c) => c.sportId === s.id && c.status === 'published')
+        .sort((a, b) => a.sortOrder - b.sortOrder)
+        .flatMap((c) => {
+          const t = this.sectionText(c.id);
+          return t ? [{ key: c.sectionKey, title: t.title, body: t.body, sources: this.rows.sourceLinks.filter((l) => l.entityType === 'sport_content_sections' && l.entityId === c.id).map((l) => l.url) }] : [];
+        }),
     };
+  }
+  /** Section text in the request locale, then the English source, then pt-BR. */
+  private sectionText(sectionId: string) {
+    const list = this.rows.contentSectionTr.filter((t) => t.sectionId === sectionId);
+    return [this.locale, ...FALLBACK_CHAIN].map((l) => list.find((t) => t.locale === l)).find(Boolean) ?? null;
   }
 
   // ── calendar, on this day ──

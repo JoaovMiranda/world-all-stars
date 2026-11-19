@@ -53,6 +53,8 @@ export const SportPageSchema = SportInfoSchema.extend({
   partOf: SportRefSchema.nullable().default(null),
   disciplines: z.array(SportRefSchema).default([]),
   programmes: z.array(SportProgrammeSchema).default([]),
+  /** Editorial sections (handoff v3 §10): history, belts, rules… — varies by sport; facts with sources. */
+  sections: z.array(z.object({ key: z.string().min(1), title: z.string().min(1), body: z.string().min(1), sources: z.array(z.string()) })).default([]),
 });
 export type SportPage = z.infer<typeof SportPageSchema>;
 

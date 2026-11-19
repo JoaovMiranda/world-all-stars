@@ -36,6 +36,7 @@ export const SPORTS_TEXT = {
     sectionTitle: 'Programas multiesportivos',
     none: 'Ainda não faz parte de nenhum programa multiesportivo cadastrado.',
     partOfTitle: 'Faz parte de',
+    sources: 'Fontes dos fatos:',
     disciplinesTitle: 'Disciplinas',
   },
   models: {

@@ -20,7 +20,8 @@ export const formatNumber = (n: number): string => currentFormat().number(n);
 /** 11/06/2026 – 19/07/2026 (single date when equal). */
 export const formatDateRange = (start: IsoDate, end: IsoDate): string => currentFormat().dateRange(start, end);
 /** 1956–1977 or 2003–hoje. */
-export const formatYears = (from: number | null, to: number | null, untilNow: string): string => `${from ?? '?'}–${to ?? untilNow}`;
+/** Career span; nothing documented yet → an em dash (never "?–present" for a career we know nothing about). */
+export const formatYears = (from: number | null, to: number | null, untilNow: string): string => (from === null && to === null ? '—' : `${from ?? '?'}–${to ?? untilNow}`);
 /** Age in full years between two dates (to = today of the page load, APP_TIME_ZONE, by default). */
 export const ageAt = (from: IsoDate, to?: IsoDate | null): number => {
   const a = fromIsoDate(from);

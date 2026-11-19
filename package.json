@@ -27,7 +27,8 @@
     "ingest:report": "pnpm --filter @was/ingest ingest report",
     "ingest:worker": "pnpm --filter @was/ingest ingest worker",
     "ingest:identity-eval": "pnpm --filter @was/ingest ingest identity-eval",
-    "catalog:sports": "node scripts/catalog/build-sports-catalog.mjs"
+    "catalog:sports": "node scripts/catalog/build-sports-catalog.mjs",
+    "rankings:calculate": "pnpm --filter server exec tsx src/cli/rankings.cli.ts"
   },
   "devDependencies": {
     "turbo": "2.11.10",

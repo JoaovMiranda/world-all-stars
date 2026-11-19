@@ -123,6 +123,24 @@ function SportContent({ sport }: { sport: SportPageData }) {
           <Section title={t.rules}>
             <p className="max-w-[68ch]">{sport.rules ?? t.noRules}</p>
           </Section>
+          {sport.sections.map((section) => (
+            <Section key={section.key} title={section.title}>
+              <p className="max-w-[68ch]">{section.body}</p>
+              {section.sources.length > 0 && (
+                <p className="muted mt-2 text-sm">
+                  {programme.sources}{' '}
+                  {section.sources.map((url, i) => (
+                    <span key={url}>
+                      {i > 0 && ' · '}
+                      <a href={url} target="_blank" rel="noreferrer">
+                        {new URL(url).hostname.replace(/^www\./, '')}
+                      </a>
+                    </span>
+                  ))}
+                </p>
+              )}
+            </Section>
+          ))}
         </div>
         <aside className="c-4 stack">
           {(sport.partOf || sport.disciplines.length > 0) && (

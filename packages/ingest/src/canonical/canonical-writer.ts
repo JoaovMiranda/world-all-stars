@@ -282,7 +282,7 @@ export class CanonicalWriter {
       await this.repo.ensure(entityExternalIds, { provider, externalId: value }, { entityId: id, provider, externalId: value, url: provider === 'wikipedia_en' ? `https://en.wikipedia.org/wiki/${encodeURIComponent(value.replaceAll(' ', '_'))}` : null } as never, CANONICAL_ACTOR);
       this.people.addExternal(id, provider, value);
     }
-    for (const a of c.aliases) {
+    for (const a of c.aliases ?? []) {
       const kindId = this.domain.get(`${DomainKind.NameKind}:${a.kind}`);
       if (kindId) await this.repo.ensure(entityAliases, { entityId: id, normalized: normalizeName(a.name), kindId }, { entityId: id, name: a.name, normalized: normalizeName(a.name), kindId, locale: a.locale } as never, CANONICAL_ACTOR);
     }

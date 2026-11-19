@@ -34,6 +34,7 @@ export const SPORTS_TEXT_EN = {
     sectionTitle: 'Multi-sport programmes',
     none: 'Not part of any multi-sport programme in the database yet.',
     partOfTitle: 'Part of',
+    sources: 'Sources of the facts:',
     disciplinesTitle: 'Disciplines',
   },
   models: {

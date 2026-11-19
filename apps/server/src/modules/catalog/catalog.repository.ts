@@ -1,6 +1,6 @@
 import * as T from '@was/db';
 import { type Database, active } from '@was/db';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
 
 /** Live rows of a table (soft delete applied). */
@@ -8,6 +8,56 @@ const all = <R>(db: Database, table: PgTable & { deletedAt: T.BaseTable['deleted
   db.select().from(table).where(active(table)) as unknown as Promise<R[]>;
 
 type Row<X extends { $inferSelect: unknown }> = X['$inferSelect'];
+
+/**
+ * Nationalities shown on cards: legacy rows + the country an ingested athlete REPRESENTED (competitor_representations,
+ * historical entities kept: USSR stays USSR). Athletes with legacy rows keep only those.
+ */
+const nationalitiesWithRepresentations = async (db: Database): Promise<Row<typeof T.athleteNationalities>[]> => {
+  const legacy = await all<Row<typeof T.athleteNationalities>>(db, T.athleteNationalities);
+  const has = new Set(legacy.map((n) => n.athleteId));
+  const res = (await db.execute(sql`
+    select r.id, r.created_at, r.updated_at, r.version, r.competitor_id, r.representation_id
+    from competitor_representations r join athletes a on a.id = r.competitor_id join countries c on c.id = r.representation_id
+    where r.deleted_at is null`)) as unknown as { rows: Record<string, unknown>[] };
+  const extra = res.rows
+    .filter((r) => !has.has(String(r.competitor_id)))
+    .map((r, i, all) => ({
+      id: String(r.id), createdAt: new Date(String(r.created_at)), createdBy: null, createdVia: 'system:canonical', updatedAt: new Date(String(r.updated_at)), updatedBy: null,
+      deletedAt: null, deletedBy: null, version: Number(r.version), athleteId: String(r.competitor_id), countryId: String(r.representation_id),
+      isPrimary: all.findIndex((x) => x.competitor_id === r.competitor_id) === i,
+    })) as Row<typeof T.athleteNationalities>[];
+  return [...legacy, ...extra];
+};
+
+/**
+ * Titles of the profile pages: legacy `achievements` + the recognition grants written by the ingestion pipeline
+ * (handoff v3 §4.5), in the same row shape, so one mapper path shows both. Backfilled grants (from the legacy rows)
+ * are not repeated.
+ */
+const achievementsWithGrants = async (db: Database): Promise<Row<typeof T.achievements>[]> => {
+  const legacy = await all<Row<typeof T.achievements>>(db, T.achievements);
+  const res = (await db.execute(sql`
+    select g.id, g.created_at, g.updated_at, g.version, g.competitor_id athlete_id, g.via_competitor_id team_id, coalesce(d.sport_id, ev.sport_id) sport_id,
+      t.id achievement_type_id, e.edition_id competition_edition_id, g.calendar_day_id, coalesce(g.year, ed.year) as year, g.rank
+    from recognition_grants g
+    join athletes a on a.id = g.competitor_id
+    join recognition_definitions d on d.id = g.definition_id
+    left join domain_values lv on lv.id = g.level_id
+    left join competition_results r on r.id = g.result_id
+    left join competition_entries e on e.id = r.entry_id
+    left join competition_events ev on ev.id = e.event_id
+    left join competition_editions ed on ed.id = e.edition_id
+    join achievement_types t on t.slug = case lv.slug when 'gold' then 'gold' when 'silver' then 'silver' when 'bronze' then 'bronze' else 'champion' end
+    where g.deleted_at is null and g.created_via = 'system:canonical' and e.edition_id is not null`)) as unknown as { rows: Record<string, unknown>[] };
+  const fromGrants = res.rows.map((r) => ({
+    id: String(r.id), createdAt: new Date(String(r.created_at)), createdBy: null, createdVia: 'system:canonical', updatedAt: new Date(String(r.updated_at)), updatedBy: null,
+    deletedAt: null, deletedBy: null, version: Number(r.version), athleteId: String(r.athlete_id), teamId: (r.team_id as string | null) ?? null, sportId: (r.sport_id as string | null) ?? null,
+    sportCategoryId: null, achievementTypeId: String(r.achievement_type_id), competitionEditionId: String(r.competition_edition_id), awardEditionId: null,
+    calendarDayId: (r.calendar_day_id as string | null) ?? null, year: Number(r.year), rank: (r.rank as number | null) ?? null, sourceLinkId: null,
+  })) as Row<typeof T.achievements>[];
+  return [...legacy, ...fromGrants];
+};
 
 /**
  * Loads the catalog (aspects + athletes and everything tied to them) in one go. Small, read-mostly data: the
@@ -20,7 +70,7 @@ export const loadCatalogRows = async (db: Database) => {
     orgKinds, orgKindTr, groups, groupTr, subgroups, subgroupTr, sports, sportTr, categories, categoryTr, governingBodies, collectionReports,
     organizations, competitions, competitionTr, editions, awards, awardTr, awardEditions, teams, observances, observanceTr, sources, sourceLinks,
     mediaLinks, athletes, athleteTr, nationalities, athleteSports, athleteTeams, achievements, reigns, milestones, milestoneTr, stats, tierHistory,
-    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions, programmeSports, sportRelations, domainValues,
+    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions, programmeSports, sportRelations, domainValues, contentSections, contentSectionTr, competitorRows,
   ] = await Promise.all([
     all<Row<typeof T.calendarDays>>(db, T.calendarDays),
     all<Row<typeof T.countries>>(db, T.countries),
@@ -61,10 +111,10 @@ export const loadCatalogRows = async (db: Database) => {
     all<Row<typeof T.mediaLinks>>(db, T.mediaLinks),
     all<Row<typeof T.athletes>>(db, T.athletes),
     all<Row<typeof T.athleteTranslations>>(db, T.athleteTranslations),
-    all<Row<typeof T.athleteNationalities>>(db, T.athleteNationalities),
+    nationalitiesWithRepresentations(db),
     all<Row<typeof T.athleteSports>>(db, T.athleteSports),
     all<Row<typeof T.athleteTeams>>(db, T.athleteTeams),
-    all<Row<typeof T.achievements>>(db, T.achievements),
+    achievementsWithGrants(db),
     all<Row<typeof T.titleReigns>>(db, T.titleReigns),
     all<Row<typeof T.athleteMilestones>>(db, T.athleteMilestones),
     all<Row<typeof T.athleteMilestoneTranslations>>(db, T.athleteMilestoneTranslations),
@@ -85,13 +135,16 @@ export const loadCatalogRows = async (db: Database) => {
     all<Row<typeof T.competitionProgramSports>>(db, T.competitionProgramSports),
     all<Row<typeof T.sportRelations>>(db, T.sportRelations),
     all<Row<typeof T.domainValues>>(db, T.domainValues),
+    all<Row<typeof T.sportContentSections>>(db, T.sportContentSections),
+    all<Row<typeof T.sportContentSectionTranslations>>(db, T.sportContentSectionTranslations),
+    db.select({ id: T.competitors.id, profileVisibility: T.competitors.profileVisibility }).from(T.competitors).where(active(T.competitors)),
   ]);
   return {
     calendarDays, countries, countryTr, cities, cityTr, levels, tiers, achievementTypes, governance, governanceTr, prizeForms, prizeFormTr,
     orgKinds, orgKindTr, groups, groupTr, subgroups, subgroupTr, sports, sportTr, categories, categoryTr, governingBodies, collectionReports,
     organizations, competitions, competitionTr, editions, awards, awardTr, awardEditions, teams, observances, observanceTr, sources, sourceLinks,
     mediaLinks, athletes, athleteTr, nationalities, athleteSports, athleteTeams, achievements, reigns, milestones, milestoneTr, stats, tierHistory,
-    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions, programmeSports, sportRelations, domainValues,
+    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions, programmeSports, sportRelations, domainValues, contentSections, contentSectionTr, competitorRows,
   };
 };
 export type CatalogRows = Awaited<ReturnType<typeof loadCatalogRows>>;
@@ -104,7 +157,7 @@ export const CATALOG_TABLES = new Set([
   'sport_category_translations', 'sport_governing_bodies', 'sport_collection_reports', 'organizations', 'competitions', 'competition_translations',
   'competition_editions', 'awards', 'award_translations', 'award_editions', 'teams', 'observance_days', 'observance_day_translations', 'sources',
   'source_links', 'media_links', 'athletes', 'athlete_translations', 'athlete_nationalities', 'athlete_sports', 'athlete_teams', 'achievements',
-  'title_reigns', 'athlete_milestones', 'athlete_milestone_translations', 'athlete_stats', 'athlete_tier_history', 'greats_dossiers',
+  'title_reigns', 'recognition_grants', 'athlete_milestones', 'athlete_milestone_translations', 'athlete_stats', 'athlete_tier_history', 'greats_dossiers',
   'greats_dossier_translations', 'greats_evidences', 'greats_evidence_translations', 'field_provenance', 'field_conflicts', 'ingestion_runs',
-  'competition_program_sports', 'sport_relations', 'domain_values',
+  'competition_program_sports', 'sport_relations', 'domain_values', 'sport_content_sections', 'sport_content_section_translations', 'competitors', 'competitor_representations',
 ]);

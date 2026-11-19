@@ -10,6 +10,14 @@
       "port": 8787
     },
     {
+      "name": "dev-api",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "dev:api"
+      ],
+      "port": 8787
+    },
+    {
       "name": "prod-local",
       "runtimeExecutable": "node",
       "runtimeArgs": [
