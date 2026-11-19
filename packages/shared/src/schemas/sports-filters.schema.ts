@@ -9,5 +9,7 @@ export const SportsFiltersSchema = z.object({
   q: optionalText(),
   governance: optionalEnum(GOVERNANCE_MODEL_VALUES),
   nature: optionalEnum(ORG_NATURE_VALUES),
+  /** Multi-sport programme slug (olympic-games-summer, world-games…). */
+  programme: optionalText(),
 });
 export type SportsFilters = z.infer<typeof SportsFiltersSchema>;

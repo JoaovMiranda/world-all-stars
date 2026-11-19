@@ -2,6 +2,7 @@ import type { Messages } from '../i18n/messages.helper';
 import type { ORG_LABELS_TEXT } from './org-labels.const';
 
 export const ORG_LABELS_TEXT_EN = {
+  multiSport: 'Multi-sport',
   nature: {
     association: 'Non-profit association',
     company: 'Company',

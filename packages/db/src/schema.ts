@@ -15,3 +15,8 @@ export * from './tables/source.table';
 export * from './tables/sport.table';
 export * from './tables/system.table';
 export * from './tables/user.table';
+export * from './tables/domain.table';
+export * from './tables/recognition.table';
+export * from './tables/registry.table';
+export * from './tables/structure.table';
+export * from './tables/taxonomy.table';

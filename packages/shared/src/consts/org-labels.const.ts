@@ -5,7 +5,8 @@ import { ORG_LABELS_TEXT_EN } from './org-labels.const.en';
 import { ORG_LABELS_TEXT_ES } from './org-labels.const.es';
 
 /** pt-BR labels of organizations (doc 19): nature, and relation to the parent; en/es next to it. */
-export const ORG_LABELS_TEXT: { nature: Record<OrgNature, string>; relation: Record<OrgRelation, string> } = {
+export const ORG_LABELS_TEXT: { nature: Record<OrgNature, string>; relation: Record<OrgRelation, string>; multiSport: string } = {
+  multiSport: 'Multiesportivo',
   nature: {
     association: 'Associação sem fins lucrativos',
     company: 'Empresa',

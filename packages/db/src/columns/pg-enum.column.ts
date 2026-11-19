@@ -1,5 +1,23 @@
 // Postgres enums created FROM the shared enums (doc 07): the same values validate the API (Zod) and the database.
 import {
+  AI_INVOCATION_STATUS_VALUES,
+  COMPETITOR_KIND_VALUES,
+  CONTENT_SECTION_STATUS_VALUES,
+  COUNTRY_KIND_VALUES,
+  CRAWL_POLICY_VALUES,
+  DIMENSION_VALUE_TYPE_VALUES,
+  DOMAIN_KIND_VALUES,
+  ENTITY_TYPE_VALUES,
+  GENDER_VALUES,
+  INFORMATION_KIND_VALUES,
+  JOB_ITEM_STATUS_VALUES,
+  METRIC_DIRECTION_VALUES,
+  METRIC_VALUE_TYPE_VALUES,
+  PROFILE_VISIBILITY_VALUES,
+  PROVENANCE_REVIEW_STATUS_VALUES,
+  RANKING_OUTPUT_KIND_VALUES,
+  RANKING_SNAPSHOT_STATUS_VALUES,
+  RETENTION_POLICY_VALUES,
   ATHLETE_STATUS_VALUES,
   BANNED_WORD_MATCH_MODE_VALUES,
   COMMENT_REACTION_VALUES,
@@ -57,3 +75,23 @@ export const sourceUsageStatusEnum = pgEnum('source_usage_status', SOURCE_USAGE_
 export const suggestionStatusEnum = pgEnum('suggestion_status', SUGGESTION_STATUS_VALUES);
 export const tierEnum = pgEnum('tier', TIER_VALUES);
 export const userRoleEnum = pgEnum('user_role', USER_ROLE_VALUES);
+
+// Handoff v3: stable internal states only (competitive values are domain data, see tables/domain.table.ts).
+export const aiInvocationStatusEnum = pgEnum('ai_invocation_status', AI_INVOCATION_STATUS_VALUES);
+export const competitorKindEnum = pgEnum('competitor_kind', COMPETITOR_KIND_VALUES);
+export const contentSectionStatusEnum = pgEnum('content_section_status', CONTENT_SECTION_STATUS_VALUES);
+export const countryKindEnum = pgEnum('country_kind', COUNTRY_KIND_VALUES);
+export const crawlPolicyEnum = pgEnum('crawl_policy', CRAWL_POLICY_VALUES);
+export const dimensionValueTypeEnum = pgEnum('dimension_value_type', DIMENSION_VALUE_TYPE_VALUES);
+export const domainKindEnum = pgEnum('domain_kind', DOMAIN_KIND_VALUES);
+export const entityTypeEnum = pgEnum('entity_type', ENTITY_TYPE_VALUES);
+export const genderEnum = pgEnum('gender', GENDER_VALUES);
+export const informationKindEnum = pgEnum('information_kind', INFORMATION_KIND_VALUES);
+export const jobItemStatusEnum = pgEnum('job_item_status', JOB_ITEM_STATUS_VALUES);
+export const metricDirectionEnum = pgEnum('metric_direction', METRIC_DIRECTION_VALUES);
+export const metricValueTypeEnum = pgEnum('metric_value_type', METRIC_VALUE_TYPE_VALUES);
+export const profileVisibilityEnum = pgEnum('profile_visibility', PROFILE_VISIBILITY_VALUES);
+export const provenanceReviewStatusEnum = pgEnum('provenance_review_status', PROVENANCE_REVIEW_STATUS_VALUES);
+export const rankingOutputKindEnum = pgEnum('ranking_output_kind', RANKING_OUTPUT_KIND_VALUES);
+export const rankingSnapshotStatusEnum = pgEnum('ranking_snapshot_status', RANKING_SNAPSHOT_STATUS_VALUES);
+export const retentionPolicyEnum = pgEnum('retention_policy', RETENTION_POLICY_VALUES);

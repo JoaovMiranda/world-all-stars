@@ -41,6 +41,8 @@ export const sports = pgTable(
     governanceModelId: uuid().references(() => governanceModels.id),
     environment: text().notNull(),
     format: text().notNull(),
+    /** sport / discipline / variant / style (domain taxon_level; FK in migration 0006). */
+    taxonLevelId: uuid(),
   },
   (t) => [uniqueIndex().on(t.slug).where(live(t.deletedAt))],
 );

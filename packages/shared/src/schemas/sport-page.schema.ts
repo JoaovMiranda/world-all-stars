@@ -5,7 +5,7 @@ import { AthleteSummarySchema } from './athlete-summary.schema';
 import { CompetitionEventSchema } from './calendar-event.schema';
 import { ObservanceSchema } from './observance.schema';
 import { OrganizationSchema, SportAssociationSchema } from './organization.schema';
-import { SportInfoSchema } from './sport-ref.schema';
+import { SportInfoSchema, SportProgrammeSchema, SportRefSchema } from './sport-ref.schema';
 import { ContentLocaleSchema } from './locale.schema';
 
 /** Report of a simulated collection that found no athlete (doc 18): reason + facts with evidence. */
@@ -49,6 +49,10 @@ export const SportPageSchema = SportInfoSchema.extend({
   athletes: z.array(AthleteSummarySchema),
   observances: z.array(ObservanceSchema),
   upcoming: z.array(CompetitionEventSchema),
+  /** Sport → discipline graph (§4.2): the parent sport and the disciplines of this one. */
+  partOf: SportRefSchema.nullable().default(null),
+  disciplines: z.array(SportRefSchema).default([]),
+  programmes: z.array(SportProgrammeSchema).default([]),
 });
 export type SportPage = z.infer<typeof SportPageSchema>;
 

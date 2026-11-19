@@ -23,3 +23,14 @@ export const SportInfoSchema = SportRefSchema.extend({
   governance: z.enum(GOVERNANCE_MODEL_VALUES).nullable(),
 });
 export type SportInfo = z.infer<typeof SportInfoSchema>;
+
+/** Presence of a sport in a multi-sport programme (Olympics, World Games…): a badge, never a container (§11.5). */
+export const SportProgrammeSchema = z.object({
+  /** Multi-sport event slug (olympic-games-summer, world-games…). */
+  slug: z.string().min(1),
+  name: z.string().min(1),
+  /** current · discontinued · demonstration · confirmed_future · core · optional · recognized · youth_only */
+  status: z.string().min(1),
+  years: z.array(z.number().int()).default([]),
+});
+export type SportProgramme = z.infer<typeof SportProgrammeSchema>;

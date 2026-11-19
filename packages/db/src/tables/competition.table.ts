@@ -13,7 +13,8 @@ export const competitions = pgTable(
   {
     ...baseColumns(),
     slug: text().notNull(),
-    sportId: uuid().notNull().references(() => sports.id),
+    /** Null only for multi-sport events (Olympic Games, World Games…): CHECK in migration 0009. */
+    sportId: uuid().references(() => sports.id),
     sportCategoryId: uuid().references(() => sportCategories.id),
     organizationId: uuid().notNull().references(() => organizations.id),
     competitionLevelId: uuid().notNull().references(() => competitionLevels.id),
@@ -22,6 +23,10 @@ export const competitions = pgTable(
     periodicity: text(),
     prizeFormId: uuid().references(() => prizeForms.id),
     wikidataQid: text(),
+    /** Default competition format (domain; FK in migration 0006): events may override. */
+    formatId: uuid(),
+    /** Multi-sport event (Olympic Games, World Games…): its programme lists sports (competition_program_sports). */
+    isMultiSport: boolean().notNull().default(false),
   },
   (t) => [uniqueIndex().on(t.slug).where(live(t.deletedAt))],
 );
@@ -37,7 +42,11 @@ export const competitionEditions = pgTable(
     ...baseColumns(),
     competitionId: uuid().notNull().references(() => competitions.id),
     editionNumber: integer(),
-    year: integer().notNull(),
+    /** Null for seasons/cycles/single events without a single year (handoff v3 §4.3). */
+    year: integer(),
+    /** edition / season / cycle / single_event / series (domain edition_kind; FK in migration 0006). */
+    editionKindId: uuid(),
+    rulesetId: uuid(),
     startCalendarDayId: uuid().references(() => calendarDays.id),
     startYear: integer(),
     endCalendarDayId: uuid().references(() => calendarDays.id),

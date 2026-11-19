@@ -37,6 +37,7 @@ interface Prototype {
   };
   collectionRuns: Record<string, unknown>[];
   collectedSports: { sport: string; reason_pt: string; facts: Record<string, unknown>[] }[];
+  slugRedirects: { table: string; oldSlug: string; newSlug: string; id: string }[];
 }
 
 export interface SeedReport {
@@ -45,6 +46,16 @@ export interface SeedReport {
 }
 
 const LOCALE = 'pt-BR';
+/** Locales of content-translations.json written by the seed (pt-BR comes from the mock rows). */
+const CONTENT_LOCALES = ['en', 'es'] as const;
+/** Translation table → FK column of its parent (same map as scripts/translations/content-translations.mjs). */
+const CONTENT_FK: Record<string, string> = {
+  athlete_translations: 'athlete_id', athlete_milestone_translations: 'milestone_id', sport_translations: 'sport_id', sport_group_translations: 'group_id',
+  sport_subgroup_translations: 'subgroup_id', sport_category_translations: 'category_id', country_translations: 'country_id', city_translations: 'city_id',
+  competition_translations: 'competition_id', award_translations: 'award_id', observance_day_translations: 'observance_day_id',
+  greats_dossier_translations: 'dossier_id', greats_evidence_translations: 'evidence_id', governance_model_translations: 'governance_model_id',
+  organization_kind_translations: 'organization_kind_id', prize_form_translations: 'prize_form_id',
+};
 const SIGNED_UP_AT = '2026-10-01T12:00:00.000Z';
 const SEED_CURATORS = [
   { email: 'curador1@exemplo.invalid', name: 'Curador 1 (seed)' },
@@ -164,6 +175,39 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
   for (const f of proto.db.all('prize_forms')) {
     const label = proto.catalog.prizeForms[f.slug as string];
     if (label) await put('prize_form_translations', { id: seedId('pf_tr', f.slug as string, LOCALE), createdVia: 'seed', prizeFormId: P(f.id), locale: LOCALE, name: label });
+  }
+
+  // 2b · Content translations (handoff v3 §11): English base + Spanish from content-translations.json. Keys are the
+  // PARENT ids of the prototype (athlete, sport, competition…); the pt-BR rows came with the mock in step 1.
+  const contentFile = path.join(repoRoot, 'packages/db/src/seeds/content-translations.json');
+  if (fs.existsSync(contentFile)) {
+    const content = JSON.parse(fs.readFileSync(contentFile, 'utf8')) as { tables: Record<string, Record<string, Record<string, unknown>>> };
+    for (const [name, entries] of Object.entries(content.tables)) {
+      const fk = CONTENT_FK[name];
+      const table = tables.get(name);
+      if (!fk || !table) continue;
+      const keys = columnKeysByDbName(table);
+      for (const [parentProtoId, entry] of Object.entries(entries)) {
+        const parentId = idMap.get(parentProtoId);
+        if (!parentId) continue;
+        const source = (entry['pt-BR'] as Record<string, string | null> | undefined) ?? {};
+        for (const locale of CONTENT_LOCALES) {
+          const translated = (entry[locale] as Record<string, string | null> | undefined) ?? {};
+          if (!Object.values(translated).some(Boolean)) continue;
+          const values: Record<string, unknown> = { id: seedId('ct', name, parentProtoId, locale), createdVia: 'seed', [keys.get(fk)!]: parentId, locale };
+          // A field not translated in this locale keeps the pt-BR text (NOT NULL columns); the mapper falls back anyway.
+          for (const [col, v] of Object.entries(source)) if (v) values[keys.get(col)!] = translated[col] ?? v;
+          await put(name, values);
+        }
+      }
+    }
+  }
+
+  // 2c · Old Portuguese slugs → 301 (registry entities only: sports, competitions, organizations, teams).
+  const REDIRECT_TYPES: Record<string, string> = { sports: 'sport', competitions: 'competition', organizations: 'organization', teams: 'competitor' };
+  for (const r of proto.slugRedirects) {
+    const entityType = REDIRECT_TYPES[r.table];
+    if (entityType) await put('slug_redirects', { id: seedId('slug', r.table, r.oldSlug), createdVia: 'seed', entityType, entityId: P(r.id), oldSlug: r.oldSlug, scope: r.table === 'teams' ? 'teams' : '' });
   }
 
   // 3 · Collection reports of sports without athletes (doc 18) and AI collection runs (docs 11/18).

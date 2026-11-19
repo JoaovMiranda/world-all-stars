@@ -1,7 +1,9 @@
-/** Languages of the interface (doc 12: same URL, the choice lives in a cookie). pt-BR is the source language. */
+/** Languages of the interface (doc 12: same URL, the choice lives in a cookie). pt-BR is the interface's default; catalog data is English at the source. */
 export const LOCALE_VALUES = ['pt-BR', 'en', 'es'] as const;
 export type Locale = (typeof LOCALE_VALUES)[number];
 export const DEFAULT_LOCALE: Locale = 'pt-BR';
+/** Language of the catalog DATA at the source (handoff v3 §11): slugs and base texts; pt-BR/es are translations. */
+export const CONTENT_SOURCE_LOCALE: Locale = 'en';
 /** Preference cookie (1 year, Lax, strictly necessary: doc 13) read by the server render and the API. */
 export const LOCALE_COOKIE = 'was_locale';
 /** Header the web client sends with every API call (wins over the cookie: the page's current language). */

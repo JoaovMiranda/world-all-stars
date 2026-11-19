@@ -36,6 +36,41 @@
       "when": 1795008096536,
       "tag": "0004_perf-indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795057928628,
+      "tag": "0005_registry-identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795057929100,
+      "tag": "0006_taxonomy-representation",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795057929579,
+      "tag": "0007_competition-structure",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1795058450551,
+      "tag": "0008_recognitions",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795058905734,
+      "tag": "0009_multisport-catalog",
+      "breakpoints": true
     }
   ]
 }
