@@ -23,6 +23,19 @@ export const SPORTS_TEXT_EN = {
     emptyText: 'Sports appear here with their champions, competitions and the associations that run them.',
     emptyAction: 'Suggest an athlete',
   },
+  programme: {
+    label: 'Multi-sport programme',
+    all: 'All programmes',
+    partOf: (name: string) => `Discipline of ${name}`,
+    status: {
+      current: 'current programme', discontinued: 'discontinued', demonstration: 'demonstration', confirmed_future: 'confirmed', core: 'core',
+      optional: 'optional', recognized: 'recognized', youth_only: 'Youth',
+    } as Record<string, string>,
+    sectionTitle: 'Multi-sport programmes',
+    none: 'Not part of any multi-sport programme in the database yet.',
+    partOfTitle: 'Part of',
+    disciplinesTitle: 'Disciplines',
+  },
   models: {
     title: 'Governance models',
     eyebrow: 'how power is organized',

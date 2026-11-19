@@ -20,7 +20,7 @@ export const loadCatalogRows = async (db: Database) => {
     orgKinds, orgKindTr, groups, groupTr, subgroups, subgroupTr, sports, sportTr, categories, categoryTr, governingBodies, collectionReports,
     organizations, competitions, competitionTr, editions, awards, awardTr, awardEditions, teams, observances, observanceTr, sources, sourceLinks,
     mediaLinks, athletes, athleteTr, nationalities, athleteSports, athleteTeams, achievements, reigns, milestones, milestoneTr, stats, tierHistory,
-    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions,
+    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions, programmeSports, sportRelations, domainValues,
   ] = await Promise.all([
     all<Row<typeof T.calendarDays>>(db, T.calendarDays),
     all<Row<typeof T.countries>>(db, T.countries),
@@ -82,13 +82,16 @@ export const loadCatalogRows = async (db: Database) => {
       .select({ entityId: T.entityVersions.entityId, versionNumber: T.entityVersions.versionNumber, summary: T.entityVersions.summary, author: T.entityVersions.author })
       .from(T.entityVersions)
       .where(active(T.entityVersions, eq(T.entityVersions.entityType, 'athletes'))),
+    all<Row<typeof T.competitionProgramSports>>(db, T.competitionProgramSports),
+    all<Row<typeof T.sportRelations>>(db, T.sportRelations),
+    all<Row<typeof T.domainValues>>(db, T.domainValues),
   ]);
   return {
     calendarDays, countries, countryTr, cities, cityTr, levels, tiers, achievementTypes, governance, governanceTr, prizeForms, prizeFormTr,
     orgKinds, orgKindTr, groups, groupTr, subgroups, subgroupTr, sports, sportTr, categories, categoryTr, governingBodies, collectionReports,
     organizations, competitions, competitionTr, editions, awards, awardTr, awardEditions, teams, observances, observanceTr, sources, sourceLinks,
     mediaLinks, athletes, athleteTr, nationalities, athleteSports, athleteTeams, achievements, reigns, milestones, milestoneTr, stats, tierHistory,
-    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions,
+    dossiers, dossierTr, evidences, evidenceTr, provenance, conflicts, ingestionRuns, versions, programmeSports, sportRelations, domainValues,
   };
 };
 export type CatalogRows = Awaited<ReturnType<typeof loadCatalogRows>>;
@@ -103,4 +106,5 @@ export const CATALOG_TABLES = new Set([
   'source_links', 'media_links', 'athletes', 'athlete_translations', 'athlete_nationalities', 'athlete_sports', 'athlete_teams', 'achievements',
   'title_reigns', 'athlete_milestones', 'athlete_milestone_translations', 'athlete_stats', 'athlete_tier_history', 'greats_dossiers',
   'greats_dossier_translations', 'greats_evidences', 'greats_evidence_translations', 'field_provenance', 'field_conflicts', 'ingestion_runs',
+  'competition_program_sports', 'sport_relations', 'domain_values',
 ]);

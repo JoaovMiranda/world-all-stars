@@ -13,7 +13,7 @@ const GET_INPUTS: Record<string, { params?: Record<string, string>; query?: Reco
   [PublicApi.athletes.path]: { query: { q: 'pel' } },
   [PublicApi.athleteProfile.path]: { params: { slug: 'pele' } },
   [PublicApi.compare.path]: { query: { slugs: 'pele,michael-phelps' } },
-  [PublicApi.sportPage.path]: { params: { slug: 'futebol' } },
+  [PublicApi.sportPage.path]: { params: { slug: 'football' } },
   [PublicApi.calendar.path]: { query: { from: '2026-01-01', to: '2026-12-31' } },
   [PublicApi.onThisDay.path]: { params: { md: '10-23' } },
   [ParticipationApi.tierVotes.path]: { params: { slug: 'pele' } },
@@ -51,7 +51,8 @@ describe.skipIf(!HAS_PROTOTYPE)('GET conformance (seeded database)', () => {
     expect(pele.json.knownAs).toBe('Pelé');
     expect(pele.json.achievements.length).toBeGreaterThan(0);
     const home = await t.call(PublicApi.home, { query: { date: '2026-10-23' } });
-    expect(home.json.sports.length).toBe(18);
+    // The sports catalog (handoff v3 §11.5) seeds every Olympic, World Games, Commonwealth, Asian Games and mind sport.
+    expect(home.json.sports.length).toBeGreaterThanOrEqual(140);
     expect(home.json.globe.length).toBeGreaterThan(0);
   });
 

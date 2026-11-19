@@ -23,6 +23,19 @@ export const SPORTS_TEXT_ES = {
     emptyText: 'Los deportes aparecen aquí con sus campeones, competiciones y las asociaciones que mandan en ellos.',
     emptyAction: 'Sugerir un atleta',
   },
+  programme: {
+    label: 'Programa multideportivo',
+    all: 'Todos los programas',
+    partOf: (name: string) => `Disciplina de ${name}`,
+    status: {
+      current: 'programa actual', discontinued: 'discontinuado', demonstration: 'demostración', confirmed_future: 'confirmado', core: 'obligatorio',
+      optional: 'opcional', recognized: 'reconocido', youth_only: 'Juventud',
+    } as Record<string, string>,
+    sectionTitle: 'Programas multideportivos',
+    none: 'Todavía no forma parte de ningún programa multideportivo registrado.',
+    partOfTitle: 'Forma parte de',
+    disciplinesTitle: 'Disciplinas',
+  },
   models: {
     title: 'Modelos de gobernanza',
     eyebrow: 'cómo se organiza el poder',

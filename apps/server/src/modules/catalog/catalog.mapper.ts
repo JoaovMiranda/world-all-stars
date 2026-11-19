@@ -27,11 +27,14 @@ import {
   type SportInfo,
   type SportPage,
   type SportCard,
+  type SportProgramme,
+  type SportRef,
   Tier,
   WINNING_ACHIEVEMENT_TYPES,
   matchesAthleteFilters,
   normalizeAnalysis,
   type AnalysisDimensionsResponse,
+  CONTENT_SOURCE_LOCALE,
   DEFAULT_LOCALE,
   isLocale,
   type Locale,
@@ -41,11 +44,13 @@ import {
 
 import type { CatalogRows } from './catalog.repository';
 
-/** Content fallback after the requested locale: the source language, then English, then whatever exists. */
-const FALLBACK_CHAIN: readonly Locale[] = [DEFAULT_LOCALE, 'en'];
+/** Content fallback after the requested locale: the data's source language (English), then the interface default. */
+const FALLBACK_CHAIN: readonly Locale[] = [CONTENT_SOURCE_LOCALE, DEFAULT_LOCALE];
 /** Placeholder organizer of the prototype: never shown as an association. */
 const UNKNOWN_ORGANIZER_SLUG = 'organizador-nao-informado';
 const WINNING = new Set<string>(WINNING_ACHIEVEMENT_TYPES);
+/** Flag shown for a historical entity without an emoji (its Commons flag comes via flag_media_link_id later). */
+const HISTORICAL_FLAG = '🏳️';
 
 type R = CatalogRows;
 type Translated = { locale: string } & Record<string, unknown>;
@@ -166,7 +171,9 @@ export class CatalogView {
     this.tierOf = (id) => m.tiers.get(id)!.slug;
     this.country = (id) => {
       const c = id ? m.countries.get(id) : undefined;
-      return c ? { iso2: c.iso2, flag: c.flagEmoji, name: this.t.country(c.id, 'name') ?? c.iso2 } : null;
+      // Historical entities (USSR, West Germany…) have no ISO code: their stable `code` and a neutral flag stand in.
+      const code = c?.iso2 ?? c?.code?.toUpperCase();
+      return c && code ? { iso2: code, flag: c.flagEmoji ?? HISTORICAL_FLAG, name: this.t.country(c.id, 'name') ?? code } : null;
     };
     this.sportInfo = memo((id: string): SportInfo => {
       const s = m.sports.get(id)!;
@@ -454,7 +461,8 @@ export class CatalogView {
       country: this.country(o.countryId),
       competitions: this.rows.competitions
         .filter((c) => c.organizationId === o.id)
-        .map((c) => ({ name: this.competitionName(c.id), sport: this.sportInfo(c.sportId).name })),
+        // Multi-sport events (Olympic Games…) have no single sport: the organization page shows "multi-sport".
+        .map((c) => ({ name: this.competitionName(c.id), sport: c.sportId ? this.sportInfo(c.sportId).name : this.orgLabels.multiSport })),
       sports: this.rows.governingBodies.filter((b) => b.organizationId === o.id).map((b) => ({ ...this.sportInfo(b.sportId), role: b.role })),
       wikipedia: o.wikipediaUrl,
       image: o.imageUrl,
@@ -509,7 +517,27 @@ export class CatalogView {
       mythic: athletes.filter((a) => a.tier === Tier.Mythic).length,
       competitions: this.rows.competitions.filter((c) => c.sportId === sportId).length,
       associations: this.sportAssociations(sportId),
+      programmes: this.sportProgrammes(sportId),
+      partOf: this.sportParent(sportId)?.slug ?? null,
     };
+  }
+  /** Multi-sport programmes of a sport (badges): event name in the request locale, status slug, explicit years. */
+  sportProgrammes(sportId: string): SportProgramme[] {
+    const statusSlug = (id: string) => this.rows.domainValues.find((d) => d.id === id)?.slug ?? 'current';
+    return this.rows.programmeSports
+      .filter((p) => p.sportId === sportId)
+      .map((p) => {
+        const c = this.maps.competitions.get(p.competitionId);
+        return { slug: c?.slug ?? '?', name: c ? this.competitionName(c.id) : '?', status: statusSlug(p.inclusionStatusId), years: p.editions };
+      })
+      .sort((a, b) => a.slug.localeCompare(b.slug) || a.status.localeCompare(b.status));
+  }
+  /** Parent sport of a discipline (sport_relations discipline_of), when any. */
+  sportParent(sportId: string): SportRef | null {
+    const rel = this.rows.sportRelations.find((r) => r.fromSportId === sportId);
+    if (!rel) return null;
+    const p = this.sportInfo(rel.toSportId);
+    return { slug: p.slug, name: p.name, colorToken: p.colorToken };
   }
   sportsTree(): SportGroup[] {
     return [...this.rows.groups]
@@ -587,6 +615,13 @@ export class CatalogView {
       athletes: this.athletes({ sport: slug }),
       observances: this.rows.observances.filter((o) => o.sportId === s.id).map((o) => this.observanceView(o)),
       upcoming: this.calendar(today, upcomingTo).filter((e): e is CompetitionEvent => e.type === CalendarEventType.Competition && e.sport.slug === slug),
+      partOf: this.sportParent(s.id),
+      disciplines: this.rows.sportRelations
+        .filter((r) => r.toSportId === s.id)
+        .map((r) => this.sportInfo(r.fromSportId))
+        .map((d) => ({ slug: d.slug, name: d.name, colorToken: d.colorToken }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+      programmes: this.sportProgrammes(s.id),
     };
   }
 
@@ -607,7 +642,7 @@ export class CatalogView {
   /** Competitions overlapping [from, to] + observances expanded on every year of the range (doc 03). */
   calendar(from: IsoDate, to: IsoDate): CalendarEvent[] {
     const comps: CalendarEvent[] = this.rows.editions
-      .filter((e) => e.startDate && e.startDate <= to && (e.endDate ?? e.startDate) >= from)
+      .filter((e) => e.startDate && e.startDate <= to && (e.endDate ?? e.startDate) >= from && this.maps.competitions.get(e.competitionId)?.sportId)
       .map((e) => {
         const c = this.maps.competitions.get(e.competitionId)!;
         const name = this.competitionName(c.id);
@@ -621,7 +656,7 @@ export class CatalogView {
           status: e.status,
           isExample: e.isExample,
           level: this.maps.levels.get(c.competitionLevelId)!.slug,
-          sport: this.sportInfo(c.sportId),
+          sport: this.sportInfo(c.sportId!),
           host: this.country(e.hostCountryId),
         };
       });
@@ -693,7 +728,7 @@ export class CatalogView {
           })
           .sort((a, b) => b.titles - a.titles);
         const ref = this.country(c.id)!;
-        return { isoNumeric: c.isoNumeric!, iso2: c.iso2, name: ref.name, flag: ref.flag, totalTitles: list.reduce((s, x) => s + x.titles, 0), sports: list, athletes };
+        return { isoNumeric: c.isoNumeric!, iso2: ref.iso2, name: ref.name, flag: ref.flag, totalTitles: list.reduce((s, x) => s + x.titles, 0), sports: list, athletes };
       })
       .sort((a, b) => b.totalTitles - a.totalTitles);
   }

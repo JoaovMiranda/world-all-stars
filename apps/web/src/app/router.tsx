@@ -55,7 +55,7 @@ const SportPage = lazyPage('sports/sport', 'SportPage');
 const SportsPage = lazyPage('sports/sports', 'SportsPage');
 
 // Every screen of doc 09 has a typed route. Search params are validated by the shared filter schemas, so links
-// (`<Link to="/athletes" search={{ sport: 'futebol' }}>`) and pages (`useUrlFilters(schema)`) agree on the URL.
+// (`<Link to="/athletes" search={{ sport: 'football' }}>`) and pages (`useUrlFilters(schema)`) agree on the URL.
 //
 // SSR (app/entry-server.tsx): loaders only PREFETCH (prefetchQueries / ensureOr404) with the same query inputs the
 // pages use (`*-query.helper.ts`), and return the PageMeta of the route <head>. Texts are imported lazily, in the

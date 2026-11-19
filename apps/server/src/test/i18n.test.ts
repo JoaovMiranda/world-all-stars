@@ -1,5 +1,5 @@
 // Same-URL i18n (doc 12): the API answers in the request locale (x-was-locale → cookie → Accept-Language → pt-BR),
-// content falls back to pt-BR with `contentLocale`, and anonymous pages are cached per language.
+// content falls back to the English source (then pt-BR) with `contentLocale`, and anonymous pages are cached per language.
 import { createDatabase, type DatabaseHandle } from '@was/db';
 import { API_ERROR_MESSAGES, LOCALE_COOKIE, ORG_LABELS_MESSAGES, LOCALE_HEADER, ParticipationApi, PublicApi, VALIDATION_MESSAGES, buildApiPath, resolveLocale, textFor } from '@was/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -72,15 +72,16 @@ describe('API in the request locale', () => {
     expect(((await me.json()) as { message: string }).message).toBe(textFor(API_ERROR_MESSAGES, 'en').signIn);
   });
 
-  it.skipIf(!HAS_PROTOTYPE)('athlete content falls back to pt-BR and says so (contentLocale)', async () => {
+  it.skipIf(!HAS_PROTOTYPE)('athlete content is English at the source; a missing translation falls back to it and says so (contentLocale)', async () => {
     const path = buildApiPath(PublicApi.athleteProfile.path, { slug: 'pele' });
-    const en = await t.app.request(path, { headers: { [LOCALE_HEADER]: 'en' } });
-    expect(en.status).toBe(200);
-    const profile = (await en.json()) as { contentLocale?: string; knownAs: string };
-    expect(profile.knownAs).toBe('Pelé');
-    expect(profile.contentLocale).toBe('pt-BR');
+    const en = (await (await t.app.request(path, { headers: { [LOCALE_HEADER]: 'en' } })).json()) as { contentLocale?: string; knownAs: string };
+    expect(en.knownAs).toBe('Pelé');
+    expect(en.contentLocale).toBe('en');
     const pt = (await (await t.app.request(path)).json()) as { contentLocale?: string };
     expect(pt.contentLocale).toBe('pt-BR');
+    // No Spanish bio yet: the English source answers and the response says so.
+    const es = (await (await t.app.request(path, { headers: { [LOCALE_HEADER]: 'es' } })).json()) as { contentLocale?: string };
+    expect(es.contentLocale).toBe('en');
   });
 
   it.skipIf(!HAS_PROTOTYPE)('organization labels come in the request locale', async () => {

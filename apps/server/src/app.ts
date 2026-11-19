@@ -29,6 +29,7 @@ import { ALL_ROUTES } from './routes';
 import { affectsPublicPages, HtmlCache } from './web/html-cache';
 import { mountImageProxy } from './web/image-proxy.route';
 import { mountSeo } from './web/seo.route';
+import { mountSlugRedirects } from './web/slug-redirect';
 import { mountWeb, type WebRuntime } from './web/web-handler';
 
 export interface CreateAppOptions {
@@ -107,6 +108,9 @@ export const createApp = ({ db, config, auth, sessionLookup, web, imageFetch }: 
     userAgent: `WorldAllStars-ImageProxy/1.0 (+${config.publicUrl})`,
     ...(imageFetch ? { fetch: imageFetch } : {}),
   });
-  if (web) mountWeb(app, web, config, htmlCache);
+  if (web) {
+    mountSlugRedirects(app, deps);
+    mountWeb(app, web, config, htmlCache);
+  }
   return { app, deps, htmlCache, betterAuth };
 };

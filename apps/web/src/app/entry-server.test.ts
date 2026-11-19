@@ -37,7 +37,7 @@ describe('server render (entry-server)', () => {
   it.each([
     ['/', /<h1[^>]*>/],
     ['/athletes/pele', /<h1[^>]*>Pelé/],
-    ['/sports/futebol', /<h1[^>]*>[^<]*Futebol/],
+    ['/sports/football', /<h1[^>]*>[^<]*Futebol/],
   ])('%s → 200 with content, dehydrated state and nonce on every script', async (path, h1) => {
     const { status, html, headers } = await ssr(path);
     expect(status).toBe(200);
@@ -94,7 +94,7 @@ describe('server render (entry-server)', () => {
     expect(crumbs.at(-1).name).toBe('Pelé');
     expect(profile).toContain('<meta property="og:image" content="https://upload.wikimedia.org/');
 
-    const sport = (await ssr('/sports/futebol')).html;
+    const sport = (await ssr('/sports/football')).html;
     expect(ofType(sport, 'CollectionPage')?.about).toMatchObject({ '@type': 'Thing', name: 'Futebol' });
     expect(ofType(sport, 'CollectionPage')?.mentions.some((o: { '@type': string; name: string }) => o['@type'] === 'SportsOrganization' && o.name === 'FIFA')).toBe(true);
     expect(ofType(sport, 'BreadcrumbList')).toBeDefined();

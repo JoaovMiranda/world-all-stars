@@ -1,6 +1,6 @@
 import './sports.page.css';
 
-import { countSports, filterSportsTree, GOVERNANCE_MODEL_VALUES, SportsFiltersSchema } from '@was/shared';
+import { countSports, filterSportsTree, GOVERNANCE_MODEL_VALUES, type SportGroup, SportsFiltersSchema } from '@was/shared';
 
 import { governanceModelsQuery, organizationsQuery, sportsQuery } from '@/data/endpoints/sports.query';
 import { currentText } from '@/i18n/text-for.helper';
@@ -9,6 +9,8 @@ import { ButtonLink } from '@/shared-ui/button-link.component';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { FilterBar } from '@/shared-ui/filter-bar.component';
+import { FormField } from '@/shared-ui/form-field.component';
+import { Select } from '@/shared-ui/select.component';
 import { PageLayout } from '@/shared-ui/page-layout.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { SearchInput } from '@/shared-ui/search-input.component';
@@ -37,6 +39,12 @@ const sportGridSkeleton = (
   </div>
 );
 
+/** Multi-sport programmes present in the tree (filter options), by name. */
+const programmeOptions = (tree: readonly SportGroup[]) =>
+  [...new Map(tree.flatMap((g) => g.subgroups.flatMap((s) => s.sports.flatMap((sp) => sp.programmes.map((p) => [p.slug, p.name] as const))))).entries()]
+    .map(([value, label]) => ({ value, label }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
 /** P6 Sports + associations (doc 09/19): search + governance filter · groups › subgroups › cards · models · hierarchy. */
 export function SportsPage() {
   const t = useText(SPORTS_MESSAGES).list;
@@ -45,7 +53,7 @@ export function SportsPage() {
   const sports = sportsQuery.useQuery();
   const models = governanceModelsQuery.useQuery();
   const orgs = organizationsQuery.useQuery();
-  const sportFilterCount = (filters.q ? 1 : 0) + (filters.governance ? 1 : 0);
+  const sportFilterCount = (filters.q ? 1 : 0) + (filters.governance ? 1 : 0) + (filters.programme ? 1 : 0);
 
   return (
     <PageLayout title={t.title} eyebrow={t.eyebrow} lead={t.lead} breadcrumb={[{ label: t.breadcrumb }]}>
@@ -67,7 +75,7 @@ export function SportsPage() {
                 label={t.filtersLabel}
                 resultCount={countSports(visible)}
                 activeCount={sportFilterCount}
-                onReset={() => setFilters({ q: undefined, governance: undefined })}
+                onReset={() => setFilters({ q: undefined, governance: undefined, programme: undefined })}
               >
                 <form role="search" aria-label={t.searchLabel} className="sports-search" onSubmit={(e) => e.preventDefault()}>
                   <SearchInput
@@ -89,6 +97,17 @@ export function SportsPage() {
                     onChange={(v) => setFilter('governance', v)}
                   />
                 </div>
+                <FormField label={sportsText.programme.label}>
+                  {(p) => (
+                    <Select
+                      {...p}
+                      options={programmeOptions(tree)}
+                      placeholder={sportsText.programme.all}
+                      value={filters.programme ?? ''}
+                      onChange={(e) => setFilter('programme', e.target.value || undefined)}
+                    />
+                  )}
+                </FormField>
               </FilterBar>
               {visible.length > 0 ? <SportDirectory groups={visible} /> : <EmptyState title={t.noMatchTitle}>{t.noMatchText}</EmptyState>}
             </div>

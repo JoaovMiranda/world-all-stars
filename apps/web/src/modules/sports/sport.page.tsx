@@ -1,7 +1,7 @@
 import './sports.page.css';
 
 import { type CompetitionEvent, matchesAthleteFilters, matchesCompetitionFilters, nextMonthDayOccurrence, type ObservanceEvent, CalendarEventType, normalizeForSearch, type SportPage as SportPageData, SportPageFiltersSchema } from '@was/shared';
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, Link } from '@tanstack/react-router';
 
 import { useToday } from '@/app/use-boot.hook';
 import { sportPageQuery } from '@/data/endpoints/sports.query';
@@ -52,6 +52,7 @@ function ExternalButton({ href, children }: { href: string; children: string }) 
 
 function SportContent({ sport }: { sport: SportPageData }) {
   const t = useText(SPORTS_MESSAGES).page;
+  const programme = useText(SPORTS_MESSAGES).programme;
   const { filters, setFilter, reset, activeCount } = useUrlFilters(SportPageFiltersSchema);
   useHashScroll();
   const q = normalizeForSearch(filters.q);
@@ -124,6 +125,45 @@ function SportContent({ sport }: { sport: SportPageData }) {
           </Section>
         </div>
         <aside className="c-4 stack">
+          {(sport.partOf || sport.disciplines.length > 0) && (
+            <Section title={sport.partOf ? programme.partOfTitle : programme.disciplinesTitle}>
+              {sport.partOf && (
+                <p>
+                  <Link to="/sports/$slug" params={{ slug: sport.partOf.slug }}>
+                    <SportDot colorToken={sport.partOf.colorToken} /> {sport.partOf.name}
+                  </Link>
+                </p>
+              )}
+              {sport.disciplines.length > 0 && (
+                <>
+                  {sport.partOf && <h3 className="label mt-3">{programme.disciplinesTitle}</h3>}
+                  <ul className="row mt-1.5 gap-1.5">
+                    {sport.disciplines.map((d) => (
+                      <li key={d.slug}>
+                        <Link to="/sports/$slug" params={{ slug: d.slug }}>
+                          <Tag tone="soft">{d.name}</Tag>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </Section>
+          )}
+          <Section title={programme.sectionTitle}>
+            {sport.programmes.length > 0 ? (
+              <ul className="stack gap-1.5">
+                {sport.programmes.map((p) => (
+                  <li key={`${p.slug}-${p.status}`}>
+                    <b className="font-semibold">{p.name}</b> · {programme.status[p.status] ?? p.status}
+                    {p.years.length > 0 && <span className="muted"> ({p.years.join(', ')})</span>}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="empty">{programme.none}</p>
+            )}
+          </Section>
           <Section title={t.categories}>
             {categories.length > 0 ? (
               <ul className="cat-tree">

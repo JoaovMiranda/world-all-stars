@@ -12,6 +12,8 @@ import { SPORTS_MESSAGES, SPORTS_HASH } from './sports.const';
 export function SportDirectory({ groups }: { groups: readonly SportGroup[] }) {
   const t = useText(SPORTS_MESSAGES).list;
   const sportsText = useText(SPORTS_MESSAGES);
+  // Names of every sport in the tree, for "Discipline of X" (the parent may be in another subgroup).
+  const names = new Map(groups.flatMap((g) => g.subgroups.flatMap((sub) => sub.sports.map((s) => [s.slug, s.name] as const))));
   return (
     <div className="sport-directory">
       {groups.map((g) => (
@@ -33,7 +35,18 @@ export function SportDirectory({ groups }: { groups: readonly SportGroup[] }) {
                         sport={s}
                         associations={shown}
                         associationsLabel={t.associations(s.associations.length)}
-                        tags={s.governance && <Tag tone="soft">{sportsText.governance[s.governance]}</Tag>}
+                        tags={
+                          <>
+                            {s.governance && <Tag tone="soft">{sportsText.governance[s.governance]}</Tag>}
+                            {s.programmes.filter((p) => p.status !== 'discontinued').map((p) => (
+                              <Tag key={`${p.slug}-${p.status}`} tone="soft">
+                                {p.name}
+                                {p.status !== 'current' && ` · ${sportsText.programme.status[p.status] ?? p.status}`}
+                              </Tag>
+                            ))}
+                            {s.partOf && <Tag tone="soft">{sportsText.programme.partOf(names.get(s.partOf) ?? s.partOf)}</Tag>}
+                          </>
+                        }
                         footer={
                           <>
                             {s.associations.length === 0 && <p className="muted">{t.noAssociations}</p>}

@@ -192,10 +192,17 @@ describe('web pages mounted on the API server', () => {
     expect(staticXml).not.toContain('/admin');
   });
 
+  it.skipIf(!HAS_PROTOTYPE)('old Portuguese slugs answer 301 to the English URL (handoff v3 §11)', async () => {
+    const old = await app().request('/sports/futebol?tab=x');
+    expect(old.status).toBe(301);
+    expect(old.headers.get('location')).toBe('/sports/football?tab=x');
+    expect((await app().request('/sports/football')).status).toBe(200);
+  });
+
   it.skipIf(!HAS_PROTOTYPE)('lists catalog athletes and sports with lastmod', async () => {
     const athletes = await (await app().request('/sitemaps/athletes.xml')).text();
     expect(athletes).toMatch(/<url><loc>https:\/\/example\.org\/athletes\/pele<\/loc><lastmod>\d{4}-\d{2}-\d{2}<\/lastmod><\/url>/);
     const sports = await (await app().request('/sitemaps/sports.xml')).text();
-    expect(sports).toContain('<loc>https://example.org/sports/futebol</loc>');
+    expect(sports).toContain('<loc>https://example.org/sports/football</loc>');
   });
 });
