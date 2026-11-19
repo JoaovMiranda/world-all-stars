@@ -71,6 +71,48 @@
       "when": 1795058905734,
       "tag": "0009_multisport-catalog",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795059207510,
+      "tag": "0010_sources-provenance",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795059245206,
+      "tag": "0011_jobs",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795059245709,
+      "tag": "0012_ai",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1795059246214,
+      "tag": "0013_rankings",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1795059246722,
+      "tag": "0014_sport-content",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1795059416405,
+      "tag": "0015_athlete-status-unknown",
+      "breakpoints": true
     }
   ]
 }

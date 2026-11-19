@@ -88,6 +88,13 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
     const ids: [string, string][] = [...(a.wikidataQid ? [['wikidata', String(a.wikidataQid)] as [string, string]] : []), ...Object.entries((a.externalIds as Record<string, string>) ?? {}), ...Object.entries((a.socialLinks as Record<string, string>) ?? {})];
     for (const [provider, externalId] of ids) await put(T.entityExternalIds, { id: seedId('xid', provider, externalId), entityId: a.id, provider, externalId });
   }
+  // Wikipedia titles of the people (from their source links): the identity resolver matches them by id, not by name.
+  for (const l of await all(db, T.sourceLinks)) {
+    const m = /^https:\/\/en\.wikipedia\.org\/wiki\/([^?#]+)$/.exec(String(l.url));
+    if (l.entityType !== 'athletes' || !l.entityId || !m) continue;
+    const title = decodeURIComponent(m[1]!).replaceAll('_', ' ');
+    await put(T.entityExternalIds, { id: seedId('xid', 'wikipedia_en', title), entityId: l.entityId, provider: 'wikipedia_en', externalId: title, url: l.url });
+  }
   for (const e of [...sports, ...competitions, ...orgs]) {
     if (e.wikidataQid) await put(T.entityExternalIds, { id: seedId('xid', 'wikidata', String(e.wikidataQid)), entityId: e.id, provider: 'wikidata', externalId: String(e.wikidataQid) });
   }

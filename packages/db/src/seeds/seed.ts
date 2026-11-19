@@ -2,6 +2,7 @@ import type { Database } from '../client';
 import { seedConfig } from './config.seed';
 import { seedDomainVocabulary } from './domain.seed';
 import { type SeedReport, seedPrototype } from './prototype.seed';
+import { seedSourcesPolicy } from './sources-policy.seed';
 import { seedSportsCatalog } from './sports-catalog.seed';
 import { backfillUniversalModel } from './universal-backfill.seed';
 
@@ -15,6 +16,8 @@ export const seedDatabase = async (db: Database, repoRoot: string, log: (msg: st
     log(`domain vocabulary: ${vocabulary} values`);
     const report = await seedPrototype(t, repoRoot, log);
     if (report.skipped) log(report.skipped);
+    const policies = await seedSourcesPolicy(t);
+    log(`source policies: ${policies} sources`);
     const catalog = await seedSportsCatalog(t, repoRoot);
     if (catalog) log(`sports catalog: ${catalog.sports} sports/disciplines, ${catalog.programmes} programme entries`);
     const backfill = await backfillUniversalModel(t);

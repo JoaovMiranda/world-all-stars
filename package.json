@@ -22,7 +22,12 @@
     "perf:lighthouse": "npx -y @lhci/cli@0.16.0 autorun",
     "fixtures:export": "node scripts/fixtures/export-prototype-fixtures.mjs",
     "translations:content": "node scripts/translations/content-translations.mjs",
-    "lint:a11y": "pnpm --filter web lint:a11y"
+    "lint:a11y": "pnpm --filter web lint:a11y",
+    "ingest": "pnpm --filter @was/ingest ingest",
+    "ingest:report": "pnpm --filter @was/ingest ingest report",
+    "ingest:worker": "pnpm --filter @was/ingest ingest worker",
+    "ingest:identity-eval": "pnpm --filter @was/ingest ingest identity-eval",
+    "catalog:sports": "node scripts/catalog/build-sports-catalog.mjs"
   },
   "devDependencies": {
     "turbo": "2.11.10",

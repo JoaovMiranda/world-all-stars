@@ -25,7 +25,7 @@ export const DOMAIN_LABELS_TEXT: {
     record: 'Recorde',
     career: 'Marco da carreira',
   },
-  athleteStatus: { active: 'Em atividade', retired: 'Aposentado', deceased: 'Falecido' },
+  athleteStatus: { active: 'Em atividade', retired: 'Aposentado', deceased: 'Falecido', unknown: 'Situação não informada' },
   contactTopic: {
     data_error: 'Erro em um dado',
     press: 'Imprensa',

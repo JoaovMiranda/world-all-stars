@@ -20,3 +20,7 @@ export * from './tables/recognition.table';
 export * from './tables/registry.table';
 export * from './tables/structure.table';
 export * from './tables/taxonomy.table';
+export * from './tables/provenance.table';
+export * from './tables/ai.table';
+export * from './tables/ranking.table';
+export * from './tables/sport-content.table';

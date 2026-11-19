@@ -1,9 +1,9 @@
 // Source registry, collected links, per-field provenance, conflicts, AI extraction queue and media (doc 03/11/18).
 import { sql } from 'drizzle-orm';
-import { boolean, date, index, integer, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { boolean, date, index, integer, jsonb, pgTable, real, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { baseColumns, live, timestamptz } from '../columns/base.column';
-import { sourceOriginKindEnum, sourceUsageStatusEnum } from '../columns/pg-enum.column';
+import { crawlPolicyEnum, provenanceReviewStatusEnum, retentionPolicyEnum, sourceOriginKindEnum, sourceUsageStatusEnum } from '../columns/pg-enum.column';
 
 export const sources = pgTable(
   'sources',
@@ -18,6 +18,15 @@ export const sources = pgTable(
     usageStatus: sourceUsageStatusEnum().notNull(),
     usageNote: text(),
     licenseReviewedAt: timestamptz(),
+    /** Handoff v3 §5.1: may a worker fetch it, and what of it may be stored. Public data ≠ permission. */
+    crawlPolicy: crawlPolicyEnum().notNull().default('link_only'),
+    retentionPolicy: retentionPolicyEnum().notNull().default('metadata_only'),
+    robotsCheckedAt: timestamptz(),
+    termsUrl: text(),
+    termsReviewedAt: timestamptz(),
+    allowedHosts: text().array().notNull().default([]),
+    minIntervalMs: integer().notNull().default(3000),
+    licenseId: uuid(),
   },
   (t) => [uniqueIndex().on(t.slug).where(live(t.deletedAt))],
 );
@@ -69,6 +78,16 @@ export const fieldProvenance = pgTable(
     extractionMethod: text().notNull().default('parser'),
     model: text(),
     evidenceQuote: text(),
+    /** Handoff v3 §5.4: the chain observation → document → SoT rule → reviewer, and the current value. */
+    observationId: uuid(),
+    documentId: uuid(),
+    confidence: real(),
+    reviewStatus: provenanceReviewStatusEnum().notNull().default('auto_accepted'),
+    approvedBy: uuid(),
+    approvedAt: timestamptz(),
+    sotRuleId: uuid(),
+    isCurrent: boolean().notNull().default(true),
+    certaintyId: uuid(),
   },
   (t) => [index().on(t.entityType, t.entityId).where(live(t.deletedAt))],
 );

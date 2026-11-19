@@ -13,7 +13,7 @@ export const DOMAIN_LABELS_TEXT_EN = {
     record: 'Record',
     career: 'Career milestone',
   },
-  athleteStatus: { active: 'Active', retired: 'Retired', deceased: 'Deceased' },
+  athleteStatus: { active: 'Active', retired: 'Retired', deceased: 'Deceased', unknown: 'Status not documented' },
   contactTopic: {
     data_error: 'Error in the data',
     press: 'Press',

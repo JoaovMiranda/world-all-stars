@@ -13,7 +13,7 @@ export const DOMAIN_LABELS_TEXT_ES = {
     record: 'Récord',
     career: 'Hito de la carrera',
   },
-  athleteStatus: { active: 'En activo', retired: 'Retirado', deceased: 'Fallecido' },
+  athleteStatus: { active: 'En activo', retired: 'Retirado', deceased: 'Fallecido', unknown: 'Situación no informada' },
   contactTopic: {
     data_error: 'Error en un dato',
     press: 'Prensa',
