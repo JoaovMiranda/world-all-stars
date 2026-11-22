@@ -26,6 +26,8 @@ export interface IngestContext {
   /** No network: only the local caches (tests, CI). */
   offline: boolean;
   log: (message: string) => void;
+  /** Cooperative cancellation (job cancel_requested_at). */
+  cancelled?: () => boolean;
   policy(sourceSlug: string): Promise<FetchPolicy>;
   /** Raw document of a permitted source (stored in source_documents; cache-first). */
   document(sourceSlug: string, url: string, opts?: { revisionId?: string | null; cacheFile?: string | null }): Promise<{ text: string; documentId: string } | null>;

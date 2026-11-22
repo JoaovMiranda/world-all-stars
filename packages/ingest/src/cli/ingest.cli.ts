@@ -10,12 +10,15 @@
 //   report                                                      counts per stage, last runs, AI usage
 //   identity-eval                                               precision/recall of the identity thresholds
 //   enrich [--athlete slug] [--task biography|facts|all] [--limit 20]   optional AI (OLLAMA_URL) → admin queue
+//   collect --list <file> [--sport slug] | --names "Cafu,Pelé" | --update [--limit N]   autonomous collection (Fase 13)
 //   ai-report                                                   calls, tokens, latency, approvals per model × task
 // Flags: --offline (crawler cache only, no network). PGlite is single-process: stop `pnpm dev` first.
 import { createDatabase, findRepoRoot, ingestionRuns, loadRootEnv } from '@was/db';
 import { desc, sql } from 'drizzle-orm';
 
 import { CanonicalWriter } from '../canonical/canonical-writer';
+import { firstCollect, updateCollect } from '../collect';
+import { parseAthleteList } from '../providers/athlete-list.provider';
 import { aiReport, OllamaProvider, runBiography, runEnrichment } from '../enrich/ai';
 import { IDENTITY_SAMPLE } from '../identity/identity-sample';
 import { IDENTITY_THRESHOLDS, scoreCandidate } from '../identity/resolver';
@@ -130,6 +133,14 @@ try {
     const task = flag('task') ?? 'biography';
     if (task === 'biography' || task === 'all') log(`biography: ${JSON.stringify(await runBiography(db, provider, items))}`);
     if (task === 'facts' || task === 'all') log(`facts: ${JSON.stringify(await runEnrichment(db, provider, items.map((i) => ({ ...i, sourceText: i.sourceText.slice(0, 6000) }))))}`);
+  } else if (command === 'collect') {
+    const provider = OllamaProvider.fromEnv();
+    if (!provider) log('collect: OLLAMA_URL not set: profiles are collected and marked needs_enrichment');
+    const fs = await import('node:fs');
+    const file = flag('list');
+    const text = file ? fs.readFileSync(file, 'utf8') : (flag('names') ?? '').split(',').join('\n');
+    const r = flag('update') === 'true' ? await updateCollect(ctx, provider, { limit: flag('limit') ? Number(flag('limit')) : undefined }) : await firstCollect(ctx, provider, parseAthleteList(text, flag('sport') ?? null));
+    log(`collect: ${JSON.stringify(r)}`);
   } else if (command === 'ai-report') {
     for (const r of await aiReport(db)) log(JSON.stringify(r));
   } else if (command === 'identity-eval') {

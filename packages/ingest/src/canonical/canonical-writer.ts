@@ -113,7 +113,9 @@ export class CanonicalWriter {
   private async write(row: typeof sourceObservations.$inferSelect, o: Observation) {
     switch (o.contract) {
       case 'competitor': {
-        await this.person(o.record, o.record.sports[0] ?? null, row);
+        const id = await this.person(o.record, o.record.sports[0] ?? null, row);
+        // Fase 13 §1.2: a person collected from a list was chosen to have a profile.
+        if (id && row.providerKey === 'athlete-list') this.publicPeople.add(id);
         return;
       }
       case 'entry': {

@@ -50,9 +50,9 @@ export const profileFacts = (e: WdEntity) => {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-export const runWikidataProfile = async (ctx: IngestContext, opts: { limit?: number | undefined } = {}) => {
+export const runWikidataProfile = async (ctx: IngestContext, opts: { limit?: number | undefined; entityIds?: Set<string> } = {}) => {
   const people = (await ctx.db.select({ entityId: entityExternalIds.entityId, qid: entityExternalIds.externalId }).from(entityExternalIds).where(active(entityExternalIds, eq(entityExternalIds.provider, 'wikidata'))))
-    .filter((p) => /^Q\d+$/.test(p.qid))
+    .filter((p) => /^Q\d+$/.test(p.qid) && (!opts.entityIds || opts.entityIds.has(p.entityId)))
     .slice(0, opts.limit ?? 5000);
   const get = async (source: string, url: string) => {
     for (let attempt = 0; attempt < 5; attempt++) {

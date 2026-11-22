@@ -8,7 +8,7 @@ import { BaseRepository, type Database, aiExtractionQueue, aiInvocations, aiMode
 
 import { applyBiography } from '../canonical/apply-ai';
 import { uuidv7 } from '@was/shared';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 export interface AiResult {
@@ -107,7 +107,7 @@ const queue = async (db: Database, linkId: string, sectionKey: string, hashKey: 
 
 /** Runs the Biography Enricher; the proposal reaches the human queue only when every claim quote is literal (level 2). */
 export const runBiography = async (db: Database, provider: AiProvider | null, items: EnrichItem[]) => {
-  if (!provider) return { skipped: true, invocations: 0, accepted: 0, proposals: 0, rejected: 0 };
+  if (!provider) return { skipped: true, invocations: 0, unchanged: 0, accepted: 0, proposals: 0, rejected: 0 };
   const modelId = seedId('ai_model', provider.provider, provider.model, provider.version);
   await db.insert(aiModels).values({ id: modelId, createdVia: 'system:enrich', provider: provider.provider, name: provider.model, version: provider.version }).onConflictDoNothing();
   const promptId = seedId('prompt', BIOGRAPHY_PROMPT_VERSION);
@@ -115,7 +115,14 @@ export const runBiography = async (db: Database, provider: AiProvider | null, it
   let proposals = 0;
   let rejected = 0;
   let accepted = 0;
+  let unchanged = 0;
   for (const item of items) {
+    // Same prompt over the same text was already answered: no new call (Fase 13 §1.2 update mode).
+    const inputHash = createHash('sha256').update(`${BIOGRAPHY_PROMPT_VERSION}\n${item.sourceText}`).digest('hex');
+    if ((await db.select({ id: aiInvocations.id }).from(aiInvocations).where(and(eq(aiInvocations.inputHash, inputHash), eq(aiInvocations.status, 'ok'))).limit(1)).length) {
+      unchanged++;
+      continue;
+    }
     const started = Date.now();
     let output: unknown = null;
     let error: string | null = null;
@@ -140,7 +147,7 @@ export const runBiography = async (db: Database, provider: AiProvider | null, it
     const invocationId = uuidv7();
     await db.insert(aiInvocations).values({
       id: invocationId, createdVia: 'system:enrich', modelId, promptVersionId: promptId, task: 'biography', inputRef: `${item.sourceUrl}#${item.sectionKey}`,
-      inputHash: createHash('sha256').update(`${BIOGRAPHY_PROMPT_VERSION}\n${item.sourceText}`).digest('hex'), output: (output ?? null) as Record<string, unknown> | null,
+      inputHash, output: (output ?? null) as Record<string, unknown> | null,
       tokensIn: tokens.tokensIn, tokensOut: tokens.tokensOut, latencyMs: Date.now() - started, estimatedCost: 0, status: error ? 'error' : 'ok', error, validationLevel: level,
       evidence: parsed.success ? parsed.data.claims.map((c) => c.evidence_quote) : [],
     });
@@ -162,7 +169,7 @@ export const runBiography = async (db: Database, provider: AiProvider | null, it
       if (level < 2) rejected++;
     }
   }
-  return { skipped: false, invocations: items.length, accepted, proposals, rejected };
+  return { skipped: false, invocations: items.length - unchanged, unchanged, accepted, proposals, rejected };
 };
 
 /** True when `text` reuses a run of 12+ words of `source` (the bio must be original writing). */

@@ -80,7 +80,7 @@ describe('Biography Enricher (§7.2 task 3)', () => {
 
   it('rejects invented quotes; flags copied text', async () => {
     const invented = { bio_en: 'Pelé is a Brazilian footballer who lifted several world titles in his long career.', bio_pt: 'x'.repeat(50), bio_es: 'y'.repeat(50), claims: [{ text: 'a', evidence_quote: 'he won five World Cups for Brazil' }, { text: 'b', evidence_quote: 'he scored two thousand goals in total' }] };
-    expect((await runBiography(h2.db, fake(invented), [item])).rejected).toBe(1);
+    expect((await runBiography(h2.db, fake(invented), [{ ...item, sourceText: `${SOURCE} (revised)` }])).rejected).toBe(1);
     expect(copiesSource('known as Pelé, won the FIFA World Cup in 1958, 1962 and 1970 with Brazil.', SOURCE)).toBe(true);
   });
 });

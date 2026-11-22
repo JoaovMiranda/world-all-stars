@@ -12,3 +12,5 @@ export * from './providers/wikidata.provider';
 export * from './enrich/ai';
 export * from './providers/wikidata-profile.provider';
 export * from './canonical/apply-ai';
+export * from './collect';
+export * from './providers/athlete-list.provider';
