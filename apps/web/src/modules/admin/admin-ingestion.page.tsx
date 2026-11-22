@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ADMIN_INGESTION_TAB_VALUES, type AdminIngestionRun, AdminIngestionSearchSchema, AdminIngestionTab, INGESTION_GATE_VALUES } from '@was/shared';
 
 import { adminIngestionQuery, runIngestion } from '@/data/endpoints/admin.query';
@@ -87,6 +88,7 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
   const meta = useAdminMeta();
   const state = useQueueState();
   const run = runIngestion.useMutation();
+  const [names, setNames] = useState('');
   const status = pickStatus(meta.runStatus, state.status);
   const jobs = [...new Map(runs.map((r) => [r.jobKey, r])).values()];
   return (
@@ -97,6 +99,26 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
         <StatTile label={T.skippedKpi} value={runs.reduce((s, r) => s + skippedOf(r), 0)} />
         <StatTile label={T.errorsKpi} value={runs.reduce((s, r) => s + r.errors, 0)} />
       </KpiGrid>
+      <Section title={T.collectTitle} headingLevel={2}>
+        <DecisionBar
+          label={T.collectTitle}
+          actions={[
+            {
+              key: 'list', label: T.collectList, confirmTitle: T.collectList,
+              confirmBody: (
+                <label className="stack">
+                  <span className="muted">{T.collectListText}</span>
+                  <span>{T.collectNames}</span>
+                  <textarea rows={6} value={names} onChange={(e) => setNames(e.target.value)} />
+                </label>
+              ),
+              onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.list', names } }),
+            },
+            { key: 'update', label: T.collectUpdate, confirmTitle: T.collectUpdate, confirmBody: <p className="muted">{T.collectUpdateText}</p>, onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.update' } }) },
+            { key: 'discovery', label: T.collectDiscovery, confirmTitle: T.collectDiscovery, confirmBody: <p className="muted">{T.collectDiscoveryText}</p>, onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.discovery' } }) },
+          ]}
+        />
+      </Section>
       <Section title={T.jobsTitle} headingLevel={2}>
         <DataTable
           caption={T.jobsLabel}

@@ -38,6 +38,8 @@ const EnvSchema = z.object({
   RATE_LIMIT_STORE: unsetIfEmpty(z.enum(['memory', 'database'])),
   /** Minutes between cleanups of expired auth sessions/verifications and rate-limit windows (0 = off). */
   CLEANUP_INTERVAL_MINUTES: z.coerce.number().nonnegative().default(60),
+  /** Fase 13: autonomous collection every N months (0 = off). */
+  INGEST_SCHEDULE_MONTHS: z.coerce.number().nonnegative().default(6),
   LOG_REQUESTS: flag.default(true),
   /** `json` (one object per line, production default) or `text` (dev default). */
   LOG_FORMAT: unsetIfEmpty(z.enum(['text', 'json'])),
@@ -101,6 +103,7 @@ export type ServerConfig = {
   rateLimitStore: RateLimitStoreKind;
   /** 0 = no periodic cleanup (tests build the config with 0). */
   cleanupIntervalMinutes: number;
+  ingestScheduleMonths: number;
   logRequests: boolean;
   logFormat: 'text' | 'json';
   slowRequestMs: number;
@@ -150,6 +153,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): ServerConfig =
     rateLimitEnabled: e.RATE_LIMIT_ENABLED,
     rateLimitStore: e.RATE_LIMIT_STORE ?? (production || e.DATABASE_URL ? 'database' : 'memory'),
     cleanupIntervalMinutes: e.CLEANUP_INTERVAL_MINUTES,
+    ingestScheduleMonths: e.INGEST_SCHEDULE_MONTHS,
     logRequests: e.LOG_REQUESTS,
     logFormat: e.LOG_FORMAT ?? (production ? 'json' : 'text'),
     slowRequestMs: e.SLOW_REQUEST_MS,

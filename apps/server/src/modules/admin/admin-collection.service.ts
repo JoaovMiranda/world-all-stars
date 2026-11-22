@@ -80,8 +80,8 @@ export const listIngestion = async ({ deps, locale }: RequestContext): Promise<A
  * POST /api/admin/ingestion-runs: "rodar agora". Jobs with a real provider (football, BJJ, Wikidata) are queued and
  * drained in the background by @was/ingest; the others keep the simulated run until their provider exists.
  */
-export const runIngestion = async (ctx: RequestContext, jobKey: string) => {
-  const real = await startIngestion(ctx.deps.db, ctx.deps.repo, jobKey, ctx.actor.userId);
+export const runIngestion = async (ctx: RequestContext, jobKey: string, names?: string) => {
+  const real = await startIngestion(ctx.deps.db, ctx.deps.repo, jobKey, ctx.actor.userId, names ? { names } : {});
   if (real) {
     await ctx.deps.repo.audit(ctx.actor, AdminAuditAction.IngestionTriggered, { type: 'ingestion_runs', id: real.runId }, { target: jobKey, reason: null });
     return { ok: true as const };

@@ -10,6 +10,7 @@ import { createApp } from './app';
 import { promoteAdminEmails } from './auth/admin-bootstrap.helper';
 import { loadConfig, type ServerConfig } from './config/env.config';
 import { startCleanupScheduler } from './maintenance/cleanup.scheduler';
+import { startCollectScheduler } from './modules/admin/ingestion-runner';
 import { readProdAssets, type WebRenderModule } from './web/web-assets.helper';
 import type { WebRuntime } from './web/web-handler';
 import { createViteDev, type ViteDev } from './web/vite-dev';
@@ -68,6 +69,7 @@ listener = getRequestListener(app.fetch);
 if (!config.google) console.warn('[auth] Google sign-in not configured (GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET missing in .env): the login dialog says so.');
 if (config.authSimulated) console.warn('[auth] AUTH_SIMULATED on: the dev session switcher (demo reader/admin) is accepted. Never in production.');
 const stopCleanup = startCleanupScheduler(handle.db, config.cleanupIntervalMinutes);
+const stopCollect = startCollectScheduler(handle.db, deps.repo, config.ingestScheduleMonths);
 const promoted = await promoteAdminEmails(deps.repo, config.adminEmails);
 if (promoted) console.log(`[auth] ADMIN_EMAILS: ${promoted} account(s) promoted to admin`);
 
@@ -78,6 +80,7 @@ httpServer.listen(config.port, config.host, () => {
 
 const shutdown = async () => {
   stopCleanup();
+  stopCollect();
   httpServer.close();
   await vite?.close();
   await handle.close();
