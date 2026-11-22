@@ -4,9 +4,11 @@
 // supports the claim) is a deterministic check stored as confidence. Nothing becomes canonical without a human.
 import { createHash } from 'node:crypto';
 
-import { type Database, aiInvocations, aiModels, promptVersions, seedId, sourceLinks } from '@was/db';
+import { BaseRepository, type Database, aiExtractionQueue, aiInvocations, aiModels, promptVersions, seedId, sourceLinks } from '@was/db';
+
+import { applyBiography } from '../canonical/apply-ai';
 import { uuidv7 } from '@was/shared';
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 export interface AiResult {
@@ -95,21 +97,24 @@ export interface EnrichItem {
   facts?: string;
 }
 
-const queue = async (db: Database, linkId: string, sectionKey: string, hashKey: string, result: Record<string, unknown>, model: string, promptVersion: string, tokens: { tokensIn: number; tokensOut: number }, invocationId: string) =>
-  db.execute(sql`
+const queue = async (db: Database, linkId: string, sectionKey: string, hashKey: string, result: Record<string, unknown>, model: string, promptVersion: string, tokens: { tokensIn: number; tokensOut: number }, invocationId: string): Promise<string | null> => {
+  const res = (await db.execute(sql`
     insert into ai_extraction_queue (id, created_via, source_link_id, section_key, section_hash, status, result_json, model, prompt_version, tokens_in, tokens_out, invocation_id)
     values (${uuidv7()}, 'system:enrich', ${linkId}, ${sectionKey}, ${createHash('sha256').update(hashKey).digest('hex')}, 'pending', ${JSON.stringify(result)}::jsonb, ${model}, ${promptVersion}, ${tokens.tokensIn}, ${tokens.tokensOut}, ${invocationId})
-    on conflict do nothing`);
+    on conflict do nothing returning id`)) as unknown as { rows: { id: string }[] };
+  return res.rows[0]?.id ?? null;
+};
 
 /** Runs the Biography Enricher; the proposal reaches the human queue only when every claim quote is literal (level 2). */
 export const runBiography = async (db: Database, provider: AiProvider | null, items: EnrichItem[]) => {
-  if (!provider) return { skipped: true, invocations: 0, proposals: 0, rejected: 0 };
+  if (!provider) return { skipped: true, invocations: 0, accepted: 0, proposals: 0, rejected: 0 };
   const modelId = seedId('ai_model', provider.provider, provider.model, provider.version);
   await db.insert(aiModels).values({ id: modelId, createdVia: 'system:enrich', provider: provider.provider, name: provider.model, version: provider.version }).onConflictDoNothing();
   const promptId = seedId('prompt', BIOGRAPHY_PROMPT_VERSION);
   await db.insert(promptVersions).values({ id: promptId, createdVia: 'system:enrich', task: 'biography', version: BIOGRAPHY_PROMPT_VERSION, templateHash: createHash('sha256').update(biographyPrompt('', '', '')).digest('hex') }).onConflictDoNothing();
   let proposals = 0;
   let rejected = 0;
+  let accepted = 0;
   for (const item of items) {
     const started = Date.now();
     let output: unknown = null;
@@ -139,16 +144,25 @@ export const runBiography = async (db: Database, provider: AiProvider | null, it
       tokensIn: tokens.tokensIn, tokensOut: tokens.tokensOut, latencyMs: Date.now() - started, estimatedCost: 0, status: error ? 'error' : 'ok', error, validationLevel: level,
       evidence: parsed.success ? parsed.data.claims.map((c) => c.evidence_quote) : [],
     });
-    if (level < 2 || !parsed.success) {
+    if (!parsed.success) {
       rejected++;
       continue;
     }
     const linkId = seedId('ai-link', item.entityId, item.sourceUrl);
     await db.insert(sourceLinks).values({ id: linkId, createdVia: 'system:enrich', entityType: 'athletes', entityId: item.entityId, url: item.sourceUrl, origin: 'system' }).onConflictDoNothing();
-    await queue(db, linkId, 'biography', `biography|${item.entityId}|${parsed.data.bio_en}`, { type: 'biography', en: parsed.data.bio_en, pt: parsed.data.bio_pt, es: parsed.data.bio_es, claims: checked, copied }, provider.model, BIOGRAPHY_PROMPT_VERSION, tokens, invocationId);
-    proposals++;
+    const queueId = await queue(db, linkId, 'biography', `biography|${item.entityId}|${parsed.data.bio_en}`, { type: 'biography', en: parsed.data.bio_en, pt: parsed.data.bio_pt, es: parsed.data.bio_es, claims: checked, copied, level }, provider.model, BIOGRAPHY_PROMPT_VERSION, tokens, invocationId);
+    // Fase 13 §1.1: level 3 is applied automatically; anything else waits in the exception queue.
+    if (level === 3 && queueId) {
+      const applied = await applyBiography(new BaseRepository(db), queueId, { approvedBy: null, reason: 'auto-accepted: schema, literal quotes, original text', invocationId });
+      await db.update(aiExtractionQueue).set({ status: applied ? 'approved' : 'pending', reviewNote: applied ? 'auto-accepted (validation level 3)' : 'blocked by a curated bio: review' }).where(eq(aiExtractionQueue.id, queueId));
+      if (applied) accepted++;
+      else proposals++;
+    } else {
+      proposals++;
+      if (level < 2) rejected++;
+    }
   }
-  return { skipped: false, invocations: items.length, proposals, rejected };
+  return { skipped: false, invocations: items.length, accepted, proposals, rejected };
 };
 
 /** True when `text` reuses a run of 12+ words of `source` (the bio must be original writing). */

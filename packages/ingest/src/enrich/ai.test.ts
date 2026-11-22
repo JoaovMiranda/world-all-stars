@@ -47,6 +47,7 @@ describe('AI layer (D03/D04)', () => {
 });
 
 import { aiExtractionQueue as queueTable } from '@was/db';
+import { BaseRepository, athleteTranslations, athletes, championTiers, fieldProvenance } from '@was/db';
 import { eq as eqOp } from 'drizzle-orm';
 
 import { copiesSource, runBiography } from './ai';
@@ -56,16 +57,25 @@ describe('Biography Enricher (§7.2 task 3)', () => {
   beforeAll(async () => {
     h2 = await createDatabase({ pgliteDataDir: 'memory://' });
     await h2.migrate();
+    const repo = new BaseRepository(h2.db);
+    const actor = { userId: null, name: 'test', via: 'system:canonical' } as const;
+    const [tier] = await h2.db.select().from(championTiers).limit(1);
+    const tierId = tier?.id ?? (await repo.insert(championTiers, { slug: 'champion', sortOrder: 1 } as never, actor)).id;
+    item.entityId = (await repo.insert(athletes, { slug: 'pele', knownAs: 'Pelé', status: 'unknown', championTierId: tierId } as never, actor)).id;
   });
   afterAll(() => h2.close());
-  const item = { entityId: '00000000-0000-7000-8000-000000000009', name: 'Pelé', sourceText: SOURCE, sourceUrl: 'https://en.wikipedia.org/wiki/Pel%C3%A9', sectionKey: 'article', facts: 'titles: FIFA World Cup 1958' };
+  const item = { entityId: '', name: 'Pelé', sourceText: SOURCE, sourceUrl: 'https://en.wikipedia.org/wiki/Pel%C3%A9', sectionKey: 'article', facts: 'titles: FIFA World Cup 1958' };
   const bio = (en: string, quote: string) => ({ bio_en: en, bio_pt: `${en} (pt)`, bio_es: `${en} (es)`, claims: [{ text: 'world cups', evidence_quote: quote }, { text: 'nickname', evidence_quote: 'Edson Arantes do Nascimento, known as Pelé' }] });
 
-  it('queues an original bio whose claims quote the source literally', async () => {
+  it('auto-accepts an original bio whose claims quote the source literally (Fase 13 §1.1)', async () => {
     const r = await runBiography(h2.db, fake(bio('Pelé is a Brazilian footballer who lifted three world titles with his national team.', 'won the FIFA World Cup in 1958, 1962 and 1970')), [item]);
-    expect(r).toMatchObject({ proposals: 1, rejected: 0 });
+    expect(r).toMatchObject({ accepted: 1, proposals: 0, rejected: 0 });
     const [q] = await h2.db.select().from(queueTable).where(eqOp(queueTable.sectionKey, 'biography'));
-    expect(q?.resultJson).toMatchObject({ type: 'biography', copied: false });
+    expect(q).toMatchObject({ status: 'approved', resultJson: { type: 'biography', copied: false, level: 3 } });
+    const bios = await h2.db.select().from(athleteTranslations).where(eqOp(athleteTranslations.athleteId, item.entityId));
+    expect(bios.map((b) => b.locale).sort()).toEqual(['en', 'es', 'pt-BR']);
+    const [prov] = await h2.db.select().from(fieldProvenance).where(eqOp(fieldProvenance.entityId, item.entityId));
+    expect(prov).toMatchObject({ reviewStatus: 'auto_accepted', extractionMethod: 'ai', approvedBy: null, isCurrent: true });
   });
 
   it('rejects invented quotes; flags copied text', async () => {

@@ -1,4 +1,5 @@
 // A1 (proposals + tier signals) and A6 (dossiers).
+import { applyBiography } from '@was/ingest';
 import { active, aiExtractionQueue, athleteTranslations, type BaseRepository, fieldConflicts, fieldProvenance, greatsDossierApprovals, greatsDossiers, sourceLinks, users } from '@was/db';
 import {
   type AdminDecision,
@@ -206,22 +207,6 @@ export const reviewDossier = async (ctx: RequestContext, id: string, decision: A
   return { ok: true as const };
 };
 
-/** Applies an approved AI proposal: a biography becomes the short bio (en/pt-BR/es) — never over a curated text. */
-const applyAiProposal = async (repo: BaseRepository, ctx: RequestContext, id: string, reason: string) => {
-  const [q] = await repo.db.select().from(aiExtractionQueue).where(eq(aiExtractionQueue.id, id));
-  const [link] = q ? await repo.db.select().from(sourceLinks).where(eq(sourceLinks.id, q.sourceLinkId)) : [];
-  const r = (q?.resultJson ?? {}) as { type?: string; en?: string; pt?: string; es?: string; claims?: { evidence_quote: string }[] };
-  if (!q || !link?.entityId || link.entityType !== 'athletes' || r.type !== 'biography') return;
-  for (const [locale, text] of [['en', r.en], ['pt-BR', r.pt], ['es', r.es]] as const) {
-    if (!text) continue;
-    const [existing] = await repo.db.select().from(athleteTranslations).where(and(eq(athleteTranslations.athleteId, link.entityId), eq(athleteTranslations.locale, locale)));
-    // Curated bios (seed / manual) are kept; the short Wikidata description is replaced.
-    if (existing && existing.createdVia === 'seed') continue;
-    if (existing) await repo.update(athleteTranslations, existing.id, { shortBio: text } as never, ctx.actor, { reason, summary: `biography (${q.model})` });
-    else await repo.insert(athleteTranslations, { athleteId: link.entityId, locale, shortBio: text } as never, ctx.actor);
-  }
-  await repo.insert(fieldProvenance, {
-    entityType: 'athletes', entityId: link.entityId, fieldName: 'short_bio', sourceLinkId: link.id, extractionMethod: 'ai', model: q.model,
-    evidenceQuote: (r.claims ?? []).map((c) => c.evidence_quote).join(' … ').slice(0, 2000), reviewStatus: 'approved', approvedBy: ctx.actor.userId, approvedAt: new Date(), isCurrent: true,
-  } as never, ctx.actor);
-};
+// Exception approval (Fase 13 §1.1): same canonical apply as the automatic path, with the human as approver.
+const applyAiProposal = (repo: BaseRepository, ctx: RequestContext, id: string, reason: string) =>
+  applyBiography(repo, id, { approvedBy: ctx.actor.userId, reason, invocationId: null }, ctx.actor);
