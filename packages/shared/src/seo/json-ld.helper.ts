@@ -1,10 +1,9 @@
 import { isCompetitionWin } from '../helpers/achievement.helper';
+import type { Crumb } from '../interfaces/crumb.interface';
 import type { AthleteProfile } from '../types/athlete-profile.type';
+import type { JsonLd } from '../types/json-ld.type';
 import type { SportPage } from '../types/sport-page.type';
 import { SITE_LANGUAGE, SITE_NAME } from './seo.const';
-
-/** One schema.org node (doc 12). Built on the server render, emitted as <script type="application/ld+json">. */
-export type JsonLd = { '@context'?: string; '@type': string } & Record<string, unknown>;
 
 const CONTEXT = 'https://schema.org';
 const compact = <T extends Record<string, unknown>>(o: T): T =>
@@ -39,12 +38,6 @@ export const organizationJsonLd = (origin: string): JsonLd => ({
   url: siteUrl(origin, '/'),
   logo: siteUrl(origin, '/favicon.svg'),
 });
-
-export interface Crumb {
-  name: string;
-  /** Site path; the last crumb (current page) may omit it. */
-  path?: string;
-}
 
 /** Detail pages: Início › … › current page. */
 export const breadcrumbJsonLd = (origin: string, crumbs: readonly Crumb[]): JsonLd => ({

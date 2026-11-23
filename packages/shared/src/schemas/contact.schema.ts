@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import { validateContact } from '../helpers/contact-validation.helper';
-import { type SuggestionContext, validateSuggestion } from '../helpers/suggestion-validation.helper';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
+import { validateSuggestion } from '../helpers/suggestion-validation.helper';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
+import type { SuggestionContext } from '../interfaces/suggestion-validation.interface';
 import type { BannedWordRule } from '../types/banned-word.type';
+import type { Locale } from '../types/locale.type';
 
 /** Body of POST /api/contact (+ Turnstile token in the future). */
 export const ContactRequestSchema = z.object({

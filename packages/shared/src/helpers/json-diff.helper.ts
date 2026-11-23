@@ -1,5 +1,4 @@
-/** One JSON Patch (RFC 6902) operation on a top-level field. */
-export type JsonPatchOp = { op: 'add' | 'remove' | 'replace'; path: string; value?: unknown };
+import type { JsonPatchOp } from '../types/json-patch-op.type';
 
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
 const pointer = (key: string): string => `/${key.replace(/~/g, '~0').replace(/\//g, '~1')}`;

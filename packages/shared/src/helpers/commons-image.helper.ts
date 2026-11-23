@@ -3,35 +3,17 @@
 // the LCP photo, long browser caching, and no third-party cookie. Both sides use these helpers, so the proxy only ever
 // fetches the exact Commons thumbnail URLs built here (no open proxy, no SSRF).
 
-/** Thumbnail widths Wikimedia pre-renders and caches (other widths may be throttled or refused). */
-export const WIKIMEDIA_STEPS = [60, 120, 250, 330, 500, 960, 1280] as const;
-export type WikimediaStep = (typeof WIKIMEDIA_STEPS)[number];
-export const isWikimediaStep = (n: number): n is WikimediaStep => (WIKIMEDIA_STEPS as readonly number[]).includes(n);
+import { IMAGE_PROXY_PREFIX, WIKIMEDIA_STEPS } from '../consts/commons-image.const';
+import type { CommonsFileRef, WikimediaFile } from '../interfaces/commons-file.interface';
+import type { WikimediaStep } from '../types/wikimedia-step.type';
 
-/** Path prefix of the image proxy (apps/server/src/web/image-proxy.route.ts). */
-export const IMAGE_PROXY_PREFIX = '/img/wm';
+export const isWikimediaStep = (n: number): n is WikimediaStep => (WIKIMEDIA_STEPS as readonly number[]).includes(n);
 
 // upload.wikimedia.org/wikipedia/commons/a/ab/File.jpg  or  …/commons/thumb/a/ab/File.jpg/960px-File.jpg
 const COMMONS = /^https:\/\/(?:upload|thumb)\.wikimedia\.org\/wikipedia\/([\w-]+)\/(?:thumb\/)?([0-9a-f])\/([0-9a-f]{2})\/([^/?#]+)(?:\/[^/?#]+)?$/i;
 const PROJECT = /^[a-z][\w-]{1,30}$/;
 /** A file name as Commons stores it (decoded): no path separators or control characters, a raster or SVG extension. */
 const FILE = /^[^/\\?#\u0000-\u001f]{1,240}\.(jpe?g|png|gif|webp|tiff?|svg)$/i;
-
-export interface CommonsFileRef {
-  project: string;
-  a: string;
-  ab: string;
-  /** Decoded file name (`Pele_con_brasil_(cropped).jpg`). */
-  file: string;
-}
-
-export interface WikimediaFile extends CommonsFileRef {
-  original: string;
-  /** Direct Commons thumbnail URL. */
-  thumb(width: number): string;
-  /** Same thumbnail through the same-origin proxy (`/img/wm/commons/5/5e/<file>/500`). */
-  proxied(width: WikimediaStep): string;
-}
 
 /** Percent-encoding Commons uses in its URLs (also `( ) ' ! *`, which encodeURIComponent leaves as is). */
 const encodeFile = (file: string): string => encodeURIComponent(file).replace(/[!'()*]/g, (ch) => `%${ch.charCodeAt(0).toString(16).toUpperCase()}`);
@@ -47,7 +29,15 @@ const decode = (s: string): string | null => {
 /** Validates the pieces of a Commons file (from a URL or from the proxy path). */
 export const commonsFileRef = (project: string, a: string, ab: string, rawFile: string, encoded = true): CommonsFileRef | null => {
   const file = encoded ? decode(rawFile) : rawFile;
-  if (!file || !PROJECT.test(project) || !/^[0-9a-f]$/i.test(a) || !/^[0-9a-f]{2}$/i.test(ab) || !ab.toLowerCase().startsWith(a.toLowerCase()) || !FILE.test(file)) return null;
+  if (
+    !file ||
+    !PROJECT.test(project) ||
+    !/^[0-9a-f]$/i.test(a) ||
+    !/^[0-9a-f]{2}$/i.test(ab) ||
+    !ab.toLowerCase().startsWith(a.toLowerCase()) ||
+    !FILE.test(file)
+  )
+    return null;
   return { project, a: a.toLowerCase(), ab: ab.toLowerCase(), file };
 };
 

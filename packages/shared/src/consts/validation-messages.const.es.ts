@@ -1,4 +1,4 @@
-import type { Messages } from '../i18n/messages.helper';
+import type { Messages } from '../types/messages.type';
 import type { VALIDATION_TEXT } from './validation-messages.const';
 
 export const VALIDATION_TEXT_ES = {

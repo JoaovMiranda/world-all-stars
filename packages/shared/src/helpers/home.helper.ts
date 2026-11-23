@@ -1,25 +1,11 @@
 import { HOME_UPCOMING_DAYS } from '../consts/home.const';
 import { CalendarEventType } from '../enums/calendar-event-type.enum';
-import type { CalendarEvent, ObservanceEvent } from '../types/calendar-event.type';
-import type { GlobeCountry } from '../types/globe-country.type';
-import type { HallOfGreatsEntry } from '../types/hall-of-greats.type';
+import type { HomeParts } from '../interfaces/home-parts.interface';
+import type { ObservanceEvent } from '../types/calendar-event.type';
 import type { HomeResponse } from '../types/home.type';
 import type { IsoDate } from '../types/iso-date.type';
-import type { OnThisDayResponse } from '../types/on-this-day.type';
-import type { SportCard } from '../types/sports-tree.type';
 import { eventsBetween } from './calendar-event.helper';
 import { addDaysIso, monthDayOfIso } from './iso-date.helper';
-
-export interface HomeParts {
-  athleteSlugs: readonly string[];
-  /** "Hoje na história" of the day (null = no fact on that day). */
-  onThisDay: OnThisDayResponse | null;
-  /** Calendar covering at least [year − 1, year + 1] of the date. */
-  calendar: readonly CalendarEvent[];
-  globe: GlobeCountry[];
-  greats: HallOfGreatsEntry[];
-  sports: SportCard[];
-}
 
 /** Calendar window the home needs for a day (current year ± 1). */
 export const homeCalendarWindow = (date: IsoDate): { from: IsoDate; to: IsoDate } => {

@@ -1,12 +1,6 @@
-import { ROBOTS_DISALLOW, SITEMAP_PATHS } from './seo.const';
+import type { SitemapUrl } from '../interfaces/sitemap-url.interface';
 import { siteUrl } from './json-ld.helper';
-
-export interface SitemapUrl {
-  /** Site path (made absolute with the origin). */
-  path: string;
-  /** YYYY-MM-DD or ISO datetime of the last change. */
-  lastmod?: string | undefined;
-}
+import { ROBOTS_DISALLOW, SITEMAP_PATHS } from './seo.const';
 
 const xmlEscape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 const XML_HEAD = '<?xml version="1.0" encoding="UTF-8"?>\n';

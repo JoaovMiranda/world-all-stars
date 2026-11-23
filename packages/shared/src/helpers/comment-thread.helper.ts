@@ -1,6 +1,7 @@
 import { COMMENTS_PAGE_SIZE } from '../consts/pagination.const';
 import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
 import { CommentSort } from '../enums/comment-sort.enum';
+import type { CommentPage } from '../interfaces/comment-page.interface';
 import type { Comment, CommentsResponse, CommentThread } from '../types/comment.type';
 
 const score = (c: Comment) => c.likes - c.dislikes;
@@ -8,14 +9,6 @@ const score = (c: Comment) => c.likes - c.dislikes;
 /** Order of threads: `top` = likes − dislikes, then newest; `recent` = newest. Ties broken by id (stable pages). */
 export const compareThreads = (sort: CommentSort) => (a: Comment, b: Comment) =>
   (sort === CommentSort.Recent ? 0 : score(b) - score(a)) || b.at.localeCompare(a.at) || b.id.localeCompare(a.id);
-
-export interface CommentPage {
-  /** Id of the last thread of the previous page (the response's `nextCursor`); absent = first page. */
-  cursor?: string | undefined;
-  limit?: number;
-  /** Every visible comment of the athlete (threads + replies); default: the rows given. */
-  total?: number;
-}
 
 /**
  * Threads of one athlete from flat visible rows (doc 20): replies chronological under their top comment, threads in

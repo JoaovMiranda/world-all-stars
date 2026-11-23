@@ -1,23 +1,6 @@
-import { DEFAULT_LOCALE, type Locale } from './locale.const';
-
-/**
- * Shape a translation must have: the same keys as the pt-BR source, strings as `string` (not the pt literal), and
- * message functions with the same parameters. Arrays/tuples keep their length (one translated item per pt item).
- */
-export type Messages<T> = T extends string
-  ? string
-  : T extends number
-    ? number
-    : T extends boolean
-      ? boolean
-      : T extends (...args: infer A) => infer R
-        ? (...args: A) => Messages<R>
-        : T extends object
-          ? { readonly [K in keyof T]: Messages<T[K]> }
-          : T;
-
-/** A dictionary in every supported language (built by `defineMessages`, read by `textFor` / `useText`). */
-export type LocalizedMessages<T> = { readonly [L in Locale]: Messages<T> } & { readonly __messages: true };
+import type { Locale } from '../types/locale.type';
+import type { LocalizedMessages, Messages } from '../types/messages.type';
+import { DEFAULT_LOCALE } from './locale.const';
 
 /**
  * One dictionary in the three languages. The pt-BR object stays in `x.const.ts` (source of truth); translations live

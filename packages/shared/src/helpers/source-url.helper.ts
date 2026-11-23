@@ -1,20 +1,20 @@
 import { FORBIDDEN_SOURCE_HOSTS } from '../consts/source-url.const';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
-import { textFor } from '../i18n/messages.helper';
 import { VALIDATION_MESSAGES } from '../consts/validation-messages.const';
 import { SourceUsageStatus } from '../enums/source-usage-status.enum';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
+import { textFor } from '../i18n/messages.helper';
+import type { Locale } from '../types/locale.type';
 import type { SourceDomainRule } from '../types/source-rule.type';
-
-export type SourceUrlError = 'invalid_url' | 'not_https' | 'forbidden_host' | 'rejected_source';
-
-export type SourceUrlCheck =
-  | { ok: true; url: string; source: { name: string; usageStatus: SourceUsageStatus } | null; note: string | null }
-  | { ok: false; error: SourceUrlError; message: string };
+import type { SourceUrlCheck } from '../types/source-url-check.type';
 
 const IPV4_REGEX = /^\d{1,3}(\.\d{1,3}){3}$/;
 const LOCAL_SUFFIXES = ['.localhost', '.local', '.internal', '.lan', '.home.arpa'];
 
-const bareHost = (hostname: string): string => hostname.toLowerCase().replace(/^www\./, '').replace(/\.$/, '');
+const bareHost = (hostname: string): string =>
+  hostname
+    .toLowerCase()
+    .replace(/^www\./, '')
+    .replace(/\.$/, '');
 
 /**
  * Postel: accepts a link typed without a scheme ("pt.wikipedia.org/wiki/Pelé" → "https://pt.wikipedia.org/wiki/Pelé").

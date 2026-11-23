@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { SOURCES_FIXTURE } from '../test/moderation.fixture';
+import { sourcesFixture } from '../test/moderation.fixture';
 import { checkSourceUrl, withDefaultHttps } from './source-url.helper';
 
-const check = (raw: string) => checkSourceUrl(raw, SOURCES_FIXTURE);
+const check = (raw: string) => checkSourceUrl(raw, sourcesFixture);
 
 describe('checkSourceUrl (doc 21)', () => {
   it('refuses text that is not a link', () => {

@@ -1,3 +1,5 @@
+import { UUID_REGEX } from '../consts/uuid.const';
+
 /**
  * UUID v7 (RFC 9562): 48-bit Unix ms timestamp + random bits, so ids sort by creation time (doc 03).
  * Uses Web Crypto (`globalThis.crypto`), available in browsers and Node: no Node import in shared.
@@ -19,6 +21,4 @@ export const uuidv7 = (now: number = Date.now()): string => {
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 };
 
-/** Canonical textual UUID (any version). */
-export const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const isUuid = (value: string): boolean => UUID_REGEX.test(value);

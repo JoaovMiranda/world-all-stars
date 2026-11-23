@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { BANNED_WORDS_FIXTURE } from '../test/moderation.fixture';
+import { bannedWordsFixture } from '../test/moderation.fixture';
 import { hasBannedWord } from './banned-words.helper';
 import { validateComment } from './text-validation.helper';
 
-const check = (body: string) => validateComment(body, BANNED_WORDS_FIXTURE);
+const check = (body: string) => validateComment(body, bannedWordsFixture);
 
 describe('validateComment (doc 20)', () => {
   it.each(['', '   ', '\n\n  \t', '   　', '​‌‍⁠﻿'])('refuses empty-ish body %j', (body) => {
@@ -32,9 +32,9 @@ describe('validateComment (doc 20)', () => {
   });
 
   it('word mode needs the whole expression; contains mode matches inside words', () => {
-    expect(hasBannedWord('filho da', BANNED_WORDS_FIXTURE)).toBe(false);
-    expect(hasBannedWord('shitake', BANNED_WORDS_FIXTURE)).toBe(false);
-    expect(hasBannedWord('mierdoso', BANNED_WORDS_FIXTURE)).toBe(false);
-    expect(hasBannedWord('mierdaa', BANNED_WORDS_FIXTURE)).toBe(true);
+    expect(hasBannedWord('filho da', bannedWordsFixture)).toBe(false);
+    expect(hasBannedWord('shitake', bannedWordsFixture)).toBe(false);
+    expect(hasBannedWord('mierdoso', bannedWordsFixture)).toBe(false);
+    expect(hasBannedWord('mierdaa', bannedWordsFixture)).toBe(true);
   });
 });

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-
-import { BANNED_WORDS_FIXTURE, SOURCES_FIXTURE } from '../test/moderation.fixture';
+import type { SuggestionDraft } from '../interfaces/suggestion-validation.interface';
+import { bannedWordsFixture, sourcesFixture } from '../test/moderation.fixture';
 import { validateContact } from './contact-validation.helper';
-import { validateSuggestion, type SuggestionDraft } from './suggestion-validation.helper';
+import { validateSuggestion } from './suggestion-validation.helper';
 
 const ctx = {
-  bannedWords: BANNED_WORDS_FIXTURE,
-  sources: SOURCES_FIXTURE,
+  bannedWords: bannedWordsFixture,
+  sources: sourcesFixture,
   knownAthletes: [{ slug: 'pele', knownAs: 'Pelé', fullName: 'Edson Arantes do Nascimento' }],
 };
 const suggest = (draft: Partial<SuggestionDraft>) => validateSuggestion({ athleteName: '', urls: [], ...draft }, ctx);
@@ -46,15 +46,15 @@ describe('validateSuggestion (doc 21)', () => {
 
 describe('validateContact (doc 21)', () => {
   const ok = { name: 'Ana', email: 'ana@example.com', topic: 'press', body: 'Olá, curadoria!' };
-  it('accepts a valid message', () => expect(validateContact(ok, BANNED_WORDS_FIXTURE)).toEqual({ ok: true, errors: {} }));
+  it('accepts a valid message', () => expect(validateContact(ok, bannedWordsFixture)).toEqual({ ok: true, errors: {} }));
   it('refuses empty, whitespace-only, too long and banned bodies', () => {
-    expect(validateContact({ ...ok, body: '' }, BANNED_WORDS_FIXTURE).errors.body).toBeDefined();
-    expect(validateContact({ ...ok, body: ' ​  ' }, BANNED_WORDS_FIXTURE).errors.body).toBeDefined();
-    expect(validateContact({ ...ok, body: 'x'.repeat(1001) }, BANNED_WORDS_FIXTURE).errors.body).toBeDefined();
-    expect(validateContact({ ...ok, body: 'que merda de site' }, BANNED_WORDS_FIXTURE).errors.body).toBeDefined();
+    expect(validateContact({ ...ok, body: '' }, bannedWordsFixture).errors.body).toBeDefined();
+    expect(validateContact({ ...ok, body: ' ​  ' }, bannedWordsFixture).errors.body).toBeDefined();
+    expect(validateContact({ ...ok, body: 'x'.repeat(1001) }, bannedWordsFixture).errors.body).toBeDefined();
+    expect(validateContact({ ...ok, body: 'que merda de site' }, bannedWordsFixture).errors.body).toBeDefined();
   });
   it('requires name, valid e-mail and a known topic', () => {
-    const r = validateContact({ name: ' ', email: 'nope', topic: 'x', body: 'ok' }, BANNED_WORDS_FIXTURE);
+    const r = validateContact({ name: ' ', email: 'nope', topic: 'x', body: 'ok' }, bannedWordsFixture);
     expect(Object.keys(r.errors).sort()).toEqual(['email', 'name', 'topic']);
   });
 });

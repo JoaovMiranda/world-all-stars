@@ -5,8 +5,6 @@ import { z } from 'zod';
 import { COMPETITOR_KIND_VALUES } from '../enums/competitor-kind.enum';
 import { INFORMATION_KIND_VALUES } from '../enums/information-kind.enum';
 
-export const INGEST_CONTRACT_VERSION = 1;
-
 /** Reference to an entity by a natural key the identity resolver understands (never a database id). */
 export const EntityRefSchema = z.object({
   /** Stable key inside the source document, e.g. `wc-2002/BRA/player:Ronaldo`. */

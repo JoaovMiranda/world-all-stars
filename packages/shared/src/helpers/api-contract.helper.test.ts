@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { AthleteFiltersSchema } from '../schemas/athlete-filters.schema';
 import { createCommentInputSchema } from '../schemas/comment.schema';
 import { createSuggestionInputSchema } from '../schemas/contact.schema';
-import { BANNED_WORDS_FIXTURE, SOURCES_FIXTURE } from '../test/moderation.fixture';
+import { bannedWordsFixture, sourcesFixture } from '../test/moderation.fixture';
 import { buildApiPath, buildQueryString } from './api-contract.helper';
 
 describe('api contract helpers', () => {
@@ -20,12 +20,12 @@ describe('shared Zod schemas', () => {
     expect(AthleteFiltersSchema.parse({ q: '  ', tier: 'god', sport: 'futebol' })).toEqual({ sport: 'futebol' });
   });
   it('comment input schema reports the shared rule on `body`', () => {
-    const r = createCommentInputSchema(BANNED_WORDS_FIXTURE).safeParse({ body: 'M3RDA' });
+    const r = createCommentInputSchema(bannedWordsFixture).safeParse({ body: 'M3RDA' });
     expect(r.success).toBe(false);
     expect(r.error?.issues[0]?.path).toEqual(['body']);
   });
   it('suggestion input schema maps field errors to paths', () => {
-    const schema = createSuggestionInputSchema({ bannedWords: BANNED_WORDS_FIXTURE, sources: SOURCES_FIXTURE, knownAthletes: [] });
+    const schema = createSuggestionInputSchema({ bannedWords: bannedWordsFixture, sources: sourcesFixture, knownAthletes: [] });
     const r = schema.safeParse({ athleteName: 'Zé', urls: ['http://x.com'] });
     expect(r.error?.issues.map((i) => i.path)).toEqual([['urls', 0]]);
   });

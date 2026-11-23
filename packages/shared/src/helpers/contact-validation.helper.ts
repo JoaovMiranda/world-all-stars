@@ -1,23 +1,22 @@
 import { CONTACT_MESSAGE_MAX_LENGTH, CONTACT_NAME_MAX_LENGTH } from '../consts/text-limits.const';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
-import { textFor } from '../i18n/messages.helper';
 import { VALIDATION_MESSAGES } from '../consts/validation-messages.const';
 import { CONTACT_TOPIC_VALUES, type ContactTopic } from '../enums/contact-topic.enum';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
+import { textFor } from '../i18n/messages.helper';
+import type { ContactDraft } from '../interfaces/contact-draft.interface';
 import type { BannedWordRule } from '../types/banned-word.type';
+import type { Locale } from '../types/locale.type';
 import type { FieldErrors } from '../types/validation-result.type';
 import { isEmail } from './email.helper';
-import { validateFreeText } from './text-validation.helper';
 import { cleanText, codePointLength } from './text-normalize.helper';
-
-export interface ContactDraft {
-  name: string;
-  email: string;
-  topic: string;
-  body: string;
-}
+import { validateFreeText } from './text-validation.helper';
 
 /** Validates the "Mensagem" tab (doc 21): name, e-mail, topic and body (≤ 1000, not empty, no banned words). */
-export const validateContact = (draft: ContactDraft, bannedWords: readonly BannedWordRule[], locale: Locale = DEFAULT_LOCALE): { ok: boolean; errors: FieldErrors } => {
+export const validateContact = (
+  draft: ContactDraft,
+  bannedWords: readonly BannedWordRule[],
+  locale: Locale = DEFAULT_LOCALE,
+): { ok: boolean; errors: FieldErrors } => {
   const m = textFor(VALIDATION_MESSAGES, locale);
   const errors: FieldErrors = {};
   const name = cleanText(draft.name);

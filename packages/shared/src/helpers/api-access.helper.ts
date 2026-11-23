@@ -2,9 +2,10 @@ import { API_ERROR_MESSAGES } from '../consts/api-error-messages.const';
 import { ApiAccess } from '../enums/api-access.enum';
 import { ApiErrorCode } from '../enums/api-error-code.enum';
 import { SessionKind } from '../enums/session-kind.enum';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
 import { textFor } from '../i18n/messages.helper';
 import type { ApiErrorBody } from '../types/api-error.type';
+import type { Locale } from '../types/locale.type';
 
 /**
  * Access rule of a contract (`access`) for a session: null when allowed, else the HTTP status + error body.

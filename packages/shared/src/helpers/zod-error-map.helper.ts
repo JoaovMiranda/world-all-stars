@@ -1,8 +1,9 @@
 import type { z } from 'zod';
 
 import { VALIDATION_MESSAGES } from '../consts/validation-messages.const';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
 import { textFor } from '../i18n/messages.helper';
+import type { Locale } from '../types/locale.type';
 
 type Issue = Parameters<z.core.$ZodErrorMap>[0];
 

@@ -1,20 +1,14 @@
 import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
-import { textFor } from '../i18n/messages.helper';
 import { VALIDATION_MESSAGES } from '../consts/validation-messages.const';
 import { TextValidationError } from '../enums/text-validation-error.enum';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
+import { textFor } from '../i18n/messages.helper';
+import type { FreeTextOptions } from '../interfaces/free-text-options.interface';
 import type { BannedWordRule } from '../types/banned-word.type';
+import type { Locale } from '../types/locale.type';
 import type { TextValidationResult } from '../types/validation-result.type';
 import { hasBannedWord } from './banned-words.helper';
 import { cleanText, codePointLength } from './text-normalize.helper';
-
-interface FreeTextOptions {
-  maxLength: number;
-  bannedWords: readonly BannedWordRule[];
-  emptyMessage?: string;
-  /** Language of the messages (the request locale on the server, the page locale in the form). */
-  locale?: Locale;
-}
 
 /** Shared rule for any free text (comment, justification, message): empty → too long → banned word. */
 export const validateFreeText = (raw: unknown, { maxLength, bannedWords, emptyMessage, locale = DEFAULT_LOCALE }: FreeTextOptions): TextValidationResult => {

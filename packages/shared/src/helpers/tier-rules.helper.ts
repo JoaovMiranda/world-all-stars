@@ -1,16 +1,20 @@
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
-import { textFor } from '../i18n/messages.helper';
 import { API_ERROR_MESSAGES } from '../consts/api-error-messages.const';
 import { AdminDecision } from '../enums/admin-decision.enum';
 import { ApiErrorCode } from '../enums/api-error-code.enum';
 import { DossierStatus } from '../enums/dossier-status.enum';
 import { Tier } from '../enums/tier.enum';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
+import { textFor } from '../i18n/messages.helper';
+import type { Locale } from '../types/locale.type';
 import { isDossierApproved } from './admin-rules.helper';
 
 type RuleError = { error: ApiErrorCode; message: string };
 
 /** Official tier change (doc 17): Mythic only with an approved dossier; the same tier is refused. Null = allowed. */
-export const officialTierChangeError = (change: { current: Tier; target: Tier; dossierStatus: DossierStatus | null }, locale: Locale = DEFAULT_LOCALE): RuleError | null => {
+export const officialTierChangeError = (
+  change: { current: Tier; target: Tier; dossierStatus: DossierStatus | null },
+  locale: Locale = DEFAULT_LOCALE,
+): RuleError | null => {
   const m = textFor(API_ERROR_MESSAGES, locale);
   if (change.target === Tier.Mythic && change.dossierStatus !== DossierStatus.Approved) {
     return { error: ApiErrorCode.DossierRequired, message: m.mythicNeedsDossier };

@@ -29,5 +29,4 @@ export const API_ERROR_TEXT = {
   consentNotPending: 'Não há aceite pendente para esta sessão.',
 } as const;
 
-export type ApiErrorMessageKey = keyof typeof API_ERROR_TEXT;
 export const API_ERROR_MESSAGES = defineMessages(API_ERROR_TEXT, { en: API_ERROR_TEXT_EN, es: API_ERROR_TEXT_ES });

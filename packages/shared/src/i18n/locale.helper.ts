@@ -1,4 +1,8 @@
-import { DEFAULT_LOCALE, isLocale, type Locale } from './locale.const';
+import type { LocaleSources } from '../interfaces/locale-sources.interface';
+import type { Locale } from '../types/locale.type';
+import { DEFAULT_LOCALE, LOCALE_VALUES } from './locale.const';
+
+export const isLocale = (value: unknown): value is Locale => LOCALE_VALUES.includes(value as Locale);
 
 /** Maps any BCP 47 tag to a supported locale: exact match, then by language (pt-PT → pt-BR, es-AR → es, en-GB → en). */
 export const matchLocale = (tag: string | null | undefined): Locale | null => {
@@ -33,16 +37,6 @@ export const negotiateLocale = (acceptLanguage: string | null | undefined): Loca
   }
   return null;
 };
-
-export interface LocaleSources {
-  /** `?locale=` (API only). */
-  query?: string | null | undefined;
-  /** `x-was-locale` (the web client's current language). */
-  header?: string | null | undefined;
-  /** `was_locale` cookie (the visitor's saved choice). */
-  cookie?: string | null | undefined;
-  acceptLanguage?: string | null | undefined;
-}
 
 /** Locale of a request: query → header → cookie (explicit choices, exact values only) → Accept-Language → pt-BR. */
 export const resolveLocale = ({ query, header, cookie, acceptLanguage }: LocaleSources): Locale => {

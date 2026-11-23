@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-/** Core Web Vitals + the two loading milestones (doc 12 targets at p75: LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1). */
-export const WEB_VITAL_NAMES = ['LCP', 'INP', 'CLS', 'FCP', 'TTFB'] as const;
+import { WEB_VITAL_NAMES } from '../consts/web-vital.const';
 
 /**
  * One field measurement from a real visitor (RUM). Anonymous by construction: no user/session id, no query string,

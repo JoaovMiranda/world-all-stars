@@ -1,10 +1,8 @@
 import { WINNING_ACHIEVEMENT_TYPES } from '../consts/achievement.const';
 import { AchievementKind } from '../enums/achievement-kind.enum';
 import type { CompetitionLevel } from '../enums/competition-level.enum';
+import type { AwardAchievement, CompetitionAchievement } from '../types/achievement.type';
 import type { Achievement } from '../types/athlete-profile.type';
-
-export type CompetitionAchievement = Extract<Achievement, { kind: typeof AchievementKind.Competition }>;
-export type AwardAchievement = Extract<Achievement, { kind: typeof AchievementKind.Award }>;
 
 const WINNING = new Set<string>(WINNING_ACHIEVEMENT_TYPES);
 

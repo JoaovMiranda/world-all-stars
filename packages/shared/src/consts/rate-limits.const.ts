@@ -14,4 +14,3 @@ export const RATE_LIMITS = {
   /** Image proxy (/img/wm): only thumbnails not yet cached count (each one is a fetch to Wikimedia). */
   imageFetch: { windowMs: 60_000, max: 120 },
 } as const;
-export type RateLimitKey = keyof typeof RATE_LIMITS;

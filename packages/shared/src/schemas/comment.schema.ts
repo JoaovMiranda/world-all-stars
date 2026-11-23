@@ -3,8 +3,9 @@ import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
 import { COMMENT_REACTION_VALUES } from '../enums/comment-reaction.enum';
 import { COMMENT_SORT_VALUES, CommentSort } from '../enums/comment-sort.enum';
 import { validateComment } from '../helpers/text-validation.helper';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
+import { DEFAULT_LOCALE } from '../i18n/locale.const';
 import type { BannedWordRule } from '../types/banned-word.type';
+import type { Locale } from '../types/locale.type';
 
 const reaction = z.enum(COMMENT_REACTION_VALUES);
 

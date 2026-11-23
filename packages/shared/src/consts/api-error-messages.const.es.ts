@@ -1,4 +1,4 @@
-import type { Messages } from '../i18n/messages.helper';
+import type { Messages } from '../types/messages.type';
 import type { API_ERROR_TEXT } from './api-error-messages.const';
 
 export const API_ERROR_TEXT_ES = {

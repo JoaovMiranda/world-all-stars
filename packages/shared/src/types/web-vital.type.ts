@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 
-import type { WEB_VITAL_NAMES, WebVitalSchema, WebVitalsRequestSchema } from '../schemas/web-vital.schema';
+import type { WEB_VITAL_NAMES } from '../consts/web-vital.const';
+import type { WebVitalSchema, WebVitalsRequestSchema } from '../schemas/web-vital.schema';
 
 export type WebVitalName = (typeof WEB_VITAL_NAMES)[number];
 export type WebVital = z.infer<typeof WebVitalSchema>;

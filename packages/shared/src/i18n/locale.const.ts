@@ -1,6 +1,7 @@
+import type { Locale } from '../types/locale.type';
+
 /** Languages of the interface (doc 12: same URL, the choice lives in a cookie). pt-BR is the interface's default; catalog data is English at the source. */
 export const LOCALE_VALUES = ['pt-BR', 'en', 'es'] as const;
-export type Locale = (typeof LOCALE_VALUES)[number];
 export const DEFAULT_LOCALE: Locale = 'pt-BR';
 /** Language of the catalog DATA at the source (handoff v3 §11): slugs and base texts; pt-BR/es are translations. */
 export const CONTENT_SOURCE_LOCALE: Locale = 'en';
@@ -16,5 +17,3 @@ export const LOCALE_AUTONYMS: Record<Locale, string> = { 'pt-BR': 'Português (B
 export const LOCALE_SHORT: Record<Locale, string> = { 'pt-BR': 'PT', en: 'EN', es: 'ES' };
 /** Open Graph `og:locale` of each language. */
 export const LOCALE_OG: Record<Locale, string> = { 'pt-BR': 'pt_BR', en: 'en_US', es: 'es_ES' };
-
-export const isLocale = (value: unknown): value is Locale => LOCALE_VALUES.includes(value as Locale);

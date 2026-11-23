@@ -1,5 +1,6 @@
-import { ANALYSIS_DIMENSIONS, type AnalysisDimension } from '../consts/analysis.const';
+import { ANALYSIS_DIMENSIONS } from '../consts/analysis.const';
 import type { AnalysisDimensionsResponse, CompareResponse } from '../types/analysis.type';
+import type { AnalysisDimension } from '../types/analysis-dimension.type';
 import type { AthleteSummary } from '../types/athlete-summary.type';
 
 type Dims = Record<AnalysisDimension, number>;

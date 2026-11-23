@@ -3,19 +3,10 @@ import { TIER_SIGNAL_MIN_SHARE, TIER_SIGNAL_MIN_VOTES } from '../consts/tier-vot
 import { CommentStatus } from '../enums/comment-status.enum';
 import { PrivacyRequestStatus } from '../enums/privacy-request-status.enum';
 import { TIER_VALUES, type Tier } from '../enums/tier.enum';
+import type { TierSignalResult } from '../interfaces/tier-signal-result.interface';
+import type { PrivacyDeadline } from '../types/privacy-deadline.type';
 
 const DAY_MS = 86_400_000;
-
-export interface TierSignalResult {
-  /** Most-voted tier other than the official one (null without votes for other tiers). */
-  topOther: Tier | null;
-  /** Share (0–1) of the votes that went to `topOther`. */
-  topOtherShare: number;
-  /** Most-voted tier overall (ties keep the official one). */
-  mostVoted: Tier | null;
-  /** True when the rule of doc 17 fires: enough votes and a clear majority for another tier. */
-  isSignal: boolean;
-}
 
 /** Tier signal of an athlete (doc 17): most-voted tier differs from the official, ≥ 30 votes, > 60 % share. */
 export const tierSignalOf = (counts: Partial<Record<Tier, number>>, official: Tier): TierSignalResult => {
@@ -35,10 +26,11 @@ export const isCommentFlagged = (comment: { status: CommentStatus; dislikes: num
 /** A5: legal deadline of a privacy request created at `createdAt` (ISO datetime). */
 export const privacyDueAt = (createdAt: string): string => new Date(new Date(createdAt).getTime() + PRIVACY_RESPONSE_DAYS * DAY_MS).toISOString();
 
-export type PrivacyDeadline = 'closed' | 'overdue' | 'due_soon' | 'on_track';
-
 /** A5: where a request stands against its deadline (closed requests never become late). */
-export const privacyDeadlineOf = (request: { status: PrivacyRequestStatus; dueAt: string }, now: Date = new Date()): { state: PrivacyDeadline; daysLeft: number } => {
+export const privacyDeadlineOf = (
+  request: { status: PrivacyRequestStatus; dueAt: string },
+  now: Date = new Date(),
+): { state: PrivacyDeadline; daysLeft: number } => {
   const daysLeft = Math.ceil((new Date(request.dueAt).getTime() - now.getTime()) / DAY_MS);
   if (request.status === PrivacyRequestStatus.Answered || request.status === PrivacyRequestStatus.Rejected) return { state: 'closed', daysLeft };
   if (daysLeft < 0) return { state: 'overdue', daysLeft };

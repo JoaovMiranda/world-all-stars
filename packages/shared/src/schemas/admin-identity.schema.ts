@@ -1,8 +1,7 @@
 // Identity review queue (handoff v3 §7.1, Fase 6): observations whose competitor could not be matched automatically.
 import { z } from 'zod';
 
-export const IDENTITY_DECISION_VALUES = ['match', 'create', 'reject'] as const;
-export const IDENTITY_STATUS_VALUES = ['pending', 'matched', 'created', 'duplicate', 'rejected'] as const;
+import { IDENTITY_DECISION_VALUES, IDENTITY_STATUS_VALUES } from '../consts/admin-identity.const';
 
 export const IdentityCandidateRefSchema = z.object({ id: z.string().min(1), name: z.string().min(1), slug: z.string().min(1), confidence: z.number() });
 export const AdminIdentityCandidateSchema = z.object({
