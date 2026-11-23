@@ -1,19 +1,7 @@
-import { PublicApi, composeHome, homeCalendarWindow, monthDayOfIso } from '@was/shared';
+import { PublicApi } from '@was/shared';
 
 import { defineRoute } from '../../http/contract-route.helper';
+import { HomeController } from './home.controller';
 
 /** P1: one round trip, composed by the same shared function as the web fixtures (composeHome). */
-export const homeRoutes = [
-  defineRoute(PublicApi.home, async ({ query }, { deps, locale }) => {
-    const view = await deps.catalog.get(locale);
-    const window = homeCalendarWindow(query.date);
-    return composeHome(query.date, {
-      athleteSlugs: view.athletes().map((a) => a.slug),
-      onThisDay: view.onThisDay(monthDayOfIso(query.date)),
-      calendar: view.calendar(window.from, window.to),
-      globe: view.globe(),
-      greats: view.hallOfGreats(),
-      sports: view.sportCards(),
-    });
-  }),
-];
+export const homeRoutes = [defineRoute(PublicApi.home, (input, ctx) => new HomeController(ctx).home(input))];

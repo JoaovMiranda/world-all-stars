@@ -1,20 +1,12 @@
-import { addDaysIso, PublicApi, toIsoDate } from '@was/shared';
+import { PublicApi } from '@was/shared';
 
 import { defineRoute } from '../../http/contract-route.helper';
-import { notFound } from '../../http/http-error.helper';
-
-/** "Próximos campeonatos" of a sport page: from today to this horizon. */
-const SPORT_UPCOMING_DAYS = 425;
+import { SportsController } from './sports.controller';
 
 /** P6/P7 + governance models and the organization hierarchy (docs 18/19). */
 export const sportsRoutes = [
-  defineRoute(PublicApi.sports, async (_, { deps, locale }) => (await deps.catalog.get(locale)).sportsTree()),
-  defineRoute(PublicApi.sportPage, async ({ params }, { deps, locale }) => {
-    const today = toIsoDate(new Date());
-    const page = (await deps.catalog.get(locale)).sportPage(params.slug, today, addDaysIso(today, SPORT_UPCOMING_DAYS));
-    if (!page) throw notFound();
-    return page;
-  }),
-  defineRoute(PublicApi.governanceModels, async (_, { deps, locale }) => (await deps.catalog.get(locale)).governanceModels()),
-  defineRoute(PublicApi.organizations, async (_, { deps, locale }) => (await deps.catalog.get(locale)).orgTree()),
+  defineRoute(PublicApi.sports, (_input, ctx) => new SportsController(ctx).sports()),
+  defineRoute(PublicApi.sportPage, (input, ctx) => new SportsController(ctx).sportPage(input)),
+  defineRoute(PublicApi.governanceModels, (_input, ctx) => new SportsController(ctx).governanceModels()),
+  defineRoute(PublicApi.organizations, (_input, ctx) => new SportsController(ctx).organizations()),
 ];

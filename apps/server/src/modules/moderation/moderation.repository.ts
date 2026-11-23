@@ -1,10 +1,16 @@
-import { type Database, active, bannedWords, sources } from '@was/db';
+import { BaseReadRepository, bannedWords, sources } from '@was/db';
 import type { BannedWord, SourceDomainRule } from '@was/shared';
 import { asc } from 'drizzle-orm';
 
 /** Inputs of the shared validators (validateComment, validateContact, validateSuggestion, checkSourceUrl). */
-export const loadBannedWords = async (db: Database): Promise<BannedWord[]> =>
-  (await db.select().from(bannedWords).where(active(bannedWords)).orderBy(asc(bannedWords.term))).map((b) => ({ term: b.term, matchMode: b.matchMode, locale: b.locale }));
+export class ModerationRepository extends BaseReadRepository {
+  async loadBannedWords(): Promise<BannedWord[]> {
+    const rows = await this.db.select().from(bannedWords).where(this.active(bannedWords)).orderBy(asc(bannedWords.term));
+    return rows.map((b) => ({ term: b.term, matchMode: b.matchMode, locale: b.locale }));
+  }
 
-export const loadSourceRules = async (db: Database): Promise<SourceDomainRule[]> =>
-  (await db.select().from(sources).where(active(sources))).map((s) => ({ name: s.name, baseUrl: s.baseUrl, usageStatus: s.usageStatus }));
+  async loadSourceRules(): Promise<SourceDomainRule[]> {
+    const rows = await this.db.select().from(sources).where(this.active(sources));
+    return rows.map((s) => ({ name: s.name, baseUrl: s.baseUrl, usageStatus: s.usageStatus }));
+  }
+}

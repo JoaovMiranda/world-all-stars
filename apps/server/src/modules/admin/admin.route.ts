@@ -1,74 +1,32 @@
-import { AdminApi, adminPendingCounts } from '@was/shared';
+import { AdminApi } from '@was/shared';
 
-import type { RequestContext } from '../../core/request-context.interface';
 import { defineRoute } from '../../http/contract-route.helper';
-import { addCollectionLinks, listAdminSources, listIngestion, runIngestion, updateSource } from './admin-collection.service';
-import {
-  addBannedWord,
-  listAdminComments,
-  listInbox,
-  listPrivacy,
-  listUsers,
-  moderateComment,
-  removeBannedWord,
-  reviewSuggestion,
-  updateContactMessage,
-  updatePrivacy,
-  updateUser,
-} from './admin-community.service';
-import { decideIdentity, listIdentities } from './admin-identity.service';
-import { listDossiers, listProposals, listTierSignals, reviewDossier, reviewProposal } from './admin-review.service';
-
-/** Painel: the same queues as each section, counted by the shared rule (adminPendingCounts). */
-const summary = async (ctx: RequestContext) => {
-  const [proposals, signals, ingestion, sources, comments, inbox, dossiers, privacy] = await Promise.all([
-    listProposals(ctx),
-    listTierSignals(ctx),
-    listIngestion(ctx),
-    listAdminSources(ctx),
-    listAdminComments(ctx),
-    listInbox(ctx),
-    listDossiers(ctx),
-    listPrivacy(ctx),
-  ]);
-  return {
-    pending: adminPendingCounts({
-      proposals: proposals.items,
-      signals: signals.items,
-      runs: ingestion.runs,
-      sources,
-      comments: comments.items,
-      inbox,
-      dossiers: dossiers.items,
-      privacy: privacy.items,
-    }),
-  };
-};
+import { AdminController } from './admin.controller';
 
 /** A1–A8. Access `admin` comes from the contracts (401 anonymous, 403 reader) — nothing to check here. */
 export const adminRoutes = [
-  defineRoute(AdminApi.summary, (_, ctx) => summary(ctx)),
-  defineRoute(AdminApi.proposals, (_, ctx) => listProposals(ctx)),
-  defineRoute(AdminApi.reviewProposal, ({ params, body }, ctx) => reviewProposal(ctx, params.id, body.decision, body.reason)),
-  defineRoute(AdminApi.tierSignals, (_, ctx) => listTierSignals(ctx)),
-  defineRoute(AdminApi.ingestion, (_, ctx) => listIngestion(ctx)),
-  defineRoute(AdminApi.identities, (_input, ctx) => listIdentities(ctx)),
-  defineRoute(AdminApi.decideIdentity, ({ params, body }, ctx) => decideIdentity(ctx, params.id, body)),
-  defineRoute(AdminApi.runIngestion, ({ body }, ctx) => runIngestion(ctx, body.jobKey, body.names)),
-  defineRoute(AdminApi.sources, (_, ctx) => listAdminSources(ctx)),
-  defineRoute(AdminApi.updateSource, ({ params, body }, ctx) => updateSource(ctx, params.id, body)),
-  defineRoute(AdminApi.addCollectionLinks, ({ body }, ctx) => addCollectionLinks(ctx, body)),
-  defineRoute(AdminApi.users, (_, ctx) => listUsers(ctx)),
-  defineRoute(AdminApi.updateUser, ({ params, body }, ctx) => updateUser(ctx, params.id, body)),
-  defineRoute(AdminApi.privacyRequests, (_, ctx) => listPrivacy(ctx)),
-  defineRoute(AdminApi.updatePrivacyRequest, ({ params, body }, ctx) => updatePrivacy(ctx, params.id, body.status, body.note)),
-  defineRoute(AdminApi.dossiers, (_, ctx) => listDossiers(ctx)),
-  defineRoute(AdminApi.reviewDossier, ({ params, body }, ctx) => reviewDossier(ctx, params.id, body.decision, body.reason)),
-  defineRoute(AdminApi.comments, (_, ctx) => listAdminComments(ctx)),
-  defineRoute(AdminApi.moderateComment, ({ params, body }, ctx) => moderateComment(ctx, params.id, body.status, body.reason)),
-  defineRoute(AdminApi.addBannedWord, ({ body }, ctx) => addBannedWord(ctx, body)),
-  defineRoute(AdminApi.removeBannedWord, ({ params }, ctx) => removeBannedWord(ctx, params)),
-  defineRoute(AdminApi.inbox, (_, ctx) => listInbox(ctx)),
-  defineRoute(AdminApi.reviewSuggestion, ({ params, body }, ctx) => reviewSuggestion(ctx, params.id, body.status, body.note)),
-  defineRoute(AdminApi.updateContactMessage, ({ params, body }, ctx) => updateContactMessage(ctx, params.id, body.status)),
+  defineRoute(AdminApi.summary, (_input, ctx) => new AdminController(ctx).summary()),
+  defineRoute(AdminApi.proposals, (_input, ctx) => new AdminController(ctx).proposals()),
+  defineRoute(AdminApi.reviewProposal, (input, ctx) => new AdminController(ctx).reviewProposal(input)),
+  defineRoute(AdminApi.tierSignals, (_input, ctx) => new AdminController(ctx).tierSignals()),
+  defineRoute(AdminApi.ingestion, (_input, ctx) => new AdminController(ctx).ingestion()),
+  defineRoute(AdminApi.identities, (_input, ctx) => new AdminController(ctx).identities()),
+  defineRoute(AdminApi.decideIdentity, (input, ctx) => new AdminController(ctx).decideIdentity(input)),
+  defineRoute(AdminApi.runIngestion, (input, ctx) => new AdminController(ctx).runIngestion(input)),
+  defineRoute(AdminApi.sources, (_input, ctx) => new AdminController(ctx).sources()),
+  defineRoute(AdminApi.updateSource, (input, ctx) => new AdminController(ctx).updateSource(input)),
+  defineRoute(AdminApi.addCollectionLinks, (input, ctx) => new AdminController(ctx).addCollectionLinks(input)),
+  defineRoute(AdminApi.users, (_input, ctx) => new AdminController(ctx).users()),
+  defineRoute(AdminApi.updateUser, (input, ctx) => new AdminController(ctx).updateUser(input)),
+  defineRoute(AdminApi.privacyRequests, (_input, ctx) => new AdminController(ctx).privacyRequests()),
+  defineRoute(AdminApi.updatePrivacyRequest, (input, ctx) => new AdminController(ctx).updatePrivacyRequest(input)),
+  defineRoute(AdminApi.dossiers, (_input, ctx) => new AdminController(ctx).dossiers()),
+  defineRoute(AdminApi.reviewDossier, (input, ctx) => new AdminController(ctx).reviewDossier(input)),
+  defineRoute(AdminApi.comments, (_input, ctx) => new AdminController(ctx).comments()),
+  defineRoute(AdminApi.moderateComment, (input, ctx) => new AdminController(ctx).moderateComment(input)),
+  defineRoute(AdminApi.addBannedWord, (input, ctx) => new AdminController(ctx).addBannedWord(input)),
+  defineRoute(AdminApi.removeBannedWord, (input, ctx) => new AdminController(ctx).removeBannedWord(input)),
+  defineRoute(AdminApi.inbox, (_input, ctx) => new AdminController(ctx).inbox()),
+  defineRoute(AdminApi.reviewSuggestion, (input, ctx) => new AdminController(ctx).reviewSuggestion(input)),
+  defineRoute(AdminApi.updateContactMessage, (input, ctx) => new AdminController(ctx).updateContactMessage(input)),
 ];

@@ -1,16 +1,21 @@
-import { type Database, active, aiCollectionRuns } from '@was/db';
+import { aiCollectionRuns, BaseReadRepository } from '@was/db';
 import type { CollectionRun } from '@was/shared';
 import { asc } from 'drizzle-orm';
 
-/** AI-assisted collection runs, oldest first (as executed). */
-export const listCollectionRuns = async (db: Database): Promise<CollectionRun[]> =>
-  (await db.select().from(aiCollectionRuns).where(active(aiCollectionRuns)).orderBy(asc(aiCollectionRuns.startedAt))).map((r) => ({
-    startedAt: r.startedAt.toISOString(),
-    mode: r.mode,
-    checked: r.checked,
-    unchanged: r.unchanged,
-    validated: r.validated,
-    factsAccepted: r.factsAccepted,
-    factsRejected: r.factsRejected,
-    extractorTokens: r.extractorTokens,
-  }));
+/** Read model of the public collection log. */
+export class DiscoveryRepository extends BaseReadRepository {
+  /** AI-assisted collection runs, oldest first (as executed). */
+  async listCollectionRuns(): Promise<CollectionRun[]> {
+    const rows = await this.db.select().from(aiCollectionRuns).where(this.active(aiCollectionRuns)).orderBy(asc(aiCollectionRuns.startedAt));
+    return rows.map((r) => ({
+      startedAt: r.startedAt.toISOString(),
+      mode: r.mode,
+      checked: r.checked,
+      unchanged: r.unchanged,
+      validated: r.validated,
+      factsAccepted: r.factsAccepted,
+      factsRejected: r.factsRejected,
+      extractorTokens: r.extractorTokens,
+    }));
+  }
+}

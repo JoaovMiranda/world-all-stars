@@ -1,11 +1,11 @@
 import { ParticipationApi } from '@was/shared';
 
 import { defineRoute } from '../../http/contract-route.helper';
-import { deleteComment, listComments, postComment, reactToComment } from './comments.service';
+import { CommentsController } from './comments.controller';
 
 export const commentsRoutes = [
-  defineRoute(ParticipationApi.comments, ({ params, query }, ctx) => listComments(ctx, params.slug, query.sort, query.cursor)),
-  defineRoute(ParticipationApi.postComment, ({ params, body }, ctx) => postComment(ctx, ctx.user, params.slug, body.body, body.parentId), { rateLimit: 'comment' }),
-  defineRoute(ParticipationApi.reactToComment, ({ params, body }, ctx) => reactToComment(ctx, ctx.user, params.id, body.reaction), { rateLimit: 'reaction' }),
-  defineRoute(ParticipationApi.deleteComment, ({ params }, ctx) => deleteComment(ctx, ctx.user, params.id)),
+  defineRoute(ParticipationApi.comments, (input, ctx) => new CommentsController(ctx).list(input)),
+  defineRoute(ParticipationApi.postComment, (input, ctx) => new CommentsController(ctx).post(input), { rateLimit: 'comment' }),
+  defineRoute(ParticipationApi.reactToComment, (input, ctx) => new CommentsController(ctx).react(input), { rateLimit: 'reaction' }),
+  defineRoute(ParticipationApi.deleteComment, (input, ctx) => new CommentsController(ctx).delete(input)),
 ];

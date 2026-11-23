@@ -1,9 +1,9 @@
 import { ParticipationApi } from '@was/shared';
 
 import { defineRoute } from '../../http/contract-route.helper';
-import { submitContact, submitSuggestion } from './contact.service';
+import { ContactController } from './contact.controller';
 
 export const contactRoutes = [
-  defineRoute(ParticipationApi.submitSuggestion, ({ body }, ctx) => submitSuggestion(ctx, body), { rateLimit: 'contact' }),
-  defineRoute(ParticipationApi.submitContact, ({ body }, ctx) => submitContact(ctx, body), { rateLimit: 'contact' }),
+  defineRoute(ParticipationApi.submitSuggestion, (input, ctx) => new ContactController(ctx).submitSuggestion(input), { rateLimit: 'contact' }),
+  defineRoute(ParticipationApi.submitContact, (input, ctx) => new ContactController(ctx).submitContact(input), { rateLimit: 'contact' }),
 ];

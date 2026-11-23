@@ -1,3 +1,4 @@
+import type { AuthUser } from '../auth/auth-provider.type';
 import type { RequestContext } from './request-context.interface';
 
 /**
@@ -11,5 +12,13 @@ export abstract class BaseController {
   /** A service of this request (same context). */
   protected service<S>(Service: new (ctx: RequestContext) => S): S {
     return new Service(this.ctx);
+  }
+
+  /**
+   * The signed-in user. Only for contracts with access reader/admin: `registerRoutes` has already refused anonymous
+   * requests (401) before the handler runs, so it is never null there.
+   */
+  protected get user(): AuthUser {
+    return this.ctx.session.user as AuthUser;
   }
 }

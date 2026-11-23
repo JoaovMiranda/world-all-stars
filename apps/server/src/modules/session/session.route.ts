@@ -1,11 +1,11 @@
 import { ParticipationApi } from '@was/shared';
 
 import { defineRoute } from '../../http/contract-route.helper';
-import { getMe, getNotifications, getSession, markNotificationRead } from './session.service';
+import { SessionController } from './session.controller';
 
 export const sessionRoutes = [
-  defineRoute(ParticipationApi.session, (_, { session, deps }) => getSession(session, deps.config)),
-  defineRoute(ParticipationApi.me, (_, { deps, user }) => getMe(deps, user)),
-  defineRoute(ParticipationApi.notifications, (_, { deps, user }) => getNotifications(deps, user)),
-  defineRoute(ParticipationApi.markNotificationRead, ({ params }, { deps, user, actor }) => markNotificationRead(deps, user, actor, params.id)),
+  defineRoute(ParticipationApi.session, (_input, ctx) => new SessionController(ctx).session()),
+  defineRoute(ParticipationApi.me, (_input, ctx) => new SessionController(ctx).me()),
+  defineRoute(ParticipationApi.notifications, (_input, ctx) => new SessionController(ctx).notifications()),
+  defineRoute(ParticipationApi.markNotificationRead, (input, ctx) => new SessionController(ctx).markNotificationRead(input)),
 ];

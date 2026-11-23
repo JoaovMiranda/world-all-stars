@@ -2,7 +2,7 @@ import type { Database } from '@was/db';
 import { DEFAULT_LOCALE, type Locale } from '@was/shared';
 
 import { CATALOG_TABLES } from './catalog.const';
-import { loadCatalogRows } from './catalog.repository';
+import { CatalogRepository } from './catalog.repository';
 import { CatalogView } from './catalog.view';
 import type { CatalogRows } from './catalog-rows.type';
 
@@ -21,7 +21,7 @@ export class CatalogCache {
   private loadRows(): Promise<CatalogRows> {
     if (!this.rows) {
       const generation = this.generation;
-      const load = loadCatalogRows(this.db);
+      const load = new CatalogRepository(this.db).load();
       this.rows = load;
       load.catch(() => {
         if (this.generation === generation) this.rows = null;
