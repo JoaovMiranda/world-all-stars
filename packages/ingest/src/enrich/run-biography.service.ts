@@ -2,7 +2,7 @@
 // proposal reaches the human queue only after the schema and literal-quote levels pass; level 3 is auto-applied.
 import { createHash } from 'node:crypto';
 
-import { aiExtractionQueue, aiInvocations, aiModels, BaseRepository, type Database, promptVersions, seedId, sourceLinks } from '@was/db';
+import { aiExtractionQueue, aiInvocations, aiModels, BaseRepository, type Database, promptVersions, seedId, selectRows, sourceLinks } from '@was/db';
 import { uuidv7 } from '@was/shared';
 import { and, eq, sql } from 'drizzle-orm';
 
@@ -25,11 +25,14 @@ const queue = async (
   tokens: { tokensIn: number; tokensOut: number },
   invocationId: string,
 ): Promise<string | null> => {
-  const res = (await db.execute(sql`
+  const res = await selectRows<{ id: string }>(
+    db,
+    sql`
     insert into ai_extraction_queue (id, created_via, source_link_id, section_key, section_hash, status, result_json, model, prompt_version, tokens_in, tokens_out, invocation_id)
     values (${uuidv7()}, 'system:enrich', ${linkId}, ${sectionKey}, ${createHash('sha256').update(hashKey).digest('hex')}, 'pending', ${JSON.stringify(result)}::jsonb, ${model}, ${promptVersion}, ${tokens.tokensIn}, ${tokens.tokensOut}, ${invocationId})
-    on conflict do nothing returning id`)) as unknown as { rows: { id: string }[] };
-  return res.rows[0]?.id ?? null;
+    on conflict do nothing returning id`,
+  );
+  return res[0]?.id ?? null;
 };
 
 /** Runs the Biography Enricher; the proposal reaches the human queue only when every claim quote is literal (level 2). */

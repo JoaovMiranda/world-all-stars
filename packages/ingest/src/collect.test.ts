@@ -1,6 +1,6 @@
 // Fase 13 §1.4: first collection of a list produces complete profiles with no approval click, and an update right
 // after calls the model 0 times. Network and model are fakes (no Wikipedia, no Ollama).
-import { createDatabase, type DatabaseHandle, findRepoRoot, seedDatabase } from '@was/db';
+import { createDatabase, type DatabaseHandle, findRepoRoot, seedDatabase, selectRows } from '@was/db';
 import { sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -84,7 +84,7 @@ describe('autonomous collection (Fase 13)', () => {
     await seedDatabase(h.db, findRepoRoot());
   }, 120_000);
   afterAll(() => h.close());
-  const n = async (q: string) => ((await h.db.execute(sql.raw(q))) as unknown as { rows: { n: number }[] }).rows[0]!.n;
+  const n = async (q: string) => (await selectRows<{ n: number }>(h.db, sql.raw(q)))[0]!.n;
 
   it('parses names, CSV lines and Wikipedia links', () => {
     expect(parseAthleteList('name,sport\nCafu,football\nhttps://en.wikipedia.org/wiki/Zico_(footballer)\n# note', 'football')).toEqual([

@@ -2,7 +2,7 @@
 // ids, name + birth date + sport, name + sport. A NAME ALONE never merges two records. Thresholds are a calibrated
 // starting point (pnpm ingest:identity-eval measures precision/recall on the labelled sample).
 import { active, athleteSports, athletes, type Database, entityAliases, entityExternalIds, sports } from '@was/db';
-import { normalizeForSearch } from '@was/shared';
+import { normalizeName } from '@was/shared';
 import { eq } from 'drizzle-orm';
 
 import type { IdentityCandidate } from './identity-candidate.interface';
@@ -12,11 +12,6 @@ import { IDENTITY_THRESHOLDS } from './identity-thresholds.const';
 
 /** Provider of the external id → weight of an exact match (stable ids weigh more than mutable titles). */
 const ID_WEIGHT: Record<string, number> = { wikidata: 1, fjelstul: 0.99, wikipedia_en: 0.99, olympedia: 0.99 };
-
-export const normalizeName = (s: string) =>
-  normalizeForSearch(s)
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
 
 /** Pure scoring of one candidate (exported for the calibration test). */
 export const scoreCandidate = (

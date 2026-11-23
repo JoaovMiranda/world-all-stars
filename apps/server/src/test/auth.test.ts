@@ -3,8 +3,8 @@
 // No network and no plan/: Better Auth's getSession is stubbed by a header naming the user id.
 import { createHmac } from 'node:crypto';
 
-import { authAccounts, authSessions, createDatabase, type DatabaseHandle, legalAcceptances, SYSTEM_ACTOR, users } from '@was/db';
-import { LEGAL_DOCUMENT_VERSIONS, LOCALE_HEADER, accountDeleteWord, uuidv7 } from '@was/shared';
+import { authAccounts, authSessions, createDatabase, type DatabaseHandle, legalAcceptances, SYSTEM_ACTOR, selectRows, users } from '@was/db';
+import { accountDeleteWord, LEGAL_DOCUMENT_VERSIONS, LOCALE_HEADER, uuidv7 } from '@was/shared';
 import { eq, sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -42,7 +42,11 @@ describe('Better Auth provider + consent', () => {
       sessionLookup: { getSession: async ({ headers }) => (headers.get(USER_HEADER) ? { user: { id: headers.get(USER_HEADER)! } } : null) },
     });
     const add = async (key: keyof typeof ids, extra: Partial<typeof users.$inferInsert> = {}) => {
-      const row = await created.deps.repo.insert(users, { email: `${key}@test.invalid`, displayName: `User ${key}`, emailVerified: true, ...extra }, SYSTEM_ACTOR);
+      const row = await created.deps.repo.insert(
+        users,
+        { email: `${key}@test.invalid`, displayName: `User ${key}`, emailVerified: true, ...extra },
+        SYSTEM_ACTOR,
+      );
       ids[key] = row.id;
     };
     await add('pending');
@@ -74,7 +78,11 @@ describe('Better Auth provider + consent', () => {
   });
 
   it('reader and admin by role; banned → 403 banned; unverified e-mail → 403 email_unverified (translated)', async () => {
-    expect((await call('GET', '/api/session', ids.reader)).json).toMatchObject({ kind: 'reader', user: { email: 'reader@test.invalid' }, pendingConsent: null });
+    expect((await call('GET', '/api/session', ids.reader)).json).toMatchObject({
+      kind: 'reader',
+      user: { email: 'reader@test.invalid' },
+      pendingConsent: null,
+    });
     expect((await call('GET', '/api/me', ids.reader)).status).toBe(200);
     expect((await call('GET', '/api/session', ids.admin)).json.kind).toBe('admin');
     expect((await call('GET', '/api/admin/summary', ids.admin)).status).toBe(200);
@@ -138,8 +146,11 @@ describe('Better Auth provider + consent', () => {
     expect(await promoteAdminEmails(created.deps.repo, ['outdated@test.invalid'])).toBe(0);
     const [row] = await handle.db.select({ role: users.role }).from(users).where(eq(users.id, ids.outdated));
     expect(row?.role).toBe('admin');
-    const audit = await handle.db.execute(sql`select count(*)::int as n from audit_logs where action = 'role_changed' and entity_id = ${ids.outdated}`);
-    expect((audit as unknown as { rows: { n: number }[] }).rows[0]?.n).toBe(1);
+    const audit = await selectRows<{ n: number }>(
+      handle.db,
+      sql`select count(*)::int as n from audit_logs where action = 'role_changed' and entity_id = ${ids.outdated}`,
+    );
+    expect(audit[0]?.n).toBe(1);
   });
 });
 
@@ -169,7 +180,11 @@ describe('real Better Auth (drizzle adapter on users + auth_* tables, signed coo
     const res = await app.request('/api/session', { headers: { cookie } });
     expect(await res.json()).toMatchObject({ kind: 'anon', pendingConsent: { email: 'ana@test.invalid', name: 'Ana Google' } });
 
-    const out = await app.request('/api/auth/sign-out', { method: 'POST', headers: { cookie, origin: config.betterAuthUrl, 'content-type': 'application/json' }, body: '{}' });
+    const out = await app.request('/api/auth/sign-out', {
+      method: 'POST',
+      headers: { cookie, origin: config.betterAuthUrl, 'content-type': 'application/json' },
+      body: '{}',
+    });
     expect(out.status).toBe(200);
     expect(await handle.db.select().from(authSessions)).toHaveLength(0);
     await handle.close();
@@ -183,7 +198,10 @@ describe('banned accounts cannot sign in (Better Auth session.create.before)', (
     const config = { ...loadConfig({}), authSimulated: false, logRequests: false, rateLimitEnabled: false };
     const { betterAuth } = createApp({ db: handle.db, config });
     const ctx = await betterAuth.$context;
-    const { user } = await ctx.internalAdapter.createOAuthUser({ email: 'bia@test.invalid', name: 'Bia', emailVerified: true }, { providerId: 'google', accountId: 'google-sub-bia' });
+    const { user } = await ctx.internalAdapter.createOAuthUser(
+      { email: 'bia@test.invalid', name: 'Bia', emailVerified: true },
+      { providerId: 'google', accountId: 'google-sub-bia' },
+    );
     await handle.db.update(users).set({ bannedAt: new Date() }).where(eq(users.id, user.id));
     const refused = ctx.internalAdapter.createSession(user.id);
     await expect(refused).rejects.toMatchObject({ body: { code: 'banned', message: 'Sua conta está suspensa.' } });

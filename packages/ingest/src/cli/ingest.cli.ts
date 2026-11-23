@@ -15,7 +15,7 @@
 // Flags: --offline (crawler cache only, no network). PGlite is single-process: stop `pnpm dev` first.
 import fs from 'node:fs';
 
-import { BaseCli, ingestionRuns } from '@was/db';
+import { BaseCli, ingestionRuns, selectRows } from '@was/db';
 import { desc, sql } from 'drizzle-orm';
 
 import { CanonicalWriter } from '../canonical/canonical-writer';
@@ -92,15 +92,18 @@ class IngestCli extends BaseCli {
       );
       log(`worker: ${processed} item(s) processed`);
     } else if (command === 'report') {
-      const counts = (await db.execute(sql`
+      const counts = await selectRows<{ k: string; n: number }>(
+        db,
+        sql`
         select 'documents' k, count(*)::int n from source_documents union all select 'payloads', count(*) from source_payloads
         union all select 'observations', count(*) from source_observations union all select 'identity candidates (pending)', count(*) from identity_candidates where status = 'pending'
         union all select 'people', count(*) from athletes where deleted_at is null union all select 'public profiles', count(*) from competitors where kind = 'person' and profile_visibility = 'public'
         union all select 'entries', count(*) from competition_entries union all select 'squad members', count(*) from entry_members
         union all select 'results', count(*) from competition_results union all select 'grants', count(*) from recognition_grants
         union all select 'conflicts (pending)', count(*) from field_conflicts where resolution = 'pending'
-        union all select 'dead job items', count(*) from ingestion_job_items where status = 'dead'`)) as unknown as { rows: { k: string; n: number }[] };
-      for (const r of counts.rows) log(`${r.k.padEnd(32)} ${String(r.n).padStart(7)}`);
+        union all select 'dead job items', count(*) from ingestion_job_items where status = 'dead'`,
+      );
+      for (const r of counts) log(`${r.k.padEnd(32)} ${String(r.n).padStart(7)}`);
       for (const r of await db.select().from(ingestionRuns).orderBy(desc(ingestionRuns.startedAt)).limit(5))
         log(`run ${r.jobKey} ${r.status} ${r.startedAt.toISOString()} checked=${r.checked} errors=${r.errors}`);
     } else if (command === 'enrich') {

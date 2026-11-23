@@ -8,6 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '../client';
 import { findRepoRoot } from '../helpers/repo-root.helper';
 import { seedId } from '../helpers/seed-id.helper';
+import { selectRows } from '../helpers/select-rows.helper';
 import type { DatabaseHandle } from '../interfaces/database-handle.interface';
 import { seedDatabase } from './seed';
 
@@ -27,9 +28,7 @@ const COUNTED = [
 
 const counts = async (h: DatabaseHandle) =>
   Object.fromEntries(
-    await Promise.all(
-      COUNTED.map(async (t) => [t, ((await h.db.execute(sql.raw(`select count(*)::int as n from ${t}`))) as unknown as { rows: { n: number }[] }).rows[0]!.n]),
-    ),
+    await Promise.all(COUNTED.map(async (t) => [t, (await selectRows<{ n: number }>(h.db, sql.raw(`select count(*)::int as n from ${t}`)))[0]!.n])),
   );
 
 describe('seed', () => {

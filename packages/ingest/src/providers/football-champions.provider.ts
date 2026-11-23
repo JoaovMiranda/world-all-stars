@@ -48,6 +48,8 @@ const csv = (text: string): Record<string, string>[] => {
   return body.map((r) => Object.fromEntries(head!.map((h, i) => [h, r[i] ?? ''])));
 };
 
+// Record-key form (NFKD, letters only): intentionally NOT the shared normalizeName — changing it would change the
+// stored `person:<key>` record keys of existing observations.
 const norm = (s: string) =>
   s
     .normalize('NFKD')

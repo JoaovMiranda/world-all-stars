@@ -1,14 +1,13 @@
 import type { Context } from 'hono';
-
+import { CACHE_CONTROL } from '../consts/cache-control.const';
 import type { HonoEnv } from '../http/app-context.type';
 import type { CachedImage } from './cached-image.type';
-import { IMAGE_CACHE_CONTROL } from './image-proxy.const';
 
 /** Image response with long cache, validator (304 on a matching If-None-Match) and no-script headers. */
 export const imageResponse = (c: Context<HonoEnv>, image: CachedImage) => {
   const headers = {
     'Content-Type': image.type,
-    'Cache-Control': IMAGE_CACHE_CONTROL,
+    'Cache-Control': CACHE_CONTROL.image,
     ETag: image.etag,
     'X-Content-Type-Options': 'nosniff',
     // An image is never a document: nothing in it may run or load anything, even if opened directly.

@@ -1,19 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
-
 import { serveStatic } from '@hono/node-server/serve-static';
 import type { Hono } from 'hono';
 import { endTime, startTime } from 'hono/timing';
-
 import type { ServerConfig } from '../config/server-config.type';
+import { CACHE_CONTROL } from '../consts/cache-control.const';
 import type { HonoEnv } from '../http/app-context.type';
 import type { SsrSessionMemo } from '../http/ssr-session-memo.interface';
 import { pageSecureHeaders } from '../middlewares/secure-headers.middleware';
 import type { HtmlCache } from './html.cache';
-import { PRIVATE_HTML_CACHE_CONTROL } from './html-cache.const';
 import { htmlEtag, isShareablePageRequest } from './html-cache.helper';
 import { SsrTimeoutError } from './ssr-timeout.error';
-import { IMMUTABLE, PAGE_VARY } from './web.const';
+import { PAGE_VARY } from './web.const';
 import { isApi, pageCacheKey, pageLocale, respond, withTimeout } from './web.helper';
 import type { WebRuntime } from './web-runtime.interface';
 
@@ -27,7 +25,7 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
     app.use(
       '/assets/*',
       // precompressed: the web build writes .br/.gz next to each JS/CSS/SVG file (scripts/precompress.mjs).
-      serveStatic({ root, precompressed: true, onFound: (_path, c) => c.header('Cache-Control', IMMUTABLE) }),
+      serveStatic({ root, precompressed: true, onFound: (_path, c) => c.header('Cache-Control', CACHE_CONTROL.immutableAsset) }),
       // A missing hashed asset is a 404, never a page.
       async (c) => c.text('Not Found', 404),
     );
@@ -36,7 +34,7 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
       if (c.req.method !== 'GET' || c.req.path.split('/').some((s) => s.startsWith('.'))) return next();
       const file = path.join(web.clientDir as string, c.req.path);
       if (c.req.path === '/' || !fs.existsSync(file) || !fs.statSync(file).isFile()) return next();
-      return serveStatic({ root, onFound: (_p, ctx) => ctx.header('Cache-Control', 'public, max-age=3600') })(c, next);
+      return serveStatic({ root, onFound: (_p, ctx) => ctx.header('Cache-Control', CACHE_CONTROL.staticFile) })(c, next);
     });
   }
 
@@ -84,7 +82,7 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
       if (!isHtml) return new Response(response.body, { status: response.status, headers });
       if (!shareable || response.status !== 200) {
         // Personalized or error page: streamed as rendered, never stored by shared caches.
-        headers.set('Cache-Control', PRIVATE_HTML_CACHE_CONTROL);
+        headers.set('Cache-Control', CACHE_CONTROL.privateHtml);
         return new Response(response.body, { status: response.status, headers });
       }
       // Anonymous 200: buffered once to get a validator; stored in the in-process cache (production).
@@ -95,7 +93,7 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
     } catch (error) {
       if (error instanceof SsrTimeoutError) {
         console.error(`[web] SSR timed out after ${config.ssrTimeoutMs}ms for ${c.req.path}`);
-        return c.text('Service Unavailable', 503, { 'Retry-After': '5', 'Cache-Control': PRIVATE_HTML_CACHE_CONTROL });
+        return c.text('Service Unavailable', 503, { 'Retry-After': '5', 'Cache-Control': CACHE_CONTROL.privateHtml });
       }
       web.fixStacktrace?.(error);
       console.error(`[web] SSR failed for ${c.req.path}`, error);

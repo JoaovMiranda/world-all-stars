@@ -1,7 +1,6 @@
-import { isLocale, type Locale } from '@was/shared';
+import { groupBy, isLocale, type Locale } from '@was/shared';
 
 import { FALLBACK_CHAIN } from './catalog.const';
-import { groupBy } from './catalog-collection.helper';
 import type { Translated } from './catalog-translated.type';
 
 /**

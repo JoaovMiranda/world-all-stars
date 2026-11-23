@@ -51,11 +51,20 @@ import {
   sports,
   teams,
 } from '@was/db';
-import { type DiscoveredCompetitor, DomainKind, type EntityRef, type EventRecord, normalizeForSearch, type Observation, ObservationSchema } from '@was/shared';
+import {
+  type DiscoveredCompetitor,
+  DomainKind,
+  type EntityRef,
+  type EventRecord,
+  normalizeName,
+  type Observation,
+  ObservationSchema,
+  slugify,
+} from '@was/shared';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import countryCodes from 'i18n-iso-countries';
 
-import { normalizeName, PersonIndex } from '../identity/resolver';
+import { PersonIndex } from '../identity/resolver';
 import { BJJ_COMPETITIONS } from '../providers/bjj-champions.const';
 import { FOOTBALL_COMPETITIONS } from '../providers/football-champions.const';
 import { CANONICAL_ACTOR } from './canonical-actor.const';
@@ -86,10 +95,6 @@ const ORG_NAMES: Record<string, string> = {
   ibjjf: 'International Brazilian Jiu-Jitsu Federation',
 };
 
-const slugify = (s: string) =>
-  normalizeForSearch(s)
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
 const flagOf = (iso2: string) => String.fromCodePoint(...[...iso2.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
 
 export class CanonicalWriter {

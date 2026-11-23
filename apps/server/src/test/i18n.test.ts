@@ -17,7 +17,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../app';
 import { loadConfig } from '../config/env.config';
-import { PUBLIC_HTML_CACHE_CONTROL } from '../web/html-cache.const';
+import { CACHE_CONTROL } from '../consts/cache-control.const';
 import type { WebRuntime } from '../web/web-runtime.interface';
 import { HAS_PROTOTYPE } from './test-app.const';
 import { createTestApp } from './test-app.helper';
@@ -147,7 +147,7 @@ describe('anonymous pages cached per language', () => {
     expect(pt.headers.get('content-language')).toBe('pt-BR');
     expect(en.headers.get('content-language')).toBe('en');
     expect(en.headers.get('vary')).toBe('Cookie, Accept-Language, Accept-Encoding'); // + compression middleware
-    expect(en.headers.get('cache-control')).toBe(PUBLIC_HTML_CACHE_CONTROL);
+    expect(en.headers.get('cache-control')).toBe(CACHE_CONTROL.publicHtml);
     expect(await pt.text()).toContain('lang="pt-BR"');
     expect(await en.text()).toContain('lang="en"');
     expect(pt.headers.get('etag')).not.toBe(en.headers.get('etag'));
@@ -164,7 +164,7 @@ describe('anonymous pages cached per language', () => {
   it('the was_locale cookie is a cacheable variant, not a personal one', async () => {
     created.htmlCache.clear();
     const es = await created.app.request('/sports', { headers: { cookie: `${LOCALE_COOKIE}=es`, 'accept-language': 'en' } });
-    expect(es.headers.get('cache-control')).toBe(PUBLIC_HTML_CACHE_CONTROL);
+    expect(es.headers.get('cache-control')).toBe(CACHE_CONTROL.publicHtml);
     expect(es.headers.get('content-language')).toBe('es');
     expect(await es.text()).toContain('lang="es"');
     expect(created.htmlCache.size).toBe(1);

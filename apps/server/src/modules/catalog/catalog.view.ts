@@ -15,11 +15,16 @@ import {
   DEFAULT_LOCALE,
   type GlobeCountry,
   type GovernanceModelInfo,
+  groupBy,
   type HallOfGreatsEntry,
   type IsoDate,
+  indexById,
+  isoDateFromParts,
+  isoDateTime,
   type Locale,
   type MediaLink,
   matchesAthleteFilters,
+  monthDayFromParts,
   normalizeAnalysis,
   type Observance,
   type OnThisDayResponse,
@@ -38,10 +43,8 @@ import {
   Tier,
   textFor,
 } from '@was/shared';
-import { isoOf } from '../../helpers/date.helper';
 import { FALLBACK_CHAIN, HISTORICAL_FLAG, UNKNOWN_ORGANIZER_SLUG, WINNING } from './catalog.const';
-import { byId, groupBy, memo } from './catalog-collection.helper';
-import { pad2 } from './catalog-date.helper';
+import { memo } from './catalog-collection.helper';
 import type { CatalogRows } from './catalog-rows.type';
 import { contentLocaleOf, translator } from './catalog-translation.helper';
 
@@ -65,28 +68,28 @@ export class CatalogView {
   ) {
     this.orgLabels = textFor(ORG_LABELS_MESSAGES, locale);
     const m = {
-      days: byId(rows.calendarDays),
-      countries: byId(rows.countries),
-      cities: byId(rows.cities),
-      levels: byId(rows.levels),
-      tiers: byId(rows.tiers),
-      types: byId(rows.achievementTypes),
-      governance: byId(rows.governance),
-      orgKinds: byId(rows.orgKinds),
-      groups: byId(rows.groups),
-      subgroups: byId(rows.subgroups),
-      sports: byId(rows.sports),
-      orgs: byId(rows.organizations),
-      competitions: byId(rows.competitions),
-      editions: byId(rows.editions),
-      awards: byId(rows.awards),
-      awardEditions: byId(rows.awardEditions),
-      teams: byId(rows.teams),
-      sources: byId(rows.sources),
-      links: byId(rows.sourceLinks),
-      media: byId(rows.mediaLinks),
-      athletes: byId(rows.athletes),
-      prizeForms: byId(rows.prizeForms),
+      days: indexById(rows.calendarDays),
+      countries: indexById(rows.countries),
+      cities: indexById(rows.cities),
+      levels: indexById(rows.levels),
+      tiers: indexById(rows.tiers),
+      types: indexById(rows.achievementTypes),
+      governance: indexById(rows.governance),
+      orgKinds: indexById(rows.orgKinds),
+      groups: indexById(rows.groups),
+      subgroups: indexById(rows.subgroups),
+      sports: indexById(rows.sports),
+      orgs: indexById(rows.organizations),
+      competitions: indexById(rows.competitions),
+      editions: indexById(rows.editions),
+      awards: indexById(rows.awards),
+      awardEditions: indexById(rows.awardEditions),
+      teams: indexById(rows.teams),
+      sources: indexById(rows.sources),
+      links: indexById(rows.sourceLinks),
+      media: indexById(rows.mediaLinks),
+      athletes: indexById(rows.athletes),
+      prizeForms: indexById(rows.prizeForms),
       achievementsByAthlete: groupBy(rows.achievements, (a) => a.athleteId),
       athleteSportsByAthlete: groupBy(rows.athleteSports, (a) => a.athleteId),
       nationalitiesByAthlete: groupBy(rows.nationalities, (n) => n.athleteId),
@@ -145,7 +148,7 @@ export class CatalogView {
   cdIso(cdId: string | null, year: number | null): IsoDate | null {
     if (!cdId || !year) return null;
     const c = this.maps.days.get(cdId);
-    return c ? `${year}-${pad2(c.month)}-${pad2(c.day)}` : null;
+    return c ? isoDateFromParts(year, c.month, c.day) : null;
   }
   source(linkId: string | null | undefined): SourceRef | null {
     const l = linkId ? this.maps.links.get(linkId) : undefined;
@@ -632,7 +635,7 @@ export class CatalogView {
     const c = this.maps.days.get(o.calendarDayId)!;
     return {
       slug: o.slug,
-      md: `${pad2(c.month)}-${pad2(c.day)}`,
+      md: monthDayFromParts(c.month, c.day),
       name: this.t.observance(o.id, 'name') ?? o.slug,
       scope: o.scope,
       recognition: o.recognition,
@@ -782,7 +785,7 @@ export class CatalogView {
               jobKey: lastRun.jobKey,
               mode: lastRun.mode,
               startedAt: lastRun.startedAt.toISOString(),
-              finishedAt: isoOf(lastRun.finishedAt),
+              finishedAt: isoDateTime(lastRun.finishedAt),
               status: lastRun.status,
               checked: lastRun.checked,
               unchanged: lastRun.unchanged,

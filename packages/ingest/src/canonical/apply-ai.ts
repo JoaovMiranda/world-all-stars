@@ -1,7 +1,7 @@
 // Applies an AI biography to the profile (handoff v3 Fase 13 §1.1): automatic when it passed the three validation
 // levels (review_status auto_accepted), or after a human decision on an exception (approved). Precedence: curated
 // bios (seed / manual) are never overwritten — only empty bios or bios written by the system itself.
-import { type Actor, aiExtractionQueue, athleteTranslations, type BaseRepository, type Database, fieldProvenance, sourceLinks } from '@was/db';
+import { type Actor, aiExtractionQueue, athleteTranslations, type BaseRepository, type Database, fieldProvenance, selectRows, sourceLinks } from '@was/db';
 import { and, eq, sql } from 'drizzle-orm';
 
 import { AI_ACTOR } from './ai-actor.const';
@@ -70,5 +70,5 @@ export const applyBiography = async (
 };
 
 /** Marks the athletes whose profile still waits for an AI biography (no Ollama, or not reached yet). */
-export const needsEnrichment = async (db: Database) => (await db.execute(sqlNeeds)) as unknown as { rows: { id: string }[] };
+export const needsEnrichment = async (db: Database) => ({ rows: await selectRows<{ id: string }>(db, sqlNeeds) });
 const sqlNeeds = sql`select a.id from athletes a where a.deleted_at is null and not exists (select 1 from field_provenance p where p.entity_id = a.id and p.field_name = 'short_bio' and p.extraction_method = 'ai' and p.is_current)`;

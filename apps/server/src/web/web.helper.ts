@@ -1,10 +1,9 @@
 import { LOCALE_COOKIE, type Locale, resolveLocale } from '@was/shared';
 import type { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
-
+import { CACHE_CONTROL } from '../consts/cache-control.const';
 import type { HonoEnv } from '../http/app-context.type';
 import type { CachedPage } from './cached-page.interface';
-import { PUBLIC_HTML_CACHE_CONTROL } from './html-cache.const';
 import { etagMatches } from './html-cache.helper';
 import { SsrTimeoutError } from './ssr-timeout.error';
 import { PAGE_VARY } from './web.const';
@@ -27,7 +26,7 @@ export const isApi = (p: string) => p === '/api' || p.startsWith('/api/');
 /** A shareable page (fresh render or cache hit): CDN-ready headers, 304 when the client already has these bytes. */
 export const respond = (c: Context<HonoEnv>, page: Pick<CachedPage, 'status' | 'headers' | 'body' | 'etag'>, ifNoneMatch: string | undefined) => {
   const headers = new Headers(page.headers);
-  headers.set('Cache-Control', PUBLIC_HTML_CACHE_CONTROL);
+  headers.set('Cache-Control', CACHE_CONTROL.publicHtml);
   headers.set('ETag', page.etag);
   headers.set('Vary', PAGE_VARY);
   headers.set('Content-Language', c.get('locale'));

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
-
 import { commonsFileRef, commonsThumbUrl, IMAGE_PROXY_PREFIX, isWikimediaStep } from '@was/shared';
 import type { Hono } from 'hono';
+import { CACHE_CONTROL } from '../consts/cache-control.const';
 import type { HonoEnv } from '../http/app-context.type';
 import type { AppDeps } from '../http/app-deps.interface';
 import { clientIp, hashIp } from '../middlewares/session.middleware';
@@ -76,7 +76,7 @@ export const mountImageProxy = (app: Hono<HonoEnv>, deps: Pick<AppDeps, 'rateLim
         misses.set(url, Date.now());
         return c.text('Not found', 404);
       }
-      return c.text('Bad gateway', 502, { 'Cache-Control': 'no-store' });
+      return c.text('Bad gateway', 502, { 'Cache-Control': CACHE_CONTROL.noStore });
     }
   });
 };

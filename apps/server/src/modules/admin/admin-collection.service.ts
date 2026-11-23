@@ -12,11 +12,11 @@ import {
   type FieldErrors,
   INGESTION_GATE_VALUES,
   IngestionRunStatus,
+  isoDateTime,
   type UpdateSourceRequest,
 } from '@was/shared';
 import { asc, desc, eq, inArray, isNull } from 'drizzle-orm';
 import { BaseService } from '../../core/base.service';
-import { isoOf } from '../../helpers/date.helper';
 import { invalidFields, notFound } from '../../http/http-error.helper';
 import type { CatalogView } from '../catalog/catalog.view';
 import { ModerationRepository } from '../moderation/moderation.repository';
@@ -48,7 +48,7 @@ export class AdminCollectionService extends BaseService {
         jobKey: r.jobKey,
         mode: r.mode,
         startedAt: r.startedAt.toISOString(),
-        finishedAt: isoOf(r.finishedAt),
+        finishedAt: isoDateTime(r.finishedAt),
         status: r.status,
         checked: r.checked,
         unchanged: r.unchanged,
@@ -153,7 +153,7 @@ export class AdminCollectionService extends BaseService {
     const view = await this.ctx.deps.catalog.get(this.ctx.locale);
     const bySlug = new Map(view.rows.sources.map((x) => [x.slug, x]));
     return {
-      sources: view.sourcesOverview().map((s) => ({ ...s, licenseReviewedAt: isoOf(bySlug.get(s.slug)?.licenseReviewedAt) })),
+      sources: view.sourcesOverview().map((s) => ({ ...s, licenseReviewedAt: isoDateTime(bySlug.get(s.slug)?.licenseReviewedAt) })),
       queuedLinks: await this.queuedLinks(view),
     };
   }

@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { DomainKind } from '@was/shared';
+import { DomainKind, normalizeForSearch } from '@was/shared';
 import { eq } from 'drizzle-orm';
 
 import { seedId } from '../helpers/seed-id.helper';
@@ -34,7 +34,6 @@ const COLOR_BY_SUBGROUP: Record<string, string> = {
   traditional: '--c-lime',
 };
 const LOCALES = ['en', 'pt-BR', 'es'] as const;
-const normalize = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 
 export const catalogFile = (repoRoot: string) => path.join(repoRoot, 'data/catalog/sports.catalog.json');
 
@@ -146,7 +145,8 @@ export const seedSportsCatalog = async (db: Database, repoRoot: string): Promise
       });
     for (const a of s.aliases) {
       const kindId = await domainId(DomainKind.NameKind, a.kind);
-      if (kindId) await put(T.entityAliases, { id: seedId('alias', id, a.kind, a.name), entityId: id, name: a.name, normalized: normalize(a.name), kindId });
+      if (kindId)
+        await put(T.entityAliases, { id: seedId('alias', id, a.kind, a.name), entityId: id, name: a.name, normalized: normalizeForSearch(a.name), kindId });
     }
   }
 

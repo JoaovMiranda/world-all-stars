@@ -4,7 +4,7 @@
 // exponential backoff + jitter and dead-lettered after max_attempts. Cancellation is cooperative.
 import { createHash } from 'node:crypto';
 
-import { active, type Database, ingestionJobItems, ingestionLogs, ingestionRuns } from '@was/db';
+import { active, type Database, ingestionJobItems, ingestionLogs, ingestionRuns, selectRows } from '@was/db';
 import { IngestionRunStatus, uuidv7 } from '@was/shared';
 import { and, eq, sql } from 'drizzle-orm';
 
@@ -60,7 +60,9 @@ export const enqueueJob = async (
 /** Claims up to `limit` due items (pending, failed with a due retry, or running with an expired lease). */
 export const claimItems = async (db: Database, workerId: string, limit = 5, leaseMs = 120_000, runId?: string): Promise<JobItem[]> => {
   const until = new Date(Date.now() + leaseMs);
-  const res = (await db.execute(sql`
+  const res = await selectRows<{ id: string }>(
+    db,
+    sql`
     update ingestion_job_items set status = 'running', locked_by = ${workerId}, locked_until = ${until.toISOString()}::timestamptz,
       attempts = attempts + 1, updated_at = now(), version = version + 1
     where id in (
@@ -72,8 +74,9 @@ export const claimItems = async (db: Database, workerId: string, limit = 5, leas
       limit ${limit}
       for update of i skip locked
     )
-    returning id`)) as unknown as { rows: { id: string }[] };
-  const ids = res.rows.map((r) => r.id);
+    returning id`,
+  );
+  const ids = res.map((r) => r.id);
   if (!ids.length) return [];
   return db
     .select()
@@ -144,10 +147,11 @@ export const logStage = async (
 
 /** Closes the run when no item is left to do: success, partial (some dead) or failed (all dead / cancelled). */
 export const finishRunIfDone = async (db: Database, runId: string): Promise<JobRun | null> => {
-  const counts = (await db.execute(
+  const counts = await selectRows<{ status: string; n: number }>(
+    db,
     sql`select status, count(*)::int n from ingestion_job_items where run_id = ${runId} and deleted_at is null group by status`,
-  )) as unknown as { rows: { status: string; n: number }[] };
-  const by = Object.fromEntries(counts.rows.map((r) => [r.status, r.n])) as Record<string, number>;
+  );
+  const by = Object.fromEntries(counts.map((r) => [r.status, r.n])) as Record<string, number>;
   const open = (by.pending ?? 0) + (by.failed ?? 0) + (by.running ?? 0);
   if (open > 0) return null;
   const done = by.done ?? 0;

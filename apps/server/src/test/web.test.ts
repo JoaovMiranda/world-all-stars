@@ -6,7 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../app';
 import { loadConfig } from '../config/env.config';
-import { PRIVATE_HTML_CACHE_CONTROL, PUBLIC_HTML_CACHE_CONTROL } from '../web/html-cache.const';
+import { CACHE_CONTROL } from '../consts/cache-control.const';
 import type { WebRuntime } from '../web/web-runtime.interface';
 import { HAS_PROTOTYPE } from './test-app.const';
 
@@ -72,7 +72,7 @@ describe('web pages mounted on the API server', () => {
     created.htmlCache.clear();
     const before = seen.renders;
     const first = await app().request('/athletes');
-    expect(first.headers.get('cache-control')).toBe(PUBLIC_HTML_CACHE_CONTROL);
+    expect(first.headers.get('cache-control')).toBe(CACHE_CONTROL.publicHtml);
     expect(first.headers.get('vary')).toContain('Cookie');
     const etag = first.headers.get('etag') ?? '';
     expect(etag).toMatch(/^W\/".+"$/);
@@ -103,13 +103,13 @@ describe('web pages mounted on the API server', () => {
       ['/nao-existe', {}],
     ] as const) {
       const res = await app().request(path, init);
-      expect(res.headers.get('cache-control'), path).toBe(PRIVATE_HTML_CACHE_CONTROL);
+      expect(res.headers.get('cache-control'), path).toBe(CACHE_CONTROL.privateHtml);
       expect(res.headers.get('etag'), path).toBeNull();
     }
     expect(created.htmlCache.size).toBe(0);
     // Unrelated cookies do not make a page personal.
     const shared = await app().request('/athletes', { headers: { cookie: '_ga=1' } });
-    expect(shared.headers.get('cache-control')).toBe(PUBLIC_HTML_CACHE_CONTROL);
+    expect(shared.headers.get('cache-control')).toBe(CACHE_CONTROL.publicHtml);
   });
 
   it('drops the HTML cache on writes to what public pages show, keeps it on private writes', async () => {

@@ -1,12 +1,12 @@
 import { buildRobotsTxt, buildSitemapIndexXml, buildSitemapXml, PUBLIC_STATIC_PATHS, SITEMAP_PATHS, type SitemapUrl } from '@was/shared';
 import type { Context, Hono } from 'hono';
+import { CACHE_CONTROL } from '../consts/cache-control.const';
 import type { HonoEnv } from '../http/app-context.type';
 import type { AppDeps } from '../http/app-deps.interface';
 
-/** Crawlers may cache these for an hour (CDN too); they are rebuilt from the in-memory catalog. */
-const CACHE = 'public, max-age=3600';
 const day = (d: Date) => d.toISOString().slice(0, 10);
-const xml = (c: Context<HonoEnv>, body: string) => c.body(body, 200, { 'Content-Type': 'application/xml; charset=UTF-8', 'Cache-Control': CACHE });
+const xml = (c: Context<HonoEnv>, body: string) =>
+  c.body(body, 200, { 'Content-Type': 'application/xml; charset=UTF-8', 'Cache-Control': CACHE_CONTROL.sitemap });
 
 /**
  * robots.txt and sitemaps (doc 12), from the same catalog the API serves (works with the database in dev:api and in
@@ -16,7 +16,7 @@ export const mountSeo = (app: Hono<HonoEnv>, deps: AppDeps): void => {
   const origin = deps.config.publicUrl;
   const latest = (dates: Date[]) => (dates.length ? day(new Date(Math.max(...dates.map((d) => d.getTime())))) : undefined);
 
-  app.get('/robots.txt', (c) => c.body(buildRobotsTxt(origin), 200, { 'Content-Type': 'text/plain; charset=UTF-8', 'Cache-Control': CACHE }));
+  app.get('/robots.txt', (c) => c.body(buildRobotsTxt(origin), 200, { 'Content-Type': 'text/plain; charset=UTF-8', 'Cache-Control': CACHE_CONTROL.sitemap }));
 
   app.get(SITEMAP_PATHS.index, async (c) => {
     const { athletes, sports } = (await deps.catalog.get()).sitemapEntries();

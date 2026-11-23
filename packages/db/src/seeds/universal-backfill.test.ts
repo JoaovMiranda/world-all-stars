@@ -6,12 +6,13 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createDatabase } from '../client';
 import { findRepoRoot } from '../helpers/repo-root.helper';
+import { selectRows } from '../helpers/select-rows.helper';
 import type { DatabaseHandle } from '../interfaces/database-handle.interface';
 import { seedDatabase } from './seed';
 
 const root = findRepoRoot();
 const hasPrototype = fs.existsSync(path.join(root, 'plan/front-prototype/mock'));
-const n = async (h: DatabaseHandle, query: string) => ((await h.db.execute(sql.raw(query))) as unknown as { rows: { n: number }[] }).rows[0]!.n;
+const n = async (h: DatabaseHandle, query: string) => (await selectRows<{ n: number }>(h.db, sql.raw(query)))[0]!.n;
 
 describe.skipIf(!hasPrototype)('universal model backfill (handoff v3 §4)', () => {
   let h: DatabaseHandle;

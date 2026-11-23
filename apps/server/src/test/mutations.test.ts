@@ -1,3 +1,4 @@
+import { selectRows } from '@was/db';
 // Business rules of the mutations (rules come from @was/shared; the server only applies them).
 import { AdminApi, ParticipationApi, PublicApi } from '@was/shared';
 import { sql } from 'drizzle-orm';
@@ -87,10 +88,11 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
         expect(pages).toBeGreaterThan(1);
         expect(new Set(seen).size).toBe(seen.length);
         // total counts threads + replies; every top-level comment was listed exactly once.
-        const all = await t.handle.db.execute(
+        const all = await selectRows<{ n: number }>(
+          t.handle.db,
           sql`select count(*)::int as n from comments c join athletes a on a.id = c.athlete_id where a.slug = 'pele' and c.deleted_at is null and c.status = 'visible' and c.parent_comment_id is null`,
         );
-        expect(seen.length).toBe((all as unknown as { rows: { n: number }[] }).rows[0]?.n);
+        expect(seen.length).toBe(all[0]?.n);
         expect(total).toBeGreaterThan(seen.length);
       }
       const recent = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort: 'recent' } }, 'reader');

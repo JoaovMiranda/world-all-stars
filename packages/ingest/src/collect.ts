@@ -3,7 +3,7 @@
 //   firstCollect: list → identity (athlete-list) → Wikidata (QID, birth, gender) → profile (Wikidata + Commons)
 //                 → Wikipedia en text + revid → biography (Ollama) → auto-validation → profile.
 //   update:       compares the Wikipedia revid with the last biography input; unchanged pages never reach Ollama.
-import type { Database } from '@was/db';
+import { type Database, selectRows } from '@was/db';
 import { wikipediaApiUrl, wikipediaPageUrl } from '@was/shared';
 import { sql } from 'drizzle-orm';
 
@@ -24,8 +24,9 @@ import { runWikidataProfile } from './providers/wikidata-profile.provider';
 
 /** Athletes with an English Wikipedia article; optionally only `ids`, one `slug`, at most `limit`. */
 export const peopleWithArticle = async (db: Database, ids: string[] | null, opts: { slug?: string | undefined; limit?: number | undefined } = {}) =>
-  (
-    (await db.execute(sql`
+  await selectRows<ArticlePerson>(
+    db,
+    sql`
     select a.id, a.known_as name, a.full_name, a.birth_date, a.height_cm, x.external_id title
     from athletes a join entity_external_ids x on x.entity_id = a.id and x.provider = 'wikipedia_en' and x.deleted_at is null and x.is_current
     where a.deleted_at is null ${
@@ -35,27 +36,27 @@ export const peopleWithArticle = async (db: Database, ids: string[] | null, opts
             sql`, `,
           )})`
         : sql``
-    }${opts.slug ? sql` and a.slug = ${opts.slug}` : sql``}${opts.limit !== undefined ? sql` limit ${opts.limit}` : sql``}`)) as unknown as {
-      rows: ArticlePerson[];
-    }
-  ).rows;
+    }${opts.slug ? sql` and a.slug = ${opts.slug}` : sql``}${opts.limit !== undefined ? sql` limit ${opts.limit}` : sql``}`,
+  );
 
 /** Facts from the database given to the biography prompt (titles, clubs, birth, height). */
 export const factsOf = async (db: Database, p: ArticlePerson) => {
-  const titles = (await db.execute(sql`
+  const titles = await selectRows<{ name: string; year: number }>(
+    db,
+    sql`
     select coalesce(t.name, d.slug) name, g.year from recognition_grants g join recognition_definitions d on d.id = g.definition_id
-    left join recognition_definition_translations t on t.definition_id = d.id and t.locale = 'en' where g.competitor_id = ${p.id} and g.deleted_at is null order by g.year`)) as unknown as {
-    rows: { name: string; year: number }[];
-  };
-  const clubs = (await db.execute(
+    left join recognition_definition_translations t on t.definition_id = d.id and t.locale = 'en' where g.competitor_id = ${p.id} and g.deleted_at is null order by g.year`,
+  );
+  const clubs = await selectRows<{ name: string; from_year: number | null; to_year: number | null }>(
+    db,
     sql`select t.name, at.from_year, at.to_year from athlete_teams at join teams t on t.id = at.team_id where at.athlete_id = ${p.id} and at.deleted_at is null order by at.from_year`,
-  )) as unknown as { rows: { name: string; from_year: number | null; to_year: number | null }[] };
+  );
   return [
     p.full_name && `full name ${p.full_name}`,
     p.birth_date && `born ${p.birth_date}`,
     p.height_cm && `height ${p.height_cm} cm`,
-    titles.rows.length && `titles: ${titles.rows.map((t) => `${t.name} ${t.year}`).join(', ')}`,
-    clubs.rows.length && `teams: ${clubs.rows.map((c) => `${c.name} (${c.from_year ?? '?'}–${c.to_year ?? '?'})`).join(', ')}`,
+    titles.length && `titles: ${titles.map((t) => `${t.name} ${t.year}`).join(', ')}`,
+    clubs.length && `teams: ${clubs.map((c) => `${c.name} (${c.from_year ?? '?'}–${c.to_year ?? '?'})`).join(', ')}`,
   ]
     .filter(Boolean)
     .join('; ');
@@ -85,11 +86,14 @@ const currentRevisions = async (ctx: IngestContext, titles: string[]) => {
 const lastBiographyRevisions = async (db: Database) =>
   new Map(
     (
-      (await db.execute(sql`
+      await selectRows<{ id: string; rev: string }>(
+        db,
+        sql`
     select distinct on (l.entity_id) l.entity_id id, split_part(i.input_ref, '#rev:', 2) rev
     from ai_invocations i join ai_extraction_queue q on q.invocation_id = i.id join source_links l on l.id = q.source_link_id
-    where i.task = 'biography' and i.status = 'ok' order by l.entity_id, i.created_at desc`)) as unknown as { rows: { id: string; rev: string }[] }
-    ).rows.map((r) => [r.id, r.rev]),
+    where i.task = 'biography' and i.status = 'ok' order by l.entity_id, i.created_at desc`,
+      )
+    ).map((r) => [r.id, r.rev]),
   );
 
 /**

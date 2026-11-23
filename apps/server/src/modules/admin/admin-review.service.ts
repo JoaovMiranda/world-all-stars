@@ -9,6 +9,7 @@ import {
   ApiErrorCode,
   type CrawlerProposal,
   AdminDecision as Decision,
+  isoDateTime,
   ReviewStatus,
   reviewDossierOutcome,
   type TierSignal,
@@ -18,7 +19,6 @@ import {
 import { eq, inArray } from 'drizzle-orm';
 
 import { BaseService } from '../../core/base.service';
-import { isoOf } from '../../helpers/date.helper';
 import { notFound, unprocessable, unprocessableKey } from '../../http/http-error.helper';
 import { TierVotesRepository } from '../tier-votes/tier-votes.repository';
 
@@ -210,7 +210,7 @@ export class AdminReviewService extends BaseService {
         description: view.evidenceDescription(e.id),
         source: view.source(e.sourceLinkId),
       })),
-      updatedAt: isoOf(d.updatedAt)!,
+      updatedAt: isoDateTime(d.updatedAt)!,
     }));
     return { items: items.sort((a, b) => Number(b.status === 'pending') - Number(a.status === 'pending')) };
   }

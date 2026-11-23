@@ -13,6 +13,7 @@ import {
   type BannedWord,
   type CommentStatus,
   type ContactStatus,
+  isoDateTime,
   NotificationKind,
   type PrivacyRequest,
   PrivacyRequestStatus,
@@ -23,7 +24,6 @@ import {
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 import { revokeAuthSessions } from '../../auth/auth-user.helper';
 import { BaseService } from '../../core/base.service';
-import { isoOf } from '../../helpers/date.helper';
 import { notFound, unprocessableKey } from '../../http/http-error.helper';
 import { ModerationRepository } from '../moderation/moderation.repository';
 import { AdminCollectionService } from './admin-collection.service';
@@ -47,7 +47,7 @@ export class AdminCommunityService extends BaseService {
         name: u.displayName,
         email: u.email,
         role: u.role,
-        bannedAt: isoOf(u.bannedAt),
+        bannedAt: isoDateTime(u.bannedAt),
         banReason: u.banReason,
         tierVotesCount: u.tierVotesCount,
         commentsCount: u.commentsCount,
@@ -114,7 +114,7 @@ export class AdminCommunityService extends BaseService {
         status: r.status,
         createdAt: r.createdAt.toISOString(),
         dueAt: r.dueAt.toISOString(),
-        answeredAt: isoOf(r.answeredAt),
+        answeredAt: isoDateTime(r.answeredAt),
         handledBy: handler ?? null,
         note: r.note,
       })),
