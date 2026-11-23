@@ -5,8 +5,7 @@ import { runRanking } from './core/engine.helper';
 import type { RankingEvidence } from './core/ranking-evidence.interface';
 import type { RankingInput } from './core/ranking-input.interface';
 import { basePoints } from './methodologies/bjj-career/bjj-career.helper';
-import { bjjCareer } from './methodologies/bjj-career/bjj-career.methodology';
-import { footballChampions } from './methodologies/football-champions/football-champions.methodology';
+import { bjjCareer, footballChampions } from './methodologies.const';
 
 let seq = 0;
 const m = (

@@ -1,9 +1,8 @@
-import type { RankingMethodology } from './core/ranking-methodology.interface';
-import { bjjCareer } from './methodologies/bjj-career/bjj-career.methodology';
-import { footballChampions } from './methodologies/football-champions/football-champions.methodology';
+import type { RegisteredMethodology } from './core/registered-methodology.interface';
+import { bjjCareer, footballChampions } from './methodologies.const';
 
 /** Registered methodologies by key (adding a sport = adding a methodology, never touching the engine). */
-export const METHODOLOGIES: Record<string, RankingMethodology<never>> = {
-  [footballChampions.key]: footballChampions as unknown as RankingMethodology<never>,
-  [bjjCareer.key]: bjjCareer as unknown as RankingMethodology<never>,
+export const METHODOLOGIES: Readonly<Record<string, RegisteredMethodology>> = {
+  [footballChampions.key]: footballChampions,
+  [bjjCareer.key]: bjjCareer,
 };

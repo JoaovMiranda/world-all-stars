@@ -1,37 +1,34 @@
 // Jiu-Jitsu Career Ranking V1 (plan/handoff/ranking.md §9–§10; METHODOLOGY.md next to this file).
 // SCORE = BASE_POINTS(placement) × EVENT_MULTIPLIER(tier). Only verified, official competitive results count; Hall of
 // Fame never scores. Belts, gi/no-gi and gender are separate classifications.
+import { BaseMethodology } from '../../core/base.methodology';
 import type { ComputedEntry } from '../../core/computed-entry.interface';
 import type { RankingDefinition } from '../../core/ranking-definition.interface';
 import type { RankingEvidence } from '../../core/ranking-evidence.interface';
-import type { RankingMethodology } from '../../core/ranking-methodology.interface';
+import type { RankingInput } from '../../core/ranking-input.interface';
 import { BJJ_CAREER_RANKINGS } from './bjj-career.const';
-import { basePoints } from './bjj-career.helper';
+import { basePoints, bjjCountedResult, bjjInScope } from './bjj-career.helper';
 import { BjjConfigSchema } from './bjj-config.schema';
 import type { BjjConfig } from './bjj-config.type';
 
-const inScope = (e: RankingEvidence, r: RankingDefinition) =>
-  e.kind === 'result' &&
-  e.attributes.giMode === r.scope.giMode &&
-  e.attributes.gender === r.scope.gender &&
-  (r.scope.belt === null || e.attributes.belt === r.scope.belt);
-const eligible = (e: RankingEvidence) =>
-  e.attributes.verification === 'verified' && e.attributes.status === 'official' && typeof e.attributes.placement === 'number';
+/** Jiu-Jitsu Career Ranking V1: placement points × event multiplier over verified official results (METHODOLOGY.md). */
+export class BjjCareerMethodology extends BaseMethodology<BjjConfig> {
+  readonly key = 'bjj-career';
+  readonly version = '1.0.0';
+  readonly sport = 'jiu-jitsu';
+  readonly outputKind = 'score' as const;
+  readonly configSchema = BjjConfigSchema;
 
-export const bjjCareer: RankingMethodology<BjjConfig> = {
-  key: 'bjj-career',
-  version: '1.0.0',
-  sport: 'jiu-jitsu',
-  outputKind: 'score',
-  configSchema: BjjConfigSchema,
-  defaultConfig: BjjConfigSchema.parse({}),
-  rankings: () => BJJ_CAREER_RANKINGS,
-  compute(ranking, input, config) {
+  rankings(_config: BjjConfig): RankingDefinition[] {
+    return BJJ_CAREER_RANKINGS;
+  }
+
+  compute(ranking: RankingDefinition, input: RankingInput, config: BjjConfig): ComputedEntry[] {
     const byPerson = new Map<string, RankingEvidence[]>();
-    for (const e of input.evidence) if (inScope(e, ranking)) (byPerson.get(e.competitorId) ?? byPerson.set(e.competitorId, []).get(e.competitorId)!).push(e);
+    for (const e of input.evidence) if (bjjInScope(e, ranking)) (byPerson.get(e.competitorId) ?? byPerson.set(e.competitorId, []).get(e.competitorId)!).push(e);
     const out: ComputedEntry[] = [];
     for (const [competitorId, list] of byPerson) {
-      const counted = list.filter(eligible);
+      const counted = list.filter(bjjCountedResult);
       const items = counted.map((e) => {
         const points = basePoints(Number(e.attributes.placement), config) * (config.multipliers[String(e.attributes.tier)] ?? 0);
         return {
@@ -63,5 +60,5 @@ export const bjjCareer: RankingMethodology<BjjConfig> = {
       });
     }
     return out;
-  },
-};
+  }
+}

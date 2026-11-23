@@ -9,6 +9,8 @@ export interface RegisteredMethodology {
   readonly version: string;
   readonly sport: string | null;
   readonly outputKind: OutputKind;
+  /** Parsed default config (schema defaults), e.g. to store a ruleset and hash it. */
+  readonly defaultConfig: unknown;
   /** Rankings produced with the given raw config (default config when omitted). */
   rankingDefinitions(rawConfig?: unknown): RankingDefinition[];
   /** Runs one ranking through the engine (config validated by the methodology's schema). */

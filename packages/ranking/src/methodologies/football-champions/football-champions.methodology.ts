@@ -1,27 +1,29 @@
 // Football World Champions V1 (plan/handoff/ranking-futebol.md §6–§8; METHODOLOGY.md next to this file).
 // 1 credit per VERIFIED winning squad membership (registered or replacement, never withdrawn/rejected); at most one
 // credit per player per edition. Rankings A–D by competition and gender; E is the consolidated overview.
+import { BaseMethodology } from '../../core/base.methodology';
 import type { ComputedEntry } from '../../core/computed-entry.interface';
+import type { RankingDefinition } from '../../core/ranking-definition.interface';
 import type { RankingEvidence } from '../../core/ranking-evidence.interface';
-import type { RankingMethodology } from '../../core/ranking-methodology.interface';
+import type { RankingInput } from '../../core/ranking-input.interface';
 import { FOOTBALL_CHAMPIONS_RANKINGS, OLYMPICS, WORLD_CUPS } from './football-champions.const';
+import { countable } from './football-champions.helper';
 import { FootballConfigSchema } from './football-config.schema';
 import type { FootballConfig } from './football-config.type';
 
-const countable = (e: RankingEvidence, c: FootballConfig) =>
-  e.kind === 'squad_membership' &&
-  c.countableRegistration.includes(String(e.attributes.registration)) &&
-  c.countableVerification.includes(String(e.attributes.verification));
+/** Football World Champions V1: one credit per verified winning squad membership (METHODOLOGY.md). */
+export class FootballChampionsMethodology extends BaseMethodology<FootballConfig> {
+  readonly key = 'football-champions';
+  readonly version = '1.0.0';
+  readonly sport = 'football';
+  readonly outputKind = 'score' as const;
+  readonly configSchema = FootballConfigSchema;
 
-export const footballChampions: RankingMethodology<FootballConfig> = {
-  key: 'football-champions',
-  version: '1.0.0',
-  sport: 'football',
-  outputKind: 'score',
-  configSchema: FootballConfigSchema,
-  defaultConfig: FootballConfigSchema.parse({}),
-  rankings: () => FOOTBALL_CHAMPIONS_RANKINGS,
-  compute(ranking, input, config) {
+  rankings(_config: FootballConfig): RankingDefinition[] {
+    return FOOTBALL_CHAMPIONS_RANKINGS;
+  }
+
+  compute(ranking: RankingDefinition, input: RankingInput, config: FootballConfig): ComputedEntry[] {
     const scope = ranking.scope.competition as string | null;
     const byPerson = new Map<string, RankingEvidence[]>();
     for (const e of input.evidence)
@@ -54,5 +56,5 @@ export const footballChampions: RankingMethodology<FootballConfig> = {
       });
     }
     return out;
-  },
-};
+  }
+}

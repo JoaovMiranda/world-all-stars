@@ -21,4 +21,5 @@ export * from './methodologies/bjj-career/bjj-config.type';
 export * from './methodologies/football-champions/football-champions.methodology';
 export * from './methodologies/football-champions/football-config.schema';
 export * from './methodologies/football-champions/football-config.type';
+export * from './methodologies.const';
 export * from './registry.const';
