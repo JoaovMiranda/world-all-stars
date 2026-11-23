@@ -1,47 +1,60 @@
-# Seeds do crawler
+# Crawler seeds (legacy)
 
-Lista de atletas campeões para popular o site. **Fonte da verdade = Wikipedia.** Os outros sites servem só para identificar e conferir os atletas.
+A list of champion athletes used to populate the site. **Source of truth: Wikipedia.** Other sites are used only to
+identify and cross-check athletes.
 
-## Como rodar
+These files come from the legacy crawler in `scripts/crawler/`, which is excluded from the repository conventions and
+from the English-only rule (D36). Its CSV and report files keep their original (Portuguese) names, headers and values.
+The current ingestion pipeline is `packages/ingest` (`pnpm ingest <command>`).
+
+## Running
 ```bash
 python3 scripts/crawler/crawl_athletes.py
 ```
-Usa só a biblioteca padrão do Python. As páginas baixadas ficam em `data/seeds/.cache/` (fora do git), então rodar de novo é rápido. Para forçar o download, apague o cache. Há uma pausa de 3 s entre requisições, porque a Wikipedia bloqueia quem pede rápido demais.
+Uses only the Python standard library. Downloaded pages are cached in `data/seeds/.cache/` (gitignored), so re-runs are
+fast; delete the cache to force a new download. There is a 3 s pause between requests because Wikipedia blocks clients
+that request too fast.
 
-## Arquivos
-| Arquivo | Conteúdo |
+## Files
+| File | Contents |
 |---|---|
-| [atletas.csv](atletas.csv) | **1430 atletas**, um por linha (gerado) |
-| [relatorio-crawler.md](relatorio-crawler.md) | O que foi lido em cada fonte, edição por edição, com avisos (gerado) |
-| [fontes-crawler.csv](fontes-crawler.csv) | Links de entrada do crawler |
+| [atletas.csv](atletas.csv) | 1430 athletes, one per row (generated) |
+| [relatorio-crawler.md](relatorio-crawler.md) | What was read from each source, edition by edition, with warnings (generated) |
+| [fontes-crawler.csv](fontes-crawler.csv) | Crawler entry links |
 
-## Escopo
-| Esporte | O que entra | Fonte |
+## Scope
+| Sport | What is included | Source |
 |---|---|---|
-| Futebol · Copa masculina 1930–2026 (23) | Elenco campeão inteiro + quem foi titular na final | Fjelstul/DataHub (1930–2022), Wikipedia (2026) |
-| Futebol · Copa feminina 1991–2023 (9) | Idem | Fjelstul/DataHub (1991–2019), Wikipedia (2023) |
-| Futebol · Olimpíadas masculinas 1908–2024 (26) | Elenco medalhista de ouro + titulares do jogo pelo ouro | Wikipedia |
-| Futebol · Olimpíadas femininas 1996–2024 (8) | Idem | Wikipedia |
-| Jiu-jitsu · ADCC | Campeões por peso, absoluto e superluta, masculino e feminino | Wikipedia (ADCC) |
-| Jiu-jitsu · Mundial IBJJF faixa-preta | Campeões por peso e absoluto, masculino e feminino | Wikipedia (World IBJJF Jiu-Jitsu Championship) |
-| Jiu-jitsu · lista do usuário | Os 21 nomes enviados (todos também estão no ADCC) | Usuário |
+| Football · men's World Cup 1930–2026 (23 editions) | Whole winning squad + starters in the final | Fjelstul/DataHub (1930–2022), Wikipedia (2026) |
+| Football · women's World Cup 1991–2023 (9) | Same | Fjelstul/DataHub (1991–2019), Wikipedia (2023) |
+| Football · men's Olympics 1908–2024 (26) | Gold-medal squad + starters in the gold-medal match | Wikipedia |
+| Football · women's Olympics 1996–2024 (8) | Same | Wikipedia |
+| Jiu-jitsu · ADCC | Champions per weight class, absolute and superfight, men and women | Wikipedia (ADCC) |
+| Jiu-jitsu · IBJJF World Championship, black belt | Champions per weight class and absolute, men and women | Wikipedia (World IBJJF Jiu-Jitsu Championship) |
+| Jiu-jitsu · owner's list | The 21 names sent by the owner (all also in ADCC) | Owner |
 
-## atletas.csv
-| Coluna | Significado |
+## Athlete CSV columns
+The header row is in Portuguese (legacy). Columns, in order:
+
+| # | Meaning |
 |---|---|
-| `nome` | Nome de exibição (como na Wikipedia) |
-| `esporte` | `futebol` · `jiu-jitsu` |
-| `categoria` | `masculino` · `feminino` |
-| `pais` | Seleção campeã (só futebol) |
-| `titulos` | Títulos separados por `\|`. Ex.: `Copa do Mundo masculina 1970 · Brazil (titular na final)` |
-| `wikipedia_url` | Página da Wikipedia (en) ou URL de busca |
-| `tipo_link` | `pagina` = página direta · `busca` = atleta sem artigo; o crawler de perfil precisa resolver |
-| `fontes` | De onde o atleta foi identificado |
+| 1 | Display name (as on Wikipedia) |
+| 2 | Sport: football or jiu-jitsu |
+| 3 | Category: men or women |
+| 4 | Winning national team (football only) |
+| 5 | Titles separated by `\|`, each with edition, team and role |
+| 6 | Wikipedia (en) page or search URL |
+| 7 | Link kind: direct page, or search (athlete without an article; the profile crawler must resolve it) |
+| 8 | Where the athlete was identified |
 
-No futebol, a marca do título diz o papel na conquista: `titular na final`, `elenco` (estava no grupo, não foi titular na final), `elenco, não entrou em campo` ou `elenco; titular não verificado`.
+In football, each title records the athlete's role in the win: starter in the final, squad member (in the squad but
+not a starter in the final), squad member who did not play, or squad member with unverified starter status.
 
-## Pendências
-- **Titulares não extraídos em 9 edições olímpicas:** masc. 1920, 1936, 1952, 1960, 1964, 1968; fem. 1996, 2000, 2008. O elenco campeão está completo; só falta marcar quem começou o jogo pelo ouro.
-- **Biblioteca do COI (Statistical Kit 1908–2012):** o site exige JavaScript e cookies, uma proteção anti-robô, e não foi contornado. Não fez falta, porque a Wikipedia cobre o mesmo período.
-- **Sem artigo na Wikipedia:** 99 atletas (95 de jiu-jitsu, 4 de futebol) (`tipo_link = busca`), principalmente campeões antigos do Mundial IBJJF. Como a fonte da verdade é a Wikipedia, os perfis deles vão ficar curtos.
-- **Possível duplicata por grafia:** "Fernanda Mazelli" e "Fernanda Mazzelli" (IBJJF). Não uni automaticamente.
+## Open items
+- **Starters not extracted for 9 Olympic editions**: men 1920, 1936, 1952, 1960, 1964, 1968; women 1996, 2000, 2008.
+  The winning squad is complete; only the starters of the gold-medal match are missing.
+- **IOC library (Statistical Kit 1908–2012)**: the site requires JavaScript and cookies (anti-bot protection), which was
+  not bypassed. It was not needed, because Wikipedia covers the same period.
+- **No Wikipedia article**: 99 athletes (95 jiu-jitsu, 4 football) have a search link, mostly early IBJJF World
+  champions. Since Wikipedia is the source of truth, their profiles will be short.
+- **Possible duplicate by spelling**: "Fernanda Mazelli" and "Fernanda Mazzelli" (IBJJF). Not merged automatically.
