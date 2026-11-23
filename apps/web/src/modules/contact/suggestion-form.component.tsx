@@ -1,13 +1,13 @@
+import { Link } from '@tanstack/react-router';
 import {
-  type SubmissionResponse,
-  SUGGESTION_WHY_MAX_LENGTH,
-  type ValidationContext,
   cleanText,
   createSuggestionInputSchema,
+  SUGGESTION_WHY_MAX_LENGTH,
+  type SubmissionResponse,
+  type ValidationContext,
   validateSuggestion,
   withDefaultHttps,
 } from '@was/shared';
-import { Link } from '@tanstack/react-router';
 import { useMemo } from 'react';
 
 import { submitSuggestion } from '@/data/endpoints/contact.query';
@@ -20,11 +20,10 @@ import { Input } from '@/shared-ui/input.component';
 import { Select } from '@/shared-ui/select.component';
 import { Textarea } from '@/shared-ui/textarea.component';
 import { useForm } from '@/shared-ui/use-form.hook';
-
+import { CONTACT_MESSAGES, SPORT_OTHER_VALUE } from './contact.const';
 import { fieldErrorsOf } from './contact-errors.helper';
 import { ContactSubmitFooter } from './contact-submit-footer.component';
 import { SourceLinksField } from './source-links-field.component';
-import { CONTACT_MESSAGES, SPORT_OTHER_VALUE } from './contact.const';
 
 interface SuggestionFormProps {
   context: ValidationContext;
@@ -33,7 +32,7 @@ interface SuggestionFormProps {
   onDone: (result: SubmissionResponse, withEmail: boolean) => void;
 }
 
-/** "Sugerir atleta" (doc 21): same shared validator as the server (https, anti-SSRF, rejected sources, duplicates). */
+/** "Suggest an athlete" (doc 21): same shared validator as the server (https, anti-SSRF, rejected sources, duplicates). */
 export function SuggestionForm({ context, email, onDone }: SuggestionFormProps) {
   const locale = useLocale();
   const t = useText(CONTACT_MESSAGES).suggestion;
@@ -49,7 +48,7 @@ export function SuggestionForm({ context, email, onDone }: SuggestionFormProps) 
       if (fieldErrors) form.setServerErrors(fieldErrors);
     },
   });
-  // "Já está no site": the shared validator also tells which profile, to link it next to the error.
+  // "Already on the site": the shared validator also tells which profile, to link it next to the error.
   const existing = errors.athleteName ? validateSuggestion(values, context, locale).existing : null;
   const sportOptions = useMemo(
     () => [...context.sports].sort((a, b) => fmt.compare(a.name, b.name)).map((s) => ({ value: s.slug, label: s.name })),

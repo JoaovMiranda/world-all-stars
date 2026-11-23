@@ -4,10 +4,10 @@ import type { ReactNode } from 'react';
 import { useText } from '@/i18n/use-text.hook';
 import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { formatDate } from '@/shared-ui/format.helper';
+import { Reveal } from '@/shared-ui/reveal.component';
 import { Section } from '@/shared-ui/section.component';
 import { SourceInfo } from '@/shared-ui/source-info.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
-import { Reveal } from '@/shared-ui/reveal.component';
 
 import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
@@ -20,7 +20,7 @@ function Evidence({ type, children }: { type: string; children: ReactNode }) {
   );
 }
 
-/** "Por que é Mítico?" (approved "Mudou o jogo" dossier) or, for other tiers, the inclusion reason + tier history. */
+/** "Why Mythic?" (approved "Game changer" dossier) or, for other tiers, the inclusion reason + tier history. */
 export function LegacyCard({ profile }: { profile: AthleteProfile }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).legacy;
   const labels = useText(DOMAIN_LABELS_MESSAGES);

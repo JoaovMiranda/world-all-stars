@@ -11,7 +11,7 @@ import { GoogleButton } from './google-button.component';
 import { Notice } from './notice.component';
 
 interface LoginDialogProps {
-  /** Open when not null; the reason completes the title ("Entre para votar…"). */
+  /** Open when not null; the reason completes the title ("Sign in to vote…"). */
   reason: LoginReason | null;
   onClose: () => void;
   /** Google configured on the server (GET /api/session `googleEnabled`). */

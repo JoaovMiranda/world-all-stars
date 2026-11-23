@@ -114,7 +114,7 @@ function AwardsTable({ groups }: { groups: readonly AchievementGroup<AwardAchiev
   );
 }
 
-/** Conquistas: titles per year stacked by level (toggle chips), titles by competition, awards. */
+/** Achievements: titles per year stacked by level (toggle chips), titles by competition, awards. */
 export function AchievementsTab({ profile }: { profile: AthleteProfile }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).achievements;
   const labels = useText(DOMAIN_LABELS_MESSAGES);

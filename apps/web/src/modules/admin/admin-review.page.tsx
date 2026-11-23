@@ -5,15 +5,15 @@ import { Tabs } from '@/shared-ui/tabs.component';
 
 import { ADMIN_MESSAGES } from './admin.const';
 import { AdminLayout } from './admin-layout.component';
-import { IdentityQueue } from './identity-queue.component';
-import { RankingAdmin } from './ranking-admin.component';
 import { DossierQueue } from './dossier-queue.component';
+import { IdentityQueue } from './identity-queue.component';
 import { ProposalQueue } from './proposal-queue.component';
+import { RankingAdmin } from './ranking-admin.component';
 import { TierSignals } from './tier-signals.component';
 import { useAdminTab } from './use-admin-tab.hook';
 import { useQueueState } from './use-queue-state.hook';
 
-/** A1 Revisão da coleta: proposals (3-way diff + evidence) · dossiers · tier signals. */
+/** A1 Collection review: proposals (3-way diff + evidence) · dossiers · tier signals. */
 export function AdminReviewPage() {
   const T = useText(ADMIN_MESSAGES).review;
   const { tab, setTab } = useAdminTab(AdminReviewSearchSchema, ADMIN_REVIEW_TAB_VALUES);

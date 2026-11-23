@@ -1,5 +1,5 @@
-import { COMMENT_MAX_LENGTH, createCommentInputSchema } from '@was/shared';
 import { useQueryClient } from '@tanstack/react-query';
+import { COMMENT_MAX_LENGTH, createCommentInputSchema } from '@was/shared';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { isApiError } from '@/data/api-error.error';
@@ -8,13 +8,13 @@ import { validationContextQuery } from '@/data/endpoints/discovery.query';
 import { sessionQuery } from '@/data/endpoints/session.query';
 import { useLocale } from '@/i18n/locale.store';
 import { useText } from '@/i18n/use-text.hook';
+import { useSession } from '@/session/use-session.hook';
 import { Button } from '@/shared-ui/button.component';
 import { CharCounter } from '@/shared-ui/char-counter.component';
 import { FormField } from '@/shared-ui/form-field.component';
 import { Notice } from '@/shared-ui/notice.component';
 import { Textarea } from '@/shared-ui/textarea.component';
 import { useForm } from '@/shared-ui/use-form.hook';
-import { useSession } from '@/session/use-session.hook';
 
 import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
@@ -50,7 +50,7 @@ export function CommentForm({ slug, label, parentId = null, autoFocus = false, o
       if (isApiError(e) && e.status === 422) form.setServerErrors(e.body.errors ?? { body: e.body.message ?? T.error });
       else if (isApiError(e) && e.status === 401) {
         setFailed('auth');
-        // The server no longer knows us: refresh the session so "Entrar de novo" opens the login dialog.
+        // The server no longer knows us: refresh the session so "Sign in again" opens the login dialog.
         void queryClient.invalidateQueries({ queryKey: sessionQuery.baseKey });
       } else setFailed('error');
     },
@@ -71,7 +71,11 @@ export function CommentForm({ slug, label, parentId = null, autoFocus = false, o
         post.mutate({ params: { slug }, body: { body: data.body, parentId: data.parentId ?? null } });
       })}
     >
-      <FormField label={<span className="sr-only">{label}</span>} error={form.errors.body} counter={<CharCounter value={form.values.body} max={COMMENT_MAX_LENGTH} />}>
+      <FormField
+        label={<span className="sr-only">{label}</span>}
+        error={form.errors.body}
+        counter={<CharCounter value={form.values.body} max={COMMENT_MAX_LENGTH} />}
+      >
         {(p) => <Textarea {...p} {...form.register('body')} ref={textRef} rows={parentId ? 2 : 3} placeholder={label} />}
       </FormField>
       <div className="form-actions">
@@ -97,7 +101,11 @@ export function CommentForm({ slug, label, parentId = null, autoFocus = false, o
           </Button>
         </Notice>
       )}
-      {posted && !parentId && <p className="sr-only" role="status">{T.posted}</p>}
+      {posted && !parentId && (
+        <p className="sr-only" role="status">
+          {T.posted}
+        </p>
+      )}
     </form>
   );
 }

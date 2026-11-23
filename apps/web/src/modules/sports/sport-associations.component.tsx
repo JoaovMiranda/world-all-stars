@@ -1,5 +1,5 @@
-import type { SportPage } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import type { SportPage } from '@was/shared';
 
 import { useText } from '@/i18n/use-text.hook';
 import { OrgRow } from '@/shared-ui/org-row.component';
@@ -7,7 +7,7 @@ import { Section } from '@/shared-ui/section.component';
 
 import { SPORTS_HASH, SPORTS_MESSAGES } from './sports.const';
 
-/** "Associações de X" (#associacoes): every association as OrgRow (logo, Wikipedia, roles, nature, ⓘ). */
+/** "X associations" (#associacoes): every association as OrgRow (logo, Wikipedia, roles, nature, ⓘ). */
 export function SportAssociations({ sport }: { sport: SportPage }) {
   const t = useText(SPORTS_MESSAGES).page;
   return (

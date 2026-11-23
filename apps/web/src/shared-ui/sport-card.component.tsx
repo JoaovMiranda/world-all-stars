@@ -1,13 +1,12 @@
-import type { SportCard as SportCardData } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import type { SportCard as SportCardData } from '@was/shared';
 import type { CSSProperties, ReactNode } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
-
-import { tokenColor } from './format.helper';
-import { OrgMini } from './org-mini.component';
-import type { OrgIdentity } from './org.type';
 import { CountUp } from './count-up.component';
+import { tokenColor } from './format.helper';
+import type { OrgIdentity } from './org.type';
+import { OrgMini } from './org-mini.component';
 import { UI_MESSAGES } from './ui-text.const';
 
 interface SportCardProps {
@@ -18,7 +17,7 @@ interface SportCardProps {
   maxAssociations?: number;
   /** Associations to list instead of the first `maxAssociations` (e.g. governing first, /sports). */
   associations?: readonly (OrgIdentity & { slug: string })[];
-  /** Small caps label above the association list (e.g. "Associações · 14"). */
+  /** Small caps label above the association list (e.g. "Associations · 14"). */
   associationsLabel?: ReactNode;
   /** Badges under the title (e.g. governance model). */
   tags?: ReactNode;

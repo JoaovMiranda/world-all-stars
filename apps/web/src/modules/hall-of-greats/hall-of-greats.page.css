@@ -11,8 +11,8 @@
   .legends { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; margin-top: 8px; }
   .legend-card { display: grid; grid-template-columns: 140px minmax(0, 1fr); height: 100%; color: var(--text); border-radius: var(--r-lg); overflow: hidden; border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box; }
   .legend-card:hover { text-decoration: none; }
-  /* Staging (holofote): ao apontar um Mítico, os outros recuam para a penumbra. */
-  /* Inclui transform/box-shadow da inclinação (.tilt) e a borda: esta regra carrega depois e substituiria a lista. */
+  /* Staging (spotlight): pointing at a Mythic pushes the others back into the shadows. */
+  /* Includes the tilt transform/box-shadow (.tilt) and the border: this rule loads later and would replace the list. */
   .legend-card { transition: opacity var(--dur-3) var(--ease-out), filter var(--dur-3) var(--ease-out), transform var(--dur-4) var(--ease-out), box-shadow var(--dur-3) var(--ease-out), border-color var(--t-fast); }
   @media (hover: hover) { .legends:has(.legend-card:hover) .legend-card:not(:hover) { opacity: .55; filter: saturate(.6); } }
   .legend-card:hover .legend-name { color: var(--accent-text); }

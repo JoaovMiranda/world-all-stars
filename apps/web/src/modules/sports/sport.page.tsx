@@ -1,7 +1,17 @@
 import './sports.page.css';
 
-import { type CompetitionEvent, matchesAthleteFilters, matchesCompetitionFilters, nextMonthDayOccurrence, type ObservanceEvent, CalendarEventType, normalizeForSearch, type SportPage as SportPageData, SportPageFiltersSchema } from '@was/shared';
 import { getRouteApi, Link } from '@tanstack/react-router';
+import {
+  CalendarEventType,
+  type CompetitionEvent,
+  matchesAthleteFilters,
+  matchesCompetitionFilters,
+  nextMonthDayOccurrence,
+  normalizeForSearch,
+  type ObservanceEvent,
+  type SportPage as SportPageData,
+  SportPageFiltersSchema,
+} from '@was/shared';
 
 import { useToday } from '@/app/use-boot.hook';
 import { sportPageQuery } from '@/data/endpoints/sports.query';
@@ -23,8 +33,8 @@ import { SportChampions } from './sport-champions.component';
 import { SportCompetitions } from './sport-competitions.component';
 import { SportFilters } from './sport-filters.component';
 import { SportGovernance } from './sport-governance.component';
-import { sportPageInput } from './sports-query.helper';
 import { SPORTS_MESSAGES } from './sports.const';
+import { sportPageInput } from './sports-query.helper';
 
 const route = getRouteApi('/sports/$slug');
 
@@ -221,7 +231,7 @@ function SportContent({ sport }: { sport: SportPageData }) {
 /**
  * P7 Sport page (doc 09). Order (04/11/2026): header · search + filters (URL) · champions (or collection report),
  * competitions by level, rules + aside (categories, upcoming, sport days) · LAST: who rules / pinnacle / environment
- * and "Associações de X" (#associacoes).
+ * and "X associations" (#associacoes).
  */
 export function SportPage() {
   const t = useText(SPORTS_MESSAGES).page;

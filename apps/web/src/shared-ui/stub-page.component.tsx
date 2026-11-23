@@ -19,7 +19,7 @@ interface StubPageProps {
   gate?: 'reader' | 'admin';
 }
 
-/** Route placeholder for phase 2: real layout + "Em construção". Replace the page body, keep the route. */
+/** Route placeholder for phase 2: real layout + "Under construction". Replace the page body, keep the route. */
 export function StubPage({ title, eyebrow, lead, breadcrumb = [{ label: title }], children, gate }: StubPageProps) {
   const ui = useText(UI_MESSAGES);
   const body = (

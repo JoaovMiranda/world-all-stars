@@ -1,5 +1,5 @@
-import { type IsoDate, monthDayOfIso } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import { type IsoDate, monthDayOfIso } from '@was/shared';
 
 import { useText } from '@/i18n/use-text.hook';
 
@@ -12,7 +12,7 @@ interface DateLinkProps {
   children?: string;
 }
 
-/** Every date is a link to its "Hoje na história" day (doc 09: aspect calendar_days). */
+/** Every date is a link to its "Today in history" day (doc 09: aspect calendar_days). */
 export function DateLink({ date, children }: DateLinkProps) {
   const ui = useText(UI_MESSAGES);
   return (

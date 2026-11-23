@@ -13,7 +13,7 @@ import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 const SYSTEM_AUTHOR = 'system';
 const PENDING = 'pending';
 
-/** Fontes: conflicts between sources, provenance of each field and the version history. */
+/** Sources: conflicts between sources, provenance of each field and the version history. */
 export function SourcesTab({ profile: p }: { profile: AthleteProfile }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).sources;
   const D = useText(ATHLETE_PROFILE_MESSAGES).dash;
@@ -29,8 +29,24 @@ export function SourcesTab({ profile: p }: { profile: AthleteProfile }) {
             rowKey={(c) => `${c.field}·${c.other.value}`}
             columns={[
               { key: 'field', header: T.field, cell: (c) => fieldLabel(c.field) },
-              { key: 'chosen', header: T.shown, cell: (c) => <><b>{c.chosen.value}</b> <span className="muted">· {c.chosen.source?.name ?? D}</span></> },
-              { key: 'other', header: T.divergent, cell: (c) => <>{c.other.value} <span className="muted">· {c.other.source?.name ?? D}</span></> },
+              {
+                key: 'chosen',
+                header: T.shown,
+                cell: (c) => (
+                  <>
+                    <b>{c.chosen.value}</b> <span className="muted">· {c.chosen.source?.name ?? D}</span>
+                  </>
+                ),
+              },
+              {
+                key: 'other',
+                header: T.divergent,
+                cell: (c) => (
+                  <>
+                    {c.other.value} <span className="muted">· {c.other.source?.name ?? D}</span>
+                  </>
+                ),
+              },
               { key: 'status', header: T.status, cell: (c) => <Tag tone="danger">{c.resolution === PENDING ? T.pending : c.resolution}</Tag> },
             ]}
           />
@@ -61,7 +77,12 @@ export function SourcesTab({ profile: p }: { profile: AthleteProfile }) {
             },
             { key: 'ref', header: T.reference, cell: (x) => <span className="muted">{x.ref ?? D}</span> },
             { key: 'license', header: T.license, cell: (x) => x.source?.license ?? D },
-            { key: 'at', header: T.retrieved, sortValue: (x) => x.retrievedAt, cell: (x) => <span className="num">{x.retrievedAt ? formatDate(x.retrievedAt) : D}</span> },
+            {
+              key: 'at',
+              header: T.retrieved,
+              sortValue: (x) => x.retrievedAt,
+              cell: (x) => <span className="num">{x.retrievedAt ? formatDate(x.retrievedAt) : D}</span>,
+            },
           ]}
         />
       </Section>

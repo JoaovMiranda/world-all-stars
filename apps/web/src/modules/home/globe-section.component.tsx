@@ -19,7 +19,7 @@ interface GlobeSectionProps {
 const stage = <div className="globe-stage" aria-hidden="true" />;
 const DeskGlobe = lazy(() => import('./desk-globe.component').then((m) => ({ default: m.DeskGlobe })));
 
-/** "Campeões pelo mundo": the globe always renders (neutral countries when there are no titles). */
+/** "Champions around the world": the globe always renders (neutral countries when there are no titles). */
 export function GlobeSection({ countries }: GlobeSectionProps) {
   const t = useText(HOME_MESSAGES).globe;
   const atlas = useWorldAtlas();

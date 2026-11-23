@@ -20,7 +20,7 @@ interface QueryBoundaryProps<T> {
   /** When true for the data, `empty` is rendered instead of children. */
   isEmpty?: (data: T) => boolean;
   empty?: ReactNode;
-  /** 404 UI (default: generic "Não encontrado"). */
+  /** 404 UI (default: generic "Not found"). */
   notFound?: ReactNode;
   errorTitle?: string;
 }
@@ -43,10 +43,26 @@ export function QueryBoundary<T>({ query, children, loading, isEmpty, empty, not
     );
   }
   if (query.isError) {
-    if (isNotFound(query.error)) return <>{notFound ?? <EmptyState title={ui.notFoundTitle} mark="?">{ui.notFoundText}</EmptyState>}</>;
+    if (isNotFound(query.error))
+      return (
+        <>
+          {notFound ?? (
+            <EmptyState title={ui.notFoundTitle} mark="?">
+              {ui.notFoundText}
+            </EmptyState>
+          )}
+        </>
+      );
     if (isUnauthorized(query.error)) {
       return (
-        <EmptyState title={ui.signInTitle} action={<Button variant="primary" onClick={() => requireLogin('account')}>{ui.signInAction}</Button>}>
+        <EmptyState
+          title={ui.signInTitle}
+          action={
+            <Button variant="primary" onClick={() => requireLogin('account')}>
+              {ui.signInAction}
+            </Button>
+          }
+        >
           {ui.signInText}
         </EmptyState>
       );

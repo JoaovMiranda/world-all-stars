@@ -94,7 +94,7 @@ function CommentDetail({ c }: { c: AdminComment }) {
   );
 }
 
-/** A7 Moderação: comments with many dislikes (hide/show with reason) and the banned-words list per locale. */
+/** A7 Moderation: comments with many dislikes (hide/show with reason) and the banned-words list per locale. */
 export function AdminCommentsPage() {
   const T = useText(ADMIN_MESSAGES).comments;
   const FILTER_META = filterMeta(useAdminMeta(), T.flagged);

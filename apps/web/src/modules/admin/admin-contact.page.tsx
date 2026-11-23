@@ -228,7 +228,7 @@ function MessagesTab({ items, state }: { items: readonly AdminContactMessage[]; 
   );
 }
 
-/** A8 Sugestões e contato: athlete suggestions (approve → collection links, duplicate, reject) and the message inbox. */
+/** A8 Suggestions and contact: athlete suggestions (approve → collection links, duplicate, reject) and the message inbox. */
 export function AdminContactPage() {
   const T = useText(ADMIN_MESSAGES).contact;
   const { tab, setTab } = useAdminTab(AdminContactSearchSchema, ADMIN_CONTACT_TAB_VALUES);

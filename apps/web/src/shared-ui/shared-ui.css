@@ -56,7 +56,7 @@
   .field-foot { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
   .input, .select, .textarea { font: 400 0.9375rem var(--font-ui); color: var(--text); background: var(--surface); border: 1px solid var(--border-control); border-radius: var(--r-md); padding: 9px 12px; min-height: 42px; width: 100%; min-width: 0; transition: border-color var(--t-fast); }
   .textarea { min-height: 112px; resize: vertical; line-height: 1.5; }
-  /* select: seta própria com folga da borda (a nativa fica colada no limite do padding) */
+  /* select: custom arrow with room from the edge (the native one sticks to the padding limit) */
   .select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer;
     background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
     background-position: calc(100% - 22px) 52%, calc(100% - 16px) 52%; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; }
@@ -74,7 +74,7 @@
   .filter-bar { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: flex-end; margin: 0 0 20px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); }
   .filter-bar > .field { flex: 1 1 180px; }
   .filter-bar-meta { display: flex; gap: 10px; align-items: center; margin-left: auto; font-size: 0.8125rem; color: var(--muted); }
-  .search.search-inline { max-width: none; margin: 0; background: var(--surface); }  /* mais específico que .search de styles.css (mesma layer) */
+  .search.search-inline { max-width: none; margin: 0; background: var(--surface); }  /* more specific than .search in styles.css (same layer) */
 
   /* Tabs */
   .tabs { position: sticky; top: var(--header-h); z-index: 10; background: var(--bg); display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--border); margin: 20px 0; scrollbar-width: thin; }
@@ -84,13 +84,13 @@
   .tabs [role="tab"] .count { font-size: 0.6875rem; color: var(--muted); margin-left: 4px; }
   .tabs [role="tab"]:focus-visible { outline-offset: -2px; }
   [role="tabpanel"]:focus-visible { outline-offset: 4px; }   /* the panel is a Tab stop: its focus stays visible (WCAG 2.4.7) */
-  /* Follow-through: um sublinhado só desliza entre as abas (use-sliding-indicator.hook) e passa um pouco do alvo antes
-     de assentar (--ease-snap). Até o JS medir (SSR), vale o sublinhado por aba acima. */
+  /* Follow-through: a single underline slides between the tabs (use-sliding-indicator.hook) and overshoots the target slightly
+     before settling (--ease-snap). Until the JS measures (SSR), the per-tab underline above applies. */
   .tabs::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: var(--ind-w, 0); transform: translateX(var(--ind-x, 0)); background: var(--accent); border-radius: 2px; pointer-events: none; opacity: 0; }
   .tabs[data-indicator]::after { opacity: 1; }
   .tabs[data-indicator="moving"]::after { transition: transform var(--dur-4) var(--ease-settle), width var(--dur-3) var(--ease-out); }
   .tabs[data-indicator] [role="tab"][aria-selected="true"] { border-bottom-color: transparent; box-shadow: none; }
-  /* Painel novo entra com fade curto (ação frequente = motion curto). */
+  /* A new panel enters with a short fade (frequent action = short motion). */
   .tab-panel-in { animation: tab-panel-in var(--dur-3) var(--ease-out); }
   @keyframes tab-panel-in { from { opacity: 0; transform: translateY(4px); } }
 
@@ -124,7 +124,7 @@
   .athlete-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 12px; }
   .athlete-card { display: flex; gap: 14px; align-items: center; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px; transition: background-color var(--t-fast), border-color var(--t-fast); min-width: 0; }
   .athlete-card:hover { background: var(--surface-2); border-color: var(--accent); text-decoration: none; }
-  /* Secondary action: o card sobe 2px e, junto, o avatar gira levemente e cresce (o anel do tier "acorda"). */
+  /* Secondary action: the card rises 2px and, with it, the avatar turns slightly and grows (the tier ring "wakes up"). */
   .athlete-card { transition: background-color var(--t-fast), border-color var(--t-fast), transform var(--dur-3) var(--ease-out); }
   .athlete-card .avatar { transition: transform var(--dur-4) var(--ease-snap); }
   @media (hover: hover) {
@@ -176,7 +176,7 @@
   .event-row.has-side { grid-template-columns: 52px minmax(0, 1fr) auto; }
   .event-obs { color: var(--accent-text); }
 
-  /* Timeline (diamonds, art déco) */
+  /* Timeline (diamonds, art deco) */
   .timeline li { display: grid; grid-template-columns: 92px 14px 1fr; gap: 10px; padding-bottom: 14px; position: relative; }
   .timeline li::before { content: ""; position: absolute; left: 108px; top: 14px; bottom: 0; width: 1px; background: var(--border); }
   .timeline li:last-child::before { display: none; }
@@ -199,8 +199,8 @@
   /* Dialog */
   .dialog { margin: auto; border: 1px solid var(--accent); outline: 1px solid var(--border); outline-offset: -6px; border-radius: var(--r-lg); background: var(--surface); color: var(--text); padding: 32px; max-width: 460px; width: calc(100% - 32px); box-shadow: var(--float-shadow); }
   .dialog::backdrop { background: rgb(0 0 0 / .55); backdrop-filter: blur(3px); }
-  /* Staging: o fundo escurece e desfoca, o dialog sobe de 96%. Entrada 240ms, saída 160ms (sai mais rápido do que entra).
-     Saída via allow-discrete (display/overlay); onde não houver suporte, simplesmente some. */
+  /* Staging: the backdrop darkens and blurs, the dialog grows from 96%. Enter 240ms, exit 160ms (leaves faster than it enters).
+     Exit via allow-discrete (display/overlay); where unsupported, it simply disappears. */
   .dialog, .dialog::backdrop { transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out), backdrop-filter var(--dur-2) var(--ease-out), overlay var(--dur-2) allow-discrete, display var(--dur-2) allow-discrete; }
   .dialog { opacity: 0; transform: translateY(10px) scale(.96); }
   .dialog::backdrop { opacity: 0; }
@@ -217,7 +217,7 @@
   /* Header: session menu and mobile nav */
   .menu { position: relative; }
   .menu-pop { position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; width: 270px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--float-shadow); padding: 10px; display: grid; gap: 2px; transform-origin: top right; transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-snap); }
-  /* Menus nascem do botão que os abriu (canto superior direito). Fecham na hora: é a resposta esperada (Jakob). */
+  /* Menus grow out of the button that opened them (top-right corner). They close instantly: that is the expected response (Jakob). */
   @starting-style { .menu-pop { opacity: 0; transform: translateY(-4px) scale(.96); } }
   .menu-item { display: block; width: 100%; text-align: left; font: 500 0.875rem var(--font-ui); color: var(--text); background: none; border: 0; border-radius: var(--r-sm); padding: 8px 10px; cursor: pointer; }
   .menu-item:hover { background: var(--surface-2); text-decoration: none; }
@@ -235,7 +235,7 @@
   .mobile-nav a { display: block; padding: 10px 4px; color: var(--text); font: 600 0.8125rem var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; border-bottom: 1px solid var(--border); }
   .mobile-nav a[aria-current="page"] { color: var(--accent-text); }
   .mobile-nav a.nav-featured { color: var(--accent-text); }
-  /* Nav mobile desce e os itens chegam em cascata (overlapping action), 30ms entre cada. */
+  /* The mobile nav slides down and the items cascade in (overlapping action), 30ms apart. */
   .mobile-nav { transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-3) var(--ease-out); }
   .mobile-nav .wrap > a { transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-3) var(--ease-out); }
   .mobile-nav .wrap > a:nth-child(2) { transition-delay: 30ms; } .mobile-nav .wrap > a:nth-child(3) { transition-delay: 60ms; }
@@ -281,9 +281,9 @@
   .session-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; flex: none; }
   .session-btn { display: inline-flex; align-items: center; gap: 8px; }
 
-  /* ───────── Fitts: alvos de toque ─────────
-     Ícones pequenos ganham área clicável invisível (::after) sem mudar o visual.
-     Em telas de toque (pointer: coarse) a área invisível cresce até 44px. */
+  /* ───────── Fitts: touch targets ─────────
+     Small icons get an invisible clickable area (::after) without changing how they look.
+     On touch screens (pointer: coarse) the invisible area grows to 44px. */
   .src, .info-btn, .compare-chip button { position: relative; }
   .src::after, .info-btn::after, .compare-chip button::after { content: ""; position: absolute; border-radius: 50%; }
   .src::after { inset: -10px; }              /* 16 → 36px */
@@ -294,25 +294,25 @@
     .info-btn::after { inset: -10px; }       /* 44px */
     .compare-chip button::after { inset: -8px; }
   }
-  /* Os 44px reais dos controles compactos ficam no fim de app/styles.css (precisa vencer a cascata). */
+  /* The real 44px of compact controls lives at the end of app/styles.css (it has to win the cascade). */
 
-  /* ───────── Solid drawing: inclinação 3D + reflexo (use-tilt.hook) ─────────
-     Volta ao plano devagar (slow out); enquanto o mouse está em cima, segue o ponteiro quase sem atraso. */
+  /* ───────── Solid drawing: 3D tilt + glare (use-tilt.hook) ─────────
+     Returns to flat slowly (slow out); while hovered, it follows the pointer with almost no lag. */
   .tilt { transform: perspective(800px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); transition: transform var(--dur-4) var(--ease-out), box-shadow var(--dur-3) var(--ease-out); }
   .tilt[data-tilting] { transition: transform 90ms linear, box-shadow var(--dur-3) var(--ease-out); }
-  .tilt-lift[data-tilting] { box-shadow: var(--float-shadow); }   /* cards sobem da mesa; o retrato mantém o próprio brilho */
+  .tilt-lift[data-tilting] { box-shadow: var(--float-shadow); }   /* cards lift off the table; the portrait keeps its own glow */
   .tilt-spec { position: relative; }
   .tilt-spec::after { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none; opacity: 0; mix-blend-mode: soft-light;
     background: radial-gradient(circle at var(--spec-x, 50%) var(--spec-y, 0%), color-mix(in oklab, white 55%, transparent), transparent 60%); transition: opacity var(--dur-3) var(--ease-out); }
   .tilt-spec[data-tilting]::after { opacity: 1; }
 
-  /* ───────── Timeline: a linha desenha de cima para baixo e os ◆ acendem em sequência ───────── */
+  /* ───────── Timeline: the line draws top to bottom and the ◆ light up in sequence ───────── */
   .timeline[data-reveal="in"] li::before { animation: tl-line var(--dur-5) var(--ease-cinematic) both; animation-delay: calc(min(var(--i, 0), 12) * 60ms + 120ms); transform-origin: top; }
   @keyframes tl-line { from { transform: scaleY(0); } }
   .timeline[data-reveal="in"] .dot { animation: tl-dot var(--dur-4) var(--ease-snap) both; animation-delay: calc(min(var(--i, 0), 12) * 60ms + 60ms); }
   @keyframes tl-dot { from { transform: rotate(45deg) scale(0); box-shadow: 0 0 0 6px color-mix(in oklab, var(--medal-gold) 40%, transparent); } 70% { transform: rotate(45deg) scale(1.35); } }
 
-  /* Estado vazio: o glifo flutua de leve (secondary action), sem chamar atenção. */
+  /* Empty state: the glyph floats gently (secondary action), without drawing attention. */
   .empty-state-mark { animation: empty-float 4.5s var(--ease-in-out) infinite alternate; }
   @keyframes empty-float { from { transform: translateY(-2px); } to { transform: translateY(3px); } }
 }

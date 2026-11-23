@@ -4,7 +4,7 @@
   .meter-row { display: grid; grid-template-columns: minmax(70px, 110px) minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 0.8125rem; }
   .meter-row.is-emphasis .meter-label { font-weight: 700; }
   .meter-track { height: 6px; background: var(--surface-2); border-radius: var(--r-pill); overflow: hidden; }
-  /* Follow-through: as barras crescem do zero em cascata (40 ms entre linhas) e assentam com overshoot leve. */
+  /* Follow-through: bars grow from zero in a cascade (40 ms between rows) and settle with a slight overshoot. */
   .meter-fill { display: block; height: 100%; width: var(--pct, 0%); background: var(--meter-fill, var(--primary)); border-radius: inherit; transition: width var(--dur-4) var(--ease-settle); transition-delay: calc(var(--i, 0) * 40ms); }
   @starting-style { .meter-fill { width: 0; } }
   .meter-value { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }

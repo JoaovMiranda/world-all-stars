@@ -108,7 +108,7 @@ function PrivacyDetail({ r }: { r: PrivacyRequest }) {
   );
 }
 
-/** A5 Pedidos de privacidade: LGPD queue with legal deadline (15 days). */
+/** A5 Privacy requests: LGPD queue with legal deadline (15 days). */
 export function AdminPrivacyPage() {
   const T = useText(ADMIN_MESSAGES).privacy;
   const adminText = useText(ADMIN_MESSAGES);

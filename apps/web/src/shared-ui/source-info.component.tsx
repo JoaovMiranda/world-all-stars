@@ -10,7 +10,7 @@ interface SourceInfoProps {
   field: string;
 }
 
-/** The ⓘ next to a value: opens the exact source link in a new tab ("fonte sempre a um clique"). */
+/** The ⓘ next to a value: opens the exact source link in a new tab ("the source is always one click away"). */
 export function SourceInfo({ source, field }: SourceInfoProps) {
   const ui = useText(UI_MESSAGES);
   if (!source) return null;

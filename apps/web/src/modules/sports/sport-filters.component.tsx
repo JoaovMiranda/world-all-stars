@@ -17,7 +17,7 @@ interface SportFiltersProps {
   setFilter: <K extends keyof SportPageFilters>(key: K, value: SportPageFilters[K] | undefined) => void;
   reset: () => void;
   activeCount: number;
-  /** "x de y campeões · a de b competições" (only when filtering). */
+  /** "x of y champions · a of b competitions" (only when filtering). */
   summary: string | undefined;
 }
 

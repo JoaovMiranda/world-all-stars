@@ -12,7 +12,7 @@
     .range-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
     .range-row-axis > :first-child { display: none; }
   }
-  /* Barras de período crescem da esquerda, linha a linha (follow-through). */
+  /* Period bars grow from the left, row by row (follow-through). */
   .range-bars[data-reveal="in"] .range-bar { animation: range-grow var(--dur-5) var(--ease-cinematic) both; animation-delay: calc(min(var(--i, 0), 12) * 70ms + 120ms); }
   @keyframes range-grow { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 }

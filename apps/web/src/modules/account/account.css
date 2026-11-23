@@ -4,7 +4,7 @@
   .account-nav a { font: 600 0.7812rem var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 8px 14px; min-height: 36px; display: inline-flex; align-items: center; gap: 6px; }
   .account-nav a:hover { color: var(--text); text-decoration: none; border-color: var(--accent); }
   .account-nav a[aria-current="page"] { color: var(--text); background: var(--primary-soft); border-color: var(--accent); }
-  @media (pointer: coarse) { .account-nav a { min-height: 44px; } }   /* Fitts: 44px reais no toque */
+  @media (pointer: coarse) { .account-nav a { min-height: 44px; } }   /* Fitts: a real 44px on touch */
   .account-athlete { display: inline-flex; gap: 10px; align-items: center; color: var(--text); font-weight: 600; min-width: 0; }
   .account-list { display: grid; }
   .account-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 14px 0; border-top: 1px solid var(--border); }

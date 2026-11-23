@@ -5,7 +5,7 @@ import { cx } from './class-names.helper';
 import { LAYOUT_MESSAGES } from './layout.const';
 import { setMotionPaused, useMotionPaused } from './motion-preference';
 
-/** "Pausar animações" (WCAG 2.2.2): one switch for every looping or decorative animation of the site. */
+/** "Pause animations" (WCAG 2.2.2): one switch for every looping or decorative animation of the site. */
 export function MotionToggle({ variant = 'icon', className }: { variant?: 'icon' | 'text'; className?: string }) {
   const layout = useText(LAYOUT_MESSAGES);
   const paused = useMotionPaused();

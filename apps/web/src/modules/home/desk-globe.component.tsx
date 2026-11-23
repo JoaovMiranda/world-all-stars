@@ -107,7 +107,7 @@ export function DeskGlobe({ features, titlesByCountry, selectedId, onSelect }: D
   const onPointerDown = (event: PointerEvent<SVGSVGElement>) => {
     autoSpin.current = false;
     momentum.current = null;
-    // O país sob o ponteiro é lido AGORA: com setPointerCapture, o click iria para o <svg> e nunca para o <path>.
+    // The country under the pointer is read NOW: with setPointerCapture, the click would go to the <svg> and never to the <path>.
     const countryId = (event.target as Element).closest('[data-country-id]')?.getAttribute('data-country-id') ?? null;
     const [l0, p0] = projection.rotate();
     drag.current = { x: event.clientX, y: event.clientY, rotate: projection.rotate(), moved: false, countryId, t: event.timeStamp, l: l0, p: p0, vl: 0, vp: 0 };

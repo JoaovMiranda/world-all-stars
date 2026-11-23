@@ -9,7 +9,7 @@ interface KpiGridProps {
   label?: string;
 }
 
-/** Grid of StatTiles separated by 1px rules (doc 08 "painel de dados"). */
+/** Grid of StatTiles separated by 1px rules (doc 08 "data panel"). */
 export function KpiGrid({ children, columns = 4, label }: KpiGridProps) {
   const ref = useRef<HTMLDivElement>(null);
   useReveal(ref, { stagger: true });

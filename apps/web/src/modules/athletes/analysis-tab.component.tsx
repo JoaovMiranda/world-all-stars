@@ -337,7 +337,7 @@ function AnalysisContent({
   );
 }
 
-/** Análise (docs 09/16): starts with nobody, up to 5 athletes, radar + normalized reading, same-sport metrics. */
+/** Analysis (docs 09/16): starts with nobody, up to 5 athletes, radar + normalized reading, same-sport metrics. */
 export function AnalysisTab({ profile, compare, onCompareChange }: AnalysisTabProps) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
   const profileText = useText(ATHLETE_PROFILE_MESSAGES);

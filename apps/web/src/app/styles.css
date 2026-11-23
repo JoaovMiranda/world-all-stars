@@ -44,7 +44,7 @@
   ul { list-style: none; margin: 0; padding: 0; }
   code { font-size: .92em; background: var(--surface-2); padding: 1px 6px; border-radius: var(--r-sm); }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
-  /* The in-page "Pausar animações" switch (shared-ui/motion-preference.ts) does the same as the OS setting (WCAG 2.2.2). */
+  /* The in-page "Pause animations" switch (shared-ui/motion-preference.ts) does the same as the OS setting (WCAG 2.2.2). */
   :root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before, :root[data-motion="reduced"] *::after { transition: none !important; animation: none !important; }
 }
 
@@ -74,7 +74,7 @@
   .logo { display: flex; align-items: center; gap: 10px; font: 600 1.1875rem var(--font-display); letter-spacing: .02em; color: var(--text); white-space: nowrap; }
   .logo:hover { text-decoration: none; }
   .logo i { width: 22px; height: 22px; display: block; background: var(--grad); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background-size: 200% 200%; background-position: 0% 0%; transition: transform var(--dur-4) var(--ease-snap), background-position var(--dur-4) var(--ease-out); }
-  /* Secondary action: a estrela gira 72° (uma ponta: volta à mesma silhueta) e o ouro corre por ela. */
+  /* Secondary action: the star turns 72° (one point: back to the same silhouette) and gold runs across it. */
   .logo:hover i { transform: rotate(72deg); background-position: 100% 100%; }
   .logo-sm { font-size: 0.9375rem; }
   .main-nav { display: flex; gap: 4px; margin-left: 20px; margin-right: auto; align-items: center; }
@@ -83,7 +83,7 @@
   .main-nav a[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
   .main-nav a.nav-featured { color: var(--accent-text); border: 1px solid var(--accent); margin-right: 10px; padding: 7px 12px; }
   .main-nav a.nav-featured:hover, .main-nav a.nav-featured[aria-current="page"] { color: var(--accent-text); background: var(--accent-soft); }
-  /* Sublinhado do nav desliza entre os links (mesmo hook das abas). Hall of Greats tem moldura própria: lá o traço some. */
+  /* The nav underline slides between links (same hook as the tabs). Hall of Greats has its own frame: the line hides there. */
   .main-nav { position: relative; }
   .main-nav::after { content: ""; position: absolute; left: 0; bottom: 4px; height: 1px; width: var(--ind-w, 0); transform: translateX(var(--ind-x, 0)); background: var(--accent); pointer-events: none; opacity: 0; transition: opacity var(--dur-2) var(--ease-out); }
   .main-nav[data-indicator]::after { opacity: 1; }
@@ -101,10 +101,10 @@
   /* Buttons */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 0.7812rem var(--font-ui); letter-spacing: var(--track); text-transform: uppercase; border: 1px solid transparent; cursor: pointer; border-radius: var(--r-md); padding: 11px 20px; min-height: 40px; color: var(--text); white-space: nowrap; transition: background-color var(--t-fast), color var(--t-fast), border-color var(--t-fast), transform var(--t-press); }
   .btn:hover { text-decoration: none; }
-  /* Snappy: afunda 1px ao toque (resposta imediata, Doherty); volta com overshoot leve. */
+  /* Snappy: sinks 1px on press (instant response, Doherty); comes back with a slight overshoot. */
   .btn:active:not(:disabled, [aria-disabled="true"]) { transform: translateY(1px) scale(.98); }
   .btn:not(:active) { transition-timing-function: var(--ease-out), var(--ease-out), var(--ease-out), var(--ease-snap); }
-  /* Pending: spinner antes do rótulo; o botão segue desabilitado e com aria-busy. */
+  /* Pending: spinner before the label; the button stays disabled with aria-busy. */
   .btn-spinner { width: 1em; height: 1em; flex: none; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: btn-spin 700ms linear infinite; }
   .btn[aria-busy="true"] { cursor: progress; }
   @keyframes btn-spin { to { transform: rotate(360deg); } }
@@ -208,9 +208,9 @@
   /* Narrow phones: the wordmark wraps to two lines instead of overlapping the controls when a label is long
      ("Iniciar sesión" in Spanish); nothing is truncated and the page never scrolls sideways. */
   @media (max-width: 420px) { .logo { font-size: 0.8125rem; letter-spacing: 0; gap: 4px; white-space: normal; line-height: 1.05; flex: 1 1 auto; } .site-header .bar { gap: 5px; } .site-header .bar > .lang-switch { margin-left: 0; } }
-  /* ───────── Montagem no scroll (use-reveal.hook / Reveal) ─────────
-     Só elementos abaixo da dobra viram "pending" (escondidos); "in" anima; "done" tira a transição.
-     rise: sobe 28px · fade · curtain: abre do centro (clip-path) · draw: cresce da esquerda. stagger: filhos em cascata. */
+  /* ───────── Reveal on scroll (use-reveal.hook / Reveal) ─────────
+     Only elements below the fold become "pending" (hidden); "in" animates; "done" drops the transition.
+     rise: moves up 28px · fade · curtain: opens from the centre (clip-path) · draw: grows from the left. stagger: children cascade. */
   [data-reveal="pending"] { opacity: 0; transform: translateY(28px); }
   [data-reveal="pending"][data-variant="fade"] { transform: none; }
   [data-reveal="pending"][data-variant="curtain"] { opacity: 1; transform: none; clip-path: inset(0 50% 0 50% round var(--r-lg)); }
@@ -221,15 +221,15 @@
   [data-reveal="in"][data-stagger] > * { transition: opacity var(--dur-5) var(--ease-cinematic), transform var(--dur-5) var(--ease-cinematic); transition-delay: calc(min(var(--i, 0), 12) * 60ms); }
   .count-up { font-variant-numeric: tabular-nums; }
 
-  /* <details>: o conteúdo abre e fecha com altura animada (interpolate-size + ::details-content).
-     Navegadores sem suporte abrem na hora, como antes. */
+  /* <details>: the content opens and closes with an animated height (interpolate-size + ::details-content).
+     Browsers without support open instantly, as before. */
   details { interpolate-size: allow-keywords; }
   details::details-content { block-size: 0; overflow-y: clip; transition: block-size var(--dur-3) var(--ease-in-out), content-visibility var(--dur-3) allow-discrete; }
   details[open]::details-content { block-size: auto; }
-  /* Fitts: em telas de toque os controles compactos têm 44px reais (no mouse mantêm o tamanho do desenho).
-     Fica por último para vencer .chip, .btn-sm e o header de 36px em telas estreitas. */
+  /* Fitts: on touch screens compact controls get a real 44px (with a mouse they keep their drawn size).
+     Kept last so it beats .chip, .btn-sm and the 36px header on narrow screens. */
   @media (pointer: coarse) {
-    .chip, .btn-sm, .menu-item { min-height: 44px; }   /* .react e .account-nav ficam no CSS do módulo (carrega depois) */
+    .chip, .btn-sm, .menu-item { min-height: 44px; }   /* .react and .account-nav live in their module CSS (loaded later) */
     .menu-item { display: flex; align-items: center; }
     .site-header .btn { min-height: 44px; }
     .site-header .icon-btn { width: 44px; height: 44px; }

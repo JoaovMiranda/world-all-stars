@@ -22,7 +22,7 @@ export interface Boot {
   publicUrl: string;
   /** Manual theme from the `was-theme` cookie (null = follow the OS). */
   theme: ThemeName | null;
-  /** "Pausar animações" from the `was-motion` cookie: <html data-motion="reduced"> on the first paint. */
+  /** "Pause animations" from the `was-motion` cookie: <html data-motion="reduced"> on the first paint. */
   motionPaused: boolean;
   /** Interface language: `was_locale` cookie → Accept-Language → pt-BR (switchable in place: locale.store). */
   locale: Locale;

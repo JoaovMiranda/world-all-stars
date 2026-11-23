@@ -1,5 +1,5 @@
-import { ACCOUNT_MIN_AGE, ConsentFormSchema, LEGAL_DOCUMENT_VERSIONS } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import { ACCOUNT_MIN_AGE, ConsentFormSchema, LEGAL_DOCUMENT_VERSIONS } from '@was/shared';
 import { useId, useState } from 'react';
 
 import { acceptConsent } from '@/data/endpoints/account.query';
@@ -21,8 +21,8 @@ interface ConsentDialogProps {
 
 /**
  * Blocking consent after the first Google sign-in, or when Terms/Privacy got a new version (doc 13): two unchecked
- * boxes (Terms + Privacy with their versions; 18+). "Continuar" stays disabled until both are ticked; "Não aceito,
- * sair" signs out. Until accepted, the API treats the session as anonymous.
+ * boxes (Terms + Privacy with their versions; 18+). "Continue" stays disabled until both are ticked; "I do not accept,
+ * sign out" signs out. Until accepted, the API treats the session as anonymous.
  */
 export function ConsentDialog({ pending, onAccepted, onDecline }: ConsentDialogProps) {
   const t = useText(SESSION_MESSAGES).consent;
@@ -34,9 +34,7 @@ export function ConsentDialog({ pending, onAccepted, onDecline }: ConsentDialogP
   const ready = form.values.documents === true && form.values.adult === true;
   const { terms, privacy } = LEGAL_DOCUMENT_VERSIONS;
 
-  const submit = form.handleSubmit(() =>
-    accept.mutate({ body: { termsVersion: terms.version, privacyVersion: privacy.version, adult: true } }),
-  );
+  const submit = form.handleSubmit(() => accept.mutate({ body: { termsVersion: terms.version, privacyVersion: privacy.version, adult: true } }));
   const decline = async () => {
     setLeaving(true);
     await onDecline().finally(() => setLeaving(false));

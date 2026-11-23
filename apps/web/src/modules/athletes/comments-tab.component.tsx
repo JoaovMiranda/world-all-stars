@@ -24,7 +24,7 @@ interface CommentsTabProps {
   onSort: (sort: CommentSort) => void;
 }
 
-/** Comentários (doc 20): threads with 1 level of replies, sort top/recent, reactions; visitors are invited to sign in. */
+/** Comments (doc 20): threads with 1 level of replies, sort top/recent, reactions; visitors are invited to sign in. */
 export function CommentsTab({ profile, comments, sort, onSort }: CommentsTabProps) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).comments;
   const { user, isSignedIn, requireLogin } = useSession();

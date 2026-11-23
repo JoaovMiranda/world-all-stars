@@ -27,7 +27,7 @@
   .globe-bar { display: grid; grid-template-columns: 110px 1fr 30px; gap: 8px; align-items: center; font-size: 0.8125rem; }
   .globe-bar .track { height: 6px; background: var(--surface-2); overflow: hidden; }
   .globe-bar .fill { height: 100%; background: var(--primary); transition: width var(--dur-5) var(--ease-settle); transition-delay: calc(var(--i, 0) * 50ms); }
-  /* Barras crescem do zero em cascata (também ao trocar de país). */
+  /* Bars grow from zero in a cascade (also when the country changes). */
   @starting-style { .globe-bar .fill { width: 0 !important; } }
   .globe-legend { display: flex; align-items: center; gap: 8px; justify-content: center; margin-top: 12px; font-size: 0.6875rem; color: var(--muted); }
   .globe-legend-ramp { width: 96px; height: 8px; border-radius: var(--r-pill); border: 1px solid var(--border); background: linear-gradient(90deg, var(--land), var(--primary)); }
@@ -36,14 +36,14 @@
   .otd-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; align-items: start; }
   @media (max-width: 760px) { .otd-layout { grid-template-columns: minmax(0, 1fr); } }
   .otd-date { font: 500 2.5rem/1.1 var(--font-display); margin-bottom: 6px; }
-  /* A data "carimba" (squash) quando a seção chega. */
+  /* The date "stamps" in (squash) when the section arrives. */
   [data-reveal="in"] .otd-date { animation: otd-stamp var(--dur-5) var(--ease-snap) 150ms both; }
   @keyframes otd-stamp { from { opacity: 0; transform: scale(1.18, .82); } 60% { opacity: 1; transform: scale(.97, 1.04); } }
-  /* Calendário: as células acendem em diagonal. */
+  /* Calendar: the cells light up diagonally. */
   [data-reveal="pending"] .cal-cell { opacity: 0; }
   [data-reveal="in"] .cal-cell { animation: cal-cell-in var(--dur-4) var(--ease-cinematic) both; animation-delay: calc(200ms + var(--cd, 0) * 28ms); }
   @keyframes cal-cell-in { from { opacity: 0; transform: translateY(6px) scale(.96); } }
-  /* Títulos de seção: o cabeçalho (com o filete) se desenha da esquerda antes do conteúdo subir. */
+  /* Section titles: the header (with its rule) draws in from the left before the content rises. */
   [data-reveal="pending"] :is(.card-head, .greats-head, .sports-head) { clip-path: inset(0 100% 0 0); }
   [data-reveal="in"] :is(.card-head, .greats-head, .sports-head) { transition: clip-path var(--dur-6) var(--ease-cinematic) 80ms; }
   .otd-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
@@ -69,9 +69,9 @@
   @media (max-width: 520px) { .greats-pedestals { display: none; } }
   .great-card { display: block; border-radius: var(--r-lg); overflow: hidden; border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box; color: var(--text); transition: border-color var(--t-fast); }
   .great-card:hover { text-decoration: none; }
-  /* Inclui transform/box-shadow da inclinação (.tilt) e a borda: esta regra carrega depois e substituiria a lista. */
+  /* Includes the tilt transform/box-shadow (.tilt) and the border: this rule loads later and would replace the list. */
   .great-card { transition: opacity var(--dur-3) var(--ease-out), filter var(--dur-3) var(--ease-out), transform var(--dur-4) var(--ease-out), box-shadow var(--dur-3) var(--ease-out), border-color var(--t-fast); }
-  @media (hover: hover) { .greats-grid:has(.great-card:hover) .great-card:not(:hover) { opacity: .55; filter: saturate(.6); } }   /* holofote */
+  @media (hover: hover) { .greats-grid:has(.great-card:hover) .great-card:not(:hover) { opacity: .55; filter: saturate(.6); } }   /* spotlight */
   .great-card:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
   .great-card-plain { background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(var(--accent), var(--accent)) border-box; }
   .great-card .photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface-2); display: grid; place-items: center; font: 700 2.125rem var(--font-display); color: var(--muted); }
@@ -84,8 +84,8 @@
   .sports-head { margin: 8px 0 14px; }
   .random-diamond { display: inline-block; font-size: 0.6875rem; line-height: 1; }
 
-  /* ───────── Palco dos Míticos (home-stage.component) ─────────
-     Sempre escuro, sangra até as bordas. Camadas: fundo (faixas de retratos, véu, holofote, ◆) e conteúdo. */
+  /* ───────── Mythic stage (home-stage.component) ─────────
+     Always dark, bleeds to the edges. Layers: background (portrait reels, veil, spotlight, ◆) and content. */
   .stage-pause { position: absolute; z-index: 3; right: 16px; bottom: 16px; color: var(--muted); }
   .home-stage { position: relative; isolation: isolate; overflow: hidden; margin-inline: calc(50% - 50vw); margin-top: -1px; margin-bottom: 40px;
     min-height: min(86vh, 860px); display: grid; place-items: center; padding: 72px max(16px, calc(50vw - 584px)) 56px; text-align: center; --sx: 50%; --sy: 40%; }
@@ -101,10 +101,10 @@
   .stage-veil { position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(ellipse 62% 58% at 50% 48%, color-mix(in oklab, var(--midnight) 90%, transparent), color-mix(in oklab, var(--midnight) 60%, transparent) 75%),
                 linear-gradient(var(--midnight), transparent 18%, transparent 82%, var(--midnight)); }
-  /* Holofote: segue o mouse devagar (a transição suaviza o salto entre frames). */
+  /* Spotlight: follows the mouse slowly (the transition smooths the jump between frames). */
   .stage-spot { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
     background: radial-gradient(circle 360px at var(--sx) var(--sy), color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%); transition: background-position var(--dur-5) var(--ease-cinematic); }
-  /* ◆ sobem em arco: o pai sobe em linha reta, o filho oscila de lado (dois movimentos = curva). */
+  /* ◆ rise in an arc: the parent rises in a straight line, the child sways sideways (two motions = a curve). */
   .stage-spark { position: absolute; left: var(--x); bottom: -20px; color: var(--accent); font-size: 0.625rem; opacity: 0; pointer-events: none;
     animation: spark-rise var(--dur) linear var(--delay) infinite; }
   .stage-spark > span { display: block; animation: spark-sway calc(var(--dur) / 2) var(--ease-in-out) var(--delay) infinite alternate; text-shadow: 0 0 8px currentColor; }
@@ -114,11 +114,11 @@
   .stage-content { position: relative; max-width: 980px; display: grid; justify-items: center; }
   .stage-content .ornament { max-width: 420px; width: 100%; color: var(--accent-text); animation: stage-fade var(--dur-5) var(--ease-cinematic) both; }
   .home-stage h1 { font-size: clamp(2.375rem, 6.6vw, 5.25rem); font-weight: 500; line-height: 1.04; margin: 22px auto 0; color: var(--text); }
-  /* Título monta palavra por palavra: cada palavra sobe de dentro da própria máscara. */
+  /* The title builds word by word: each word rises out of its own mask. */
   .home-stage h1 .w { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .08em; margin-bottom: -.08em; }
   .home-stage h1 .w > span { display: inline-block; animation: word-in var(--dur-5) var(--ease-cinematic) both; animation-delay: calc(120ms + var(--w) * 70ms); }
   @keyframes word-in { from { transform: translateY(105%); } }
-  /* O gradiente vai em cada palavra (não no <em>): o recorte de texto não atravessa as palavras animadas. */
+  /* The gradient goes on each word (not on the <em>): background-clip text does not span the animated words. */
   .home-stage h1 em { font-style: italic; }
   .home-stage h1 em .w { padding-right: .06em; }
   .home-stage h1 .w > .w-tail { font-style: normal; }
@@ -132,7 +132,7 @@
   .home-stage .home-intro-actions .btn-primary:hover { box-shadow: 0 0 28px -4px color-mix(in oklab, var(--primary) 60%, transparent); }
   @keyframes stage-fade { from { opacity: 0; transform: translateY(12px); } }
 
-  /* Números do acervo: contam ao aparecer; finos filetes dourados entre eles. */
+  /* Collection numbers: count up when they appear; thin gold rules between them. */
   .stage-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 40px 0 0; width: min(760px, 100%); border-top: 1px solid var(--border); padding-top: 20px;
     animation: stage-fade var(--dur-5) var(--ease-cinematic) 1s both; }
   .stage-stats > div { display: flex; flex-direction: column-reverse; gap: 2px; padding: 0 12px; border-left: 1px solid var(--border); }
@@ -146,7 +146,7 @@
     .stage-stats > div:nth-child(3) { border-left: 0; }
   }
 
-  /* Scroll: o conteúdo sai mais rápido que o fundo (parallax de 2 camadas) e uma linha de progresso nasce no topo. */
+  /* Scroll: the content leaves faster than the background (2-layer parallax) and a progress line grows at the top. */
   .home-progress { position: fixed; z-index: 40; left: 0; right: 0; top: var(--header-h); height: 2px; background: var(--grad); transform-origin: left; transform: scaleX(0); pointer-events: none; display: none; }
   @supports (animation-timeline: scroll()) {
     .home-progress { display: block; animation: home-progress linear both; animation-timeline: scroll(root); }

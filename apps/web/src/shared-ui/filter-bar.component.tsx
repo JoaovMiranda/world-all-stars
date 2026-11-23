@@ -12,7 +12,7 @@ interface FilterBarProps {
   children: ReactNode;
   /** Number of results (announced politely). */
   resultCount?: number;
-  /** Shows "Limpar filtros" when > 0. */
+  /** Shows "Clear filters" when > 0. */
   activeCount?: number;
   onReset?: () => void;
 }

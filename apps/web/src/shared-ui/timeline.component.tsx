@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import type { TimelineItem } from './timeline-item.interface';
 import { useReveal } from './use-reveal.hook';
 
-/** Vertical timeline with art-déco diamonds (career, milestones, versions). */
+/** Vertical timeline with art-deco diamonds (career, milestones, versions). */
 export function Timeline({ items, label }: { items: readonly TimelineItem[]; label?: string }) {
   const ref = useRef<HTMLOListElement>(null);
   useReveal(ref, { stagger: true, settleMs: 2400 });

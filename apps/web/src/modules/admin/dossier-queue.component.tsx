@@ -111,7 +111,7 @@ function DossierDetail({ d }: { d: AdminDossier }) {
   );
 }
 
-/** A6 (also the "Dossiês" tab of A1): headline, evidences with source, 2-admin approval. */
+/** A6 (also the "Dossiers" tab of A1): headline, evidences with source, 2-admin approval. */
 export function DossierQueue({ state }: { state: QueueState }) {
   const T = useText(ADMIN_MESSAGES).dossiers;
   const adminText = useText(ADMIN_MESSAGES);

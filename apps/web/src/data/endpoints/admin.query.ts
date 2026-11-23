@@ -1,7 +1,6 @@
 import { AdminApi } from '@was/shared';
-
-import { demoStore } from '../demo.store';
 import { defineMutation, defineQuery } from '../define-endpoint.helper';
+import { demoStore } from '../demo.store';
 import {
   addDemoBannedWord,
   addDemoCollectionLinks,
@@ -45,7 +44,9 @@ export const reviewProposal = defineMutation(
 export const adminIdentitiesQuery = defineQuery(AdminApi.identities, { sample: () => ({ items: [] }) });
 
 /** PATCH /api/admin/identities/:id: match / create / reject with reason. */
-export const decideIdentity = defineMutation(AdminApi.decideIdentity, () => ({ ok: true as const }), { invalidates: [adminIdentitiesQuery, adminSummaryQuery] });
+export const decideIdentity = defineMutation(AdminApi.decideIdentity, () => ({ ok: true as const }), {
+  invalidates: [adminIdentitiesQuery, adminSummaryQuery],
+});
 
 /** GET /api/admin/tier-signals (A1, doc 17): reader votes vs official tier. */
 export const adminTierSignalsQuery = defineQuery(AdminApi.tierSignals, { sample: ({ sample }) => buildTierSignals(sample) });
@@ -53,7 +54,7 @@ export const adminTierSignalsQuery = defineQuery(AdminApi.tierSignals, { sample:
 /** GET /api/admin/ingestion-runs (A2): runs, gates, tokens, logs and the AI queue. */
 export const adminIngestionQuery = defineQuery(AdminApi.ingestion, { sample: ({ sample }) => buildIngestion(sample) });
 
-/** POST /api/admin/ingestion-runs (A2): "rodar agora" (simulated). */
+/** POST /api/admin/ingestion-runs (A2): "run now" (simulated). */
 export const runIngestion = defineMutation(AdminApi.runIngestion, ({ input, sample, session }) => runDemoIngestion(sample, session, input.body.jobKey), {
   invalidates: [adminIngestionQuery, adminSummaryQuery],
 });
@@ -62,14 +63,22 @@ export const runIngestion = defineMutation(AdminApi.runIngestion, ({ input, samp
 export const adminSourcesQuery = defineQuery(AdminApi.sources, { sample: ({ sample }) => buildSources(sample) });
 
 /** PATCH /api/admin/sources/:id (A3). */
-export const updateSource = defineMutation(AdminApi.updateSource, ({ input, sample, session }) => updateDemoSource(sample, session, input.params.id, input.body), {
-  invalidates: [adminSourcesQuery, adminSummaryQuery],
-});
+export const updateSource = defineMutation(
+  AdminApi.updateSource,
+  ({ input, sample, session }) => updateDemoSource(sample, session, input.params.id, input.body),
+  {
+    invalidates: [adminSourcesQuery, adminSummaryQuery],
+  },
+);
 
 /** POST /api/admin/source-links (A3): athlete + links to the collection (checked with checkSourceUrl). */
-export const addCollectionLinks = defineMutation(AdminApi.addCollectionLinks, ({ input, sample, session }) => addDemoCollectionLinks(sample, session, input.body), {
-  invalidates: [adminSourcesQuery, adminSummaryQuery],
-});
+export const addCollectionLinks = defineMutation(
+  AdminApi.addCollectionLinks,
+  ({ input, sample, session }) => addDemoCollectionLinks(sample, session, input.body),
+  {
+    invalidates: [adminSourcesQuery, adminSummaryQuery],
+  },
+);
 
 /** GET /api/admin/users (A4): accounts + audit log. */
 export const adminUsersQuery = defineQuery(AdminApi.users, { sample: ({ sample }) => buildUsers(sample) });
@@ -142,7 +151,10 @@ export const reviewSuggestion = defineMutation(
 );
 
 /** PATCH /api/admin/contact/:id (A8): new → answered → closed. */
-export const updateContactMessage = defineMutation(AdminApi.updateContactMessage, ({ input, session }) => updateDemoMessage(session, input.params.id, input.body.status), {
-  invalidates: [adminInboxQuery, adminSummaryQuery, adminUsersQuery],
-});
-
+export const updateContactMessage = defineMutation(
+  AdminApi.updateContactMessage,
+  ({ input, session }) => updateDemoMessage(session, input.params.id, input.body.status),
+  {
+    invalidates: [adminInboxQuery, adminSummaryQuery, adminUsersQuery],
+  },
+);

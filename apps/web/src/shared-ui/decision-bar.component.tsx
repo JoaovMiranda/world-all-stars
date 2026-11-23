@@ -10,7 +10,7 @@ import type { DecisionAction } from './decision-action.interface';
 import { REVIEW_KIT_MESSAGES } from './review-kit.const';
 
 interface DecisionBarProps {
-  /** Accessible name of the group (e.g. "Decisão sobre a proposta"). */
+  /** Accessible name of the group (e.g. "Decision on the proposal"). */
   label: string;
   actions: readonly DecisionAction[];
   kicker?: string;

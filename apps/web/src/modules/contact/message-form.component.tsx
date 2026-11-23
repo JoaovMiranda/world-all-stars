@@ -1,4 +1,4 @@
-import { CONTACT_MESSAGE_MAX_LENGTH, CONTACT_TOPIC_VALUES, type SubmissionResponse, type ValidationContext, createContactInputSchema } from '@was/shared';
+import { CONTACT_MESSAGE_MAX_LENGTH, CONTACT_TOPIC_VALUES, createContactInputSchema, type SubmissionResponse, type ValidationContext } from '@was/shared';
 import { useMemo } from 'react';
 
 import { submitContact } from '@/data/endpoints/contact.query';
@@ -11,10 +11,9 @@ import { Input } from '@/shared-ui/input.component';
 import { Select } from '@/shared-ui/select.component';
 import { Textarea } from '@/shared-ui/textarea.component';
 import { useForm } from '@/shared-ui/use-form.hook';
-
+import { CONTACT_MESSAGES } from './contact.const';
 import { fieldErrorsOf } from './contact-errors.helper';
 import { ContactSubmitFooter } from './contact-submit-footer.component';
-import { CONTACT_MESSAGES } from './contact.const';
 
 interface MessageFormProps {
   context: ValidationContext;
@@ -23,7 +22,7 @@ interface MessageFormProps {
   onDone: (result: SubmissionResponse) => void;
 }
 
-/** "Mensagem" (doc 21): name, e-mail, topic and body (≤ 1000, no banned words), validated by the shared rules. */
+/** "Message" (doc 21): name, e-mail, topic and body (≤ 1000, no banned words), validated by the shared rules. */
 export function MessageForm({ context, name, email, onDone }: MessageFormProps) {
   const locale = useLocale();
   const t = useText(CONTACT_MESSAGES).message;
@@ -53,13 +52,7 @@ export function MessageForm({ context, name, email, onDone }: MessageFormProps) 
       <FormField label={t.topic} required error={errors.topic}>
         {(p) => <Select {...p} {...form.register('topic')} options={TOPIC_OPTIONS} placeholder={t.topicPlaceholder} />}
       </FormField>
-      <FormField
-        label={t.body}
-        required
-        hint={t.bodyHint}
-        error={errors.body}
-        counter={<CharCounter value={values.body} max={CONTACT_MESSAGE_MAX_LENGTH} />}
-      >
+      <FormField label={t.body} required hint={t.bodyHint} error={errors.body} counter={<CharCounter value={values.body} max={CONTACT_MESSAGE_MAX_LENGTH} />}>
         {(p) => <Textarea {...p} {...form.register('body')} rows={6} />}
       </FormField>
       <ContactSubmitFooter label={t.submit} isPending={send.isPending} failed={send.isError && !fieldErrorsOf(send.error)} />

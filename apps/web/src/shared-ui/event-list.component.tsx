@@ -11,7 +11,7 @@ interface EventListProps {
   withBadges?: boolean;
 }
 
-/** List of EventRows (home "Próximos 30 dias", calendar day, sport page "Próximos campeonatos"). */
+/** List of EventRows (home "Next 30 days", calendar day, sport page "Upcoming championships"). */
 export function EventList({ events, emptyTitle, emptyText, withBadges = false }: EventListProps) {
   if (events.length === 0) {
     return (

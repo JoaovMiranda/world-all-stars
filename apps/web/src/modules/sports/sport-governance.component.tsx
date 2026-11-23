@@ -7,9 +7,9 @@ import { OrgName } from '@/shared-ui/org-name.component';
 import { Section } from '@/shared-ui/section.component';
 import { Tag } from '@/shared-ui/tag.component';
 
-import { SPORTS_MESSAGES, SPORTS_HASH } from './sports.const';
+import { SPORTS_HASH, SPORTS_MESSAGES } from './sports.const';
 
-/** "Quem manda / O ápice / Ambiente" (doc 18/19): governance chains with Wikipedia links, pinnacle, prize forms. */
+/** "Who rules / The pinnacle / Environment" (doc 18/19): governance chains with Wikipedia links, pinnacle, prize forms. */
 export function SportGovernance({ sport }: { sport: SportPage }) {
   const t = useText(SPORTS_MESSAGES).page;
   const sportsText = useText(SPORTS_MESSAGES);

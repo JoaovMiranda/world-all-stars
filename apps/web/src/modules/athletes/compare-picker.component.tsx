@@ -17,7 +17,7 @@ interface ComparePickerProps {
   onChange: (slugs: string[]) => void;
 }
 
-/** "Adicionar à comparação" select (same sport first), colored chips with remove, and the explicit "Ninguém" option. */
+/** "Add to comparison" select (same sport first), colored chips with remove, and the explicit "Nobody" option. */
 export function ComparePicker({ main, selected, candidates, onChange }: ComparePickerProps) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
   const slugs = selected.map((s) => s.slug);

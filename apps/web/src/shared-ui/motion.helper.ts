@@ -2,7 +2,7 @@ import { MOTION } from './motion.const';
 
 /** Imperative motion helpers. Browser-only: call them from effects or event handlers, never during render (SSR). */
 
-/** True when the user asked for reduced motion: OS setting or the in-page "Pausar animações" switch (false on the server). */
+/** True when the user asked for reduced motion: OS setting or the in-page "Pause animations" switch (false on the server). */
 export function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return false;
   return document.documentElement.dataset.motion === 'reduced' || window.matchMedia('(prefers-reduced-motion: reduce)').matches;

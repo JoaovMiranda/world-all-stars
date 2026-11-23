@@ -4,7 +4,7 @@ import { useText } from '@/i18n/use-text.hook';
 import type { BreadcrumbItem } from './breadcrumb-item.interface';
 import { UI_MESSAGES } from './ui-text.const';
 
-/** "Início › Atletas › Pelé" trail (nav landmark + ordered list; the home is implicit and always first). */
+/** "Home › Athletes › Pelé" trail (nav landmark + ordered list; the home is implicit and always first). */
 export function Breadcrumb({ items }: { items: readonly BreadcrumbItem[] }) {
   const ui = useText(UI_MESSAGES);
   return (

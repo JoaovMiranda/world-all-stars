@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 interface PageHeaderProps {
   title: ReactNode;
-  /** Small caps label above the title (e.g. "Esporte", "Atleta"). */
+  /** Small caps label above the title (e.g. "Sport", "Athlete"). */
   eyebrow?: ReactNode;
   /** Short paragraph under the title. */
   lead?: ReactNode;

@@ -62,7 +62,7 @@ function UserActions({ u, isMe }: { u: AdminUser; isMe: boolean }) {
   return <DecisionBar label={`${adminText.common.actions}: ${u.name}`} actions={actions} />;
 }
 
-/** A4 Usuários e papéis: accounts (search, role/banned filter, promote/ban with reason) and the audit log. */
+/** A4 Users and roles: accounts (search, role/banned filter, promote/ban with reason) and the audit log. */
 export function AdminUsersPage() {
   const T = useText(ADMIN_MESSAGES).users;
   const adminText = useText(ADMIN_MESSAGES);

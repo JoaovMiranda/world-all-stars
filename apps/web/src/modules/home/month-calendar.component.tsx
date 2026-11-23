@@ -1,4 +1,4 @@
-import { type CalendarEvent, CalendarEventType, type IsoDate, eventKey, eventsOnDay, fromIsoDate } from '@was/shared';
+import { type CalendarEvent, CalendarEventType, eventKey, eventsOnDay, fromIsoDate, type IsoDate } from '@was/shared';
 import { addDays, addMonths, endOfWeek, startOfWeek } from 'date-fns';
 import { type CSSProperties, type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -21,7 +21,7 @@ interface MonthCalendarProps {
   events: CalendarEvent[] | undefined;
 }
 
-/** Hick: sport chips shown before "+ N esportes" (busiest of the month first). */
+/** Hick: sport chips shown before "+ N sports" (busiest of the month first). */
 const CAL_CHIPS_VISIBLE = 5;
 
 type CalendarSport = NonNullable<Extract<CalendarEvent, { sport: unknown }>['sport']>;
@@ -50,9 +50,7 @@ export function MonthCalendar({ today, events }: MonthCalendarProps) {
   const [showAllSports, setShowAllSports] = useState(false);
   const overflow = sports.length - CAL_CHIPS_VISIBLE;
   const chipSports = showAllSports || overflow <= 1 ? sports : sports.filter((s, i) => i < CAL_CHIPS_VISIBLE || hiddenSports.has(s.slug));
-  const visible = all.filter((e) =>
-    e.type === CalendarEventType.Competition ? !hiddenSports.has(e.sport.slug) : showObservances,
-  );
+  const visible = all.filter((e) => (e.type === CalendarEventType.Competition ? !hiddenSports.has(e.sport.slug) : showObservances));
   const cells = useMemo(() => buildMonthGrid(month), [month]);
   const dayEvents = eventsOnDay(visible, selected);
   const hasExamples = all.some((e) => e.type === CalendarEventType.Competition && e.isExample);
@@ -127,18 +125,20 @@ export function MonthCalendar({ today, events }: MonthCalendarProps) {
               </Chip>
             )}
             <Chip toggle pressed={showObservances} onClick={() => setShowObservances((v) => !v)}>
-              <span className="mr-1.5 text-(--accent-text)" aria-hidden="true">◆</span>
+              <span className="mr-1.5 text-(--accent-text)" aria-hidden="true">
+                ◆
+              </span>
               {ui.observances}
             </Chip>
           </div>
         )}
       </div>
 
-      {events && all.length === 0 && (
-        <Notice className="mb-3">{t.emptyNotice}</Notice>
-      )}
+      {events && all.length === 0 && <Notice className="mb-3">{t.emptyNotice}</Notice>}
 
-      <p id="cal-grid-hint" className="sr-only">{t.gridHint}</p>
+      <p id="cal-grid-hint" className="sr-only">
+        {t.gridHint}
+      </p>
       {/* oxlint-disable-next-line jsx-a11y/no-static-element-interactions -- keydown only routes arrow keys to the day buttons */}
       <div className="cal-grid" ref={gridRef} role="group" aria-labelledby="cal-title" aria-describedby="cal-grid-hint" onKeyDown={onGridKeyDown}>
         {t.weekdays.map((d) => (

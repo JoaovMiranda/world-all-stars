@@ -54,7 +54,7 @@ function ChangeTierDialog({ row, onClose }: { row: TierSignal | null; onClose: (
   );
 }
 
-/** A1 · "Sinais de tier": readers' votes vs the official tier, with the change-tier action. */
+/** A1 · "Tier signals": readers' votes vs the official tier, with the change-tier action. */
 export function TierSignals({ state }: { state: QueueState }) {
   const T = useText(ADMIN_MESSAGES).tiers;
   const adminText = useText(ADMIN_MESSAGES);

@@ -31,7 +31,7 @@
   .vote-opt:hover { background: var(--surface-2); }
   .vote-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--primary-soft); }
   .vote-opt:disabled { cursor: progress; opacity: .7; }
-  /* Voto registrado: um brilho do metal do tier atravessa o botão e ◆ saltam em arco (vote-motion.helper). */
+  /* Vote recorded: a glint of the tier metal sweeps the button and ◆ jump in an arc (vote-motion.helper). */
   .vote-opt { position: relative; }
   .vote-opt::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
     background: linear-gradient(105deg, transparent 30%, color-mix(in oklab, var(--vote-tier, var(--accent)) 55%, transparent) 50%, transparent 70%) no-repeat; background-size: 250% 100%; }
@@ -91,11 +91,11 @@
   .react:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
   .react[aria-pressed="true"] { color: var(--text); border-color: var(--primary); background: var(--primary-soft); }
   .react:disabled { cursor: default; opacity: .6; }
-  .react > span[aria-hidden] { display: inline-block; }   /* permite o salto do ▲/▼ (transform) */
-  /* Comentários chegam com fade curto (novo comentário, troca de ordenação). */
+  .react > span[aria-hidden] { display: inline-block; }   /* lets the ▲/▼ jump (transform) */
+  /* Comments arrive with a short fade (new comment, sort change). */
   .comment { transition: opacity var(--dur-3) var(--ease-out), transform var(--dur-3) var(--ease-out); }
   @starting-style { .comment { opacity: 0; transform: translateY(6px); } }
-  @media (pointer: coarse) { .react { min-height: 44px; } }   /* Fitts: 44px reais no toque */
+  @media (pointer: coarse) { .react { min-height: 44px; } }   /* Fitts: a real 44px on touch */
   .replies { margin: 10px 0 0 18px; padding-left: 16px; border-left: 2px solid var(--border); display: grid; gap: 12px; }
   @media (max-width: 600px) { .replies { margin-left: 4px; padding-left: 12px; } }
   .reply-slot { margin-top: 10px; }

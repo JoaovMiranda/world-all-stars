@@ -1,5 +1,5 @@
-import { HOME_GREATS_LIMIT, type HallOfGreatsEntry, Tier } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import { type HallOfGreatsEntry, HOME_GREATS_LIMIT, Tier } from '@was/shared';
 import { useRef } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
@@ -7,10 +7,10 @@ import { ButtonLink } from '@/shared-ui/button-link.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { initials } from '@/shared-ui/format.helper';
 import { ResponsiveImg } from '@/shared-ui/responsive-img.component';
+import { Reveal } from '@/shared-ui/reveal.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
 import { useTilt } from '@/shared-ui/use-tilt.hook';
-import { Reveal } from '@/shared-ui/reveal.component';
 
 import { HOME_MESSAGES } from './home.const';
 
@@ -19,11 +19,21 @@ function GreatCard({ athlete }: { athlete: HallOfGreatsEntry }) {
   useTilt(ref, 5);
   return (
     <li>
-      <Link ref={ref} className={athlete.tier === Tier.Mythic ? 'great-card tilt tilt-spec tilt-lift' : 'great-card great-card-plain tilt tilt-spec tilt-lift'} to="/athletes/$slug" params={{ slug: athlete.slug }}>
+      <Link
+        ref={ref}
+        className={athlete.tier === Tier.Mythic ? 'great-card tilt tilt-spec tilt-lift' : 'great-card great-card-plain tilt tilt-spec tilt-lift'}
+        to="/athletes/$slug"
+        params={{ slug: athlete.slug }}
+      >
         <div className="photo">
           {athlete.photo ? (
             // .greats-grid: 4 columns → 2 (≤960px) → 1 (≤520px)
-            <ResponsiveImg url={athlete.photo.url} displayWidth={300} fluid={{ sizes: '(max-width: 520px) 100vw, (max-width: 960px) 50vw, 300px', maxWidth: 520 }} loading="lazy" />
+            <ResponsiveImg
+              url={athlete.photo.url}
+              displayWidth={300}
+              fluid={{ sizes: '(max-width: 520px) 100vw, (max-width: 960px) 50vw, 300px', maxWidth: 520 }}
+              loading="lazy"
+            />
           ) : (
             <span aria-hidden="true">{initials(athlete.knownAs)}</span>
           )}
@@ -46,7 +56,7 @@ function GreatCard({ athlete }: { athlete: HallOfGreatsEntry }) {
   );
 }
 
-/** Always-dark "stage" band with the Míticos. Empty: message + empty pedestals waiting for the first names. */
+/** Always-dark "stage" band with the Mythic athletes. Empty: message + empty pedestals waiting for the first names. */
 export function HallOfGreatsBand({ greats }: { greats: HallOfGreatsEntry[] | undefined }) {
   const t = useText(HOME_MESSAGES).greats;
   return (

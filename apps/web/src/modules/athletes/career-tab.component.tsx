@@ -21,7 +21,7 @@ const TONE: Partial<Record<OnThisDayKind, TimelineItem['tone']>> = {
   [OnThisDayKind.Death]: 'muted',
 };
 
-/** Carreira: teams gantt (national team in green), title reigns, milestones timeline with day links. */
+/** Career: teams gantt (national team in green), title reigns, milestones timeline with day links. */
 export function CareerTab({ profile: p }: { profile: AthleteProfile }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).career;
   const ui = useText(UI_MESSAGES);

@@ -4,8 +4,8 @@ import { type CSSProperties, type ReactNode, useEffect, useRef } from 'react';
 import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { CountUp } from '@/shared-ui/count-up.component';
-import { MotionToggle } from '@/shared-ui/motion-toggle.component';
 import { prefersReducedMotion } from '@/shared-ui/motion.helper';
+import { MotionToggle } from '@/shared-ui/motion-toggle.component';
 import { ResponsiveImg } from '@/shared-ui/responsive-img.component';
 
 import { HOME_MESSAGES } from './home.const';
@@ -68,7 +68,7 @@ function Reel({ greats, reverse }: { greats: HomeResponse['greats']; reverse?: b
 }
 
 /**
- * Home hero "Palco dos Míticos": always-dark full-bleed stage with two reels of Mythic portraits, a spotlight that
+ * Home hero "Mythic stage": always-dark full-bleed stage with two reels of Mythic portraits, a spotlight that
  * follows the mouse, ◆ rising in arcs, the title assembling word by word and the collection in counting numbers.
  * On scroll the content lifts away faster than the background (scroll-driven, where supported).
  */
@@ -122,7 +122,11 @@ export function HomeStage({ data, isError = false }: HomeStageProps) {
         <span className="stage-veil" />
         <span className="stage-spot" />
         {SPARKS.map(([x, drift, dur, delay]) => (
-          <span key={x} className="stage-spark" style={{ '--x': `${x}%`, '--drift': `${drift}px`, '--dur': `${dur}s`, '--delay': `${delay}s` } as CSSProperties}>
+          <span
+            key={x}
+            className="stage-spark"
+            style={{ '--x': `${x}%`, '--drift': `${drift}px`, '--dur': `${dur}s`, '--delay': `${delay}s` } as CSSProperties}
+          >
             <span>◆</span>
           </span>
         ))}

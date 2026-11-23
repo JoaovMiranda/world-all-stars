@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 interface EmptyStateProps {
   title: string;
   children?: ReactNode;
-  /** Decorative mark shown above the title (default: art déco diamond). */
+  /** Decorative mark shown above the title (default: art deco diamond). */
   mark?: string;
   action?: ReactNode;
   compact?: boolean;

@@ -40,7 +40,7 @@ export const titlesPerLevel = (p: AthleteProfile, levels: readonly CompetitionLe
   return levels.map((l) => wins.filter((a) => a.level === l).length);
 };
 
-/** Years between first and last world/continental title (doc 16 "longevidade no topo"). */
+/** Years between first and last world/continental title (doc 16 "longevity at the top"). */
 export const topLongevity = (p: AthleteProfile): number | null => {
   const span = winYearSpan(p.achievements, [CompetitionLevel.World, CompetitionLevel.Continental]);
   return span ? span[1] - span[0] + 1 : null;

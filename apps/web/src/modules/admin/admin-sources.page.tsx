@@ -76,7 +76,7 @@ function SourceActions({ s }: { s: AdminSource }) {
   );
 }
 
-/** A3 Fontes: registry (usage status, license review) and athletes + links added to the collection. */
+/** A3 Sources: registry (usage status, license review) and athletes + links added to the collection. */
 export function AdminSourcesPage() {
   const T = useText(ADMIN_MESSAGES).sources;
   const adminText = useText(ADMIN_MESSAGES);

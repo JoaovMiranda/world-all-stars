@@ -26,7 +26,7 @@ export const ABOUT_TEXT = {
     sources: 'De onde vêm os dados',
     suggest: 'Sugerir um atleta',
   },
-  /** Definition of each tier (doc 00 "Níveis de campeão"). */
+  /** Definition of each tier (doc 00 "Champion tiers"). */
   tierDefinition: {
     mythic:
       'Mudou o esporte: redefiniu técnica, recordes, popularidade ou a forma como o esporte é jogado e visto, e é referência histórica unânime. Entra no Hall of Greats.',
@@ -34,7 +34,7 @@ export const ABOUT_TEXT = {
     elite: 'Vários títulos de nível mundial ou continental e destaque claro na sua geração.',
     champion: 'Cumpre os critérios de inclusão do esporte (título relevante), sem domínio prolongado.',
   } satisfies Record<Tier, string>,
-  /** Examples of each competition level (doc 00 "Nível de campeonato e prêmio"). */
+  /** Examples of each competition level (doc 00 "Competition and award level"). */
   levelExamples: {
     world: 'Copa do Mundo FIFA, Jogos Olímpicos, Mundial de Natação, Mundial de Xadrez, Major de CS, cinturões WBA/WBC/IBF/WBO, Bola de Ouro',
     continental: 'Copa Libertadores, Eurocopa, Pan-Americano, Europeu de Xadrez, IEM regional',

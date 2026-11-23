@@ -7,7 +7,7 @@ import { ResponsiveImg } from './responsive-img.component';
 
 interface AvatarProps {
   name: string;
-  /** Colored ring by tier (gold double ring for Mítico). */
+  /** Colored ring by tier (gold double ring for Mythic). */
   tier?: Tier;
   /** Image by link only (Commons); falls back to initials when missing or broken. */
   photoUrl?: string | null;

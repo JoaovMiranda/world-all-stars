@@ -1,4 +1,4 @@
-/* Tier-framed portrait with photo credit (Mítico: moldura iridescente animada; Lendário ouro, Elite safira, Campeão esmeralda). */
+/* Tier-framed portrait with photo credit (Mythic: animated iridescent frame; Legendary gold, Elite sapphire, Champion emerald). */
 @layer components {
   .tier-portrait { margin: 0; width: var(--portrait-w, 168px); aspect-ratio: 4 / 5; border-radius: var(--r-lg); overflow: hidden; position: relative; display: grid; place-items: center; border: 2px solid var(--border); background: var(--surface-2); flex: none; }
   .tier-portrait-mythic { border-color: transparent; background: linear-gradient(var(--surface-2), var(--surface-2)) padding-box, var(--tier-mythic-grad) border-box; background-size: 100% 100%, 200% 100%; animation: tier-mythic-shimmer 6s linear infinite; outline: 1px solid var(--tier-mythic-fill); outline-offset: 5px; box-shadow: 0 0 24px -6px var(--tier-mythic-fill); }

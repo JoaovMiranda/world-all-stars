@@ -37,7 +37,7 @@ const current = (): DemoState => (state ??= read());
 
 /**
  * In-memory + localStorage store of the fixture-mode mutations (same idea as the prototype's session.helper.js).
- * Fixture handlers read it to overlay the sample data; "Limpar … da demo" resets it.
+ * Fixture handlers read it to overlay the sample data; "Clear demo …" resets it.
  */
 export const demoStore = {
   get: (): DemoState => current(),

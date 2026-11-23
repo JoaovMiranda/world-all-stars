@@ -10,7 +10,7 @@ import { FieldSource } from './field-source.component';
 import { LegacyCard } from './legacy-card.component';
 import { TierVoteCard } from './tier-vote-card.component';
 
-/** Visão geral: legacy ("Por que é…?"), tier vote, sport-specific panel and bio. */
+/** Overview: legacy ("Why…?"), tier vote, sport-specific panel and bio. */
 export function OverviewTab({ profile, sportPanel }: { profile: AthleteProfile; sportPanel: ReactNode }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).bio;
   const lang = useContentLang(profile.contentLocale);

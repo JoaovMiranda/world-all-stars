@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { ADMIN_INGESTION_TAB_VALUES, type AdminIngestionRun, AdminIngestionSearchSchema, AdminIngestionTab, INGESTION_GATE_VALUES } from '@was/shared';
+import { useState } from 'react';
 
 import { adminIngestionQuery, runIngestion } from '@/data/endpoints/admin.query';
 import { useText } from '@/i18n/use-text.hook';
@@ -22,9 +22,9 @@ import { formatDateTime } from './admin-format.helper';
 import { AdminLayout } from './admin-layout.component';
 import { filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import { StatusTag } from './status-tag.component';
+import { useAdminMeta } from './use-admin-meta.hook';
 import { useAdminTab } from './use-admin-tab.hook';
 import { useQueueState } from './use-queue-state.hook';
-import { useAdminMeta } from './use-admin-meta.hook';
 
 const statusOf = (r: AdminIngestionRun) => r.status;
 const skippedOf = (r: AdminIngestionRun) => INGESTION_GATE_VALUES.reduce((s, g) => s + (r.skipped[g] ?? 0), 0);
@@ -104,7 +104,9 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
           label={T.collectTitle}
           actions={[
             {
-              key: 'list', label: T.collectList, confirmTitle: T.collectList,
+              key: 'list',
+              label: T.collectList,
+              confirmTitle: T.collectList,
               confirmBody: (
                 <label className="stack">
                   <span className="muted">{T.collectListText}</span>
@@ -114,8 +116,20 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
               ),
               onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.list', names } }),
             },
-            { key: 'update', label: T.collectUpdate, confirmTitle: T.collectUpdate, confirmBody: <p className="muted">{T.collectUpdateText}</p>, onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.update' } }) },
-            { key: 'discovery', label: T.collectDiscovery, confirmTitle: T.collectDiscovery, confirmBody: <p className="muted">{T.collectDiscoveryText}</p>, onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.discovery' } }) },
+            {
+              key: 'update',
+              label: T.collectUpdate,
+              confirmTitle: T.collectUpdate,
+              confirmBody: <p className="muted">{T.collectUpdateText}</p>,
+              onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.update' } }),
+            },
+            {
+              key: 'discovery',
+              label: T.collectDiscovery,
+              confirmTitle: T.collectDiscovery,
+              confirmBody: <p className="muted">{T.collectDiscoveryText}</p>,
+              onConfirm: () => run.mutateAsync({ body: { jobKey: 'collect.discovery' } }),
+            },
           ]}
         />
       </Section>
@@ -135,14 +149,28 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
               cell: (r) => (
                 <DecisionBar
                   label={T.runNowTitle(r.jobKey)}
-                  actions={[{ key: 'run', label: T.runNow, confirmTitle: T.runNowTitle(r.jobKey), confirmBody: <p className="muted">{T.runNowText}</p>, onConfirm: () => run.mutateAsync({ body: { jobKey: r.jobKey } }) }]}
+                  actions={[
+                    {
+                      key: 'run',
+                      label: T.runNow,
+                      confirmTitle: T.runNowTitle(r.jobKey),
+                      confirmBody: <p className="muted">{T.runNowText}</p>,
+                      onConfirm: () => run.mutateAsync({ body: { jobKey: r.jobKey } }),
+                    },
+                  ]}
                 />
               ),
             },
           ]}
         />
       </Section>
-      <StatusFilter label={adminText.common.statusFilter} options={statusOptions(meta.runStatus, runs, statusOf)} value={status} total={runs.length} onChange={state.setStatus} />
+      <StatusFilter
+        label={adminText.common.statusFilter}
+        options={statusOptions(meta.runStatus, runs, statusOf)}
+        value={status}
+        total={runs.length}
+        onChange={state.setStatus}
+      />
       <ReviewQueue
         label={T.runsLabel}
         items={filterByStatus(runs, status, statusOf)}
@@ -168,7 +196,7 @@ function RunsTab({ runs }: { runs: readonly AdminIngestionRun[] }) {
   );
 }
 
-/** A2 Ingestão: runs per job (gates, tokens, logs, "rodar agora") and the AI extraction queue. */
+/** A2 Ingestion: runs per job (gates, tokens, logs, "run now") and the AI extraction queue. */
 export function AdminIngestionPage() {
   const T = useText(ADMIN_MESSAGES).ingestion;
   const adminText = useText(ADMIN_MESSAGES);

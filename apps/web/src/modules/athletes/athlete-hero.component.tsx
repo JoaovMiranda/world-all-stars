@@ -1,5 +1,5 @@
-import { AthleteProfileTab, type AthleteProfile, AthleteStatus } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import { type AthleteProfile, AthleteProfileTab, AthleteStatus } from '@was/shared';
 
 import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
@@ -25,7 +25,7 @@ export function AthleteNames({ profile: p }: { profile: AthleteProfile }) {
   );
 }
 
-/** Nationalities · sport/position · taxonomy, then vitals (dates link to "Hoje na história"). */
+/** Nationalities · sport/position · taxonomy, then vitals (dates link to "Today in history"). */
 export function AthleteHeroDetails({ profile: p }: { profile: AthleteProfile }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).hero;
   const ui = useText(UI_MESSAGES);

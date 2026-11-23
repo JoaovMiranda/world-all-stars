@@ -3,7 +3,7 @@
   .error-screen { display: grid; gap: 20px; }
   .error-hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: center; }
   .error-code { font: 500 clamp(3.5rem, 12vw, 7rem)/1 var(--font-display); color: var(--accent-text); letter-spacing: -.02em; }
-  /* O código "cai" na página com squash e leve desfoque (feedback exagerado, uma vez). */
+  /* The code "drops" onto the page with squash and a slight blur (exaggerated feedback, once). */
   .error-code { display: inline-block; animation: error-stamp var(--dur-6) var(--ease-snap) both; }
   @keyframes error-stamp { from { opacity: 0; transform: scale(1.5) rotate(-8deg); filter: blur(8px); } 55% { opacity: 1; transform: scale(.94, 1.06) rotate(1deg); filter: blur(0); } 80% { transform: scale(1.02, .98); } }
   .error-hero p { margin: 0; max-width: 60ch; }

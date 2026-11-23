@@ -19,7 +19,7 @@ import type { Receipt } from './receipt.interface';
 import { SubmissionReceipt } from './submission-receipt.component';
 import { SuggestionForm } from './suggestion-form.component';
 
-/** P17 Contact (doc 21): tabs Sugerir atleta / Mensagem (`?tipo=mensagem`), shared validators, protocol on success. */
+/** P17 Contact (doc 21): tabs Suggest an athlete / Message (`?tipo=mensagem`), shared validators, protocol on success. */
 export function ContactPage() {
   const t = useText(CONTACT_MESSAGES);
   const TABS = [

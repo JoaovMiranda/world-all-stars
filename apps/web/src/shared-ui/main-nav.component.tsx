@@ -4,7 +4,7 @@ import { useText } from '@/i18n/use-text.hook';
 
 import { LAYOUT_MESSAGES, NAV_ITEMS } from './layout.const';
 
-/** Main navigation links (doc 09 order: ★ Hall of Greats highlighted, Atletas, Esportes, Fontes, Contato). */
+/** Main navigation links (doc 09 order: ★ Hall of Greats highlighted, Athletes, Sports, Sources, Contact). */
 export function MainNavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const t = useText(LAYOUT_MESSAGES);
   return (
