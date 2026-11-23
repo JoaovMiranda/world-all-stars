@@ -57,7 +57,7 @@ export const createBetterAuth = (db: Database, repo: BaseRepository, config: Ser
       fields: { name: 'displayName', image: 'avatarUrl' },
       deleteUser: { enabled: false },
     },
-    // 30 days, renewed once a day while in use (cookie policy: "até sair ou 30 dias").
+    // 30 days, renewed once a day while in use (cookie policy: "until sign-out or 30 days").
     session: { modelName: 'auth_sessions', expiresIn: 60 * 60 * 24 * 30, updateAge: 60 * 60 * 24 },
     account: { modelName: 'auth_accounts', encryptOAuthTokens: true },
     verification: { modelName: 'auth_verifications' },

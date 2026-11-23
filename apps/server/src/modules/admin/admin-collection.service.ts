@@ -25,7 +25,7 @@ import { startIngestion } from './ingestion-runner';
 const emptyGates = () => Object.fromEntries(INGESTION_GATE_VALUES.map((g) => [g, 0])) as Record<(typeof INGESTION_GATE_VALUES)[number], number>;
 type LogLevel = 'info' | 'warn' | 'error';
 
-/** A2 (ingestion runs, AI queue, "rodar agora") and A3 (source registry, links queued for the next collection). */
+/** A2 (ingestion runs, AI queue, "Run now") and A3 (source registry, links queued for the next collection). */
 export class AdminCollectionService extends BaseService {
   /** A2: runs (newest first) with source, gates, tokens and logs + the AI extraction queue. */
   async listIngestion(): Promise<AdminIngestionResponse> {
@@ -79,7 +79,7 @@ export class AdminCollectionService extends BaseService {
   }
 
   /**
-   * POST /api/admin/ingestion-runs: "rodar agora". Jobs with a real provider (football, BJJ, Wikidata) are queued and
+   * POST /api/admin/ingestion-runs: the "Run now" action. Jobs with a real provider (football, BJJ, Wikidata) are queued and
    * drained in the background by @was/ingest; the others keep the simulated run until their provider exists.
    */
   async runIngestion(jobKey: string, names?: string) {

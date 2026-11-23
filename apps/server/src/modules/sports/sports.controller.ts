@@ -5,7 +5,7 @@ import type { ContractInputOf } from '../../http/contract-input-of.interface';
 import { notFound } from '../../http/http-error.helper';
 import { CatalogService } from '../catalog/catalog.service';
 
-/** "Próximos campeonatos" of a sport page: from today to this horizon. */
+/** The "Upcoming championships" section of a sport page: from today to this horizon. */
 const SPORT_UPCOMING_DAYS = 425;
 
 /** P6/P7 + governance models and the organization hierarchy (docs 18/19). */
