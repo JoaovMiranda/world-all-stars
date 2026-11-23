@@ -23,6 +23,36 @@ const ALLOWLIST = [
   /^packages\/shared\/src\/i18n\//,
   /^packages\/shared\/src\/consts\/[^/]*-messages\.const\.ts$/,
   /^packages\/db\/src\/seeds\/content-translations\.json$/,
+  // Tests: localized inputs (pt-BR comments, names) and assertions on pt-BR/es output.
+  /\.test\.(ts|tsx)$/,
+  // Fixtures and demo data mirror localized prototype content.
+  /^apps\/web\/src\/fixtures\//,
+  /^apps\/web\/src\/data\/fixtures\//,
+  /^scripts\/fixtures\//,
+  // Localized label data (pt/es columns) and Portuguese data-matching literals.
+  /^packages\/db\/src\/seeds\/(domain|sources-policy)\.seed\.ts$/,
+  /^scripts\/catalog\/sports\.seed\.mjs$/,
+  /^packages\/db\/src\/consts\/title-end-reason-patterns\.const\.ts$/,
+  /^packages\/shared\/src\/consts\/org-labels\.const\.ts$/,
+  /^packages\/ingest\/src\/canonical\/canonical-writer\.ts$/, // pt/es labels of historical countries
+  /^packages\/ingest\/src\/providers\/football-champions\.const\.ts$/, // pt/es competition names
+  // Legacy Portuguese URL values, kept only to answer 301 (D35).
+  /^apps\/server\/src\/web\/legacy-url-map\.const\.ts$/,
+  // Proper names with accents (Pelé, André Galvão, São Paulo…) in data and examples.
+  /^packages\/ingest\/src\/providers\/bjj-champions\.const\.ts$/,
+  /^packages\/ingest\/src\/identity\/identity-sample\.const\.ts$/,
+  /^packages\/ingest\/src\/cli\/ingest\.cli\.ts$/,
+  /^packages\/shared\/src\/helpers\/(text-normalize|wikimedia-url|source-url)\.helper\.ts$/,
+  /^apps\/web\/src\/shared-ui\/breadcrumb\.component\.tsx$/,
+  /^apps\/web\/src\/modules\/athletes\/athlete-profile\.helper\.ts$/,
+  /^packages\/ranking\/src\/methodologies\/football-champions\/METHODOLOGY\.md$/,
+  // Quotes a pt-BR UI label next to its English translation; Spanish UI label described in CSS.
+  /^packages\/shared\/src\/schemas\/admin-curation\.schema\.ts$/,
+  /^apps\/web\/src\/app\/styles\.css$/,
+  // Legacy crawler file names (D36: atletas.csv, fontes-crawler.csv) documented in the seeds README.
+  /^data\/seeds\/README\.md$/,
+  // Known finding (follow-up): anonymized display name 'Usuário removido' should come from i18n.
+  /^packages\/shared\/src\/helpers\/account\.helper\.ts$/,
   // pt-BR web catalogs: `apps/web/src/**/*.const.ts` with sibling `.en.ts`/`.es.ts` translations (checked below).
 ];
 

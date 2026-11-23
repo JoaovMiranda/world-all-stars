@@ -36,7 +36,9 @@
     "e2e": "pnpm --filter web exec playwright test",
     "load": "k6 run scripts/load/smoke.js",
     "scan:mixed": "node scripts/scan/mixed-declarations.mjs",
-    "scan:language": "node scripts/scan/non-english.mjs"
+    "scan:language": "node scripts/scan/non-english.mjs",
+    "lint:language": "node scripts/scan/non-english.mjs --fail",
+    "lint:declarations": "node scripts/scan/declaration-rules.mjs --fail"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
