@@ -13,10 +13,16 @@ export const FootballStatsSchema = z.object({
   career_goals: optionalCount,
   career_matches: optionalCount,
   career_goals_note: z.string().nullable().optional(),
-  national_team: z.object({ matches: count, goals: count, wins: optionalCount, draws: optionalCount, losses: optionalCount, as_of: IsoDateSchema.nullable().optional() }),
+  national_team: z.object({
+    matches: count,
+    goals: count,
+    wins: optionalCount,
+    draws: optionalCount,
+    losses: optionalCount,
+    as_of: IsoDateSchema.nullable().optional(),
+  }),
   world_cups: z.array(z.object({ year: z.number().int(), matches: count, goals: count, result: z.string(), note: z.string().nullable().optional() })),
 });
-export type FootballStats = z.infer<typeof FootballStatsSchema>;
 
 export const SwimmingStatsSchema = z.object({
   schema: z.literal('swimming'),
@@ -25,7 +31,6 @@ export const SwimmingStatsSchema = z.object({
   world_records: z.object({ total: count, individual: count, relay: count }),
   olympic_games: z.array(z.number().int()).min(1),
 });
-export type SwimmingStats = z.infer<typeof SwimmingStatsSchema>;
 
 export const BoxingStatsSchema = z.object({
   schema: z.literal('boxing'),
@@ -35,7 +40,6 @@ export const BoxingStatsSchema = z.object({
   pro_debut: IsoDateSchema.nullable().optional(),
   last_fight: IsoDateSchema.nullable().optional(),
 });
-export type BoxingStats = z.infer<typeof BoxingStatsSchema>;
 
 export const CsStatsSchema = z.object({
   schema: z.literal('cs'),
@@ -44,4 +48,3 @@ export const CsStatsSchema = z.object({
   majors_won: count.optional(),
   hltv_top20: z.array(z.object({ year: z.number().int(), rank: z.number().int().positive() })),
 });
-export type CsStats = z.infer<typeof CsStatsSchema>;

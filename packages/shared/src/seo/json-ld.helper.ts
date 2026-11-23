@@ -1,6 +1,6 @@
 import { isCompetitionWin } from '../helpers/achievement.helper';
-import type { AthleteProfile } from '../schemas/athlete-profile.schema';
-import type { SportPage } from '../schemas/sport-page.schema';
+import type { AthleteProfile } from '../types/athlete-profile.type';
+import type { SportPage } from '../types/sport-page.type';
 import { SITE_LANGUAGE, SITE_NAME } from './seo.const';
 
 /** One schema.org node (doc 12). Built on the server render, emitted as <script type="application/ld+json">. */
@@ -64,7 +64,10 @@ export const itemListJsonLd = (origin: string, name: string, items: readonly { n
 
 /** Wikidata + Wikipedia links of an athlete (`sameAs`). */
 const athleteSameAs = (p: AthleteProfile): string[] =>
-  unique([p.wikidataQid ? `https://www.wikidata.org/wiki/${p.wikidataQid}` : null, ...p.sourceLinks.filter((s) => /wikipedia|wikidata/.test(s.slug)).map((s) => s.url)]);
+  unique([
+    p.wikidataQid ? `https://www.wikidata.org/wiki/${p.wikidataQid}` : null,
+    ...p.sourceLinks.filter((s) => /wikipedia|wikidata/.test(s.slug)).map((s) => s.url),
+  ]);
 
 /** Titles won and awards ("Copa do Mundo FIFA (1958)"), most recent last. */
 const athleteAwards = (p: AthleteProfile): string[] =>
@@ -78,7 +81,8 @@ const athleteAwards = (p: AthleteProfile): string[] =>
 /** Athlete profile: ProfilePage whose main entity is the Person (Google "ProfilePage" rich result). */
 export const athleteJsonLd = (origin: string, p: AthleteProfile): JsonLd => {
   const url = siteUrl(origin, `/athletes/${p.slug}`);
-  const place = (e: AthleteProfile['birth']) => (e.city ? compact({ '@type': 'Place', name: [e.city.name, e.city.region, e.city.country?.name].filter(Boolean).join(', ') }) : undefined);
+  const place = (e: AthleteProfile['birth']) =>
+    e.city ? compact({ '@type': 'Place', name: [e.city.name, e.city.region, e.city.country?.name].filter(Boolean).join(', ') }) : undefined;
   return {
     '@context': CONTEXT,
     '@type': 'ProfilePage',
@@ -118,7 +122,9 @@ export const sportJsonLd = (origin: string, s: SportPage): JsonLd => ({
     description: s.description ?? undefined,
     sameAs: unique([s.wikidataQid ? `https://www.wikidata.org/wiki/${s.wikidataQid}` : null, s.wikipedia]),
   }),
-  mentions: s.associations.map((a) => compact({ '@type': 'SportsOrganization', name: a.name, sport: s.name, url: a.wikipedia ?? undefined, logo: a.image ?? undefined })),
+  mentions: s.associations.map((a) =>
+    compact({ '@type': 'SportsOrganization', name: a.name, sport: s.name, url: a.wikipedia ?? undefined, logo: a.image ?? undefined }),
+  ),
 });
 
 /**
@@ -126,4 +132,9 @@ export const sportJsonLd = (origin: string, s: SportPage): JsonLd => ({
  * close the script element.
  */
 export const serializeJsonLd = (data: JsonLd): string =>
-  JSON.stringify(data).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+  JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');

@@ -17,9 +17,7 @@ export const AdminIdentityCandidateSchema = z.object({
   documentUrl: z.string().nullable(),
   createdAt: z.iso.datetime(),
 });
-export type AdminIdentityCandidate = z.infer<typeof AdminIdentityCandidateSchema>;
 export const AdminIdentitiesResponseSchema = z.object({ items: z.array(AdminIdentityCandidateSchema) });
-export type AdminIdentitiesResponse = z.infer<typeof AdminIdentitiesResponseSchema>;
 
 export const DecideIdentityRequestSchema = z.object({
   decision: z.enum(IDENTITY_DECISION_VALUES),
@@ -27,4 +25,3 @@ export const DecideIdentityRequestSchema = z.object({
   entityId: z.string().min(1).optional(),
   reason: z.string().trim().min(3).max(500),
 });
-export type DecideIdentityRequest = z.infer<typeof DecideIdentityRequestSchema>;

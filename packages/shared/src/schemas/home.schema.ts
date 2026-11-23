@@ -9,7 +9,6 @@ import { SportCardSchema } from './sports-tree.schema';
 
 /** Query of GET /api/home. The date comes from the client (its local day), as in GET /api/today. */
 export const HomeQuerySchema = z.object({ date: IsoDateSchema });
-export type HomeQuery = z.infer<typeof HomeQuerySchema>;
 
 /** Payload of GET /api/home: everything the home page needs in a single round trip (SSR-friendly). */
 export const HomeResponseSchema = z.object({
@@ -26,4 +25,3 @@ export const HomeResponseSchema = z.object({
   greats: z.array(HallOfGreatsEntrySchema),
   sports: z.array(SportCardSchema),
 });
-export type HomeResponse = z.infer<typeof HomeResponseSchema>;

@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 import { ON_THIS_DAY_KIND_VALUES } from '../enums/on-this-day-kind.enum';
 import { AthleteSummarySchema } from './athlete-summary.schema';
+import { ContentLocaleSchema } from './locale.schema';
 import { MonthDaySchema } from './month-day.schema';
 import { ObservanceSchema } from './observance.schema';
-import { ContentLocaleSchema } from './locale.schema';
 
 /** A dated milestone of an athlete (birth, title, record…) shown in "Hoje na história". */
 export const OnThisDayItemSchema = z.object({
@@ -13,7 +13,6 @@ export const OnThisDayItemSchema = z.object({
   title: z.string().min(1),
   athlete: AthleteSummarySchema,
 });
-export type OnThisDayItem = z.infer<typeof OnThisDayItemSchema>;
 
 /** Response of GET /api/today/:md (P13 and the home block). */
 export const OnThisDayResponseSchema = z.object({
@@ -22,5 +21,4 @@ export const OnThisDayResponseSchema = z.object({
   observance: ObservanceSchema.nullable(),
   contentLocale: ContentLocaleSchema,
 });
-export type OnThisDayResponse = z.infer<typeof OnThisDayResponseSchema>;
 export const MonthDayParamsSchema = z.object({ md: MonthDaySchema });

@@ -1,5 +1,5 @@
 import { fromIsoDate } from '../helpers/iso-date.helper';
-import type { IsoDate } from '../schemas/iso-date.schema';
+import type { IsoDate } from '../types/iso-date.type';
 import type { Locale } from './locale.const';
 
 const DAY_MS = 864e5;

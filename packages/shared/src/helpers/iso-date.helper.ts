@@ -1,5 +1,5 @@
-import type { IsoDate } from '../schemas/iso-date.schema';
-import type { MonthDay } from '../schemas/month-day.schema';
+import type { IsoDate } from '../types/iso-date.type';
+import type { MonthDay } from '../types/month-day.type';
 
 const pad2 = (n: number): string => String(n).padStart(2, '0');
 

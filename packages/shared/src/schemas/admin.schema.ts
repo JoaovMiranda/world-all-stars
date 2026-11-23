@@ -34,7 +34,6 @@ export const CrawlerProposalSchema = z.object({
   skippedAtGate: z.string().nullable(),
   createdAt: z.iso.datetime(),
 });
-export type CrawlerProposal = z.infer<typeof CrawlerProposalSchema>;
 export const CrawlerProposalsResponseSchema = z.object({ items: z.array(CrawlerProposalSchema) });
 
 /** A2 · Ingestion runs with their source, items skipped per gate, extractor tokens and log lines. */
@@ -44,7 +43,6 @@ export const AdminIngestionRunSchema = IngestionRunSchema.extend({
   tokens: z.number().int().nonnegative().default(0),
   logs: z.array(z.object({ at: z.iso.datetime(), level: z.enum(['info', 'warn', 'error']), message: z.string() })).default([]),
 });
-export type AdminIngestionRun = z.infer<typeof AdminIngestionRunSchema>;
 /** A2 · `ai_extraction_queue` item (doc 11). */
 export const AiQueueItemSchema = z.object({
   id: z.string().min(1),
@@ -58,12 +56,10 @@ export const AiQueueItemSchema = z.object({
   model: z.string().nullable(),
   createdAt: z.iso.datetime(),
 });
-export type AiQueueItem = z.infer<typeof AiQueueItemSchema>;
 export const AdminIngestionResponseSchema = z.object({
   runs: z.array(AdminIngestionRunSchema),
   queue: z.array(AiQueueItemSchema).default([]),
 });
-export type AdminIngestionResponse = z.infer<typeof AdminIngestionResponseSchema>;
 
 /** A7 · Comments for moderation (most disliked first) + banned words list. */
 export const AdminCommentSchema = z.object({
@@ -78,9 +74,7 @@ export const AdminCommentSchema = z.object({
   status: z.enum(COMMENT_STATUS_VALUES),
   hiddenReason: z.string().nullable(),
 });
-export type AdminComment = z.infer<typeof AdminCommentSchema>;
 export const AdminCommentsResponseSchema = z.object({ items: z.array(AdminCommentSchema), bannedWords: z.array(BannedWordSchema) });
-export type AdminCommentsResponse = z.infer<typeof AdminCommentsResponseSchema>;
 export const ModerateCommentRequestSchema = z.object({ status: z.enum(COMMENT_STATUS_VALUES), reason: z.string().trim().min(3) });
 
 /** A8 · Athlete suggestions and contact inbox. */
@@ -95,7 +89,6 @@ export const AdminSuggestionSchema = z.object({
   status: z.enum(SUGGESTION_STATUS_VALUES),
   createdAt: z.iso.datetime(),
 });
-export type AdminSuggestion = z.infer<typeof AdminSuggestionSchema>;
 export const AdminContactMessageSchema = z.object({
   id: z.string().min(1),
   protocol: z.string().min(1),
@@ -106,7 +99,5 @@ export const AdminContactMessageSchema = z.object({
   status: z.enum(CONTACT_STATUS_VALUES),
   createdAt: z.iso.datetime(),
 });
-export type AdminContactMessage = z.infer<typeof AdminContactMessageSchema>;
 export const AdminInboxResponseSchema = z.object({ suggestions: z.array(AdminSuggestionSchema), messages: z.array(AdminContactMessageSchema) });
-export type AdminInboxResponse = z.infer<typeof AdminInboxResponseSchema>;
 export const ReviewSuggestionRequestSchema = z.object({ status: z.enum(SUGGESTION_STATUS_VALUES), note: z.string().optional() });

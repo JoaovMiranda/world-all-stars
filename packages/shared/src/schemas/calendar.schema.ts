@@ -9,5 +9,4 @@ export const CalendarQuerySchema = z.object({
   to: IsoDateSchema,
   sport: z.string().optional(),
 });
-export type CalendarQuery = z.infer<typeof CalendarQuerySchema>;
 export const CalendarResponseSchema = z.array(CalendarEventSchema);

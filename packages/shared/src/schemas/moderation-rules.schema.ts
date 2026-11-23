@@ -10,7 +10,6 @@ export const BannedWordSchema = z.object({
   matchMode: z.enum(BANNED_WORD_MATCH_MODE_VALUES),
   locale: z.string().min(2),
 });
-export type BannedWord = z.infer<typeof BannedWordSchema>;
 
 /**
  * Response of GET /api/validation-context: inputs of the shared validators, so the form warns with the exact
@@ -22,4 +21,3 @@ export const ValidationContextSchema = z.object({
   knownAthletes: z.array(AthleteRefSchema.extend({ fullName: z.string().nullable() })),
   sports: z.array(SportRefSchema),
 });
-export type ValidationContext = z.infer<typeof ValidationContextSchema>;

@@ -1,10 +1,9 @@
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
 import { z } from 'zod';
-
 import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
 import { COMMENT_REACTION_VALUES } from '../enums/comment-reaction.enum';
 import { COMMENT_SORT_VALUES, CommentSort } from '../enums/comment-sort.enum';
 import { validateComment } from '../helpers/text-validation.helper';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/locale.const';
 import type { BannedWordRule } from '../types/banned-word.type';
 
 const reaction = z.enum(COMMENT_REACTION_VALUES);
@@ -14,7 +13,6 @@ export const CommentsQuerySchema = z.object({
   sort: z.enum(COMMENT_SORT_VALUES).default(CommentSort.Top).catch(CommentSort.Top),
   cursor: z.string().optional(),
 });
-export type CommentsQuery = z.input<typeof CommentsQuerySchema>;
 
 /** One comment (plain text, rendered escaped with pre-wrap). */
 export const CommentSchema = z.object({
@@ -28,11 +26,9 @@ export const CommentSchema = z.object({
   dislikes: z.number().int().nonnegative(),
   myReaction: reaction.nullable(),
 });
-export type Comment = z.infer<typeof CommentSchema>;
 
 /** Top-level comment with its replies (1 level, chronological). */
 export const CommentThreadSchema = CommentSchema.extend({ replies: z.array(CommentSchema) });
-export type CommentThread = z.infer<typeof CommentThreadSchema>;
 
 export const CommentsResponseSchema = z.object({
   threads: z.array(CommentThreadSchema),
@@ -40,7 +36,6 @@ export const CommentsResponseSchema = z.object({
   max: z.number().int().positive(),
   nextCursor: z.string().nullable(),
 });
-export type CommentsResponse = z.infer<typeof CommentsResponseSchema>;
 
 /** Transport shape of POST /api/athletes/:slug/comments (rules applied by createCommentInputSchema). */
 export const PostCommentRequestSchema = z.object({
@@ -48,7 +43,6 @@ export const PostCommentRequestSchema = z.object({
   /** Replying to a reply attaches to the same top-level comment. */
   parentId: z.string().nullable().optional(),
 });
-export type PostCommentRequest = z.infer<typeof PostCommentRequestSchema>;
 export const PostCommentResponseSchema = z.object({ id: z.string().min(1) });
 
 /** Form/server validation of a comment: same rules on both sides (doc 20). */
@@ -60,12 +54,10 @@ export const createCommentInputSchema = (bannedWords: readonly BannedWordRule[],
 
 /** Body of PUT /api/comments/:id/reaction: like/dislike, or null to undo. */
 export const ReactToCommentRequestSchema = z.object({ reaction: reaction.nullable() });
-export type ReactToCommentRequest = z.infer<typeof ReactToCommentRequestSchema>;
 export const ReactToCommentResponseSchema = z.object({
   reaction: reaction.nullable(),
   likes: z.number().int().nonnegative(),
   dislikes: z.number().int().nonnegative(),
 });
-export type ReactToCommentResponse = z.infer<typeof ReactToCommentResponseSchema>;
 
 export const CommentIdParamsSchema = z.object({ id: z.string().min(1) });

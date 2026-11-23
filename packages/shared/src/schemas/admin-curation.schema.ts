@@ -24,11 +24,9 @@ export const AdminReasonSchema = z.string().trim().min(ADMIN_REASON_MIN_LENGTH).
 
 /** Painel: pending items per section (badges of the admin navigation). */
 export const AdminSummaryResponseSchema = z.object({ pending: z.record(z.enum(ADMIN_SECTION_VALUES), count) });
-export type AdminSummaryResponse = z.infer<typeof AdminSummaryResponseSchema>;
 
 /** Body of every approve/reject decision (proposal, dossier). */
 export const AdminDecisionRequestSchema = z.object({ decision: z.enum(ADMIN_DECISION_VALUES), reason: AdminReasonSchema });
-export type AdminDecisionRequest = z.infer<typeof AdminDecisionRequestSchema>;
 
 /** A1 · "Sinais de tier": votes of the readers against the official tier (doc 17). */
 export const TierSignalSchema = z.object({
@@ -41,7 +39,6 @@ export const TierSignalSchema = z.object({
   topOtherShare: z.number().min(0).max(1),
   isSignal: z.boolean(),
 });
-export type TierSignal = z.infer<typeof TierSignalSchema>;
 export const TierSignalsResponseSchema = z.object({ items: z.array(TierSignalSchema) });
 
 /** A6 · "Mudou o jogo" dossier with its evidences (each one with a source) and the 2-admin approval. */
@@ -51,7 +48,6 @@ export const GreatsEvidenceSchema = z.object({
   description: z.string().nullable(),
   source: SourceRefSchema.nullable(),
 });
-export type GreatsEvidence = z.infer<typeof GreatsEvidenceSchema>;
 export const AdminDossierSchema = z.object({
   id: z.string().min(1),
   athlete: AthleteRefSchema,
@@ -63,7 +59,6 @@ export const AdminDossierSchema = z.object({
   evidences: z.array(GreatsEvidenceSchema),
   updatedAt: z.iso.datetime(),
 });
-export type AdminDossier = z.infer<typeof AdminDossierSchema>;
 export const AdminDossiersResponseSchema = z.object({ items: z.array(AdminDossierSchema) });
 
 /** A4 · Accounts, roles and the audit log of admin actions. */
@@ -78,7 +73,6 @@ export const AdminUserSchema = z.object({
   commentsCount: count,
   createdAt: z.iso.datetime(),
 });
-export type AdminUser = z.infer<typeof AdminUserSchema>;
 export const AdminAuditEntrySchema = z.object({
   id: z.string().min(1),
   at: z.iso.datetime(),
@@ -87,11 +81,8 @@ export const AdminAuditEntrySchema = z.object({
   target: z.string().min(1),
   reason: z.string().nullable(),
 });
-export type AdminAuditEntry = z.infer<typeof AdminAuditEntrySchema>;
 export const AdminUsersResponseSchema = z.object({ items: z.array(AdminUserSchema), audit: z.array(AdminAuditEntrySchema) });
-export type AdminUsersResponse = z.infer<typeof AdminUsersResponseSchema>;
 export const UpdateUserRequestSchema = z.object({ role: z.enum(USER_ROLE_VALUES).optional(), banned: z.boolean().optional(), reason: AdminReasonSchema });
-export type UpdateUserRequest = z.infer<typeof UpdateUserRequestSchema>;
 
 /** A5 · Privacy requests (LGPD) from users, athletes and heirs, with legal deadline (doc 13). */
 export const PrivacyRequestSchema = z.object({
@@ -109,13 +100,11 @@ export const PrivacyRequestSchema = z.object({
   handledBy: z.string().nullable(),
   note: z.string().nullable(),
 });
-export type PrivacyRequest = z.infer<typeof PrivacyRequestSchema>;
 export const AdminPrivacyResponseSchema = z.object({ items: z.array(PrivacyRequestSchema) });
 export const UpdatePrivacyRequestSchema = z.object({ status: z.enum(PRIVACY_REQUEST_STATUS_VALUES), note: AdminReasonSchema });
 
 /** A3 · Source registry (usage status, license review) + links queued for the next collection. */
 export const AdminSourceSchema = SourceOverviewSchema.extend({ licenseReviewedAt: z.iso.datetime().nullable() });
-export type AdminSource = z.infer<typeof AdminSourceSchema>;
 export const AdminQueuedLinkSchema = z.object({
   id: z.string().min(1),
   athleteName: z.string().min(1),
@@ -125,26 +114,25 @@ export const AdminQueuedLinkSchema = z.object({
   origin: z.enum(['admin', 'suggestion']),
   createdAt: z.iso.datetime(),
 });
-export type AdminQueuedLink = z.infer<typeof AdminQueuedLinkSchema>;
 export const AdminSourcesResponseSchema = z.object({ sources: z.array(AdminSourceSchema), queuedLinks: z.array(AdminQueuedLinkSchema) });
-export type AdminSourcesResponse = z.infer<typeof AdminSourcesResponseSchema>;
 export const UpdateSourceRequestSchema = z.object({
   usageStatus: z.enum(SOURCE_USAGE_STATUS_VALUES).optional(),
   licenseReviewed: z.boolean().optional(),
   reason: AdminReasonSchema,
 });
-export type UpdateSourceRequest = z.infer<typeof UpdateSourceRequestSchema>;
 /** Body of POST /api/admin/source-links: athlete + 1–3 links (re-checked with checkSourceUrl on the server). */
 export const AddCollectionLinksRequestSchema = z.object({
   athleteName: z.string().trim().min(2).max(120),
   sport: z.string().trim().max(60).optional(),
   urls: z.array(z.string().trim().min(1)).min(1).max(COLLECTION_LINKS_MAX),
 });
-export type AddCollectionLinksRequest = z.infer<typeof AddCollectionLinksRequestSchema>;
 
 /** A8 · Status of a contact message. */
 export const UpdateContactMessageRequestSchema = z.object({ status: z.enum(CONTACT_STATUS_VALUES) });
 /** A2 · "Rodar agora" (simulated). */
-export const RunIngestionRequestSchema = z.object({ jobKey: z.string().min(1), /** collect.list: names, links or CSV lines (Fase 13). */ names: z.string().max(20_000).optional() });
+export const RunIngestionRequestSchema = z.object({
+  jobKey: z.string().min(1),
+  /** collect.list: names, links or CSV lines (Fase 13). */ names: z.string().max(20_000).optional(),
+});
 /** A7 · Banned word key in the URL (DELETE /api/admin/banned-words/:locale/:term). */
 export const BannedWordKeyParamsSchema = z.object({ locale: z.string().min(2), term: z.string().min(1) });

@@ -13,16 +13,12 @@ export const AthleteProfileSearchSchema = z.object({
   compare: optionalText(),
   sort: optionalEnum(COMMENT_SORT_VALUES),
 });
-export type AthleteProfileSearch = z.infer<typeof AthleteProfileSearchSchema>;
 
 /** URL state of /contact (doc 21: `?tipo=mensagem` opens the message tab). */
 export const ContactSearchSchema = z.object({ tipo: optionalEnum(CONTACT_TAB_VALUES) });
-export type ContactSearch = z.infer<typeof ContactSearchSchema>;
 
 /** URL state of the home: `date` simulates another day for "Hoje na história" and the calendar. */
 export const HomeSearchSchema = z.object({ date: IsoDateSchema.optional().catch(undefined) });
-export type HomeSearch = z.infer<typeof HomeSearchSchema>;
 
 /** URL state of /me/notifications (E4): read-state filter (`?filtro=nao-lidas|lidas`). */
 export const NotificationsSearchSchema = z.object({ filtro: optionalEnum(NOTIFICATION_FILTER_VALUES) });
-export type NotificationsSearch = z.infer<typeof NotificationsSearchSchema>;

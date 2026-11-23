@@ -11,4 +11,3 @@ export const SportPageFiltersSchema = z.object({
   tier: optionalEnum(TIER_VALUES),
   level: optionalEnum(COMPETITION_LEVEL_VALUES),
 });
-export type SportPageFilters = z.infer<typeof SportPageFiltersSchema>;

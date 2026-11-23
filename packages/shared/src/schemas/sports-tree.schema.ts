@@ -15,7 +15,6 @@ export const SportCardSchema = SportInfoSchema.extend({
   /** Slug of the sport this one is a discipline of (Cycling › BMX racing), when any. */
   partOf: z.string().nullable().default(null),
 });
-export type SportCard = z.infer<typeof SportCardSchema>;
 
 /** Response item of GET /api/sports: group › subgroup › sports. */
 export const SportGroupSchema = z.object({
@@ -23,7 +22,6 @@ export const SportGroupSchema = z.object({
   name: z.string().min(1),
   subgroups: z.array(z.object({ slug: z.string().min(1), name: z.string().min(1), sports: z.array(SportCardSchema) })),
 });
-export type SportGroup = z.infer<typeof SportGroupSchema>;
 export const SportsTreeResponseSchema = z.array(SportGroupSchema);
 
 /** Response item of GET /api/governance-models (doc 18). */
@@ -33,5 +31,4 @@ export const GovernanceModelSchema = z.object({
   summary: z.string().min(1),
   sports: z.array(SportInfoSchema),
 });
-export type GovernanceModelInfo = z.infer<typeof GovernanceModelSchema>;
 export const GovernanceModelsResponseSchema = z.array(GovernanceModelSchema);

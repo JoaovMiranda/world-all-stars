@@ -12,7 +12,6 @@ export const AthleteRefSchema = z.object({
   knownAs: z.string().min(1),
   tier: z.enum(TIER_VALUES),
 });
-export type AthleteRef = z.infer<typeof AthleteRefSchema>;
 
 /** Athlete as shown in cards and lists (athletes list, Hall of Greats, search, on this day). */
 export const AthleteSummarySchema = AthleteRefSchema.extend({
@@ -29,4 +28,3 @@ export const AthleteSummarySchema = AthleteRefSchema.extend({
   worldTitles: z.number().int().nonnegative(),
   isHallOfGreats: z.boolean(),
 });
-export type AthleteSummary = z.infer<typeof AthleteSummarySchema>;

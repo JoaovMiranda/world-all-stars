@@ -9,4 +9,3 @@ export const MediaLinkSchema = z.object({
   license: z.string().nullable(),
   year: z.number().int().nullable(),
 });
-export type MediaLink = z.infer<typeof MediaLinkSchema>;

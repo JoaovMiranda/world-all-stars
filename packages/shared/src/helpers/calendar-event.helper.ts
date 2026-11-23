@@ -1,6 +1,6 @@
 import { CalendarEventType } from '../enums/calendar-event-type.enum';
-import type { CalendarEvent } from '../schemas/calendar-event.schema';
-import type { IsoDate } from '../schemas/iso-date.schema';
+import type { CalendarEvent } from '../types/calendar-event.type';
+import type { IsoDate } from '../types/iso-date.type';
 
 /** First day of an event (start of a competition or the observance date). */
 export const eventStart = (e: CalendarEvent): IsoDate => (e.type === CalendarEventType.Competition ? e.start : e.date);

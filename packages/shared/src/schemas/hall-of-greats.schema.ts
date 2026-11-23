@@ -9,7 +9,6 @@ export const HallOfGreatsEntrySchema = AthleteSummarySchema.extend({
   evidences: z.number().int().nonnegative(),
   approvals: z.number().int().nonnegative().nullable(),
 });
-export type HallOfGreatsEntry = z.infer<typeof HallOfGreatsEntrySchema>;
 
 /** Response of GET /api/hall-of-greats: the Mythics + Legendary candidates without a dossier. */
 export const HallOfGreatsResponseSchema = z.object({
@@ -17,4 +16,3 @@ export const HallOfGreatsResponseSchema = z.object({
   candidates: z.array(AthleteSummarySchema),
   contentLocale: ContentLocaleSchema,
 });
-export type HallOfGreatsResponse = z.infer<typeof HallOfGreatsResponseSchema>;

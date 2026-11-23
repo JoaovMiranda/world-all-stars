@@ -6,4 +6,3 @@ export const CountryRefSchema = z.object({
   flag: z.string().min(1),
   name: z.string().min(1),
 });
-export type CountryRef = z.infer<typeof CountryRefSchema>;

@@ -12,7 +12,6 @@ import { optionalEnum, optionalText } from './url-filter.schema';
 
 /** URL state shared by every admin queue: status filter, selected item (detail panel) and free-text filter. */
 export const AdminQueueSearchSchema = z.object({ status: optionalText(), item: optionalText(), q: optionalText() });
-export type AdminQueueSearch = z.infer<typeof AdminQueueSearchSchema>;
 
 export const AdminReviewSearchSchema = AdminQueueSearchSchema.extend({ tab: optionalEnum(ADMIN_REVIEW_TAB_VALUES) });
 export const AdminIngestionSearchSchema = AdminQueueSearchSchema.extend({ tab: optionalEnum(ADMIN_INGESTION_TAB_VALUES) });

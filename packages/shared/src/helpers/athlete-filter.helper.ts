@@ -1,5 +1,5 @@
-import type { AthleteFilters } from '../schemas/athlete-filters.schema';
-import type { AthleteSummary } from '../schemas/athlete-summary.schema';
+import type { AthleteFilters } from '../types/athlete-filters.type';
+import type { AthleteSummary } from '../types/athlete-summary.type';
 import { normalizeForSearch } from './text-normalize.helper';
 
 /**

@@ -1,9 +1,9 @@
 import type { CompetitionLevel } from '../enums/competition-level.enum';
 import type { GovernanceModel } from '../enums/governance-model.enum';
 import type { OrgNature } from '../enums/org-nature.enum';
-import type { OrgTreeNode, SportAssociation } from '../schemas/organization.schema';
-import type { SportCompetition } from '../schemas/sport-page.schema';
-import type { SportCard, SportGroup } from '../schemas/sports-tree.schema';
+import type { OrgTreeNode, SportAssociation } from '../types/organization.type';
+import type { SportCompetition } from '../types/sport-page.type';
+import type { SportCard, SportGroup } from '../types/sports-tree.type';
 import { normalizeForSearch } from './text-normalize.helper';
 
 /**
@@ -23,12 +23,23 @@ export const matchesSportSearch = (sport: SportCard, q: unknown): boolean => {
 };
 
 /** Filters the sports tree by search and governance model, dropping empty subgroups and groups. */
-export const filterSportsTree = (tree: readonly SportGroup[], filters: { q?: string | undefined; governance?: GovernanceModel | undefined; programme?: string | undefined }): SportGroup[] =>
+export const filterSportsTree = (
+  tree: readonly SportGroup[],
+  filters: { q?: string | undefined; governance?: GovernanceModel | undefined; programme?: string | undefined },
+): SportGroup[] =>
   tree
     .map((g) => ({
       ...g,
       subgroups: g.subgroups
-        .map((s) => ({ ...s, sports: s.sports.filter((sp) => (!filters.governance || sp.governance === filters.governance) && (!filters.programme || (sp.programmes ?? []).some((p) => p.slug === filters.programme)) && matchesSportSearch(sp, filters.q)) }))
+        .map((s) => ({
+          ...s,
+          sports: s.sports.filter(
+            (sp) =>
+              (!filters.governance || sp.governance === filters.governance) &&
+              (!filters.programme || (sp.programmes ?? []).some((p) => p.slug === filters.programme)) &&
+              matchesSportSearch(sp, filters.q),
+          ),
+        }))
         .filter((s) => s.sports.length > 0),
     }))
     .filter((g) => g.subgroups.length > 0);

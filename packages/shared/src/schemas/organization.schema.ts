@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { COMPETITION_LEVEL_VALUES } from '../enums/competition-level.enum';
 import { ORG_NATURE_VALUES } from '../enums/org-nature.enum';
 import { ORG_RELATION_VALUES } from '../enums/org-relation.enum';
+import type { OrgTreeNode } from '../types/organization.type';
 import { CountryRefSchema } from './country-ref.schema';
 import { SportInfoSchema } from './sport-ref.schema';
 
@@ -26,7 +27,6 @@ export const OrganizationSchema = z.object({
   description: z.string().nullable(),
   qid: z.string().nullable(),
 });
-export type Organization = z.infer<typeof OrganizationSchema>;
 
 /** One step of the hierarchy up to the root (FIFA › CONMEBOL › CBF). */
 export const OrgChainItemSchema = z.object({
@@ -35,7 +35,6 @@ export const OrgChainItemSchema = z.object({
   wikipedia: z.url().nullable(),
   relationLabel: z.string().nullable(),
 });
-export type OrgChainItem = z.infer<typeof OrgChainItemSchema>;
 
 /** Organization as an association of a sport: roles in that sport + chain up to the root. */
 export const SportAssociationSchema = OrganizationSchema.extend({
@@ -43,9 +42,7 @@ export const SportAssociationSchema = OrganizationSchema.extend({
   governs: z.boolean(),
   chain: z.array(OrgChainItemSchema),
 });
-export type SportAssociation = z.infer<typeof SportAssociationSchema>;
 
-export type OrgTreeNode = Organization & { children: OrgTreeNode[] };
 /** Node of GET /api/organizations (full hierarchy, recursive). */
 export const OrgTreeNodeSchema: z.ZodType<OrgTreeNode> = OrganizationSchema.extend({
   get children() {

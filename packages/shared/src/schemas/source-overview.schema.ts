@@ -17,7 +17,6 @@ export const IngestionRunSchema = z.object({
   updated: z.number().int().nonnegative(),
   errors: z.number().int().nonnegative(),
 });
-export type IngestionRun = z.infer<typeof IngestionRunSchema>;
 
 /** One source of the registry with license, usage status and collected links (doc 09 P14). */
 export const SourceOverviewSchema = z.object({
@@ -44,5 +43,4 @@ export const SourceOverviewSchema = z.object({
   achievements: z.number().int().nonnegative(),
   lastRun: IngestionRunSchema.nullable(),
 });
-export type SourceOverview = z.infer<typeof SourceOverviewSchema>;
 export const SourcesResponseSchema = z.array(SourceOverviewSchema);

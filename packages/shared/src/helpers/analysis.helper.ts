@@ -1,6 +1,6 @@
 import { ANALYSIS_DIMENSIONS, type AnalysisDimension } from '../consts/analysis.const';
-import type { AnalysisDimensionsResponse, CompareResponse } from '../schemas/analysis.schema';
-import type { AthleteSummary } from '../schemas/athlete-summary.schema';
+import type { AnalysisDimensionsResponse, CompareResponse } from '../types/analysis.type';
+import type { AthleteSummary } from '../types/athlete-summary.type';
 
 type Dims = Record<AnalysisDimension, number>;
 
@@ -15,7 +15,10 @@ export const normalizeAnalysis = (raw: readonly { slug: string; values: Dims }[]
     keys: [...ANALYSIS_DIMENSIONS],
     max,
     bySlug: Object.fromEntries(
-      raw.map((r) => [r.slug, { raw: r.values, norm: Object.fromEntries(ANALYSIS_DIMENSIONS.map((k) => [k, k === 'legacy' ? r.values[k] : scale(r.values[k], max[k])])) as Dims }]),
+      raw.map((r) => [
+        r.slug,
+        { raw: r.values, norm: Object.fromEntries(ANALYSIS_DIMENSIONS.map((k) => [k, k === 'legacy' ? r.values[k] : scale(r.values[k], max[k])])) as Dims },
+      ]),
     ),
   };
 };

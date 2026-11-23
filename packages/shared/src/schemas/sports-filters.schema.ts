@@ -12,4 +12,3 @@ export const SportsFiltersSchema = z.object({
   /** Multi-sport programme slug (olympic-games-summer, world-games…). */
   programme: optionalText(),
 });
-export type SportsFilters = z.infer<typeof SportsFiltersSchema>;

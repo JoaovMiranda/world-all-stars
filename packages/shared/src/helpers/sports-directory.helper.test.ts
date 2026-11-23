@@ -1,15 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
-import type { OrgTreeNode } from '../schemas/organization.schema';
-import type { SportCompetition } from '../schemas/sport-page.schema';
-import type { SportCard, SportGroup } from '../schemas/sports-tree.schema';
-import { countOrgTree, countSports, featuredAssociations, filterOrgTree, filterSportsTree, matchesCompetitionFilters, matchesSportSearch } from './sports-directory.helper';
+import type { OrgTreeNode } from '../types/organization.type';
+import type { SportCompetition } from '../types/sport-page.type';
+import type { SportCard, SportGroup } from '../types/sports-tree.type';
+import {
+  countOrgTree,
+  countSports,
+  featuredAssociations,
+  filterOrgTree,
+  filterSportsTree,
+  matchesCompetitionFilters,
+  matchesSportSearch,
+} from './sports-directory.helper';
 
 const org = (name: string, governs: boolean) => ({ name, governs });
 const sport = (name: string, governance: SportCard['governance'], orgs: string[]) =>
   ({ name, group: 'Físico', subgroup: 'Combate', governance, associations: orgs.map((o) => ({ name: o })) }) as SportCard;
 const tree: SportGroup[] = [
-  { slug: 'fisico', name: 'Físico', subgroups: [{ slug: 'combate', name: 'Combate', sports: [sport('MMA', 'free_market', ['UFC', 'PFL']), sport('Boxe', 'condominium', ['WBC'])] }] },
+  {
+    slug: 'fisico',
+    name: 'Físico',
+    subgroups: [{ slug: 'combate', name: 'Combate', sports: [sport('MMA', 'free_market', ['UFC', 'PFL']), sport('Boxe', 'condominium', ['WBC'])] }],
+  },
   { slug: 'mental', name: 'Mental', subgroups: [{ slug: 'tabuleiro', name: 'Tabuleiro', sports: [sport('Xadrez', 'pyramid', ['FIDE'])] }] },
 ];
 const node = (name: string, nature: OrgTreeNode['nature'], children: OrgTreeNode[] = []) => ({ name, nature, children }) as unknown as OrgTreeNode;

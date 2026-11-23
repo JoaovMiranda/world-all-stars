@@ -14,4 +14,3 @@ export const GlobeCountrySchema = z.object({
   sports: z.array(z.object({ sport: SportRefSchema, titles: z.number().int().nonnegative() })),
   athletes: z.array(AthleteRefSchema),
 });
-export type GlobeCountry = z.infer<typeof GlobeCountrySchema>;

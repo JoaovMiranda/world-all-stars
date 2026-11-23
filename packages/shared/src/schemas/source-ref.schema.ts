@@ -8,4 +8,3 @@ export const SourceRefSchema = z.object({
   url: z.url(),
   home: z.url(),
 });
-export type SourceRef = z.infer<typeof SourceRefSchema>;

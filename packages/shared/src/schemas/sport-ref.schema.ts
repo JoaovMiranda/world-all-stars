@@ -8,7 +8,6 @@ export const SportRefSchema = z.object({
   name: z.string().min(1),
   colorToken: z.string().min(1),
 });
-export type SportRef = z.infer<typeof SportRefSchema>;
 
 /** Sport with taxonomy path and classification (repository `sportOf`). */
 export const SportInfoSchema = SportRefSchema.extend({
@@ -22,7 +21,6 @@ export const SportInfoSchema = SportRefSchema.extend({
   format: z.string().min(1),
   governance: z.enum(GOVERNANCE_MODEL_VALUES).nullable(),
 });
-export type SportInfo = z.infer<typeof SportInfoSchema>;
 
 /** Presence of a sport in a multi-sport programme (Olympics, World Games…): a badge, never a container (§11.5). */
 export const SportProgrammeSchema = z.object({
@@ -33,4 +31,3 @@ export const SportProgrammeSchema = z.object({
   status: z.string().min(1),
   years: z.array(z.number().int()).default([]),
 });
-export type SportProgramme = z.infer<typeof SportProgrammeSchema>;

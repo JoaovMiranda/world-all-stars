@@ -1,5 +1,5 @@
-import type { IsoDate } from '../schemas/iso-date.schema';
-import type { MonthDay } from '../schemas/month-day.schema';
+import type { IsoDate } from '../types/iso-date.type';
+import type { MonthDay } from '../types/month-day.type';
 import { addDaysIso, toIsoDate } from './iso-date.helper';
 
 /** A leap year, so 02-29 exists and the day ring has 366 days. */

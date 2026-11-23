@@ -6,7 +6,6 @@ export const StatKpiSchema = z.object({
   value: z.union([z.number(), z.string()]),
   hint_pt: z.string().nullable().optional(),
 });
-export type StatKpi = z.infer<typeof StatKpiSchema>;
 
 /**
  * Sport-specific career stats (athlete_stats.stats, JSONB). Loose record keyed by `schema` (football, swimming…):
@@ -19,4 +18,3 @@ export const AthleteStatsSchema = z
     _labels: z.record(z.string(), z.string()).optional(),
   })
   .catchall(z.unknown());
-export type AthleteStats = z.infer<typeof AthleteStatsSchema>;

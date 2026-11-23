@@ -1,7 +1,7 @@
 import { COMMENTS_PAGE_SIZE } from '../consts/pagination.const';
 import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
 import { CommentSort } from '../enums/comment-sort.enum';
-import type { Comment, CommentsResponse, CommentThread } from '../schemas/comment.schema';
+import type { Comment, CommentsResponse, CommentThread } from '../types/comment.type';
 
 const score = (c: Comment) => c.likes - c.dislikes;
 

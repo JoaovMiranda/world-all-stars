@@ -1,3 +1,4 @@
+import type { AdminSection } from '../enums/admin-section.enum';
 import { ContactStatus } from '../enums/contact-status.enum';
 import { DossierStatus } from '../enums/dossier-status.enum';
 import { IngestionRunStatus } from '../enums/ingestion-run-status.enum';
@@ -5,9 +6,8 @@ import { PrivacyRequestStatus } from '../enums/privacy-request-status.enum';
 import { ReviewStatus } from '../enums/review-status.enum';
 import { SourceUsageStatus } from '../enums/source-usage-status.enum';
 import { SuggestionStatus } from '../enums/suggestion-status.enum';
-import type { AdminSection } from '../enums/admin-section.enum';
-import type { AdminCommentsResponse, AdminInboxResponse, AdminIngestionResponse, CrawlerProposal } from '../schemas/admin.schema';
-import type { AdminDossier, AdminSourcesResponse, PrivacyRequest, TierSignal } from '../schemas/admin-curation.schema';
+import type { AdminCommentsResponse, AdminInboxResponse, AdminIngestionResponse, CrawlerProposal } from '../types/admin.type';
+import type { AdminDossier, AdminSourcesResponse, PrivacyRequest, TierSignal } from '../types/admin-curation.type';
 import { isCommentFlagged } from './admin-rules.helper';
 
 export interface AdminQueues {
@@ -28,7 +28,8 @@ export const adminPendingCounts = (q: AdminQueues): Record<AdminSection, number>
   sources: q.sources.sources.filter((s) => s.usageStatus === SourceUsageStatus.PendingPermission).length + q.sources.queuedLinks.length,
   users: 0,
   comments: q.comments.filter(isCommentFlagged).length,
-  contact: q.inbox.suggestions.filter((s) => s.status === SuggestionStatus.Pending).length + q.inbox.messages.filter((m) => m.status === ContactStatus.New).length,
+  contact:
+    q.inbox.suggestions.filter((s) => s.status === SuggestionStatus.Pending).length + q.inbox.messages.filter((m) => m.status === ContactStatus.New).length,
   dossiers: q.dossiers.filter((d) => d.status === DossierStatus.Pending).length,
   privacy: q.privacy.filter((r) => r.status === PrivacyRequestStatus.Open || r.status === PrivacyRequestStatus.InProgress).length,
 });

@@ -32,6 +32,3 @@ export const ObservanceEventSchema = ObservanceSchema.extend({
 
 /** One entry of the calendar (GET /api/calendar): competition or observance. */
 export const CalendarEventSchema = z.discriminatedUnion('type', [CompetitionEventSchema, ObservanceEventSchema]);
-export type CompetitionEvent = z.infer<typeof CompetitionEventSchema>;
-export type ObservanceEvent = z.infer<typeof ObservanceEventSchema>;
-export type CalendarEvent = z.infer<typeof CalendarEventSchema>;

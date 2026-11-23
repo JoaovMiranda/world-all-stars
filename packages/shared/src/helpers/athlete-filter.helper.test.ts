@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import type { AthleteSummary } from '../schemas/athlete-summary.schema';
+import type { AthleteSummary } from '../types/athlete-summary.type';
 import { matchesAthleteFilters } from './athlete-filter.helper';
 
 const pele = {
-  slug: 'pele', knownAs: 'Pelé', tier: 'mythic',
+  slug: 'pele',
+  knownAs: 'Pelé',
+  tier: 'mythic',
   sport: { slug: 'futebol', groupSlug: 'fisico' },
   nationalities: [{ iso2: 'BR', flag: '🇧🇷', name: 'Brasil' }],
 } as unknown as AthleteSummary;

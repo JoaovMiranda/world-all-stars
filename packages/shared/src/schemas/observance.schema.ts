@@ -17,4 +17,3 @@ export const ObservanceSchema = z.object({
   country: CountryRefSchema.nullable(),
   sport: SportInfoSchema.nullable(),
 });
-export type Observance = z.infer<typeof ObservanceSchema>;

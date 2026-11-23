@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 /** Core Web Vitals + the two loading milestones (doc 12 targets at p75: LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1). */
 export const WEB_VITAL_NAMES = ['LCP', 'INP', 'CLS', 'FCP', 'TTFB'] as const;
-export type WebVitalName = (typeof WEB_VITAL_NAMES)[number];
 
 /**
  * One field measurement from a real visitor (RUM). Anonymous by construction: no user/session id, no query string,
@@ -19,8 +18,6 @@ export const WebVitalSchema = z.object({
   /** Effective connection type when the browser exposes it (4g, 3g…). */
   connection: z.string().max(16).optional(),
 });
-export type WebVital = z.infer<typeof WebVitalSchema>;
 
 /** Body of POST /api/vitals: the metrics a page collected, sent once when it is hidden (sendBeacon). */
 export const WebVitalsRequestSchema = z.object({ metrics: z.array(WebVitalSchema).min(1).max(10) });
-export type WebVitalsRequest = z.infer<typeof WebVitalsRequestSchema>;

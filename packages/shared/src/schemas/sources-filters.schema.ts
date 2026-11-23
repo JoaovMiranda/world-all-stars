@@ -7,4 +7,3 @@ import { optionalEnum } from './url-filter.schema';
 export const SourcesFiltersSchema = z.object({
   status: optionalEnum(SOURCE_USAGE_STATUS_VALUES),
 });
-export type SourcesFilters = z.infer<typeof SourcesFiltersSchema>;

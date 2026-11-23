@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { CalendarEvent } from '../schemas/calendar-event.schema';
+import type { CalendarEvent } from '../types/calendar-event.type';
 import { eventKey, eventsBetween, eventsOnDay } from './calendar-event.helper';
 
 const cup = { type: 'competition', id: 'c1', start: '2026-06-11', end: '2026-07-19' } as CalendarEvent;

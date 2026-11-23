@@ -7,4 +7,3 @@ export const AthleteListResponseSchema = z.object({
   items: z.array(AthleteSummarySchema),
   total: z.number().int().nonnegative(),
 });
-export type AthleteListResponse = z.infer<typeof AthleteListResponseSchema>;

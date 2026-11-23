@@ -16,7 +16,6 @@ export const CollectionRunSchema = z.object({
   factsRejected: z.number().int().nonnegative(),
   extractorTokens: z.number().int().nonnegative(),
 });
-export type CollectionRun = z.infer<typeof CollectionRunSchema>;
 
 /** Response of GET /api/collection-runs (newest last, as executed). */
 export const CollectionRunsResponseSchema = z.array(CollectionRunSchema);

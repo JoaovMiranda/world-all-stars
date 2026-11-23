@@ -1,7 +1,6 @@
 import { z } from 'zod';
-
-import { ACHIEVEMENT_TYPE_VALUES } from '../enums/achievement-type.enum';
 import { AchievementKind } from '../enums/achievement-kind.enum';
+import { ACHIEVEMENT_TYPE_VALUES } from '../enums/achievement-type.enum';
 import { COMPETITION_LEVEL_VALUES } from '../enums/competition-level.enum';
 import { DOSSIER_STATUS_VALUES } from '../enums/dossier-status.enum';
 import { ON_THIS_DAY_KIND_VALUES } from '../enums/on-this-day-kind.enum';
@@ -10,8 +9,8 @@ import { AthleteStatsSchema } from './athlete-stats.schema';
 import { AthleteSummarySchema } from './athlete-summary.schema';
 import { CountryRefSchema } from './country-ref.schema';
 import { IsoDateSchema } from './iso-date.schema';
-import { SourceRefSchema } from './source-ref.schema';
 import { ContentLocaleSchema } from './locale.schema';
+import { SourceRefSchema } from './source-ref.schema';
 
 const level = z.enum(COMPETITION_LEVEL_VALUES);
 const achievementBase = {
@@ -44,7 +43,6 @@ export const AwardAchievementSchema = z.object({
 });
 /** A title, medal, placing or award (competition edition OR award edition). */
 export const AchievementSchema = z.discriminatedUnion('kind', [CompetitionAchievementSchema, AwardAchievementSchema]);
-export type Achievement = z.infer<typeof AchievementSchema>;
 
 export const CityRefSchema = z.object({ name: z.string().min(1), region: z.string().nullable(), country: CountryRefSchema.nullable() });
 export const LifeEventSchema = z.object({ date: IsoDateSchema.nullable(), city: CityRefSchema.nullable() });
@@ -59,7 +57,6 @@ export const TeamStintSchema = z.object({
   toDate: IsoDateSchema.nullable(),
   role: z.string().nullable(),
 });
-export type TeamStint = z.infer<typeof TeamStintSchema>;
 
 export const TitleReignSchema = z.object({
   competition: z.string().min(1),
@@ -68,7 +65,6 @@ export const TitleReignSchema = z.object({
   endReason: z.string().nullable(),
   source: SourceRefSchema.nullable(),
 });
-export type TitleReign = z.infer<typeof TitleReignSchema>;
 
 export const MilestoneSchema = z.object({
   date: IsoDateSchema,
@@ -76,7 +72,6 @@ export const MilestoneSchema = z.object({
   title: z.string().min(1),
   source: SourceRefSchema.nullable(),
 });
-export type Milestone = z.infer<typeof MilestoneSchema>;
 
 /** "Mudou o jogo" dossier (Hall of Greats): headline + evidences, approved by 2 admins. */
 export const DossierSchema = z.object({
@@ -85,7 +80,6 @@ export const DossierSchema = z.object({
   headline: z.string().nullable(),
   evidences: z.array(z.object({ type: z.string().min(1), text: z.string().min(1), source: SourceRefSchema.nullable() })),
 });
-export type Dossier = z.infer<typeof DossierSchema>;
 
 export const TierChangeSchema = z.object({
   from: z.enum(TIER_VALUES),
@@ -101,7 +95,6 @@ export const FieldProvenanceSchema = z.object({
   retrievedAt: IsoDateSchema.nullable(),
   source: SourceRefSchema.nullable(),
 });
-export type FieldProvenance = z.infer<typeof FieldProvenanceSchema>;
 
 /** Two sources disagree on a field: chosen value vs other value. */
 export const FieldConflictSchema = z.object({
@@ -110,16 +103,12 @@ export const FieldConflictSchema = z.object({
   other: z.object({ value: z.string(), source: SourceRefSchema.nullable() }),
   resolution: z.string().min(1),
 });
-export type FieldConflict = z.infer<typeof FieldConflictSchema>;
 
 /** Legacy score breakdown: Σ rank_weight × level weight (doc 03/16). */
 export const LegacyScoreSchema = z.object({
   total: z.number().nonnegative(),
-  rows: z.array(
-    z.object({ level, type: z.string().min(1), count: z.number().int().nonnegative(), points: z.number().nonnegative(), unit: z.number() }),
-  ),
+  rows: z.array(z.object({ level, type: z.string().min(1), count: z.number().int().nonnegative(), points: z.number().nonnegative(), unit: z.number() })),
 });
-export type LegacyScore = z.infer<typeof LegacyScoreSchema>;
 
 export const EntityVersionSchema = z.object({ n: z.number().int().positive(), summary: z.string().min(1), author: z.string().min(1) });
 
@@ -152,8 +141,6 @@ export const AthleteProfileSchema = AthleteSummarySchema.extend({
   version: z.object({ current: z.number().int().positive(), history: z.array(EntityVersionSchema) }),
   sourceLinks: z.array(SourceRefSchema),
 });
-export type AthleteProfile = z.infer<typeof AthleteProfileSchema>;
 
 /** Path params of every /api/athletes/:slug/* endpoint. */
 export const AthleteSlugParamsSchema = z.object({ slug: z.string().min(1) });
-export type AthleteSlugParams = z.infer<typeof AthleteSlugParamsSchema>;

@@ -15,7 +15,6 @@ export const SessionUserSchema = z.object({
   tierVotesCount: z.number().int().nonnegative(),
   commentsCount: z.number().int().nonnegative(),
 });
-export type SessionUser = z.infer<typeof SessionUserSchema>;
 
 /**
  * Response of GET /api/session: who is browsing (anon has no user).
@@ -31,7 +30,6 @@ export const SessionResponseSchema = z.object({
   simulated: z.boolean(),
   googleEnabled: z.boolean(),
 });
-export type SessionResponse = z.infer<typeof SessionResponseSchema>;
 
 /** Response of GET /api/me (E2): votes given and comments written. */
 export const MeResponseSchema = z.object({
@@ -39,7 +37,6 @@ export const MeResponseSchema = z.object({
   votes: z.array(z.object({ athlete: AthleteRefSchema, tier: z.enum(TIER_VALUES), at: z.iso.datetime() })),
   comments: z.array(z.object({ id: z.string().min(1), athlete: AthleteRefSchema, body: z.string(), at: z.iso.datetime(), isReply: z.boolean() })),
 });
-export type MeResponse = z.infer<typeof MeResponseSchema>;
 
 export const NotificationSchema = z.object({
   id: z.string().min(1),
@@ -51,10 +48,8 @@ export const NotificationSchema = z.object({
   athlete: AthleteRefSchema.nullable(),
   commentId: z.string().nullable(),
 });
-export type Notification = z.infer<typeof NotificationSchema>;
 /** Response of GET /api/notifications (E4). */
 export const NotificationsResponseSchema = z.object({ items: z.array(NotificationSchema), unread: z.number().int().nonnegative() });
-export type NotificationsResponse = z.infer<typeof NotificationsResponseSchema>;
 export const NotificationIdParamsSchema = z.object({ id: z.string().min(1) });
 
 /** Body of POST /api/account/consent: the versions shown in the consent dialog + the 18+ self-declaration. */
@@ -63,8 +58,6 @@ export const AcceptConsentRequestSchema = z.object({
   privacyVersion: z.string().min(1),
   adult: z.literal(true),
 });
-export type AcceptConsentRequest = z.infer<typeof AcceptConsentRequestSchema>;
 
 /** Consent dialog (web): both boxes start unchecked and must be ticked (Terms + Privacy; 18+). */
 export const ConsentFormSchema = z.object({ documents: z.literal(true), adult: z.literal(true) });
-export type ConsentForm = z.input<typeof ConsentFormSchema>;
