@@ -1,28 +1,13 @@
 import './review-kit.css';
 
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 
 import { Button } from './button.component';
-import type { ButtonVariant } from './button.helper';
-import { ConfirmDialog, type ReasonConfig } from './confirm-dialog.component';
+import { ConfirmDialog } from './confirm-dialog.component';
+import type { DecisionAction } from './decision-action.interface';
 import { REVIEW_KIT_MESSAGES } from './review-kit.const';
-
-export interface DecisionAction {
-  key: string;
-  label: string;
-  variant?: ButtonVariant;
-  disabled?: boolean;
-  /** Title of the confirmation dialog (defaults to the label). */
-  confirmTitle?: ReactNode;
-  /** Text/fields shown in the dialog. */
-  confirmBody?: ReactNode;
-  /** Required reason (approve/reject, hide, ban…). Omit for a plain confirmation. */
-  reason?: ReasonConfig;
-  /** Runs the decision; a thrown Error is shown in the dialog. */
-  onConfirm: (reason: string) => unknown;
-}
 
 interface DecisionBarProps {
   /** Accessible name of the group (e.g. "Decisão sobre a proposta"). */

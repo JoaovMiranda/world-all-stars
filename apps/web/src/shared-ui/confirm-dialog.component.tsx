@@ -5,19 +5,13 @@ import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
 import { useText } from '@/i18n/use-text.hook';
 
 import { Button } from './button.component';
-import type { ButtonVariant } from './button.helper';
+import type { ButtonVariant } from './button-variant.type';
 import { Dialog } from './dialog.component';
 import { FormField } from './form-field.component';
 import { Notice } from './notice.component';
+import type { ReasonConfig } from './reason-config.interface';
 import { REVIEW_KIT_MESSAGES } from './review-kit.const';
 import { Textarea } from './textarea.component';
-
-export interface ReasonConfig {
-  label?: string;
-  hint?: string;
-  /** Minimum length after trim (required reason). */
-  minLength: number;
-}
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -35,7 +29,17 @@ interface ConfirmDialogProps {
 }
 
 /** Confirmation modal (native Dialog) with optional required reason, pending state and inline error. */
-export function ConfirmDialog({ open, onClose, title, kicker, children, confirmLabel: confirmLabelProp, confirmVariant = 'primary', reason, onConfirm }: ConfirmDialogProps) {
+export function ConfirmDialog({
+  open,
+  onClose,
+  title,
+  kicker,
+  children,
+  confirmLabel: confirmLabelProp,
+  confirmVariant = 'primary',
+  reason,
+  onConfirm,
+}: ConfirmDialogProps) {
   const kit = useText(REVIEW_KIT_MESSAGES);
   const confirmLabel = confirmLabelProp ?? kit.confirm;
   const [text, setText] = useState('');
@@ -76,7 +80,16 @@ export function ConfirmDialog({ open, onClose, title, kicker, children, confirmL
         {children}
         {reason && (
           <FormField label={reason.label ?? kit.reasonLabel} hint={reason.hint ?? kit.reasonHint} error={fieldError} required>
-            {(p) => <Textarea {...p} autoFocus rows={3} value={text} onChange={(e) => (setText(e.target.value), fieldError && setFieldError(undefined))} maxLength={500} />}
+            {(p) => (
+              <Textarea
+                {...p}
+                autoFocus
+                rows={3}
+                value={text}
+                onChange={(e) => (setText(e.target.value), fieldError && setFieldError(undefined))}
+                maxLength={500}
+              />
+            )}
           </FormField>
         )}
         {error && (

@@ -4,13 +4,13 @@ import { useState } from 'react';
 
 import { rankingDetailQuery } from '@/data/endpoints/rankings.query';
 import { useText } from '@/i18n/use-text.hook';
-import { DataTable, type DataColumn } from '@/shared-ui/data-table.component';
+import type { DataColumn } from '@/shared-ui/data-column.interface';
+import { DataTable } from '@/shared-ui/data-table.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { PageLayout } from '@/shared-ui/page-layout.component';
 import { Pagination } from '@/shared-ui/pagination.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
-
 import { RANKINGS_MESSAGES } from './rankings.const';
 
 const route = getRouteApi('/rankings/$id');
@@ -31,13 +31,24 @@ export function RankingPage() {
           {
             key: 'competitor',
             header: t.competitor,
-            cell: (e) => (e.competitor.hasProfile && e.competitor.slug ? <Link to="/athletes/$slug" params={{ slug: e.competitor.slug }}>{e.competitor.name}</Link> : e.competitor.name),
+            cell: (e) =>
+              e.competitor.hasProfile && e.competitor.slug ? (
+                <Link to="/athletes/$slug" params={{ slug: e.competitor.slug }}>
+                  {e.competitor.name}
+                </Link>
+              ) : (
+                e.competitor.name
+              ),
           },
           { key: 'score', header: t.score, align: 'end', cell: (e) => e.score ?? '—' },
           ...metricKeys.map((k) => ({ key: k, header: t.metrics[k] ?? k, align: 'end' as const, cell: (e: RankingEntry) => e.metrics[k] ?? '—' })),
         ];
         return (
-          <PageLayout title={data.snapshot.title} eyebrow={`${data.snapshot.methodology} · v${data.snapshot.methodologyVersion}`} breadcrumb={[{ label: t.breadcrumb, link: { to: '/rankings' } }, { label: data.snapshot.title }]}>
+          <PageLayout
+            title={data.snapshot.title}
+            eyebrow={`${data.snapshot.methodology} · v${data.snapshot.methodologyVersion}`}
+            breadcrumb={[{ label: t.breadcrumb, link: { to: '/rankings' } }, { label: data.snapshot.title }]}
+          >
             <DataTable caption={data.snapshot.title} captionHidden columns={columns} rows={data.entries} rowKey={(e) => e.competitor.id} />
             <Pagination page={data.page} pageCount={Math.max(1, Math.ceil(data.total / data.pageSize))} onChange={setPage} />
             <p className="muted mt-4">

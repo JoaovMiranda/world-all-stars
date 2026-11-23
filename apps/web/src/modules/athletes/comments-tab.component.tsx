@@ -1,20 +1,21 @@
-import { type AthleteProfile, COMMENT_SORT_VALUES, type CommentSort, type CommentsResponse } from '@was/shared';
 import { useMutationState, useQueries } from '@tanstack/react-query';
+import { type AthleteProfile, COMMENT_SORT_VALUES, type CommentSort, type CommentsResponse } from '@was/shared';
 import { useEffect, useRef, useState } from 'react';
 
 import { commentsQuery, postComment } from '@/data/endpoints/comments.query';
 
 import { useText } from '@/i18n/use-text.hook';
+import { useSession } from '@/session/use-session.hook';
 import { Button } from '@/shared-ui/button.component';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { Section } from '@/shared-ui/section.component';
-import { useSession } from '@/session/use-session.hook';
 
 import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 import { CommentForm } from './comment-form.component';
 import { CommentItem } from './comment-item.component';
-import { PENDING_COMMENT_PREFIX, withPendingComments } from './optimistic.helper';
+import { PENDING_COMMENT_PREFIX } from './optimistic.const';
+import { withPendingComments } from './optimistic.helper';
 
 interface CommentsTabProps {
   profile: AthleteProfile;

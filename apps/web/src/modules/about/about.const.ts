@@ -1,7 +1,13 @@
-import { COMPETITION_LEVEL_WEIGHT, MYTHIC_MIN_EVIDENCES, TIER_PERCENTILE_THRESHOLD, type CompetitionLevel, defineMessages, type Locale, type Tier } from '@was/shared';
-
-import type { DocumentContent } from '@/shared-ui/document-page-layout.component';
-
+import {
+  COMPETITION_LEVEL_WEIGHT,
+  type CompetitionLevel,
+  defineMessages,
+  type Locale,
+  MYTHIC_MIN_EVIDENCES,
+  TIER_PERCENTILE_THRESHOLD,
+  type Tier,
+} from '@was/shared';
+import type { DocumentContent } from '@/shared-ui/document-content.interface';
 import { ABOUT_TEXT_EN, CRITERIA_DOC_EN } from './about.const.en';
 import { ABOUT_TEXT_ES, CRITERIA_DOC_ES } from './about.const.es';
 
@@ -69,14 +75,24 @@ export const CRITERIA_DOC: DocumentContent = {
           caption: 'Critérios de inclusão dos esportes do lançamento',
           headers: ['Esporte', 'Entra quem cumprir pelo menos um'],
           rows: [
-            ['Futebol', 'Bola de Ouro ou FIFA The Best · campeão mundial com prêmio individual na Copa (Bola de Ouro da Copa, artilheiro) · top 10 artilheiros históricos oficiais'],
-            ['Natação', '2 ou mais ouros olímpicos individuais · recordista mundial em prova olímpica por 2 anos ou mais · 5 ou mais títulos mundiais individuais'],
+            [
+              'Futebol',
+              'Bola de Ouro ou FIFA The Best · campeão mundial com prêmio individual na Copa (Bola de Ouro da Copa, artilheiro) · top 10 artilheiros históricos oficiais',
+            ],
+            [
+              'Natação',
+              '2 ou mais ouros olímpicos individuais · recordista mundial em prova olímpica por 2 anos ou mais · 5 ou mais títulos mundiais individuais',
+            ],
             ['Xadrez', 'Campeão mundial (clássico, linha histórica e FIDE) · nº 1 do rating FIDE por 12 meses ou mais · campeã mundial feminina'],
             ['Boxe', 'Campeão indiscutido (todos os cinturões principais) · campeão linear · membro do International Boxing Hall of Fame'],
             ['Counter-Strike', 'Campeão de Major com prêmio de MVP · 2 ou mais Majors · nº 1 do ranking anual HLTV Top 20'],
           ],
         },
-        { kind: 'notice', tone: 'info', text: 'Os demais esportes do site seguem a mesma lógica; os critérios de cada um são publicados aqui conforme a curadoria os aprova.' },
+        {
+          kind: 'notice',
+          tone: 'info',
+          text: 'Os demais esportes do site seguem a mesma lógica; os critérios de cada um são publicados aqui conforme a curadoria os aprova.',
+        },
       ],
     },
     {

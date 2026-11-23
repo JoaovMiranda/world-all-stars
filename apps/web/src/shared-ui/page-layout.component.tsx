@@ -1,7 +1,8 @@
 import type { Locale } from '@was/shared';
 import type { ReactNode } from 'react';
 
-import { Breadcrumb, type BreadcrumbItem } from './breadcrumb.component';
+import { Breadcrumb } from './breadcrumb.component';
+import type { BreadcrumbItem } from './breadcrumb-item.interface';
 import { useContentLang } from './content-lang.helper';
 import { PageHeader } from './page-header.component';
 import { UntranslatedNote } from './untranslated-note.component';
@@ -32,7 +33,22 @@ interface PageLayoutProps {
 }
 
 /** Skeleton of every public page: breadcrumb → header → content (8/12) + optional aside (4/12). */
-export function PageLayout({ title, heading, breadcrumb, eyebrow, lead, badges, actions, headerExtra, media, decor, aside, contentLocale, className, children }: PageLayoutProps) {
+export function PageLayout({
+  title,
+  heading,
+  breadcrumb,
+  eyebrow,
+  lead,
+  badges,
+  actions,
+  headerExtra,
+  media,
+  decor,
+  aside,
+  contentLocale,
+  className,
+  children,
+}: PageLayoutProps) {
   // The lead is API prose on the pages that pass contentLocale (sport description…): mark its language (WCAG 3.1.2).
   const contentLang = useContentLang(contentLocale);
   const leadNode = lead && contentLang ? <span lang={contentLang}>{lead}</span> : lead;

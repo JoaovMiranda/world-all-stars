@@ -1,4 +1,4 @@
-import { type ApiContract, ApiErrorSchema, HTTP_HEADER, LOCALE_HEADER, SessionKind, buildApiPath, buildQueryString } from '@was/shared';
+import { type ApiContract, ApiErrorSchema, buildApiPath, buildQueryString, HTTP_HEADER, LOCALE_HEADER, SessionKind } from '@was/shared';
 
 import { getScope } from '@/app/request-scope';
 import { localeStore } from '@/i18n/locale.store';
@@ -6,12 +6,7 @@ import { sessionStore } from '@/session/session.store';
 
 import { ApiError } from './api-error.error';
 import { API_BASE_URL } from './data-layer.const';
-
-interface HttpInput {
-  params?: Record<string, unknown>;
-  query?: Record<string, unknown>;
-  body?: unknown;
-}
+import type { HttpInput } from './http-input.interface';
 
 /** Origin of the in-process requests made during SSR (never leaves the process). */
 const SSR_ORIGIN = 'http://ssr.internal';

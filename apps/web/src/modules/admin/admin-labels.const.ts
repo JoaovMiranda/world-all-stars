@@ -3,8 +3,8 @@ import {
   type BannedWordMatchMode,
   type CommentStatus,
   type ContactStatus,
-  defineMessages,
   type DossierStatus,
+  defineMessages,
   type GreatsEvidenceType,
   type IngestionGate,
   type IngestionRunStatus,
@@ -22,12 +22,6 @@ import type { TagTone } from '@/shared-ui/tag.component';
 
 import { ADMIN_LABELS_TEXT_EN } from './admin-labels.const.en';
 import { ADMIN_LABELS_TEXT_ES } from './admin-labels.const.es';
-
-/** Label + tag tone of a status value. */
-export interface StatusMeta {
-  label: string;
-  tone: TagTone;
-}
 
 // pt-BR labels of admin values (en/es next to it). Tones are data and live in ADMIN_STATUS_TONES.
 export const ADMIN_LABELS_TEXT: {

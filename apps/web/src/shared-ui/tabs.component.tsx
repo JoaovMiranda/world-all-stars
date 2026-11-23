@@ -1,13 +1,6 @@
 import { type KeyboardEvent, type ReactNode, useId, useRef } from 'react';
-
+import type { TabItem } from './tab-item.interface';
 import { useSlidingIndicator } from './use-sliding-indicator.hook';
-
-export interface TabItem<V extends string> {
-  value: V;
-  label: ReactNode;
-  /** Small counter after the label (e.g. comments). */
-  count?: number;
-}
 
 interface TabsProps<V extends string> {
   /** Accessible name of the tablist. */

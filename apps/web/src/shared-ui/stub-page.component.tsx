@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
-
+import type { BreadcrumbItem } from './breadcrumb-item.interface';
 import { ButtonLink } from './button-link.component';
-import type { BreadcrumbItem } from './breadcrumb.component';
 import { EmptyState } from './empty-state.component';
 import { PageLayout } from './page-layout.component';
 import { RequireSession } from './require-session.component';

@@ -1,31 +1,23 @@
-import { type AthleteProfile, isCompetitionAchievement, MEDAL_ACHIEVEMENT_TYPES, type SwimmingStats, SwimmingStatsSchema } from '@was/shared';
+import { type AthleteProfile, isCompetitionAchievement, MEDAL_ACHIEVEMENT_TYPES, type SwimmingStats } from '@was/shared';
 import { useCallback, useMemo } from 'react';
 
-import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
-import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
-import { barsOption } from '@/shared-ui/chart-presets.helper';
-import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
+import { barsOption } from '@/shared-ui/chart-presets.helper';
+import type { ChartTheme } from '@/shared-ui/chart-theme.interface';
 import { DataTable } from '@/shared-ui/data-table.component';
 import { Medal, type MedalMetal } from '@/shared-ui/medal.component';
 import { Section } from '@/shared-ui/section.component';
-
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import { ATHLETE_PROFILE_MESSAGES } from '../athletes.const';
-import { kpi, metric } from './sport-panel.helper';
-import type { SportPanelDef } from './sport-panel.type';
 
 const METAL_COLOR: Record<MedalMetal, string> = { gold: '--medal-gold', silver: '--medal-silver', bronze: '--medal-bronze' };
 const isMetal = (type: string): type is MedalMetal => (MEDAL_ACHIEVEMENT_TYPES as readonly string[]).includes(type);
-const total = (m: SwimmingStats['olympic_medals']) => m.gold + m.silver + m.bronze;
 
-function SwimmingPanel({ profile }: { profile: AthleteProfile; stats: SwimmingStats }) {
+export function SwimmingPanel({ profile }: { profile: AthleteProfile; stats: SwimmingStats }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
   const ui = useText(UI_MESSAGES);
-  const medals = useMemo(
-    () => profile.achievements.filter(isCompetitionAchievement).filter((a) => a.isOlympic && isMetal(a.type)),
-    [profile.achievements],
-  );
+  const medals = useMemo(() => profile.achievements.filter(isCompetitionAchievement).filter((a) => a.isOlympic && isMetal(a.type)), [profile.achievements]);
   const games = useMemo(() => [...new Set(medals.map((a) => a.year))].sort((a, b) => a - b), [medals]);
   const events = useMemo(() => [...new Set(medals.map((a) => a.category ?? T.event))], [medals, T]);
   const option = useCallback(
@@ -72,29 +64,3 @@ function SwimmingPanel({ profile }: { profile: AthleteProfile; stats: SwimmingSt
     </Section>
   );
 }
-
-export const SWIMMING_PANEL: SportPanelDef<SwimmingStats> = {
-  schema: SwimmingStatsSchema,
-  kpis: (_p, s) => {
-    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
-    const o = s.olympic_medals;
-    const g = s.olympic_games;
-    return [
-      kpi(T.olympicMedals, total(o), T.olympicMedalsHint(o.gold, o.silver, o.bronze), true),
-      kpi(T.olympicGolds, o.gold, T.olympicGoldsHint(g.length, g[0] ?? 0, g[g.length - 1] ?? 0), true),
-      kpi(T.worldChampGolds, s.world_championship_medals.gold, T.worldChampGoldsHint),
-      kpi(T.worldRecords, s.world_records.total, T.worldRecordsHint(s.world_records.individual, s.world_records.relay)),
-    ];
-  },
-  compare: (_p, s) => {
-    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
-    return [
-      metric(T.olympicMedals, total(s.olympic_medals)),
-      metric(T.olympicGolds, s.olympic_medals.gold),
-      metric(T.worldChampGolds, s.world_championship_medals.gold),
-      metric(T.worldRecords, s.world_records.total),
-      metric(T.olympicGames, s.olympic_games.length),
-    ];
-  },
-  Panel: SwimmingPanel,
-};

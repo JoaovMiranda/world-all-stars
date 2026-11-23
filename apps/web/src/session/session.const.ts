@@ -1,4 +1,4 @@
-import { APP_COOKIE, AUTH_BASE_PATH as SHARED_AUTH_BASE_PATH, defineMessages } from '@was/shared';
+import { APP_COOKIE, defineMessages, AUTH_BASE_PATH as SHARED_AUTH_BASE_PATH } from '@was/shared';
 
 import { SESSION_TEXT_EN } from './session.const.en';
 import { SESSION_TEXT_ES } from './session.const.es';
@@ -64,6 +64,4 @@ export const SESSION_TEXT = {
     error: 'Não foi possível registrar o aceite. Tente de novo.',
   },
 } as const;
-export type LoginReason = keyof typeof SESSION_TEXT.reasons;
-
 export const SESSION_MESSAGES = defineMessages(SESSION_TEXT, { en: SESSION_TEXT_EN, es: SESSION_TEXT_ES });

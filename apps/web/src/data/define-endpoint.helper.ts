@@ -1,25 +1,23 @@
-import { type ApiContract, type ContractInput, type ContractResponse, FixtureMode, type Locale, type SessionKind } from '@was/shared';
 import { queryOptions, type UseMutationOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type ApiContract, type ContractInput, type ContractResponse, FixtureMode, type Locale, type SessionKind } from '@was/shared';
 
 import { getScope } from '@/app/request-scope';
 import { localeStore, useLocale } from '@/i18n/locale.store';
 import { identityStore, sessionStore, useSessionIdentity, useSessionKind } from '@/session/session.store';
-
-import type { FixtureHandler } from './fixture-context.type';
 import { DATA_SOURCE } from './data-layer.const';
+import type { FixtureHandler } from './fixture-context.type';
 import { fixtureModeStore, useFixtureMode } from './fixture-mode.store';
+import type { FixtureOptions } from './fixture-options.interface';
 import { httpRequest } from './http-client.helper';
-import { type FixtureOptions, runFixture } from './run-fixture.helper';
+import type { Invalidation } from './invalidation.interface';
+import type { QueryExtra } from './query-extra.interface';
+import type { QueryKeyOptions } from './query-key-options.interface';
+import { runFixture } from './run-fixture.helper';
 
 /** Input argument: optional when the contract has no params/query/body. */
 type InputArgs<C extends ApiContract> = object extends ContractInput<C> ? [input?: ContractInput<C>] : [input: ContractInput<C>];
-/** Extra options of `useQuery` (e.g. `enabled: isSignedIn`). */
-export interface QueryExtra {
-  enabled?: boolean;
-}
-type HookArgs<C extends ApiContract> = object extends ContractInput<C>
-  ? [input?: ContractInput<C>, extra?: QueryExtra]
-  : [input: ContractInput<C>, extra?: QueryExtra];
+type HookArgs<C extends ApiContract> =
+  object extends ContractInput<C> ? [input?: ContractInput<C>, extra?: QueryExtra] : [input: ContractInput<C>, extra?: QueryExtra];
 
 const call = async <C extends ApiContract>(contract: C, fixture: FixtureOptions<C>, input: unknown, mode: FixtureMode, signal?: AbortSignal) => {
   const raw =
@@ -33,11 +31,6 @@ const call = async <C extends ApiContract>(contract: C, fixture: FixtureOptions<
 /** True when `previous` is the same query in another language (the key minus its last item, the locale). */
 const sameButLocale = (previous: readonly unknown[], current: readonly unknown[]): boolean =>
   previous.length === current.length + 1 && JSON.stringify(previous.slice(0, -1)) === JSON.stringify(current);
-
-export interface QueryKeyOptions {
-  /** false only for GET /api/session itself: it is what tells the identity (the other keys carry it). */
-  keyedByIdentity?: boolean;
-}
 
 /**
  * ONE definition per GET endpoint → typed queryKey/queryOptions/useQuery/fetch, served by the real API
@@ -85,18 +78,12 @@ export function defineQuery<C extends ApiContract>(contract: C, fixture: Fixture
     },
   };
 }
-export type QueryEndpoint = ReturnType<typeof defineQuery<ApiContract>>;
-
-/** A query refreshed after a write: every key of the endpoint, or only those `match` selects. */
-export interface Invalidation {
-  baseKey: readonly unknown[];
-  /** (mutation input, query input) → refresh this cached query? Absent = every key of the endpoint. */
-  match?: (mutationInput: unknown, queryInput: unknown) => boolean;
-}
-
 const slugOf = (input: unknown) => (input as { params?: { slug?: unknown } } | undefined)?.params?.slug;
 /** Only the cached queries of the athlete the write was about (same `params.slug`), not every athlete's. */
-export const bySlug = (query: { baseKey: readonly unknown[] }): Invalidation => ({ baseKey: query.baseKey, match: (m, q) => slugOf(m) !== undefined && slugOf(m) === slugOf(q) });
+export const bySlug = (query: { baseKey: readonly unknown[] }): Invalidation => ({
+  baseKey: query.baseKey,
+  match: (m, q) => slugOf(m) !== undefined && slugOf(m) === slugOf(q),
+});
 
 /**
  * ONE definition per write endpoint → typed useMutation/mutate. On success it invalidates the listed queries (and

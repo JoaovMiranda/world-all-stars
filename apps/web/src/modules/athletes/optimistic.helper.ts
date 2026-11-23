@@ -1,4 +1,5 @@
 import type { Comment, CommentThread, PostCommentRequest, Tier, TierVotesResponse } from '@was/shared';
+import { PENDING_COMMENT_PREFIX } from './optimistic.const';
 
 /** Shares as they will be after my vote moves to `tier` (one vote per user: the old tier loses it). */
 export function applyVote(votes: TierVotesResponse, tier: Tier): TierVotesResponse {
@@ -8,9 +9,6 @@ export function applyVote(votes: TierVotesResponse, tier: Tier): TierVotesRespon
   counts[tier] = (counts[tier] ?? 0) + 1;
   return { ...votes, counts, myVote: tier, total: votes.myVote ? votes.total : votes.total + 1 };
 }
-
-/** Prefix of the ids of comments that exist only on screen while their POST is in flight. */
-export const PENDING_COMMENT_PREFIX = 'pending:';
 
 /**
  * Threads with my in-flight comments already in place (top-level first, replies at the end of their thread). They

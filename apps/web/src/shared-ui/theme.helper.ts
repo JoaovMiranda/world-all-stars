@@ -1,7 +1,8 @@
 import { getBoot } from '@/app/request-scope';
 
 import { readCookie, writeCookie } from './cookie.helper';
-import { THEME_COOKIE, THEME_STORAGE_KEY, type ThemeName, isThemeName } from './theme.const';
+import { isThemeName, THEME_COOKIE, THEME_STORAGE_KEY } from './theme.const';
+import type { ThemeName } from './theme-name.type';
 
 /** Theme in effect (browser): manual override on <html data-theme>, otherwise the OS preference. */
 export const getEffectiveTheme = (): ThemeName => {

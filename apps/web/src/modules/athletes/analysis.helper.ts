@@ -1,8 +1,7 @@
-import { type AthleteProfile, COMPETITION_LEVEL_ORDER, competitionWins, CompetitionLevel, winYearSpan } from '@was/shared';
+import { type AthleteProfile, COMPETITION_LEVEL_ORDER, CompetitionLevel, competitionWins, winYearSpan } from '@was/shared';
 
 import { COMPARE_SERIES_TOKENS } from './athletes.const';
-
-export type CellValue = string | number | null;
+import type { CellValue } from './cell-value.type';
 
 /** Color token of the i-th athlete of the comparison (main athlete = 0). */
 export const seriesToken = (i: number): string => COMPARE_SERIES_TOKENS[i % COMPARE_SERIES_TOKENS.length] ?? '--primary';
@@ -58,9 +57,7 @@ export const commonCompetitions = (group: readonly AthleteProfile[]) => {
     }),
   );
   const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
-  return [...map.values()].sort(
-    (a, b) => COMPETITION_LEVEL_ORDER.indexOf(a.level) - COMPETITION_LEVEL_ORDER.indexOf(b.level) || sum(b.counts) - sum(a.counts),
-  );
+  return [...map.values()].sort((a, b) => COMPETITION_LEVEL_ORDER.indexOf(a.level) - COMPETITION_LEVEL_ORDER.indexOf(b.level) || sum(b.counts) - sum(a.counts));
 };
 
 /** Club/team names (national teams excluded) shared by two athletes. */

@@ -1,5 +1,5 @@
-import { AdminDecision, type AdminDossier, DossierStatus } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import { AdminDecision, type AdminDossier, DossierStatus } from '@was/shared';
 
 import { adminDossiersQuery, reviewDossier } from '@/data/endpoints/admin.query';
 import { useText } from '@/i18n/use-text.hook';
@@ -17,7 +17,8 @@ import { TierTag } from '@/shared-ui/tier-tag.component';
 
 import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import { ADMIN_REASON, filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
+import { ADMIN_REASON } from './admin-queue.const';
+import { filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import type { QueueState } from './queue-state.type';
 import { SourceLink } from './source-link.component';
 import { StatusTag } from './status-tag.component';
@@ -52,7 +53,16 @@ function DossierDetail({ d }: { d: AdminDossier }) {
         items={[
           { key: 'by', term: T.approvedBy, detail: d.approvedBy.length ? d.approvedBy.join(', ') : T.nobody },
           { key: 'updated', term: adminText.common.updated, detail: formatDateTime(d.updatedAt) },
-          { key: 'profile', term: adminText.common.athlete, detail: <Link to="/athletes/$slug" params={{ slug: d.athlete.slug }}>{T.profile}<span className="sr-only">: {d.athlete.knownAs}</span></Link> },
+          {
+            key: 'profile',
+            term: adminText.common.athlete,
+            detail: (
+              <Link to="/athletes/$slug" params={{ slug: d.athlete.slug }}>
+                {T.profile}
+                <span className="sr-only">: {d.athlete.knownAs}</span>
+              </Link>
+            ),
+          },
         ]}
       />
       <div>
@@ -82,7 +92,16 @@ function DossierDetail({ d }: { d: AdminDossier }) {
           <DecisionBar
             label={T.decisionLabel}
             actions={[
-              { key: 'approve', label: T.approve, variant: 'primary', disabled: iApproved || !d.evidences.length, confirmTitle: T.approveTitle, confirmBody: <p className="muted">{T.approveText}</p>, reason: ADMIN_REASON, onConfirm: decide(AdminDecision.Approve) },
+              {
+                key: 'approve',
+                label: T.approve,
+                variant: 'primary',
+                disabled: iApproved || !d.evidences.length,
+                confirmTitle: T.approveTitle,
+                confirmBody: <p className="muted">{T.approveText}</p>,
+                reason: ADMIN_REASON,
+                onConfirm: decide(AdminDecision.Approve),
+              },
               { key: 'reject', label: T.reject, variant: 'danger', confirmTitle: T.rejectTitle, reason: ADMIN_REASON, onConfirm: decide(AdminDecision.Reject) },
             ]}
           />
@@ -104,7 +123,13 @@ export function DossierQueue({ state }: { state: QueueState }) {
         const status = pickStatus(meta.dossierStatus, state.status);
         return (
           <div className="stack">
-            <StatusFilter label={adminText.common.statusFilter} options={statusOptions(meta.dossierStatus, items, statusOf)} value={status} total={items.length} onChange={state.setStatus} />
+            <StatusFilter
+              label={adminText.common.statusFilter}
+              options={statusOptions(meta.dossierStatus, items, statusOf)}
+              value={status}
+              total={items.length}
+              onChange={state.setStatus}
+            />
             <ReviewQueue
               label={T.queueLabel}
               items={filterByStatus(items, status, statusOf)}

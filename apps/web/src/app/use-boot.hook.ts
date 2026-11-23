@@ -1,6 +1,6 @@
 import type { IsoDate } from '@was/shared';
-
-import { type Boot, getBoot } from './request-scope';
+import type { Boot } from './boot.interface';
+import { getBoot } from './request-scope';
 
 /** Boot of this page load (fixed for its lifetime, identical on server and client). */
 export const useBoot = (): Boot => getBoot();

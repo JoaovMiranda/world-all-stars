@@ -1,17 +1,12 @@
 import type { Tier } from '@was/shared';
-
-import { animateOnce, MOTION, prefersReducedMotion } from '@/shared-ui/motion.helper';
+import { MOTION } from '@/shared-ui/motion.const';
+import { animateOnce, prefersReducedMotion } from '@/shared-ui/motion.helper';
 
 /** Squash & stretch on press: flattens, stretches back and settles (≈ 240 ms). */
 export function squash(element: HTMLElement | null): void {
   void animateOnce(
     element,
-    [
-      { transform: 'scale(1)' },
-      { transform: 'scale(1.06, .92)', offset: 0.3 },
-      { transform: 'scale(.97, 1.04)', offset: 0.65 },
-      { transform: 'scale(1)' },
-    ],
+    [{ transform: 'scale(1)' }, { transform: 'scale(1.06, .92)', offset: 0.3 }, { transform: 'scale(.97, 1.04)', offset: 0.65 }, { transform: 'scale(1)' }],
     { duration: MOTION.dur3, easing: MOTION.easeOut },
   );
 }

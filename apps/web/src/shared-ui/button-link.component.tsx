@@ -1,7 +1,9 @@
 import { createLink, type LinkComponent } from '@tanstack/react-router';
 import { type AnchorHTMLAttributes, forwardRef } from 'react';
 
-import { type ButtonSize, type ButtonVariant, buttonClass } from './button.helper';
+import { buttonClass } from './button.helper';
+import type { ButtonSize } from './button-size.type';
+import type { ButtonVariant } from './button-variant.type';
 
 interface ButtonAnchorProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   variant?: ButtonVariant;

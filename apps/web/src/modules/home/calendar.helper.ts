@@ -1,11 +1,6 @@
-import { type IsoDate, toIsoDate } from '@was/shared';
+import { toIsoDate } from '@was/shared';
 import { addDays, endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
-
-export interface CalendarCell {
-  date: Date;
-  iso: IsoDate;
-  inMonth: boolean;
-}
+import type { CalendarCell } from './calendar-cell.interface';
 
 /** Cells of a month grid starting on Monday (whole weeks, 35 or 42 cells). */
 export const buildMonthGrid = (month: Date): CalendarCell[] => {

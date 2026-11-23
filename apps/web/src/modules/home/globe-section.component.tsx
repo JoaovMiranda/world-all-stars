@@ -1,12 +1,13 @@
-import type { GlobeCountry } from '@was/shared';
 import { ClientOnly } from '@tanstack/react-router';
+import type { GlobeCountry } from '@was/shared';
 import { lazy, Suspense, useMemo, useState } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 
 import { countryNameFromNumeric } from './country-name.helper';
-import { GlobePanel, type SelectedCountry } from './globe-panel.component';
+import { GlobePanel } from './globe-panel.component';
 import { HOME_MESSAGES } from './home.const';
+import type { SelectedCountry } from './selected-country.interface';
 import { useWorldAtlas } from './use-world-atlas.hook';
 
 interface GlobeSectionProps {
@@ -24,10 +25,7 @@ export function GlobeSection({ countries }: GlobeSectionProps) {
   const atlas = useWorldAtlas();
   const [selected, setSelected] = useState<SelectedCountry | null>(null);
 
-  const titlesByCountry = useMemo(
-    () => new Map((countries ?? []).map((c) => [c.isoNumeric, c.totalTitles] as const)),
-    [countries],
-  );
+  const titlesByCountry = useMemo(() => new Map((countries ?? []).map((c) => [c.isoNumeric, c.totalTitles] as const)), [countries]);
 
   const hint = atlas.isError ? t.mapError : atlas.isPending ? t.loadingMap : t.hint;
 
@@ -54,11 +52,7 @@ export function GlobeSection({ countries }: GlobeSectionProps) {
           </ClientOnly>
           <p className="globe-hint">{hint}</p>
         </div>
-        <GlobePanel
-          countries={countries}
-          selected={selected}
-          onSelectCountry={(c) => setSelected({ id: c.isoNumeric, name: c.name })}
-        />
+        <GlobePanel countries={countries} selected={selected} onSelectCountry={(c) => setSelected({ id: c.isoNumeric, name: c.name })} />
       </div>
     </section>
   );

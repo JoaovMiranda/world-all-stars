@@ -1,5 +1,14 @@
-import { ADMIN_COMMENTS_TAB_VALUES, AthleteProfileTab, COMMENT_FLAG_MIN_DISLIKES, type AdminComment, AdminCommentsSearchSchema, AdminCommentsTab, CommentStatus, isCommentFlagged } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import {
+  ADMIN_COMMENTS_TAB_VALUES,
+  type AdminComment,
+  AdminCommentsSearchSchema,
+  AdminCommentsTab,
+  AthleteProfileTab,
+  COMMENT_FLAG_MIN_DISLIKES,
+  CommentStatus,
+  isCommentFlagged,
+} from '@was/shared';
 
 import { adminCommentsQuery, moderateComment } from '@/data/endpoints/admin.query';
 import { useText } from '@/i18n/use-text.hook';
@@ -14,17 +23,22 @@ import { Tabs } from '@/shared-ui/tabs.component';
 
 import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import type { StatusMeta } from './admin-labels.const';
 import { AdminLayout } from './admin-layout.component';
-import { ADMIN_REASON, filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
+import type { AdminMeta } from './admin-meta.type';
+import { ADMIN_REASON } from './admin-queue.const';
+import { filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import { BannedWords } from './banned-words.component';
+import type { StatusMeta } from './status-meta.interface';
 import { StatusTag } from './status-tag.component';
+import { useAdminMeta } from './use-admin-meta.hook';
 import { useAdminTab } from './use-admin-tab.hook';
 import { useQueueState } from './use-queue-state.hook';
-import { type AdminMeta, useAdminMeta } from './use-admin-meta.hook';
 
 type CommentFilter = 'flagged' | CommentStatus;
-const filterMeta = (meta: AdminMeta, flagged: string): Record<CommentFilter, StatusMeta> => ({ flagged: { label: flagged, tone: 'gold' }, ...meta.commentStatus });
+const filterMeta = (meta: AdminMeta, flagged: string): Record<CommentFilter, StatusMeta> => ({
+  flagged: { label: flagged, tone: 'gold' },
+  ...meta.commentStatus,
+});
 const filterOf = (c: AdminComment): CommentFilter => (isCommentFlagged(c) ? 'flagged' : c.status);
 
 function CommentDetail({ c }: { c: AdminComment }) {
@@ -65,7 +79,15 @@ function CommentDetail({ c }: { c: AdminComment }) {
         actions={[
           hidden
             ? { key: 'show', label: T.show, confirmTitle: T.showTitle, reason: ADMIN_REASON, onConfirm: set(CommentStatus.Visible) }
-            : { key: 'hide', label: T.hide, variant: 'danger', confirmTitle: T.hideTitle, confirmBody: <p className="muted">{T.hideText}</p>, reason: ADMIN_REASON, onConfirm: set(CommentStatus.Hidden) },
+            : {
+                key: 'hide',
+                label: T.hide,
+                variant: 'danger',
+                confirmTitle: T.hideTitle,
+                confirmBody: <p className="muted">{T.hideText}</p>,
+                reason: ADMIN_REASON,
+                onConfirm: set(CommentStatus.Hidden),
+              },
         ]}
       />
     </div>
@@ -98,7 +120,13 @@ export function AdminCommentsPage() {
             return (
               <div className="stack">
                 <Notice tone="info">{T.flagRule(COMMENT_FLAG_MIN_DISLIKES)}</Notice>
-                <StatusFilter label={adminText.common.statusFilter} options={statusOptions(FILTER_META, items, filterOf)} value={status} total={items.length} onChange={state.setStatus} />
+                <StatusFilter
+                  label={adminText.common.statusFilter}
+                  options={statusOptions(FILTER_META, items, filterOf)}
+                  value={status}
+                  total={items.length}
+                  onChange={state.setStatus}
+                />
                 <ReviewQueue
                   label={T.queueLabel}
                   items={filterByStatus(items, status, filterOf)}

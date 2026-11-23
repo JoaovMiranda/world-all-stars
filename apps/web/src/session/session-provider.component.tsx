@@ -1,6 +1,6 @@
-import { API_ERROR_MESSAGES, ApiErrorCode, SessionKind } from '@was/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
+import { API_ERROR_MESSAGES, ApiErrorCode, SessionKind } from '@was/shared';
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DATA_SOURCE } from '@/data/data-layer.const';
@@ -13,10 +13,12 @@ import { LoginDialog } from '@/shared-ui/login-dialog.component';
 
 import { signOutOfAuth } from './auth-client';
 import { ConsentDialog } from './consent-dialog.component';
-import { AUTH_ERROR_PARAMS, type LoginReason, SESSION_MESSAGES } from './session.const';
-import { sessionIdentity } from './session-identity.helper';
+import type { LoginReason } from './login-reason.type';
+import { AUTH_ERROR_PARAMS, SESSION_MESSAGES } from './session.const';
 import { identityStore, sessionStore, useSessionKind } from './session.store';
-import { SessionContext, type SessionContextValue } from './use-session.hook';
+import type { SessionContextValue } from './session-context-value.interface';
+import { sessionIdentity } from './session-identity.helper';
+import { SessionContext } from './use-session.hook';
 
 /**
  * Session of the whole app: who is browsing comes from GET /api/session (prefetched by the SSR), so a Google

@@ -1,6 +1,8 @@
 import type { ButtonHTMLAttributes, MouseEvent } from 'react';
 
-import { type ButtonSize, type ButtonVariant, buttonClass } from './button.helper';
+import { buttonClass } from './button.helper';
+import type { ButtonSize } from './button-size.type';
+import type { ButtonVariant } from './button-variant.type';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** primary (gold) · secondary (outline, default) · ghost · link · danger */

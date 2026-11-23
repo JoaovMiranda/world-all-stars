@@ -2,15 +2,20 @@ import type { CollectionRun } from '@was/shared';
 
 import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
-import { DataTable, type DataColumn } from '@/shared-ui/data-table.component';
+import type { DataColumn } from '@/shared-ui/data-column.interface';
+import { DataTable } from '@/shared-ui/data-table.component';
 import { formatNumber, instantFormat } from '@/shared-ui/format.helper';
-
 import { SOURCES_MESSAGES } from './sources.const';
 
 const COLUMNS = (): readonly DataColumn<CollectionRun>[] => {
   const t = currentText(SOURCES_MESSAGES).runs;
   return [
-    { key: 'startedAt', header: t.colStarted, sortValue: (r) => r.startedAt, cell: (r) => <span className="num">{instantFormat({ dateStyle: 'short', timeStyle: 'short' }).format(new Date(r.startedAt))}</span> },
+    {
+      key: 'startedAt',
+      header: t.colStarted,
+      sortValue: (r) => r.startedAt,
+      cell: (r) => <span className="num">{instantFormat({ dateStyle: 'short', timeStyle: 'short' }).format(new Date(r.startedAt))}</span>,
+    },
     { key: 'mode', header: t.colMode, cell: (r) => r.mode },
     { key: 'checked', header: t.colChecked, align: 'end', cell: (r) => formatNumber(r.checked) },
     { key: 'unchanged', header: t.colUnchanged, align: 'end', cell: (r) => <b>{formatNumber(r.unchanged)}</b> },

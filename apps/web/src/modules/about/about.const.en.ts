@@ -1,7 +1,5 @@
-import { COMPETITION_LEVEL_WEIGHT as w, type Messages, MYTHIC_MIN_EVIDENCES, TIER_PERCENTILE_THRESHOLD } from '@was/shared';
-
-import type { DocumentContent } from '@/shared-ui/document-page-layout.component';
-
+import { type Messages, MYTHIC_MIN_EVIDENCES, TIER_PERCENTILE_THRESHOLD, COMPETITION_LEVEL_WEIGHT as w } from '@was/shared';
+import type { DocumentContent } from '@/shared-ui/document-content.interface';
 import type { ABOUT_TEXT } from './about.const';
 
 export const ABOUT_TEXT_EN = {
@@ -57,14 +55,24 @@ export const CRITERIA_DOC_EN: DocumentContent = {
           caption: 'Inclusion criteria of the launch sports',
           headers: ['Sport', 'Gets in if they meet at least one'],
           rows: [
-            ['Football', 'Ballon d’Or or FIFA The Best · world champion with an individual award at the World Cup (World Cup Golden Ball, top scorer) · top 10 official all-time scorers'],
-            ['Swimming', '2 or more individual Olympic golds · world record holder in an Olympic event for 2 years or more · 5 or more individual world titles'],
+            [
+              'Football',
+              'Ballon d’Or or FIFA The Best · world champion with an individual award at the World Cup (World Cup Golden Ball, top scorer) · top 10 official all-time scorers',
+            ],
+            [
+              'Swimming',
+              '2 or more individual Olympic golds · world record holder in an Olympic event for 2 years or more · 5 or more individual world titles',
+            ],
             ['Chess', 'World champion (classical, historical lineage and FIDE) · FIDE world no. 1 for 12 months or more · women’s world champion'],
             ['Boxing', 'Undisputed champion (all major belts) · lineal champion · member of the International Boxing Hall of Fame'],
             ['Counter-Strike', 'Major champion with an MVP award · 2 or more Majors · no. 1 in the annual HLTV Top 20'],
           ],
         },
-        { kind: 'notice', tone: 'info', text: 'The site’s other sports follow the same logic; each one’s criteria are published here as the curators approve them.' },
+        {
+          kind: 'notice',
+          tone: 'info',
+          text: 'The site’s other sports follow the same logic; each one’s criteria are published here as the curators approve them.',
+        },
       ],
     },
     {

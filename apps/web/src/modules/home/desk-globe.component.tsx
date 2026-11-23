@@ -4,12 +4,11 @@ import { type KeyboardEvent, type PointerEvent, useEffect, useId, useMemo, useRe
 import { useText } from '@/i18n/use-text.hook';
 import { useReducedMotion } from '@/shared-ui/motion-preference';
 import { useInViewOnce } from '@/shared-ui/use-reveal.hook';
-
+import type { CountryFeature } from './country-feature.type';
 import { countryNameFromNumeric } from './country-name.helper';
 import { GLOBE } from './globe.const';
 import { clampLatitude, countryFill, standGeometry } from './globe.helper';
 import { HOME_MESSAGES } from './home.const';
-import type { CountryFeature } from './use-world-atlas.hook';
 
 interface DeskGlobeProps {
   features: CountryFeature[] | undefined;

@@ -1,25 +1,20 @@
-import { type AthleteProfile, competitionWins, type FootballStats, FootballStatsSchema } from '@was/shared';
+import type { AthleteProfile, FootballStats } from '@was/shared';
 import { useCallback } from 'react';
 
-import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
-import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
-import { barsOption, donutOption } from '@/shared-ui/chart-presets.helper';
-import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
+import { barsOption, donutOption } from '@/shared-ui/chart-presets.helper';
+import type { ChartTheme } from '@/shared-ui/chart-theme.interface';
 import { DataTable } from '@/shared-ui/data-table.component';
-import { formatDate, formatNumber } from '@/shared-ui/format.helper';
+import { formatDate } from '@/shared-ui/format.helper';
 import { Notice } from '@/shared-ui/notice.component';
 import { Section } from '@/shared-ui/section.component';
-
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import { ATHLETE_PROFILE_MESSAGES } from '../athletes.const';
-import { awardsCount, kpi, metric, percent, titleMetrics } from './sport-panel.helper';
-import type { SportPanelDef } from './sport-panel.type';
 
-const WORLD_CUP = 'copa-do-mundo-fifa';
 type Cup = FootballStats['world_cups'][number];
 
-function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStats }) {
+export function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStats }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
   const ui = useText(UI_MESSAGES);
   const n = stats.national_team;
@@ -54,7 +49,12 @@ function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStat
     <Section title={T.nationalTitle} eyebrow={T.nationalLabel(n.matches, n.goals)}>
       <div className="panel-split">
         {hasWdl ? (
-          <ChartContainer option={wdl} ariaLabel={T.wdl.aria} height={240} summary={`${T.wdl.wins}: ${n.wins} · ${T.wdl.draws}: ${n.draws} · ${T.wdl.losses}: ${n.losses}`} />
+          <ChartContainer
+            option={wdl}
+            ariaLabel={T.wdl.aria}
+            height={240}
+            summary={`${T.wdl.wins}: ${n.wins} · ${T.wdl.draws}: ${n.draws} · ${T.wdl.losses}: ${n.losses}`}
+          />
         ) : (
           <Notice tone="info">
             {T.wdlMissing} {n.as_of ? T.asOf(formatDate(n.as_of)) : ''}
@@ -90,36 +90,3 @@ function FootballPanel({ stats }: { profile: AthleteProfile; stats: FootballStat
     </Section>
   );
 }
-
-export const FOOTBALL_PANEL: SportPanelDef<FootballStats> = {
-  schema: FootballStatsSchema,
-  kpis: (p, s) => {
-    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
-    const cups = competitionWins(p.achievements, WORLD_CUP);
-    return [
-      kpi(T.titles, p.titles, T.clubsAndNational, true),
-      kpi(T.worldCups, cups.length, cups.map((a) => a.year).join(' · '), true),
-      s.career_goals != null
-        ? kpi(T.careerGoals, formatNumber(s.career_goals), T.careerGoalsHint(formatNumber(s.career_matches ?? 0), s.career_goals_note ?? ''))
-        : kpi(T.awards, awardsCount(p), T.awardsHint),
-      kpi(T.nationalGoals, s.national_team.goals, T.inMatches(s.national_team.matches)),
-    ];
-  },
-  compare: (p, s) => {
-    const T = currentText(ATHLETE_PROFILE_MESSAGES).panels;
-    const n = s.national_team;
-    return [
-      ...titleMetrics(p),
-      metric(T.worldCupsWon, competitionWins(p.achievements, WORLD_CUP).length),
-      metric(T.worldCupsPlayed, s.world_cups.length),
-      metric(T.worldCupGoals, s.world_cups.reduce((sum, c) => sum + c.goals, 0)),
-      metric(T.nationalMatches, n.matches),
-      metric(T.nationalGoals, n.goals),
-      metric(T.goalsPerMatch, n.matches ? Number((n.goals / n.matches).toFixed(2)) : null),
-      metric(T.winRate, n.wins != null ? `${percent(n.wins, n.matches)}%` : null),
-      metric(T.careerGoals, s.career_goals),
-      metric(T.awards, awardsCount(p)),
-    ];
-  },
-  Panel: FootballPanel,
-};

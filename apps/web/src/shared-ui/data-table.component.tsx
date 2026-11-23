@@ -1,18 +1,9 @@
 import { type ReactNode, useMemo, useRef, useState } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
-
+import type { DataColumn } from './data-column.interface';
 import { UI_MESSAGES } from './ui-text.const';
 import { useReveal } from './use-reveal.hook';
-
-export interface DataColumn<T> {
-  key: string;
-  header: string;
-  cell: (row: T) => ReactNode;
-  /** Makes the column sortable. */
-  sortValue?: (row: T) => string | number | null;
-  align?: 'start' | 'end';
-}
 
 interface DataTableProps<T> {
   columns: readonly DataColumn<T>[];
@@ -58,7 +49,12 @@ export function DataTable<T>({ columns, rows, rowKey, caption, captionHidden = f
             {columns.map((c) => {
               const active = sort?.key === c.key;
               return (
-                <th key={c.key} scope="col" data-align={c.align} aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : c.sortValue ? 'none' : undefined}>
+                <th
+                  key={c.key}
+                  scope="col"
+                  data-align={c.align}
+                  aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : c.sortValue ? 'none' : undefined}
+                >
                   {c.sortValue ? (
                     <button type="button" className="sort-btn" onClick={() => toggle(c.key)} aria-label={ui.sortBy(c.header)}>
                       {c.header}

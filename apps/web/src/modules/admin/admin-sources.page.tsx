@@ -1,4 +1,11 @@
-import { ADMIN_SOURCES_TAB_VALUES, type AdminSource, AdminSourcesSearchSchema, AdminSourcesTab, SOURCE_USAGE_STATUS_VALUES, type SourceUsageStatus } from '@was/shared';
+import {
+  ADMIN_SOURCES_TAB_VALUES,
+  type AdminSource,
+  AdminSourcesSearchSchema,
+  AdminSourcesTab,
+  SOURCE_USAGE_STATUS_VALUES,
+  type SourceUsageStatus,
+} from '@was/shared';
 import { useState } from 'react';
 
 import { adminSourcesQuery, updateSource } from '@/data/endpoints/admin.query';
@@ -17,12 +24,13 @@ import { Tabs } from '@/shared-ui/tabs.component';
 import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime, formatDay } from './admin-format.helper';
 import { AdminLayout } from './admin-layout.component';
-import { ADMIN_REASON, filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
+import { ADMIN_REASON } from './admin-queue.const';
+import { filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import { CollectionLinksForm } from './collection-links-form.component';
 import { StatusTag } from './status-tag.component';
+import { useAdminMeta } from './use-admin-meta.hook';
 import { useAdminTab } from './use-admin-tab.hook';
 import { useQueueState } from './use-queue-state.hook';
-import { useAdminMeta } from './use-admin-meta.hook';
 
 const statusOf = (s: AdminSource) => s.usageStatus;
 
@@ -43,7 +51,14 @@ function SourceActions({ s }: { s: AdminSource }) {
           confirmTitle: T.changeUsageTitle(s.name),
           confirmBody: (
             <FormField label={T.usageField} required>
-              {(p) => <Select {...p} value={usage} onChange={(e) => setUsage(e.target.value as SourceUsageStatus)} options={SOURCE_USAGE_STATUS_VALUES.map((v) => ({ value: v, label: meta.sourceUsage[v].label }))} />}
+              {(p) => (
+                <Select
+                  {...p}
+                  value={usage}
+                  onChange={(e) => setUsage(e.target.value as SourceUsageStatus)}
+                  options={SOURCE_USAGE_STATUS_VALUES.map((v) => ({ value: v, label: meta.sourceUsage[v].label }))}
+                />
+              )}
             </FormField>
           ),
           reason: ADMIN_REASON,
@@ -94,7 +109,16 @@ export function AdminSourcesPage() {
                     rowKey={(l) => l.id}
                     columns={[
                       { key: 'athlete', header: adminText.common.athlete, cell: (l) => <b>{l.athleteName}</b>, sortValue: (l) => l.athleteName },
-                      { key: 'url', header: T.links, cell: (l) => <a href={l.url} target="_blank" rel="noopener noreferrer" className="admin-wrap">{l.url}<NewTabNote /></a> },
+                      {
+                        key: 'url',
+                        header: T.links,
+                        cell: (l) => (
+                          <a href={l.url} target="_blank" rel="noopener noreferrer" className="admin-wrap">
+                            {l.url}
+                            <NewTabNote />
+                          </a>
+                        ),
+                      },
                       { key: 'source', header: adminText.common.source, cell: (l) => l.sourceName ?? '—' },
                       { key: 'origin', header: T.origin, cell: (l) => T.originLabel[l.origin] },
                       { key: 'at', header: adminText.common.created, cell: (l) => formatDateTime(l.createdAt), sortValue: (l) => l.createdAt },
@@ -106,7 +130,13 @@ export function AdminSourcesPage() {
             const status = pickStatus(meta.sourceUsage, state.status);
             return (
               <div className="stack">
-                <StatusFilter label={adminText.common.statusFilter} options={statusOptions(meta.sourceUsage, sources, statusOf)} value={status} total={sources.length} onChange={state.setStatus} />
+                <StatusFilter
+                  label={adminText.common.statusFilter}
+                  options={statusOptions(meta.sourceUsage, sources, statusOf)}
+                  value={status}
+                  total={sources.length}
+                  onChange={state.setStatus}
+                />
                 <DataTable
                   caption={T.caption}
                   captionHidden
@@ -114,10 +144,24 @@ export function AdminSourcesPage() {
                   rows={filterByStatus(sources, status, statusOf)}
                   rowKey={(s) => s.slug}
                   columns={[
-                    { key: 'name', header: T.name, cell: (s) => <a href={s.url} target="_blank" rel="noopener noreferrer"><b>{s.name}</b> <span aria-hidden="true">↗</span><NewTabNote /></a>, sortValue: (s) => s.name },
+                    {
+                      key: 'name',
+                      header: T.name,
+                      cell: (s) => (
+                        <a href={s.url} target="_blank" rel="noopener noreferrer">
+                          <b>{s.name}</b> <span aria-hidden="true">↗</span>
+                          <NewTabNote />
+                        </a>
+                      ),
+                      sortValue: (s) => s.name,
+                    },
                     { key: 'license', header: T.license, cell: (s) => <span className="admin-wrap">{s.license || '—'}</span> },
                     { key: 'usage', header: T.usage, cell: (s) => <StatusTag meta={meta.sourceUsage[s.usageStatus]} />, sortValue: (s) => s.usageStatus },
-                    { key: 'review', header: T.licenseReview, cell: (s) => (s.licenseReviewedAt ? T.reviewedAt(formatDay(s.licenseReviewedAt)) : <span className="muted">{T.notReviewed}</span>) },
+                    {
+                      key: 'review',
+                      header: T.licenseReview,
+                      cell: (s) => (s.licenseReviewedAt ? T.reviewedAt(formatDay(s.licenseReviewedAt)) : <span className="muted">{T.notReviewed}</span>),
+                    },
                     { key: 'links', header: T.links, cell: (s) => s.links.length, sortValue: (s) => s.links.length, align: 'end' },
                     { key: 'actions', header: adminText.common.actions, cell: (s) => <SourceActions key={`${s.slug}-${s.usageStatus}`} s={s} /> },
                   ]}

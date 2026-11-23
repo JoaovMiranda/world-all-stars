@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-
-import type { DocSection } from '@/shared-ui/document-page-layout.component';
+import type { DocSection } from '@/shared-ui/doc-section.interface';
 
 /** Appends rich content (links, buttons) to some sections of a const document, by section id. */
 export const withSectionExtras = (sections: readonly DocSection[], extras: Readonly<Record<string, ReactNode>>): DocSection[] =>

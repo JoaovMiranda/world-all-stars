@@ -2,12 +2,12 @@ import type { SourceOverview } from '@was/shared';
 
 import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
-import { DataTable, type DataColumn } from '@/shared-ui/data-table.component';
+import type { DataColumn } from '@/shared-ui/data-column.interface';
+import { DataTable } from '@/shared-ui/data-table.component';
 import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { formatDate } from '@/shared-ui/format.helper';
 import { Notice } from '@/shared-ui/notice.component';
 import { Tag } from '@/shared-ui/tag.component';
-
 import { COMMERCIAL_USE_TONE, RUN_STATUS_TONE, SOURCES_MESSAGES, USAGE_STATUS_TONE } from './sources.const';
 
 type SourceLink = SourceOverview['links'][number];

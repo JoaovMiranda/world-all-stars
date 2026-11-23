@@ -1,23 +1,12 @@
-import { type ApiContract, FixtureMode, accessDenial } from '@was/shared';
-
+import { type ApiContract, accessDenial, FixtureMode } from '@was/shared';
+import { IS_SERVER } from '@/app/request-scope.const';
 import { localeStore } from '@/i18n/locale.store';
-import { IS_SERVER } from '@/app/request-scope';
-
 import { ApiError } from './api-error.error';
 import { FIXTURE_LATENCY_MS } from './data-layer.const';
 import { emptyOf } from './empty-response.helper';
-import type { FixtureHandler } from './fixture-context.type';
+import type { FixtureOptions } from './fixture-options.interface';
 import { loadSample } from './sample-fixtures.helper';
 import { sessionSnapshot } from './session-snapshot.helper';
-
-export interface FixtureOptions<C extends ApiContract> {
-  /** Response in sample mode (and for mutations in every mode except loading/error). */
-  sample: FixtureHandler<C>;
-  /** Response in empty mode. 'not-found' = 404 (entity absent from an empty database). Default: derived from the schema. */
-  empty?: FixtureHandler<C> | 'not-found';
-  /** Same response in every mode (e.g. the session itself). */
-  modeIndependent?: boolean;
-}
 
 const wait = (ms: number, signal?: AbortSignal) =>
   new Promise<void>((resolve, reject) => {

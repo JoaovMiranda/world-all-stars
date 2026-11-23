@@ -3,7 +3,8 @@ import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 
 
 import { useText } from '@/i18n/use-text.hook';
 
-import { type ChartTheme, chartAxis, chartBaseOption, cssVar } from './chart-theme.helper';
+import { chartAxis, chartBaseOption, cssVar } from './chart-theme.helper';
+import type { ChartTheme } from './chart-theme.interface';
 import { useEffectiveTheme } from './theme.store';
 import { UI_MESSAGES } from './ui-text.const';
 
@@ -38,12 +39,15 @@ export function ChartContainer({ option, ariaLabel, height = 280, summary }: Cha
     const el = ref.current;
     if (!el) return;
     if (typeof IntersectionObserver === 'undefined') return setNear(true);
-    const io = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        setNear(true);
-        io.disconnect();
-      }
-    }, { rootMargin: '400px 0px' });
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '400px 0px' },
+    );
     io.observe(el);
     return () => io.disconnect();
   }, []);

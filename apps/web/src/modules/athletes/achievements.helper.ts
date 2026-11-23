@@ -1,12 +1,5 @@
-import { type Achievement, type AwardAchievement, type CompetitionAchievement, COMPETITION_LEVEL_ORDER, type CompetitionLevel } from '@was/shared';
-
-/** Achievements of one competition or award, with the level of the first one. */
-export interface AchievementGroup<A> {
-  key: string;
-  name: string;
-  level: CompetitionLevel;
-  items: A[];
-}
+import { type Achievement, type AwardAchievement, COMPETITION_LEVEL_ORDER, type CompetitionAchievement, type CompetitionLevel } from '@was/shared';
+import type { AchievementGroup } from './achievement-group.interface';
 
 const levelRank = (l: CompetitionLevel) => COMPETITION_LEVEL_ORDER.indexOf(l);
 
@@ -23,11 +16,19 @@ const groupBy = <A extends Achievement>(items: readonly A[], key: (a: A) => stri
 
 /** Titles grouped by competition, world level first. */
 export const groupByCompetition = (wins: readonly CompetitionAchievement[]) =>
-  groupBy(wins, (a) => a.competition.slug, (a) => a.competition.name).sort((a, b) => levelRank(a.level) - levelRank(b.level) || b.items.length - a.items.length);
+  groupBy(
+    wins,
+    (a) => a.competition.slug,
+    (a) => a.competition.name,
+  ).sort((a, b) => levelRank(a.level) - levelRank(b.level) || b.items.length - a.items.length);
 
 /** Awards grouped by award, world level first. */
 export const groupByAward = (awards: readonly AwardAchievement[]) =>
-  groupBy(awards, (a) => a.award.slug, (a) => a.award.name).sort((a, b) => levelRank(a.level) - levelRank(b.level));
+  groupBy(
+    awards,
+    (a) => a.award.slug,
+    (a) => a.award.name,
+  ).sort((a, b) => levelRank(a.level) - levelRank(b.level));
 
 /** Every year from `from` to `to` (inclusive). */
 export const yearsBetween = (from: number, to: number): number[] => Array.from({ length: Math.max(to - from + 1, 0) }, (_, i) => from + i);

@@ -1,14 +1,21 @@
-import { ANALYSIS_MAX_ATHLETES, type AnalysisDimensionsResponse, type AthleteProfile, type AthleteSummary, careerOverlapYears, COMPETITION_LEVEL_ORDER } from '@was/shared';
 import { useQueries } from '@tanstack/react-query';
+import {
+  ANALYSIS_MAX_ATHLETES,
+  type AnalysisDimensionsResponse,
+  type AthleteProfile,
+  type AthleteSummary,
+  COMPETITION_LEVEL_ORDER,
+  careerOverlapYears,
+} from '@was/shared';
 import { useCallback, useMemo } from 'react';
 
 import { analysisDimensionsQuery, athleteProfileQuery, athletesQuery } from '@/data/endpoints/athletes.query';
-import { currentText } from '@/i18n/text-for.helper';
 import { useLocale } from '@/i18n/locale.store';
+import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
-import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
-import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
+import { barsOption } from '@/shared-ui/chart-presets.helper';
+import type { ChartTheme } from '@/shared-ui/chart-theme.interface';
 import { DataTable } from '@/shared-ui/data-table.component';
 import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
@@ -19,16 +26,16 @@ import { Section } from '@/shared-ui/section.component';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { Tag } from '@/shared-ui/tag.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
-import { barsOption } from '@/shared-ui/chart-presets.helper';
-
+import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import { bestFlags, commonCompetitions, seriesToken, sharedClubs, titlesByAge, titlesPerLevel, topLongevity } from './analysis.helper';
 import { currentYear } from './athlete-profile.helper';
-import { ALL_ATHLETES_INPUT } from './athletes-query.helper';
 import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
-import { CompareMatrix, type MatrixRow } from './compare-matrix.component';
+import { ALL_ATHLETES_INPUT } from './athletes-query.const';
+import { CompareMatrix } from './compare-matrix.component';
 import { ComparePicker } from './compare-picker.component';
-import { resolveSportPanel } from './sport-panels/sport-panel.registry';
+import type { MatrixRow } from './matrix-row.interface';
 import { formatValue } from './sport-panels/sport-panel.helper';
+import { resolveSportPanel } from './sport-panels/sport-panel.registry';
 
 const CS_SCHEMA = 'cs';
 const NATIONAL_TEAM = 'national';
@@ -71,7 +78,14 @@ function Charts({ profiles }: { profiles: readonly AthleteProfile[] }) {
   const ageOption = useCallback(
     ({ cssVar, axis }: ChartTheme) => ({
       tooltip: { trigger: 'axis' as const },
-      xAxis: { type: 'value' as const, name: T.ageAxis, min: AGE_AXIS_MIN, interval: 5, nameTextStyle: { color: cssVar('--muted') }, ...axis({ splitLine: { show: false } }) },
+      xAxis: {
+        type: 'value' as const,
+        name: T.ageAxis,
+        min: AGE_AXIS_MIN,
+        interval: 5,
+        nameTextStyle: { color: cssVar('--muted') },
+        ...axis({ splitLine: { show: false } }),
+      },
       yAxis: { type: 'value' as const, minInterval: 1, ...axis() },
       series: profiles.map((p, i) => ({
         name: p.knownAs,
@@ -88,7 +102,12 @@ function Charts({ profiles }: { profiles: readonly AthleteProfile[] }) {
   return (
     <>
       <Section title={T.ageTitle} eyebrow={T.ageLabel}>
-        <ChartContainer option={ageOption} ariaLabel={T.ageAria} height={240} summary={profiles.map((p) => `${p.knownAs}: ${titlesByAge(p).length}`).join(', ')} />
+        <ChartContainer
+          option={ageOption}
+          ariaLabel={T.ageAria}
+          height={240}
+          summary={profiles.map((p) => `${p.knownAs}: ${titlesByAge(p).length}`).join(', ')}
+        />
       </Section>
       <Section title={T.levelsTitle} eyebrow={T.ageLabel}>
         <ChartContainer
@@ -125,7 +144,10 @@ function SameSport({ group }: { group: readonly AthleteProfile[] }) {
   const common = commonCompetitions(group);
   return (
     <>
-      <Section title={T.sameSportTitle} eyebrow={group.map((p, i) => T.leads(p.knownAs, rows.filter((row) => bestFlags(row.values, row.higher ?? null)[i]).length)).join(' · ')}>
+      <Section
+        title={T.sameSportTitle}
+        eyebrow={group.map((p, i) => T.leads(p.knownAs, rows.filter((row) => bestFlags(row.values, row.higher ?? null)[i]).length)).join(' · ')}
+      >
         <CompareMatrix caption={T.metricsCaption} rowHeader={T.metric} athletes={group} rows={rows} />
         <div className="panel-gap">
           <DataTable<AthleteProfile>
@@ -192,7 +214,17 @@ function SameSport({ group }: { group: readonly AthleteProfile[] }) {
   );
 }
 
-function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteProfile; profiles: AthleteProfile[]; dims: AnalysisDimensionsResponse; total: number }) {
+function AnalysisContent({
+  profile,
+  profiles,
+  dims,
+  total,
+}: {
+  profile: AthleteProfile;
+  profiles: AthleteProfile[];
+  dims: AnalysisDimensionsResponse;
+  total: number;
+}) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).analysis;
   const ui = useText(UI_MESSAGES);
   const profileText = useText(ATHLETE_PROFILE_MESSAGES);
@@ -232,10 +264,16 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
     [dims, scored, profiles, T],
   );
   const raw = (p: AthleteProfile, k: (typeof dims.keys)[number]) => dims.bySlug[p.slug]?.raw[k] ?? null;
-  const tierRow: MatrixRow = { key: 'tier', label: T.tier, values: profiles.map((p) => p.tier), higher: null, render: (_v, i) => {
-    const p = profiles[i];
-    return p ? <TierTag tier={p.tier} /> : null;
-  } };
+  const tierRow: MatrixRow = {
+    key: 'tier',
+    label: T.tier,
+    values: profiles.map((p) => p.tier),
+    higher: null,
+    render: (_v, i) => {
+      const p = profiles[i];
+      return p ? <TierTag tier={p.tier} /> : null;
+    },
+  };
   const dimsRows: MatrixRow[] = [
     tierRow,
     ...(mixed ? [{ key: 'sport', label: T.sport, values: profiles.map((p) => p.sport.name), higher: null }] : []),
@@ -243,9 +281,19 @@ function AnalysisContent({ profile, profiles, dims, total }: { profile: AthleteP
     { key: 'legacyRaw', label: T.legacyRaw, values: profiles.map((p) => p.legacy.total) },
   ];
   const conceptRows: MatrixRow[] = [
-    { key: 'env', label: T.environment, higher: null, values: profiles.map((p) => T.envValue(T.env[p.sport.environment] ?? profileText.dash, T.format[p.sport.format] ?? profileText.dash)) },
+    {
+      key: 'env',
+      label: T.environment,
+      higher: null,
+      values: profiles.map((p) => T.envValue(T.env[p.sport.environment] ?? profileText.dash, T.format[p.sport.format] ?? profileText.dash)),
+    },
     { key: 'dom', label: T.dominanceRow, values: profiles.map((p) => p.percentile) },
-    { key: 'long', label: T.longevityRow, values: profiles.map(topLongevity), render: (v) => (v === null ? <span className="muted">{profileText.noData}</span> : T.yearsValue(Number(v))) },
+    {
+      key: 'long',
+      label: T.longevityRow,
+      values: profiles.map(topLongevity),
+      render: (v) => (v === null ? <span className="muted">{profileText.noData}</span> : T.yearsValue(Number(v))),
+    },
     { key: 'peak', label: T.peakRow, higher: null, values: profiles.map(peak) },
     { key: 'pressure', label: T.pressureRow, higher: null, values: profiles.map(pressure) },
     { key: 'consistency', label: T.consistencyRow, higher: null, values: profiles.map(() => T.matchData) },
@@ -307,7 +355,12 @@ export function AnalysisTab({ profile, compare, onCompareChange }: AnalysisTabPr
 
   return (
     <div className="stack">
-      <ComparePicker main={mainSummary} selected={valid.map((slug) => ({ slug, knownAs: candidates.find((a) => a.slug === slug)?.knownAs ?? slug }))} candidates={candidates} onChange={onCompareChange} />
+      <ComparePicker
+        main={mainSummary}
+        selected={valid.map((slug) => ({ slug, knownAs: candidates.find((a) => a.slug === slug)?.knownAs ?? slug }))}
+        candidates={candidates}
+        onChange={onCompareChange}
+      />
       {pending ? (
         <div aria-busy="true" aria-label={T.loadingCompare}>
           <SkeletonList rows={4} className="h-40 w-full" />

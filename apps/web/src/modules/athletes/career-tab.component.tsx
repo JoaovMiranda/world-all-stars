@@ -7,15 +7,19 @@ import { formatDate, formatYears } from '@/shared-ui/format.helper';
 import { RangeBars } from '@/shared-ui/range-bars.component';
 import { Section } from '@/shared-ui/section.component';
 import { SourceInfo } from '@/shared-ui/source-info.component';
-import { Timeline, type TimelineItem } from '@/shared-ui/timeline.component';
+import { Timeline } from '@/shared-ui/timeline.component';
+import type { TimelineItem } from '@/shared-ui/timeline-item.interface';
 import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
-
 import { currentYear } from './athlete-profile.helper';
 import { ATHLETE_PROFILE_MESSAGES } from './athletes.const';
 
 const NATIONAL_TEAM = 'national';
 const yearOf = (iso: string) => Number(iso.slice(0, 4));
-const TONE: Partial<Record<OnThisDayKind, TimelineItem['tone']>> = { [OnThisDayKind.Title]: 'gold', [OnThisDayKind.Record]: 'gold', [OnThisDayKind.Death]: 'muted' };
+const TONE: Partial<Record<OnThisDayKind, TimelineItem['tone']>> = {
+  [OnThisDayKind.Title]: 'gold',
+  [OnThisDayKind.Record]: 'gold',
+  [OnThisDayKind.Death]: 'muted',
+};
 
 /** Carreira: teams gantt (national team in green), title reigns, milestones timeline with day links. */
 export function CareerTab({ profile: p }: { profile: AthleteProfile }) {
@@ -38,7 +42,12 @@ export function CareerTab({ profile: p }: { profile: AthleteProfile }) {
                 from,
                 to,
                 text: formatYears(t.from, t.to, ui.untilNow),
-                description: T.teamDescription(t.name, t.fromDate ? formatDate(t.fromDate) : String(from), t.toDate ? formatDate(t.toDate) : t.to ? String(t.to) : ui.untilNow, t.role),
+                description: T.teamDescription(
+                  t.name,
+                  t.fromDate ? formatDate(t.fromDate) : String(from),
+                  t.toDate ? formatDate(t.toDate) : t.to ? String(t.to) : ui.untilNow,
+                  t.role,
+                ),
                 tone: t.kind === NATIONAL_TEAM ? 'success' : 'primary',
               };
             })}

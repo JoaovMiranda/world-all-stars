@@ -12,20 +12,12 @@ import { Section } from '@/shared-ui/section.component';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { Tabs } from '@/shared-ui/tabs.component';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
-
-import { ContactAside } from './contact-aside.component';
 import { CONTACT_MESSAGES } from './contact.const';
+import { ContactAside } from './contact-aside.component';
 import { MessageForm } from './message-form.component';
+import type { Receipt } from './receipt.interface';
 import { SubmissionReceipt } from './submission-receipt.component';
 import { SuggestionForm } from './suggestion-form.component';
-
-
-interface Receipt {
-  tab: ContactTab;
-  protocol: string;
-  text: string;
-  notes: readonly string[];
-}
 
 /** P17 Contact (doc 21): tabs Sugerir atleta / Mensagem (`?tipo=mensagem`), shared validators, protocol on success. */
 export function ContactPage() {
@@ -72,9 +64,20 @@ export function ContactPage() {
                     }}
                   />
                 ) : tab === ContactTab.Suggestion ? (
-                  <SuggestionForm key={formKey} context={ctx} email={user?.email ?? ''} onDone={(r, withEmail) => done(r.protocol, t.done.suggestionText(withEmail), r.notes)} />
+                  <SuggestionForm
+                    key={formKey}
+                    context={ctx}
+                    email={user?.email ?? ''}
+                    onDone={(r, withEmail) => done(r.protocol, t.done.suggestionText(withEmail), r.notes)}
+                  />
                 ) : (
-                  <MessageForm key={formKey} context={ctx} name={user?.name ?? ''} email={user?.email ?? ''} onDone={(r) => done(r.protocol, t.done.messageText, r.notes)} />
+                  <MessageForm
+                    key={formKey}
+                    context={ctx}
+                    name={user?.name ?? ''}
+                    email={user?.email ?? ''}
+                    onDone={(r) => done(r.protocol, t.done.messageText, r.notes)}
+                  />
                 )
               }
             </QueryBoundary>

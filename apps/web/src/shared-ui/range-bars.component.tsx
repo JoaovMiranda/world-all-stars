@@ -1,21 +1,8 @@
 import './range-bars.css';
 
-import { type ReactNode, useRef } from 'react';
-
+import { useRef } from 'react';
+import type { RangeBarItem } from './range-bar-item.interface';
 import { useReveal } from './use-reveal.hook';
-
-export interface RangeBarItem {
-  key: string;
-  label: ReactNode;
-  /** Start and end on the axis unit (years). */
-  from: number;
-  to: number;
-  /** Text inside the bar (e.g. "1956–1974"). */
-  text: string;
-  /** Long description (tooltip + screen readers). */
-  description?: string;
-  tone?: 'primary' | 'accent' | 'success';
-}
 
 interface RangeBarsProps {
   items: readonly RangeBarItem[];

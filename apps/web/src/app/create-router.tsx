@@ -1,24 +1,14 @@
-import { type DehydratedState, dehydrate, hydrate, QueryClientProvider, type QueryClient } from '@tanstack/react-query';
+import { dehydrate, hydrate, QueryClientProvider } from '@tanstack/react-query';
 import { createRouter } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 
 import { ErrorPage } from '@/modules/errors/error.page';
 import { PagePending } from '@/shared-ui/page-pending.component';
-
-import { type Boot, getBoot, initClientScope } from './request-scope';
+import type { AppRouter } from './app-router.type';
+import type { CreateAppRouterOptions } from './create-app-router-options.interface';
+import type { DehydratedApp } from './dehydrated-app.interface';
+import { getBoot, initClientScope } from './request-scope';
 import { routeTree } from './router';
-
-/** What travels from the server render to the browser with the router state (serialized by the router, seroval). */
-interface DehydratedApp {
-  boot: Boot;
-  queries: DehydratedState;
-}
-
-interface CreateAppRouterOptions {
-  queryClient: QueryClient;
-  /** Server: per-request CSP nonce put on every script/style the router renders. */
-  nonce?: string | undefined;
-}
 
 /**
  * One router per server request (entry-server) and one in the browser (entry-client). The React Query cache and the
@@ -47,8 +37,6 @@ export const createAppRouter = ({ queryClient, nonce }: CreateAppRouterOptions) 
     },
     Wrap: ({ children }: { children: ReactNode }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>,
   });
-
-export type AppRouter = ReturnType<typeof createAppRouter>;
 
 declare module '@tanstack/react-router' {
   interface Register {

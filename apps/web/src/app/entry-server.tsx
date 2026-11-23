@@ -7,31 +7,11 @@ import { createQueryClient } from '@/data/query-client';
 
 import { resolveBoot } from './boot.helper';
 import { createAppRouter } from './create-router';
-import { registerServerScope, type RequestScope } from './request-scope';
+import type { DocumentAssets } from './document-assets.interface';
+import type { RenderOptions } from './render-options.interface';
+import { registerServerScope } from './request-scope';
+import type { RequestScope } from './request-scope.interface';
 import { routeTree } from './router';
-
-/** Assets of the document: client entry (+ dev preamble), stylesheets and module preloads (from the Vite manifest). */
-export interface DocumentAssets {
-  scripts: { attrs?: Record<string, string | boolean>; children?: string }[];
-  css: string[];
-  preloads: string[];
-  /** Production: chunks of each page module (`src/modules/…page.tsx` → files), preloaded for the matched route. */
-  routeChunks?: Record<string, string[]>;
-}
-
-/** Contract with apps/server (src/web/web.route.ts): one call per page request. */
-export interface RenderOptions {
-  request: Request;
-  /** Per-request CSP nonce (the server sends the matching Content-Security-Policy header). */
-  nonce: string;
-  /** The API, in-process (Hono `app.fetch`). */
-  apiFetch: (request: Request) => Promise<Response>;
-  /** APP_TIME_ZONE: "today" of the page. */
-  timeZone: string;
-  /** PUBLIC_URL: canonical/og URLs. */
-  publicUrl: string;
-  assets: DocumentAssets;
-}
 
 const storage = new AsyncLocalStorage<RequestScope>();
 

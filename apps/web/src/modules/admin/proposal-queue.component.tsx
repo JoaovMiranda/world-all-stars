@@ -14,7 +14,8 @@ import { Tag } from '@/shared-ui/tag.component';
 
 import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import { ADMIN_REASON, filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
+import { ADMIN_REASON } from './admin-queue.const';
+import { filterByStatus, pickStatus, statusOptions } from './admin-queue.helper';
 import type { QueueState } from './queue-state.type';
 import { SourceLink } from './source-link.component';
 import { StatusTag } from './status-tag.component';
@@ -69,7 +70,14 @@ function ProposalDetail({ p }: { p: CrawlerProposal }) {
         <DecisionBar
           label={T.decisionLabel}
           actions={[
-            { key: 'approve', label: T.approve, variant: 'primary', confirmTitle: T.approveTitle, reason: ADMIN_REASON, onConfirm: decide(AdminDecision.Approve) },
+            {
+              key: 'approve',
+              label: T.approve,
+              variant: 'primary',
+              confirmTitle: T.approveTitle,
+              reason: ADMIN_REASON,
+              onConfirm: decide(AdminDecision.Approve),
+            },
             { key: 'reject', label: T.reject, variant: 'danger', confirmTitle: T.rejectTitle, reason: ADMIN_REASON, onConfirm: decide(AdminDecision.Reject) },
           ]}
         />
@@ -93,7 +101,13 @@ export function ProposalQueue({ state }: { state: QueueState }) {
         const shown = filterByStatus(items, status, statusOf);
         return (
           <div className="stack">
-            <StatusFilter label={adminText.common.statusFilter} options={statusOptions(meta.reviewStatus, items, statusOf)} value={status} total={items.length} onChange={state.setStatus} />
+            <StatusFilter
+              label={adminText.common.statusFilter}
+              options={statusOptions(meta.reviewStatus, items, statusOf)}
+              value={status}
+              total={items.length}
+              onChange={state.setStatus}
+            />
             <ReviewQueue
               label={T.queueLabel}
               items={shown}

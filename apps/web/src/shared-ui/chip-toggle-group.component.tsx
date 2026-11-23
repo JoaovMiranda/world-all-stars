@@ -1,12 +1,5 @@
-import type { ReactNode } from 'react';
-
 import { Chip } from './chip.component';
-
-export interface ChipOption<V extends string> {
-  value: V;
-  label: ReactNode;
-  swatch?: string;
-}
+import type { ChipOption } from './chip-option.interface';
 
 interface SingleProps<V extends string> {
   multiple?: false;
@@ -37,7 +30,13 @@ export function ChipToggleGroup<V extends string>(props: ChipToggleGroupProps<V>
   return (
     <div className="chip-group" role="group" aria-label={props.label}>
       {props.options.map((o) => (
-        <Chip key={o.value} pressed={isOn(o.value)} toggle={props.multiple ?? false} onClick={() => toggle(o.value)} {...(o.swatch ? { swatch: o.swatch } : {})}>
+        <Chip
+          key={o.value}
+          pressed={isOn(o.value)}
+          toggle={props.multiple ?? false}
+          onClick={() => toggle(o.value)}
+          {...(o.swatch ? { swatch: o.swatch } : {})}
+        >
           {o.label}
         </Chip>
       ))}

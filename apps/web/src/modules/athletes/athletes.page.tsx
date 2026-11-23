@@ -1,4 +1,4 @@
-import { AthleteListQuerySchema, TIER_ORDER, pageCountOf } from '@was/shared';
+import { AthleteListQuerySchema, pageCountOf, TIER_ORDER } from '@was/shared';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { athletesQuery } from '@/data/endpoints/athletes.query';
@@ -14,14 +14,15 @@ import { PageLayout } from '@/shared-ui/page-layout.component';
 import { Pagination } from '@/shared-ui/pagination.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
 import { SearchInput } from '@/shared-ui/search-input.component';
-import { Select, type SelectOption } from '@/shared-ui/select.component';
+import { Select } from '@/shared-ui/select.component';
+import type { SelectOption } from '@/shared-ui/select-option.interface';
 import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
 import { useUrlSearchText } from '@/shared-ui/use-url-search-text.hook';
-
-import { ALL_ATHLETES_INPUT, athletesListInput } from './athletes-query.helper';
 import { ATHLETES_MESSAGES } from './athletes.const';
+import { ALL_ATHLETES_INPUT } from './athletes-query.const';
+import { athletesListInput } from './athletes-query.helper';
 
 const byLabel = (a: SelectOption, b: SelectOption) => currentFormat().compare(a.label, b.label);
 
@@ -54,7 +55,8 @@ export function AthletesPage() {
   const { page = 1, ...criteria } = filters;
   const activeCount = Object.values(criteria).filter((v) => v !== undefined).length;
   // Any filter change goes back to the first page (page 3 of another filter is meaningless).
-  const setFilter = <K extends keyof typeof criteria>(key: K, value: (typeof criteria)[K] | undefined) => setFilters({ [key]: value, page: undefined } as Partial<typeof filters>);
+  const setFilter = <K extends keyof typeof criteria>(key: K, value: (typeof criteria)[K] | undefined) =>
+    setFilters({ [key]: value, page: undefined } as Partial<typeof filters>);
   // After a page change, focus moves to the new results (the clicked page button may no longer exist: WCAG 2.4.3).
   const focusResults = useRef(false);
   const goToPage = (p: number) => {
@@ -75,7 +77,9 @@ export function AthletesPage() {
     const items = all.data?.items ?? [];
     return {
       sports: [...new Map(items.map((a) => [a.sport.slug, { value: a.sport.slug, label: a.sport.name }])).values()].sort(byLabel),
-      countries: [...new Map(items.flatMap((a) => a.nationalities.map((n) => [n.iso2, { value: n.iso2, label: `${n.flag} ${n.name}` }]))).values()].sort(byLabel),
+      countries: [...new Map(items.flatMap((a) => a.nationalities.map((n) => [n.iso2, { value: n.iso2, label: `${n.flag} ${n.name}` }]))).values()].sort(
+        byLabel,
+      ),
       frequentCountries: frequentCountries(items),
     };
   }, [all.data]);
@@ -91,11 +95,24 @@ export function AthletesPage() {
             {(p) => <SearchInput {...p} inline placeholder={t.searchPlaceholder} value={q} onChange={(e) => setQ(e.target.value)} />}
           </FormField>
           <FormField label={t.sport}>
-            {(p) => <Select {...p} options={options.sports} placeholder={t.allSports} value={filters.sport ?? ''} onChange={(e) => setFilter('sport', e.target.value || undefined)} />}
+            {(p) => (
+              <Select
+                {...p}
+                options={options.sports}
+                placeholder={t.allSports}
+                value={filters.sport ?? ''}
+                onChange={(e) => setFilter('sport', e.target.value || undefined)}
+              />
+            )}
           </FormField>
           <FormField label={t.country}>
             {(p) => (
-              <Select {...p} placeholder={t.allCountries} value={filters.country?.toUpperCase() ?? ''} onChange={(e) => setFilter('country', e.target.value || undefined)}>
+              <Select
+                {...p}
+                placeholder={t.allCountries}
+                value={filters.country?.toUpperCase() ?? ''}
+                onChange={(e) => setFilter('country', e.target.value || undefined)}
+              >
                 {options.frequentCountries.length > 0 ? (
                   <>
                     <optgroup label={t.countriesFrequent}>
@@ -153,17 +170,17 @@ export function AthletesPage() {
       >
         {(data) => (
           <div id="athletes-results" tabIndex={-1} aria-label={t.resultsLabel}>
-          <AthleteGrid
-            athletes={data.items}
-            emptyTitle={t.noResultsTitle}
-            emptyText={t.noResultsText}
-            emptyAction={
-              <Button variant="secondary" onClick={reset}>
-                {ui.clearFilters}
-              </Button>
-            }
-          />
-          <Pagination page={page} pageCount={pageCountOf(data.total)} onChange={goToPage} />
+            <AthleteGrid
+              athletes={data.items}
+              emptyTitle={t.noResultsTitle}
+              emptyText={t.noResultsText}
+              emptyAction={
+                <Button variant="secondary" onClick={reset}>
+                  {ui.clearFilters}
+                </Button>
+              }
+            />
+            <Pagination page={page} pageCount={pageCountOf(data.total)} onChange={goToPage} />
           </div>
         )}
       </QueryBoundary>

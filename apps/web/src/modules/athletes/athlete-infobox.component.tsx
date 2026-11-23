@@ -1,14 +1,14 @@
-import type { AthleteProfile } from '@was/shared';
 import { Link } from '@tanstack/react-router';
+import type { AthleteProfile } from '@was/shared';
 
 import { useText } from '@/i18n/use-text.hook';
 import { DateLink } from '@/shared-ui/date-link.component';
-import { type FactItem, FactList, FactListSeparator } from '@/shared-ui/fact-list.component';
+import type { FactItem } from '@/shared-ui/fact-item.interface';
+import { FactList, FactListSeparator } from '@/shared-ui/fact-list.component';
 import { ageAt, formatYears } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
 import { TierTag } from '@/shared-ui/tier-tag.component';
 import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
-
 import { formatPlace } from './athlete-profile.helper';
 import { ATHLETE_PROFILE_MESSAGES, INFOBOX_TEAMS_MAX } from './athletes.const';
 import { FieldSource } from './field-source.component';
@@ -31,7 +31,16 @@ export function AthleteInfobox({ profile: p }: { profile: AthleteProfile }) {
   const ui = useText(UI_MESSAGES);
   const deathAge = p.birth.date && p.death?.date ? ageAt(p.birth.date, p.death.date) : null;
   const personal: FactItem[] = [
-    { key: 'name', term: T.fullName, detail: <>{p.fullName ?? D}<FieldSource profile={p} field="full_name" /></> },
+    {
+      key: 'name',
+      term: T.fullName,
+      detail: (
+        <>
+          {p.fullName ?? D}
+          <FieldSource profile={p} field="full_name" />
+        </>
+      ),
+    },
     ...(p.nicknames.length ? [{ key: 'nick', term: T.nicknames, detail: p.nicknames.join(', ') }] : []),
     {
       key: 'birth',
@@ -89,8 +98,19 @@ export function AthleteInfobox({ profile: p }: { profile: AthleteProfile }) {
   ];
   const teams = p.teams.slice(-INFOBOX_TEAMS_MAX);
   const meta: FactItem[] = [
-    { key: 'tier', term: T.tier, detail: <span className="row"><TierTag tier={p.tier} /><span className="muted">{T.percentile(p.percentile)}</span></span> },
-    ...(p.wikidataQid ? [{ key: 'qid', term: T.wikidata, detail: <External href={`https://www.wikidata.org/wiki/${p.wikidataQid}`}>{p.wikidataQid}</External> }] : []),
+    {
+      key: 'tier',
+      term: T.tier,
+      detail: (
+        <span className="row">
+          <TierTag tier={p.tier} />
+          <span className="muted">{T.percentile(p.percentile)}</span>
+        </span>
+      ),
+    },
+    ...(p.wikidataQid
+      ? [{ key: 'qid', term: T.wikidata, detail: <External href={`https://www.wikidata.org/wiki/${p.wikidataQid}`}>{p.wikidataQid}</External> }]
+      : []),
     ...(p.sourceLinks.length
       ? [
           {

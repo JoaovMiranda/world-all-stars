@@ -1,10 +1,19 @@
-import { type AthleteProfile, type AwardAchievement, type CompetitionAchievement, COMPETITION_LEVEL_ORDER, type CompetitionLevel, competitionWins, isAwardAchievement } from '@was/shared';
+import {
+  type AthleteProfile,
+  type AwardAchievement,
+  COMPETITION_LEVEL_ORDER,
+  type CompetitionAchievement,
+  type CompetitionLevel,
+  competitionWins,
+  isAwardAchievement,
+} from '@was/shared';
 import { useCallback, useMemo, useState } from 'react';
 
 import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
-import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
+import { barsOption } from '@/shared-ui/chart-presets.helper';
+import type { ChartTheme } from '@/shared-ui/chart-theme.interface';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { DataTable } from '@/shared-ui/data-table.component';
 import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
@@ -12,9 +21,8 @@ import { EmptyState } from '@/shared-ui/empty-state.component';
 import { LevelTag } from '@/shared-ui/level-tag.component';
 import { Section } from '@/shared-ui/section.component';
 import { SourceInfo } from '@/shared-ui/source-info.component';
-import { barsOption } from '@/shared-ui/chart-presets.helper';
-
-import { type AchievementGroup, byYear, groupByAward, groupByCompetition, yearsBetween } from './achievements.helper';
+import type { AchievementGroup } from './achievement-group.interface';
+import { byYear, groupByAward, groupByCompetition, yearsBetween } from './achievements.helper';
 import { ATHLETE_PROFILE_MESSAGES, LEVEL_COLOR_TOKEN } from './athletes.const';
 import { YearChips } from './year-chips.component';
 
@@ -127,7 +135,11 @@ export function AchievementsTab({ profile }: { profile: AthleteProfile }) {
       ...barsOption(
         theme,
         years,
-        shown.map((l) => ({ name: labels.level[l], data: years.map((y) => wins.filter((a) => a.level === l && a.year === y).length), color: `--${LEVEL_COLOR_TOKEN[l]}` })),
+        shown.map((l) => ({
+          name: labels.level[l],
+          data: years.map((y) => wins.filter((a) => a.level === l && a.year === y).length),
+          color: `--${LEVEL_COLOR_TOKEN[l]}`,
+        })),
         { stack: true, barMaxWidth: 18 },
       ),
       legend: { show: false },
@@ -154,12 +166,18 @@ export function AchievementsTab({ profile }: { profile: AthleteProfile }) {
               label={T.levelsLabel}
               value={shown}
               onChange={(next) => next.length && setActive(next)}
-              options={levels.map((l) => ({ value: l, label: T.levelChip(labels.level[l], wins.filter((a) => a.level === l).length), swatch: LEVEL_COLOR_TOKEN[l] }))}
+              options={levels.map((l) => ({
+                value: l,
+                label: T.levelChip(labels.level[l], wins.filter((a) => a.level === l).length),
+                swatch: LEVEL_COLOR_TOKEN[l],
+              }))}
             />
           )
         }
       >
-        {years.length > 0 && <ChartContainer option={option} ariaLabel={T.chartAria} summary={T.chartSummary(wins.length, years[0] ?? 0, years[years.length - 1] ?? 0)} />}
+        {years.length > 0 && (
+          <ChartContainer option={option} ariaLabel={T.chartAria} summary={T.chartSummary(wins.length, years[0] ?? 0, years[years.length - 1] ?? 0)} />
+        )}
         <div className="panel-gap">
           <TitlesTable groups={groups.filter((g) => shown.includes(g.level))} />
         </div>

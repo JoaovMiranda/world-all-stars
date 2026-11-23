@@ -11,7 +11,7 @@ import { Tag } from '@/shared-ui/tag.component';
 
 import { ADMIN_MESSAGES } from './admin.const';
 import { formatDateTime } from './admin-format.helper';
-import { ADMIN_REASON } from './admin-queue.helper';
+import { ADMIN_REASON } from './admin-queue.const';
 import type { QueueState } from './queue-state.type';
 
 function IdentityDetail({ c }: { c: AdminIdentityCandidate }) {
@@ -32,8 +32,27 @@ function IdentityDetail({ c }: { c: AdminIdentityCandidate }) {
         items={[
           { key: 'provider', term: T.provider, detail: <code>{c.provider}</code> },
           ...(c.sport ? [{ key: 'sport', term: 'Sport', detail: c.sport }] : []),
-          { key: 'ids', term: T.ids, detail: Object.entries(c.externalIds).map(([k, v]) => `${k}: ${v}`).join(' · ') || '—' },
-          ...(c.documentUrl ? [{ key: 'doc', term: T.document, detail: <a href={c.documentUrl} target="_blank" rel="noreferrer">{c.documentUrl}</a> }] : []),
+          {
+            key: 'ids',
+            term: T.ids,
+            detail:
+              Object.entries(c.externalIds)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(' · ') || '—',
+          },
+          ...(c.documentUrl
+            ? [
+                {
+                  key: 'doc',
+                  term: T.document,
+                  detail: (
+                    <a href={c.documentUrl} target="_blank" rel="noreferrer">
+                      {c.documentUrl}
+                    </a>
+                  ),
+                },
+              ]
+            : []),
           { key: 'created', term: common.created, detail: formatDateTime(c.createdAt) },
         ]}
       />
@@ -53,7 +72,14 @@ function IdentityDetail({ c }: { c: AdminIdentityCandidate }) {
         <DecisionBar
           label={T.decisionLabel}
           actions={[
-            ...c.candidates.slice(0, 2).map((x) => ({ key: `match-${x.id}`, label: T.match(x.name), variant: 'primary' as const, confirmTitle: T.matchTitle, reason: ADMIN_REASON, onConfirm: send('match', x.id) })),
+            ...c.candidates.slice(0, 2).map((x) => ({
+              key: `match-${x.id}`,
+              label: T.match(x.name),
+              variant: 'primary' as const,
+              confirmTitle: T.matchTitle,
+              reason: ADMIN_REASON,
+              onConfirm: send('match', x.id),
+            })),
             { key: 'create', label: T.create, variant: 'secondary' as const, confirmTitle: T.createTitle, reason: ADMIN_REASON, onConfirm: send('create') },
             { key: 'reject', label: T.reject, variant: 'danger' as const, confirmTitle: T.rejectTitle, reason: ADMIN_REASON, onConfirm: send('reject') },
           ]}

@@ -1,12 +1,12 @@
-import { APP_COOKIE, FIXTURE_MODE_VALUES, FixtureMode, type IsoDate, LOCALE_COOKIE, SESSION_KIND_VALUES, SessionKind, resolveLocale } from '@was/shared';
+import { APP_COOKIE, FIXTURE_MODE_VALUES, FixtureMode, type IsoDate, LOCALE_COOKIE, resolveLocale, SESSION_KIND_VALUES, SessionKind } from '@was/shared';
 
 import { FIXTURE_MODE_COOKIE, FIXTURE_MODE_PARAM } from '@/data/data-layer.const';
 import { SESSION_COOKIE, SESSION_URL_PARAM } from '@/session/session.const';
-import { ANON_IDENTITY } from '@/session/session-identity.helper';
+import { ANON_IDENTITY } from '@/session/session-identity.const';
 import { readCookie } from '@/shared-ui/cookie.helper';
-import { THEME_COOKIE, isThemeName } from '@/shared-ui/theme.const';
-
-import type { Boot } from './request-scope';
+import { isThemeName, THEME_COOKIE } from '@/shared-ui/theme.const';
+import type { Boot } from './boot.interface';
+import type { BootRequest } from './boot-request.interface';
 
 const isMode = (v: unknown): v is FixtureMode => FIXTURE_MODE_VALUES.includes(v as FixtureMode);
 const isKind = (v: unknown): v is SessionKind => SESSION_KIND_VALUES.includes(v as SessionKind);
@@ -14,15 +14,6 @@ const isKind = (v: unknown): v is SessionKind => SESSION_KIND_VALUES.includes(v 
 /** YYYY-MM-DD of an instant in a IANA time zone (en-CA formats as ISO). */
 export const isoDateIn = (instant: Date, timeZone: string): IsoDate =>
   new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(instant) as IsoDate;
-
-export interface BootRequest {
-  url: URL;
-  cookie: string | null;
-  timeZone: string;
-  publicUrl: string;
-  acceptLanguage?: string | null;
-  now?: Date;
-}
 
 /**
  * Server: what the page load starts with. Fixture mode = `?fixture=` → cookie → sample; session = `?as=` → cookie →

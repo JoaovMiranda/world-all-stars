@@ -3,8 +3,8 @@ import { useState } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 import { signInWithGoogle } from '@/session/auth-client';
-import { SESSION_MESSAGES, type LoginReason } from '@/session/session.const';
-
+import type { LoginReason } from '@/session/login-reason.type';
+import { SESSION_MESSAGES } from '@/session/session.const';
 import { Button } from './button.component';
 import { Dialog } from './dialog.component';
 import { GoogleButton } from './google-button.component';
@@ -51,10 +51,20 @@ export function LoginDialog({ reason, onClose, googleEnabled, onSimulateLogin }:
         <p className="muted">{t.loginText}</p>
         <GoogleButton label={googleEnabled ? t.loginGoogle : t.loginGoogleUnavailable} onClick={() => void google()} disabled={!googleEnabled} busy={busy} />
         {!googleEnabled && <p className="login-legal">{t.loginGoogleUnavailableHint}</p>}
-        {error && <Notice tone="danger" live="assertive">{t.loginGoogleError}</Notice>}
+        {error && (
+          <Notice tone="danger" live="assertive">
+            {t.loginGoogleError}
+          </Notice>
+        )}
         <p className="login-legal">
-          {t.loginLegal.before} <Link to="/legal/terms" onClick={onClose}>{t.loginLegal.terms}</Link> {t.loginLegal.and}{' '}
-          <Link to="/legal/privacy" onClick={onClose}>{t.loginLegal.privacy}</Link>
+          {t.loginLegal.before}{' '}
+          <Link to="/legal/terms" onClick={onClose}>
+            {t.loginLegal.terms}
+          </Link>{' '}
+          {t.loginLegal.and}{' '}
+          <Link to="/legal/privacy" onClick={onClose}>
+            {t.loginLegal.privacy}
+          </Link>
           {t.loginLegal.after}
         </p>
         {onSimulateLogin && (

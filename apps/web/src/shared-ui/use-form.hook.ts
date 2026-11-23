@@ -3,6 +3,7 @@ import { type ChangeEvent, type FormEvent, useCallback, useEffect, useRef, useSt
 import type { z } from 'zod';
 
 import { useLocale } from '@/i18n/locale.store';
+import type { UseFormOptions } from './use-form-options.interface';
 
 const issuesToErrors = (issues: readonly z.core.$ZodIssue[]): FieldErrors => {
   const errors: FieldErrors = {};
@@ -12,12 +13,6 @@ const issuesToErrors = (issues: readonly z.core.$ZodIssue[]): FieldErrors => {
   }
   return errors;
 };
-
-interface UseFormOptions<S extends z.ZodType> {
-  /** Shared Zod schema (e.g. createCommentInputSchema(bannedWords)). `null` while its context loads. */
-  schema: S | null;
-  initialValues: z.input<S>;
-}
 
 /**
  * Minimal form state wired to the shared Zod validators: values, field errors by path (`urls.0`), validation on

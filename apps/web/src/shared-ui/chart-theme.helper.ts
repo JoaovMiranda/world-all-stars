@@ -22,8 +22,3 @@ export const chartAxis = <T extends object>(extra?: T) => ({
   splitLine: { lineStyle: { color: cssVar('--border'), type: 'dashed' as const } },
   ...extra,
 });
-
-export interface ChartTheme {
-  cssVar: typeof cssVar;
-  axis: typeof chartAxis;
-}

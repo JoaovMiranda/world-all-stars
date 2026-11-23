@@ -1,19 +1,11 @@
 import type { AthleteProfile } from '@was/shared';
-import type { ReactNode } from 'react';
-
-import { BOXING_PANEL } from './boxing-panel.component';
-import { CS_PANEL } from './cs-panel.component';
-import { FOOTBALL_PANEL } from './football-panel.component';
-import { GENERIC_PANEL } from './generic-panel.component';
-import type { CompareMetric, SportKpi, SportPanelDef } from './sport-panel.type';
-import { SWIMMING_PANEL } from './swimming-panel.component';
-
-/** A sport panel bound to one profile: header KPIs, same-sport metrics and the Overview card. */
-export interface ResolvedSportPanel {
-  kpis: SportKpi[];
-  compare: CompareMetric[];
-  panel: ReactNode;
-}
+import { BOXING_PANEL } from './boxing-panel.const';
+import { CS_PANEL } from './cs-panel.const';
+import { FOOTBALL_PANEL } from './football-panel.const';
+import { GENERIC_PANEL } from './generic-panel.const';
+import type { ResolvedSportPanel } from './resolved-sport-panel.interface';
+import type { SportPanelDef } from './sport-panel.type';
+import { SWIMMING_PANEL } from './swimming-panel.const';
 
 const bind = <S,>(def: SportPanelDef<S>, profile: AthleteProfile): ResolvedSportPanel | null => {
   const parsed = def.schema.safeParse(profile.stats);

@@ -1,12 +1,6 @@
 import './fact-list.css';
 
-import type { ReactNode } from 'react';
-
-export interface FactItem {
-  key: string;
-  term: ReactNode;
-  detail: ReactNode;
-}
+import type { FactItem } from './fact-item.interface';
 
 interface FactListProps {
   items: readonly FactItem[];

@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
-import type { LoginReason } from '@/session/session.const';
+import type { LoginReason } from '@/session/login-reason.type';
 import { useSession } from '@/session/use-session.hook';
-
 import { Button } from './button.component';
 import { EmptyState } from './empty-state.component';
 import { UI_MESSAGES } from './ui-text.const';
@@ -21,11 +20,23 @@ export function RequireSession({ role = 'reader', reason = 'account', children }
   const { isSignedIn, isAdmin, requireLogin } = useSession();
   if (!isSignedIn) {
     return (
-      <EmptyState title={ui.signInTitle} action={<Button variant="primary" onClick={() => requireLogin(reason)}>{ui.signInAction}</Button>}>
+      <EmptyState
+        title={ui.signInTitle}
+        action={
+          <Button variant="primary" onClick={() => requireLogin(reason)}>
+            {ui.signInAction}
+          </Button>
+        }
+      >
         {ui.signInText}
       </EmptyState>
     );
   }
-  if (role === 'admin' && !isAdmin) return <EmptyState title={ui.adminOnlyTitle} mark="◆">{ui.adminOnlyText}</EmptyState>;
+  if (role === 'admin' && !isAdmin)
+    return (
+      <EmptyState title={ui.adminOnlyTitle} mark="◆">
+        {ui.adminOnlyText}
+      </EmptyState>
+    );
   return <>{children}</>;
 }

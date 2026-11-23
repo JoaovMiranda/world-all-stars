@@ -1,50 +1,17 @@
-import { type AthleteProfile, type AthleteStats, AthleteStatsSchema, isCompetitionAchievement } from '@was/shared';
+import { type AthleteProfile, type AthleteStats, isCompetitionAchievement } from '@was/shared';
 import { useCallback, useMemo } from 'react';
-import { z } from 'zod';
 
 import { useText } from '@/i18n/use-text.hook';
-import { barsOption } from '@/shared-ui/chart-presets.helper';
-import type { ChartTheme } from '@/shared-ui/chart-theme.helper';
 import { ChartContainer } from '@/shared-ui/chart-container.component';
+import { barsOption } from '@/shared-ui/chart-presets.helper';
+import type { ChartTheme } from '@/shared-ui/chart-theme.interface';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { FactList } from '@/shared-ui/fact-list.component';
-import { capitalize, formatNumber } from '@/shared-ui/format.helper';
 import { Section } from '@/shared-ui/section.component';
+import { ATHLETE_PROFILE_MESSAGES, GENERIC_STATS_MAX } from '../athletes.const';
+import { statEntries } from './generic-panel.helper';
 
-import { GENERIC_STATS_MAX, ATHLETE_PROFILE_MESSAGES } from '../athletes.const';
-import { kpi, metric, titleKpis, titleMetrics } from './sport-panel.helper';
-import type { SportPanelDef } from './sport-panel.type';
-
-const HIDDEN_KEYS = new Set(['schema', '_kpis', '_labels']);
-
-interface StatEntry {
-  key: string;
-  label: string;
-  text: string;
-  raw: unknown;
-}
-
-const pretty = (key: string) => capitalize(key.replace(/_/g, ' '));
-const show = (v: unknown): string => (typeof v === 'number' ? formatNumber(v) : String(v));
-
-/** Crawler stats as label/value rows: `_labels` give the pt-BR names; arrays and objects are flattened. */
-const statEntries = (stats: AthleteStats | null): StatEntry[] => {
-  if (!stats) return [];
-  const labels = stats._labels ?? {};
-  const label = (k: string) => labels[k] ?? pretty(k);
-  return Object.entries(stats)
-    .filter(([k, v]) => !HIDDEN_KEYS.has(k) && v !== null && v !== undefined && v !== '')
-    .map(([k, v]) => {
-      const text = Array.isArray(v)
-        ? v.map((x) => (x && typeof x === 'object' ? Object.values(x).map(show).join(' ') : show(x))).join(', ')
-        : v && typeof v === 'object'
-          ? Object.entries(v).map(([a, b]) => `${label(a)}: ${show(b)}`).join(' · ')
-          : show(v);
-      return { key: k, label: label(k), text, raw: v };
-    });
-};
-
-function GenericPanel({ profile }: { profile: AthleteProfile; stats: AthleteStats | null }) {
+export function GenericPanel({ profile }: { profile: AthleteProfile; stats: AthleteStats | null }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).panels;
   const entries = useMemo(() => statEntries(profile.stats).slice(0, GENERIC_STATS_MAX), [profile.stats]);
   const byComp = useMemo(() => {
@@ -54,7 +21,12 @@ function GenericPanel({ profile }: { profile: AthleteProfile; stats: AthleteStat
   }, [profile.achievements]);
   const option = useCallback(
     (theme: ChartTheme) =>
-      barsOption(theme, byComp.map(([n]) => n), [{ name: T.titles, data: byComp.map(([, c]) => c), color: `--${profile.sport.colorToken}` }], { horizontal: true, barMaxWidth: 16 }),
+      barsOption(
+        theme,
+        byComp.map(([n]) => n),
+        [{ name: T.titles, data: byComp.map(([, c]) => c), color: `--${profile.sport.colorToken}` }],
+        { horizontal: true, barMaxWidth: 16 },
+      ),
     [byComp, profile.sport.colorToken, T],
   );
   return (
@@ -66,7 +38,12 @@ function GenericPanel({ profile }: { profile: AthleteProfile; stats: AthleteStat
           <EmptyState compact title={T.noStats} mark="◇" />
         )}
         {byComp.length ? (
-          <ChartContainer option={option} ariaLabel={T.byCompetitionChart} height={Math.max(160, byComp.length * 34 + 40)} summary={byComp.map(([n, c]) => `${n}: ${c}`).join(', ')} />
+          <ChartContainer
+            option={option}
+            ariaLabel={T.byCompetitionChart}
+            height={Math.max(160, byComp.length * 34 + 40)}
+            summary={byComp.map(([n, c]) => `${n}: ${c}`).join(', ')}
+          />
         ) : (
           <EmptyState compact title={T.noCompetitionTitles} mark="◇" />
         )}
@@ -74,16 +51,3 @@ function GenericPanel({ profile }: { profile: AthleteProfile; stats: AthleteStat
     </Section>
   );
 }
-
-export const GENERIC_PANEL: SportPanelDef<AthleteStats | null> = {
-  schema: AthleteStatsSchema.nullable() as z.ZodType<AthleteStats | null>,
-  kpis: (p, s) => [...(s?._kpis ?? []).slice(0, 2).map((k) => kpi(k.label_pt, k.value, k.hint_pt ?? undefined)), ...titleKpis(p)].slice(0, 4),
-  compare: (p, s) => [
-    ...titleMetrics(p),
-    ...statEntries(s)
-      .filter((e) => typeof e.raw === 'number')
-      .slice(0, 6)
-      .map((e) => metric(e.label, e.raw as number)),
-  ],
-  Panel: GenericPanel,
-};

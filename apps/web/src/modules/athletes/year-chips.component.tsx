@@ -1,9 +1,4 @@
-export interface YearChip {
-  key: string;
-  text: string;
-  /** Details on hover/focus (result, category, edition). */
-  title?: string;
-}
+import type { YearChip } from './year-chip.interface';
 
 /** Wrapped list of small year chips ("1958", "2008 ×8", "2016 · #2"). */
 export function YearChips({ chips }: { chips: readonly YearChip[] }) {

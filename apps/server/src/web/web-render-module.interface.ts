@@ -1,6 +1,6 @@
 import type { DocumentAssets } from './document-assets.interface';
 
-/** What apps/web/src/app/entry-server.tsx exports (the server never compiles web code, so the contract is restated). */
+/** What apps/web/src/app/document-assets.interface.ts exports (the server never compiles web code, so the contract is restated). */
 export interface WebRenderModule {
   render(options: {
     request: Request;

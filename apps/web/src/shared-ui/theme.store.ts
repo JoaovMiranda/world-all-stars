@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
-import type { ThemeName } from './theme.const';
 import { getEffectiveTheme, getServerTheme } from './theme.helper';
+import type { ThemeName } from './theme-name.type';
 
 /** Effective theme as an external store: notifies on manual toggle (<html data-theme>) and on OS changes. */
 export const themeStore = {

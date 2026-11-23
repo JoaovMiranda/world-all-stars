@@ -4,12 +4,7 @@ import { useText } from '@/i18n/use-text.hook';
 
 import { ChipToggleGroup } from './chip-toggle-group.component';
 import { REVIEW_KIT_MESSAGES } from './review-kit.const';
-
-export interface StatusFilterOption<V extends string> {
-  value: V;
-  label: string;
-  count?: number;
-}
+import type { StatusFilterOption } from './status-filter-option.interface';
 
 interface StatusFilterProps<V extends string> {
   /** Accessible name of the group. */

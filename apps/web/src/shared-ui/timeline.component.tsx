@@ -1,16 +1,6 @@
-import { type ReactNode, useRef } from 'react';
-
+import { useRef } from 'react';
+import type { TimelineItem } from './timeline-item.interface';
 import { useReveal } from './use-reveal.hook';
-
-export interface TimelineItem {
-  key: string;
-  /** Left column (year or DateLink). */
-  when: ReactNode;
-  title: ReactNode;
-  detail?: ReactNode;
-  /** gold = achievement, muted = minor, default = neutral diamond. */
-  tone?: 'gold' | 'muted' | 'default';
-}
 
 /** Vertical timeline with art-déco diamonds (career, milestones, versions). */
 export function Timeline({ items, label }: { items: readonly TimelineItem[]; label?: string }) {

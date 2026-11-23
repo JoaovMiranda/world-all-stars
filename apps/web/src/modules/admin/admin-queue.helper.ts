@@ -1,8 +1,5 @@
-import { ADMIN_REASON_MIN_LENGTH } from '@was/shared';
-
-import type { StatusFilterOption } from '@/shared-ui/status-filter.component';
-
-import type { StatusMeta } from './admin-labels.const';
+import type { StatusFilterOption } from '@/shared-ui/status-filter-option.interface';
+import type { StatusMeta } from './status-meta.interface';
 
 /**
  * Options of a StatusFilter with counters, from a status → meta map and the queue items. Only statuses that are
@@ -18,6 +15,3 @@ export const pickStatus = <S extends string>(meta: Record<S, StatusMeta>, raw: s
 /** Items of the selected status (all when undefined). */
 export const filterByStatus = <S extends string, T>(items: readonly T[], status: S | undefined, statusOf: (item: T) => S): T[] =>
   status ? items.filter((i) => statusOf(i) === status) : [...items];
-
-/** Required reason of admin decisions (same minimum as the shared request schemas). */
-export const ADMIN_REASON = { minLength: ADMIN_REASON_MIN_LENGTH } as const;

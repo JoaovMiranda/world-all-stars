@@ -1,21 +1,49 @@
-import { type AdminSection, AdminCommentsSearchSchema, AdminContactSearchSchema, AdminIngestionSearchSchema, AdminQueueSearchSchema, AdminReviewSearchSchema, AdminSourcesSearchSchema, AdminUsersSearchSchema, AthleteListQuerySchema, AthleteProfileSearchSchema, AthleteProfileTab, ContactSearchSchema, HomeSearchSchema, MonthDaySchema, monthDayToIso, NotificationsSearchSchema, SourcesFiltersSchema, SportPageFiltersSchema, SportsFiltersSchema, athleteJsonLd, breadcrumbJsonLd, itemListJsonLd, organizationJsonLd, sportJsonLd, webSiteJsonLd } from '@was/shared';
-import type { QueryClient } from '@tanstack/react-query';
-import type { ComponentType } from 'react';
 import { createRootRouteWithContext, createRoute, lazyRouteComponent, notFound, redirect } from '@tanstack/react-router';
+import {
+  AdminCommentsSearchSchema,
+  AdminContactSearchSchema,
+  AdminIngestionSearchSchema,
+  AdminQueueSearchSchema,
+  AdminReviewSearchSchema,
+  type AdminSection,
+  AdminSourcesSearchSchema,
+  AdminUsersSearchSchema,
+  AthleteListQuerySchema,
+  AthleteProfileSearchSchema,
+  AthleteProfileTab,
+  athleteJsonLd,
+  breadcrumbJsonLd,
+  ContactSearchSchema,
+  HomeSearchSchema,
+  itemListJsonLd,
+  MonthDaySchema,
+  monthDayToIso,
+  NotificationsSearchSchema,
+  organizationJsonLd,
+  SourcesFiltersSchema,
+  SportPageFiltersSchema,
+  SportsFiltersSchema,
+  sportJsonLd,
+  webSiteJsonLd,
+} from '@was/shared';
+import type { ComponentType } from 'react';
 
 import { sessionQuery } from '@/data/endpoints/session.query';
-import { NotFoundPage } from '@/modules/errors/not-found.page';
-import { currentLocalized } from '@/i18n/use-localized.hook';
 import { currentText } from '@/i18n/text-for.helper';
-import { sessionIdentity } from '@/session/session-identity.helper';
+import { currentLocalized } from '@/i18n/use-localized.hook';
+import { NotFoundPage } from '@/modules/errors/not-found.page';
 import { identityStore } from '@/session/session.store';
+import { sessionIdentity } from '@/session/session-identity.helper';
 import { UI_MESSAGES } from '@/shared-ui/ui-text.const';
 
-import { buildHead, type PageMeta, rootHead } from './head.helper';
-import { getBoot, IS_SERVER } from './request-scope';
+import { buildHead, rootHead } from './head.helper';
+import type { PageMeta } from './page-meta.interface';
+import { getBoot } from './request-scope';
+import { IS_SERVER } from './request-scope.const';
 import { RootDocument } from './root-document.component';
 import { RootLayout } from './root-layout.component';
 import { ensureOr404, prefetchQueries } from './route-prefetch.helper';
+import type { RouterContext } from './router-context.interface';
 
 // One chunk per page module (loaded on navigation / hover preload). The module path also goes to the route's
 // staticData, so the server can <link rel="modulepreload"> the page chunk of the matched route (no waterfall).
@@ -63,10 +91,6 @@ const SportsPage = lazyPage('sports/sports', 'SportsPage');
 // pages use (`*-query.helper.ts`), and return the PageMeta of the route <head>. Texts are imported lazily, in the
 // page's own chunk.
 
-export interface RouterContext {
-  queryClient: QueryClient;
-}
-
 declare module '@tanstack/react-router' {
   interface StaticDataRouteOption {
     /** Source of the page chunk (`src/modules/…page.tsx`, a key of the Vite manifest). */
@@ -106,7 +130,8 @@ const page = <P extends string>(path: P, component: LazyPage, load: () => Promis
 /** Account and admin pages: data depends on the session, nothing to prefetch; never indexed. */
 const privatePage = <P extends string>(path: P, component: LazyPage, title: () => Promise<string>) =>
   page(path, component, async () => ({ title: await title(), noindex: true }));
-const accountTitle = (key: 'me' | 'notifications' | 'data') => async () => currentText((await import('@/modules/account/account.const')).ACCOUNT_MESSAGES)[key].title;
+const accountTitle = (key: 'me' | 'notifications' | 'data') => async () =>
+  currentText((await import('@/modules/account/account.const')).ACCOUNT_MESSAGES)[key].title;
 const adminTitle = (section?: AdminSection) => async () => {
   const t = currentText((await import('@/modules/admin/admin.const')).ADMIN_MESSAGES);
   return section ? t.sections[section].title : t.title;
@@ -139,7 +164,10 @@ const hallRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/hall-of-greats',
   loader: async ({ context }) => {
-    const [{ hallOfGreatsQuery }, { HALL_OF_GREATS_MESSAGES }] = await Promise.all([import('@/data/endpoints/discovery.query'), import('@/modules/hall-of-greats/hall-of-greats.const')]);
+    const [{ hallOfGreatsQuery }, { HALL_OF_GREATS_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/discovery.query'),
+      import('@/modules/hall-of-greats/hall-of-greats.const'),
+    ]);
     const options = hallOfGreatsQuery.queryOptions();
     await prefetchQueries(context.queryClient, [options]);
     const greats = context.queryClient.getQueryData(options.queryKey)?.greats ?? [];
@@ -147,7 +175,13 @@ const hallRoute = createRoute({
     return {
       title: t.title,
       description: t.lead,
-      jsonLd: [itemListJsonLd(origin(), t.title, greats.map((g) => ({ name: g.knownAs, path: `/athletes/${g.slug}` })))],
+      jsonLd: [
+        itemListJsonLd(
+          origin(),
+          t.title,
+          greats.map((g) => ({ name: g.knownAs, path: `/athletes/${g.slug}` })),
+        ),
+      ],
     } satisfies PageMeta;
   },
   head,
@@ -171,7 +205,13 @@ const athletesRoute = createRoute({
     return {
       title: t.title,
       description: t.lead,
-      jsonLd: [itemListJsonLd(origin(), t.title, items.slice(0, LIST_LD_MAX).map((a) => ({ name: a.knownAs, path: `/athletes/${a.slug}` })))],
+      jsonLd: [
+        itemListJsonLd(
+          origin(),
+          t.title,
+          items.slice(0, LIST_LD_MAX).map((a) => ({ name: a.knownAs, path: `/athletes/${a.slug}` })),
+        ),
+      ],
     } satisfies PageMeta;
   },
   head,
@@ -183,16 +223,18 @@ const athleteRoute = createRoute({
   validateSearch: AthleteProfileSearchSchema,
   loaderDeps: ({ search }) => ({ sort: search.sort, tab: search.tab }),
   loader: async ({ context, deps, params }) => {
-    const [{ athleteProfileQuery, athletesQuery, analysisDimensionsQuery }, { commentsQuery }, { tierVotesQuery }, input, { ATHLETE_PROFILE_MESSAGES }] = await Promise.all([
-      import('@/data/endpoints/athletes.query'),
-      import('@/data/endpoints/comments.query'),
-      import('@/data/endpoints/tier-votes.query'),
-      import('@/modules/athletes/athletes-query.helper'),
-      import('@/modules/athletes/athletes.const'),
-    ]);
+    const [{ athleteProfileQuery, athletesQuery, analysisDimensionsQuery }, { commentsQuery }, { tierVotesQuery }, input, { ATHLETE_PROFILE_MESSAGES }] =
+      await Promise.all([
+        import('@/data/endpoints/athletes.query'),
+        import('@/data/endpoints/comments.query'),
+        import('@/data/endpoints/tier-votes.query'),
+        import('@/modules/athletes/athletes-query.helper'),
+        import('@/modules/athletes/athletes.const'),
+      ]);
     const extra: { queryKey: readonly unknown[] }[] = [commentsQuery.queryOptions(input.commentsInput(params.slug, deps.sort))];
     // Signed in: the vote card's shares come with the page instead of a second round-trip after it renders.
-    if (context.queryClient.getQueryData(sessionQuery.queryOptions().queryKey)?.user) extra.push(tierVotesQuery.queryOptions({ params: { slug: params.slug } }));
+    if (context.queryClient.getQueryData(sessionQuery.queryOptions().queryKey)?.user)
+      extra.push(tierVotesQuery.queryOptions({ params: { slug: params.slug } }));
     if (deps.tab === AthleteProfileTab.Analysis) extra.push(athletesQuery.queryOptions(input.ALL_ATHLETES_INPUT), analysisDimensionsQuery.queryOptions());
     const [athlete] = await Promise.all([
       ensureOr404(context.queryClient, athleteProfileQuery.queryOptions(input.athleteProfileInput(params.slug))),
@@ -223,7 +265,10 @@ const sportsRoute = createRoute({
   path: '/sports',
   validateSearch: SportsFiltersSchema,
   loader: async ({ context }) => {
-    const [{ sportsQuery, governanceModelsQuery, organizationsQuery }, { SPORTS_MESSAGES }] = await Promise.all([import('@/data/endpoints/sports.query'), import('@/modules/sports/sports.const')]);
+    const [{ sportsQuery, governanceModelsQuery, organizationsQuery }, { SPORTS_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/sports.query'),
+      import('@/modules/sports/sports.const'),
+    ]);
     const tree = sportsQuery.queryOptions();
     await prefetchQueries(context.queryClient, [tree, governanceModelsQuery.queryOptions(), organizationsQuery.queryOptions()]);
     const sports = (context.queryClient.getQueryData(tree.queryKey) ?? []).flatMap((g) => g.subgroups.flatMap((sg) => sg.sports));
@@ -231,7 +276,13 @@ const sportsRoute = createRoute({
     return {
       title: t.title,
       description: t.lead,
-      jsonLd: [itemListJsonLd(origin(), t.title, sports.map((sp) => ({ name: sp.name, path: `/sports/${sp.slug}` })))],
+      jsonLd: [
+        itemListJsonLd(
+          origin(),
+          t.title,
+          sports.map((sp) => ({ name: sp.name, path: `/sports/${sp.slug}` })),
+        ),
+      ],
     } satisfies PageMeta;
   },
   head,
@@ -279,7 +330,10 @@ const rankingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/rankings',
   loader: async ({ context }) => {
-    const [{ rankingsQuery }, { RANKINGS_MESSAGES }] = await Promise.all([import('@/data/endpoints/rankings.query'), import('@/modules/rankings/rankings.const')]);
+    const [{ rankingsQuery }, { RANKINGS_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/rankings.query'),
+      import('@/modules/rankings/rankings.const'),
+    ]);
     await prefetchQueries(context.queryClient, [rankingsQuery.queryOptions()]);
     const t = currentText(RANKINGS_MESSAGES).list;
     return { title: t.title, description: t.lead } satisfies PageMeta;
@@ -291,7 +345,10 @@ const rankingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/rankings/$id',
   loader: async ({ context, params }) => {
-    const [{ rankingDetailQuery }, { RANKINGS_MESSAGES }] = await Promise.all([import('@/data/endpoints/rankings.query'), import('@/modules/rankings/rankings.const')]);
+    const [{ rankingDetailQuery }, { RANKINGS_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/rankings.query'),
+      import('@/modules/rankings/rankings.const'),
+    ]);
     await prefetchQueries(context.queryClient, [rankingDetailQuery.queryOptions({ params: { id: params.id }, query: { page: 1, pageSize: 50 } })]);
     return { title: currentText(RANKINGS_MESSAGES).list.title } satisfies PageMeta;
   },
@@ -303,7 +360,10 @@ const sourcesRoute = createRoute({
   path: '/sources',
   validateSearch: SourcesFiltersSchema,
   loader: async ({ context }) => {
-    const [{ sourcesQuery, collectionRunsQuery }, { SOURCES_MESSAGES }] = await Promise.all([import('@/data/endpoints/discovery.query'), import('@/modules/sources/sources.const')]);
+    const [{ sourcesQuery, collectionRunsQuery }, { SOURCES_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/discovery.query'),
+      import('@/modules/sources/sources.const'),
+    ]);
     await prefetchQueries(context.queryClient, [sourcesQuery.queryOptions(), collectionRunsQuery.queryOptions()]);
     const t = currentText(SOURCES_MESSAGES).page;
     return { title: t.title, description: t.lead } satisfies PageMeta;
@@ -316,7 +376,10 @@ const contactRoute = createRoute({
   path: '/contact',
   validateSearch: ContactSearchSchema,
   loader: async ({ context }) => {
-    const [{ validationContextQuery }, { CONTACT_MESSAGES }] = await Promise.all([import('@/data/endpoints/discovery.query'), import('@/modules/contact/contact.const')]);
+    const [{ validationContextQuery }, { CONTACT_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/discovery.query'),
+      import('@/modules/contact/contact.const'),
+    ]);
     await prefetchQueries(context.queryClient, [validationContextQuery.queryOptions()]);
     const t = currentText(CONTACT_MESSAGES).page;
     return { title: t.title, description: t.lead } satisfies PageMeta;
@@ -377,7 +440,13 @@ const criteriaRoute = page('/about/criteria', CriteriaPage, async () => {
 const adminRoute = privatePage('/admin', AdminHomePage, adminTitle());
 /** A1–A8: one typed route per admin section (search params from @was/shared admin schemas). */
 const adminPage = <P extends string, S extends typeof AdminQueueSearchSchema>(path: P, validateSearch: S, component: LazyPage, section: AdminSection) =>
-  createRoute({ getParentRoute: () => rootRoute, path, validateSearch, ...component, ...staticMeta(async () => ({ title: await adminTitle(section)(), noindex: true })) });
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path,
+    validateSearch,
+    ...component,
+    ...staticMeta(async () => ({ title: await adminTitle(section)(), noindex: true })),
+  });
 const adminReviewRoute = adminPage('/admin/review', AdminReviewSearchSchema, AdminReviewPage, 'review');
 const adminIngestionRoute = adminPage('/admin/ingestion', AdminIngestionSearchSchema, AdminIngestionPage, 'ingestion');
 const adminSourcesRoute = adminPage('/admin/sources', AdminSourcesSearchSchema, AdminSourcesPage, 'sources');

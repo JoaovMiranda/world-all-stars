@@ -10,7 +10,7 @@ import { SkeletonList } from '@/shared-ui/skeleton.component';
 import { Tag } from '@/shared-ui/tag.component';
 
 import { ADMIN_MESSAGES } from './admin.const';
-import { ADMIN_REASON } from './admin-queue.helper';
+import { ADMIN_REASON } from './admin-queue.const';
 
 function SnapshotRow({ s }: { s: RankingSnapshotSummary }) {
   const T = useText(ADMIN_MESSAGES).rankings;
@@ -26,7 +26,16 @@ function SnapshotRow({ s }: { s: RankingSnapshotSummary }) {
       {s.status === 'calculated' && (
         <DecisionBar
           label={T.decisionLabel}
-          actions={[{ key: 'approve', label: T.approve, variant: 'primary', confirmTitle: T.approveTitle, reason: ADMIN_REASON, onConfirm: (reason: string) => approve.mutateAsync({ params: { id: s.id }, body: { reason } }) }]}
+          actions={[
+            {
+              key: 'approve',
+              label: T.approve,
+              variant: 'primary',
+              confirmTitle: T.approveTitle,
+              reason: ADMIN_REASON,
+              onConfirm: (reason: string) => approve.mutateAsync({ params: { id: s.id }, body: { reason } }),
+            },
+          ]}
         />
       )}
     </li>
@@ -48,7 +57,12 @@ export function RankingAdmin() {
           </Button>
         ))}
       </div>
-      <QueryBoundary query={snapshots} loading={<SkeletonList rows={5} />} isEmpty={(d) => d.items.length === 0} empty={<EmptyState title={T.empty}>{T.emptyText}</EmptyState>}>
+      <QueryBoundary
+        query={snapshots}
+        loading={<SkeletonList rows={5} />}
+        isEmpty={(d) => d.items.length === 0}
+        empty={<EmptyState title={T.empty}>{T.emptyText}</EmptyState>}
+      >
         {(data) => (
           <ul className="stack gap-3">
             {data.items.map((s) => (

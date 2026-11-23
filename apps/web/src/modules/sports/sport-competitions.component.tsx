@@ -2,9 +2,9 @@ import type { SportCompetition } from '@was/shared';
 
 import { currentText } from '@/i18n/text-for.helper';
 import { useText } from '@/i18n/use-text.hook';
-import { DataTable, type DataColumn } from '@/shared-ui/data-table.component';
+import type { DataColumn } from '@/shared-ui/data-column.interface';
+import { DataTable } from '@/shared-ui/data-table.component';
 import { LevelTag } from '@/shared-ui/level-tag.component';
-
 import { SPORTS_MESSAGES } from './sports.const';
 
 const COLUMNS = (): readonly DataColumn<SportCompetition>[] => {

@@ -1,5 +1,5 @@
-import { TIER_SIGNAL_MIN_SHARE, TIER_SIGNAL_MIN_VOTES, TIER_VALUES, type Tier, type TierSignal } from '@was/shared';
 import { useQueryClient } from '@tanstack/react-query';
+import { TIER_SIGNAL_MIN_SHARE, TIER_SIGNAL_MIN_VOTES, TIER_VALUES, type Tier, type TierSignal } from '@was/shared';
 import { useState } from 'react';
 
 import { adminSummaryQuery, adminTierSignalsQuery } from '@/data/endpoints/admin.query';
@@ -20,7 +20,7 @@ import { TierTag } from '@/shared-ui/tier-tag.component';
 
 import { ADMIN_MESSAGES } from './admin.const';
 import { formatPercent } from './admin-format.helper';
-import { ADMIN_REASON } from './admin-queue.helper';
+import { ADMIN_REASON } from './admin-queue.const';
 import type { QueueState } from './queue-state.type';
 
 const SIGNALS = 'signals';
@@ -86,10 +86,28 @@ export function TierSignals({ state }: { state: QueueState }) {
                 { key: 'athlete', header: adminText.common.athlete, cell: (s) => <b>{s.athlete.knownAs}</b>, sortValue: (s) => s.athlete.knownAs },
                 { key: 'official', header: T.official, cell: (s) => <TierTag tier={s.official} /> },
                 { key: 'most', header: T.mostVoted, cell: (s) => (s.mostVoted ? <TierTag tier={s.mostVoted} /> : T.noSignal) },
-                { key: 'other', header: T.topOther, cell: (s) => (s.topOther ? `${labels.tier[s.topOther]} · ${formatPercent(s.topOtherShare)}` : T.noSignal), sortValue: (s) => s.topOtherShare },
+                {
+                  key: 'other',
+                  header: T.topOther,
+                  cell: (s) => (s.topOther ? `${labels.tier[s.topOther]} · ${formatPercent(s.topOtherShare)}` : T.noSignal),
+                  sortValue: (s) => s.topOtherShare,
+                },
                 { key: 'votes', header: T.votes, cell: (s) => s.total, sortValue: (s) => s.total, align: 'end' },
-                { key: 'signal', header: T.signal, cell: (s) => (s.isSignal ? <Tag tone="gold">{T.signal}</Tag> : T.noSignal), sortValue: (s) => Number(s.isSignal) },
-                { key: 'action', header: adminText.common.actions, cell: (s) => <Button size="sm" onClick={() => setEditing(s)} aria-label={T.changeTitle(s.athlete.knownAs)}>{T.change}</Button> },
+                {
+                  key: 'signal',
+                  header: T.signal,
+                  cell: (s) => (s.isSignal ? <Tag tone="gold">{T.signal}</Tag> : T.noSignal),
+                  sortValue: (s) => Number(s.isSignal),
+                },
+                {
+                  key: 'action',
+                  header: adminText.common.actions,
+                  cell: (s) => (
+                    <Button size="sm" onClick={() => setEditing(s)} aria-label={T.changeTitle(s.athlete.knownAs)}>
+                      {T.change}
+                    </Button>
+                  ),
+                },
               ]}
             />
             <ChangeTierDialog row={editing} onClose={() => setEditing(null)} />

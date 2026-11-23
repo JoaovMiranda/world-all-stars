@@ -4,13 +4,17 @@ import type { IsoDate } from '@was/shared';
 import { type ReactNode, useId } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
-
-import type { BreadcrumbItem } from './breadcrumb.component';
+import type { BreadcrumbItem } from './breadcrumb-item.interface';
+import type { DocSection } from './doc-section.interface';
+import type { DocumentContent } from './document-content.interface';
 import { DOCUMENT_PAGE_MESSAGES } from './document-page.const';
 import { formatDate } from './format.helper';
 import { Notice, type NoticeTone } from './notice.component';
 import { PageLayout } from './page-layout.component';
 import { Tag } from './tag.component';
+
+// Kept for modules/legal/legal.const.ts (user-owned), which still imports the type from this file.
+export type { DocumentContent } from './document-content.interface';
 
 /** Content block of a long-form section: data in `<module>.const.ts`, rendered the same way on every document. */
 export type DocBlock =
@@ -19,23 +23,6 @@ export type DocBlock =
   | { kind: 'table'; caption: string; headers: readonly string[]; rows: readonly (readonly ReactNode[])[] }
   | { kind: 'defs'; items: readonly { term: ReactNode; text: ReactNode }[] }
   | { kind: 'notice'; text: ReactNode; tone?: NoticeTone };
-
-export interface DocSection {
-  /** Anchor (`#direitos`), also used by the table of contents. */
-  id: string;
-  title: string;
-  blocks?: readonly DocBlock[];
-  /** Rich content after the blocks (links, tags, components). */
-  children?: ReactNode;
-}
-
-/** Text shape of a document in a const file (`{ title, eyebrow, lead, sections }`). */
-export interface DocumentContent {
-  title: string;
-  eyebrow?: string;
-  lead?: string;
-  sections: readonly DocSection[];
-}
 
 interface DocumentPageLayoutProps extends DocumentContent {
   breadcrumb?: readonly BreadcrumbItem[];
@@ -141,7 +128,18 @@ function DocSectionCard({ section, index }: { section: DocSection; index: number
  * ONE layout for every long-form page (privacy, terms, cookies, accessibility, criteria): header with version and
  * dates, optional notice, numbered sections and a sticky table of contents (first on phones).
  */
-export function DocumentPageLayout({ title, eyebrow, lead, sections, breadcrumb = [{ label: title }], version, effectiveAt, updatedAt, notice, noticeTone = 'warning' }: DocumentPageLayoutProps) {
+export function DocumentPageLayout({
+  title,
+  eyebrow,
+  lead,
+  sections,
+  breadcrumb = [{ label: title }],
+  version,
+  effectiveAt,
+  updatedAt,
+  notice,
+  noticeTone = 'warning',
+}: DocumentPageLayoutProps) {
   const docText = useText(DOCUMENT_PAGE_MESSAGES);
   const tocId = useId();
   const meta = [
@@ -181,9 +179,7 @@ export function DocumentPageLayout({ title, eyebrow, lead, sections, breadcrumb 
           </ol>
         </nav>
         <article className="doc-article">
-          {notice && (
-            <Notice tone={noticeTone}>{notice}</Notice>
-          )}
+          {notice && <Notice tone={noticeTone}>{notice}</Notice>}
           {sections.map((s, i) => (
             <DocSectionCard key={s.id} section={s} index={i} />
           ))}

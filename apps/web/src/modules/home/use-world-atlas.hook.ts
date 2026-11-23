@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Feature, Geometry } from 'geojson';
 import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
-
-export type CountryFeature = Feature<Geometry, { name: string }>;
+import type { CountryFeature } from './country-feature.type';
 
 /** Loads Natural Earth 1:110m countries (world-atlas) lazily, as its own chunk, once per session. */
 const loadCountries = async (): Promise<CountryFeature[]> => {
@@ -13,5 +11,4 @@ const loadCountries = async (): Promise<CountryFeature[]> => {
   return feature(atlas, atlas.objects.countries).features as CountryFeature[];
 };
 
-export const useWorldAtlas = () =>
-  useQuery({ queryKey: ['world-atlas', '110m'], queryFn: loadCountries, staleTime: Infinity, gcTime: Infinity, retry: 1 });
+export const useWorldAtlas = () => useQuery({ queryKey: ['world-atlas', '110m'], queryFn: loadCountries, staleTime: Infinity, gcTime: Infinity, retry: 1 });

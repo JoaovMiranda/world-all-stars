@@ -1,14 +1,8 @@
 import { Link, type LinkProps } from '@tanstack/react-router';
 
 import { useText } from '@/i18n/use-text.hook';
-
+import type { BreadcrumbItem } from './breadcrumb-item.interface';
 import { UI_MESSAGES } from './ui-text.const';
-
-export interface BreadcrumbItem {
-  label: string;
-  /** Typed router link of the item (omit for the current page, always last). */
-  link?: Pick<LinkProps, 'to' | 'params' | 'search' | 'hash'>;
-}
 
 /** "Início › Atletas › Pelé" trail (nav landmark + ordered list; the home is implicit and always first). */
 export function Breadcrumb({ items }: { items: readonly BreadcrumbItem[] }) {

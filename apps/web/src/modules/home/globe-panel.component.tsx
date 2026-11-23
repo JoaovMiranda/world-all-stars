@@ -1,19 +1,15 @@
-import type { CSSProperties } from 'react';
 import type { GlobeCountry } from '@was/shared';
+import type { CSSProperties } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 import { ButtonLink } from '@/shared-ui/button-link.component';
 import { Chip } from '@/shared-ui/chip.component';
+import { CountUp } from '@/shared-ui/count-up.component';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { Skeleton } from '@/shared-ui/skeleton.component';
-import { CountUp } from '@/shared-ui/count-up.component';
 
 import { HOME_MESSAGES } from './home.const';
-
-export interface SelectedCountry {
-  id: string;
-  name: string;
-}
+import type { SelectedCountry } from './selected-country.interface';
 
 interface GlobePanelProps {
   countries: GlobeCountry[] | undefined;

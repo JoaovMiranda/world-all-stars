@@ -3,8 +3,8 @@ import { type ReactNode, useId, useRef } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
-import { animateOnce, MOTION } from '@/shared-ui/motion.helper';
-
+import { MOTION } from '@/shared-ui/motion.const';
+import { animateOnce } from '@/shared-ui/motion.helper';
 import { HOME_MESSAGES } from './home.const';
 
 interface RandomAthleteButtonProps {

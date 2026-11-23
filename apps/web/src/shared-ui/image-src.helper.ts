@@ -3,22 +3,10 @@
 // displayed size instead: same image, a fraction of the bytes. Other hosts (Google profile photos…) pass through.
 
 import { WIKIMEDIA_STEPS, type WikimediaFile, wikimediaFile, wikimediaStep } from '@was/shared';
+import type { ImageVia } from './image-via.type';
+import type { ResponsiveSource } from './responsive-source.interface';
 
 export { WIKIMEDIA_STEPS, wikimediaFile, wikimediaStep };
-
-/**
- * Where thumbnails come from: `proxy` = the server's same-origin `/img/wm/…` (real API: one connection, long cache,
- * no third-party cookie); `direct` = upload.wikimedia.org (fixture mode has no server behind it).
- */
-export type ImageVia = 'proxy' | 'direct';
-
-export interface ResponsiveSource {
-  src: string;
-  srcSet?: string;
-  sizes?: string;
-  /** The untouched URL, used when the thumbnail fails (e.g. a file narrower than the step). */
-  fallback?: string;
-}
 
 /**
  * `src`/`srcSet` for an image shown at a fixed `width` (avatars, logos, portraits: steps from 1x to 2x, `sizes` = width), or — with `sizes` — at a fluid
@@ -30,7 +18,12 @@ export const responsiveSource = (url: string, width: number, fluid?: { sizes: st
   const file: Pick<WikimediaFile, 'original' | 'thumb'> = via === 'proxy' ? { original: found.original, thumb: (w) => found.proxied(wikimediaStep(w)) } : found;
   if (fluid) {
     const steps = WIKIMEDIA_STEPS.filter((s) => s <= wikimediaStep(fluid.maxWidth));
-    return { src: file.thumb(wikimediaStep(width)), srcSet: steps.map((s) => `${file.thumb(s)} ${s}w`).join(', '), sizes: fluid.sizes, fallback: file.original };
+    return {
+      src: file.thumb(wikimediaStep(width)),
+      srcSet: steps.map((s) => `${file.thumb(s)} ${s}w`).join(', '),
+      sizes: fluid.sizes,
+      fallback: file.original,
+    };
   }
   // w-descriptors (not 1x/2x) with sizes = the shown width: on a 1.75x phone a 251px portrait needs 440px, so the
   // browser takes the 500px step instead of jumping to the 960px "2x" one (3× the bytes of the LCP image).

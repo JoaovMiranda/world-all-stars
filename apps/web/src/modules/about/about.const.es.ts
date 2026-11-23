@@ -1,7 +1,5 @@
-import { COMPETITION_LEVEL_WEIGHT as w, type Messages, MYTHIC_MIN_EVIDENCES, TIER_PERCENTILE_THRESHOLD } from '@was/shared';
-
-import type { DocumentContent } from '@/shared-ui/document-page-layout.component';
-
+import { type Messages, MYTHIC_MIN_EVIDENCES, TIER_PERCENTILE_THRESHOLD, COMPETITION_LEVEL_WEIGHT as w } from '@was/shared';
+import type { DocumentContent } from '@/shared-ui/document-content.interface';
 import type { ABOUT_TEXT } from './about.const';
 
 export const ABOUT_TEXT_ES = {
@@ -17,7 +15,8 @@ export const ABOUT_TEXT_ES = {
   tierDefinition: {
     mythic:
       'Cambió el deporte: redefinió la técnica, los récords, la popularidad o la forma en que se juega y se ve el deporte, y es una referencia histórica unánime. Entra en el Hall of Greats.',
-    legendary: 'Dominio prolongado y números históricos entre los más grandes de todos los tiempos, sin haber transformado el deporte (o con menos consenso al respecto).',
+    legendary:
+      'Dominio prolongado y números históricos entre los más grandes de todos los tiempos, sin haber transformado el deporte (o con menos consenso al respecto).',
     elite: 'Varios títulos de nivel mundial o continental y un claro protagonismo en su generación.',
     champion: 'Cumple los criterios de inclusión del deporte (título relevante), sin dominio prolongado.',
   },
@@ -57,14 +56,24 @@ export const CRITERIA_DOC_ES: DocumentContent = {
           caption: 'Criterios de inclusión de los deportes del lanzamiento',
           headers: ['Deporte', 'Entra quien cumpla al menos uno'],
           rows: [
-            ['Fútbol', 'Balón de Oro o FIFA The Best · campeón del mundo con premio individual en el Mundial (Balón de Oro del Mundial, máximo goleador) · top 10 de máximos goleadores históricos oficiales'],
-            ['Natación', '2 o más oros olímpicos individuales · plusmarquista mundial en una prueba olímpica durante 2 años o más · 5 o más títulos mundiales individuales'],
+            [
+              'Fútbol',
+              'Balón de Oro o FIFA The Best · campeón del mundo con premio individual en el Mundial (Balón de Oro del Mundial, máximo goleador) · top 10 de máximos goleadores históricos oficiales',
+            ],
+            [
+              'Natación',
+              '2 o más oros olímpicos individuales · plusmarquista mundial en una prueba olímpica durante 2 años o más · 5 o más títulos mundiales individuales',
+            ],
             ['Ajedrez', 'Campeón del mundo (clásico, linaje histórico y FIDE) · n.º 1 del ranking FIDE durante 12 meses o más · campeona del mundo femenina'],
             ['Boxeo', 'Campeón indiscutido (todos los cinturones principales) · campeón lineal · miembro del International Boxing Hall of Fame'],
             ['Counter-Strike', 'Campeón de Major con premio MVP · 2 o más Majors · n.º 1 del ranking anual HLTV Top 20'],
           ],
         },
-        { kind: 'notice', tone: 'info', text: 'Los demás deportes del sitio siguen la misma lógica; los criterios de cada uno se publican aquí a medida que el equipo de curaduría los aprueba.' },
+        {
+          kind: 'notice',
+          tone: 'info',
+          text: 'Los demás deportes del sitio siguen la misma lógica; los criterios de cada uno se publican aquí a medida que el equipo de curaduría los aprueba.',
+        },
       ],
     },
     {

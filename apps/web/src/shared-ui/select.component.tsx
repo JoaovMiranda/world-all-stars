@@ -1,11 +1,7 @@
 import { forwardRef, type SelectHTMLAttributes } from 'react';
 
 import { cx } from './class-names.helper';
-
-export interface SelectOption {
-  value: string;
-  label: string;
-}
+import type { SelectOption } from './select-option.interface';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   /** Options to render (or pass <option> children). */

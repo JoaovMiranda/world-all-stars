@@ -1,37 +1,9 @@
-import { type AdminContactMessage, type AdminSuggestion, type CommentReaction, type SuggestionStatus, type Tier, submissionProtocol } from '@was/shared';
-
-import { IS_SERVER } from '@/app/request-scope';
-
-import { type AdminDemoState, initialAdminDemo } from './fixtures/admin-demo.type';
+import { submissionProtocol } from '@was/shared';
+import { IS_SERVER } from '@/app/request-scope.const';
+import type { DemoState } from './demo-state.interface';
+import { initialAdminDemo } from './fixtures/admin-demo.type';
 
 const STORAGE_KEY = 'was-demo';
-
-export interface DemoComment {
-  id: string;
-  slug: string;
-  parentId: string | null;
-  body: string;
-  author: string;
-  at: string;
-}
-
-/** What the tester did in fixture mode (votes, comments, reactions, admin decisions, submissions). */
-export interface DemoState {
-  votes: Record<string, { tier: Tier; at: string }>;
-  comments: DemoComment[];
-  reactions: Record<string, CommentReaction>;
-  officialTiers: Record<string, { tier: Tier; reason: string; at: string }>;
-  hiddenComments: Record<string, string>;
-  deletedComments: string[];
-  readNotifications: string[];
-  suggestions: AdminSuggestion[];
-  messages: AdminContactMessage[];
-  reviewedSuggestions: Record<string, SuggestionStatus>;
-  /** Optional consents granted/revoked in /me/data (E6), by purpose. */
-  consents: Record<string, { granted: boolean; at: string }>;
-  /** Admin decisions (A1–A8), see fixtures/admin-demo.type.ts. */
-  admin: AdminDemoState;
-}
 
 const initial = (): DemoState => ({
   votes: {},

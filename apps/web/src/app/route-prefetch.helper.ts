@@ -1,17 +1,13 @@
-import { FixtureMode } from '@was/shared';
 import type { DataTag, QueryClient } from '@tanstack/react-query';
 import { notFound } from '@tanstack/react-router';
+import { FixtureMode } from '@was/shared';
 
 import { isApiError } from '@/data/api-error.error';
 import { DATA_SOURCE } from '@/data/data-layer.const';
 import { fixtureModeStore } from '@/data/fixture-mode.store';
+import type { EndpointQueryOptions } from './endpoint-query-options.interface';
+import { IS_SERVER } from './request-scope.const';
 
-import { IS_SERVER } from './request-scope';
-
-/** Options built by an endpoint (`xQuery.queryOptions(input)`): the key carries the data type. */
-interface EndpointQueryOptions {
-  queryKey: readonly unknown[];
-}
 type DataOf<O> = O extends { queryKey: DataTag<unknown, infer D, unknown> } ? D : unknown;
 type FetchOptions = Parameters<QueryClient['fetchQuery']>[0];
 
