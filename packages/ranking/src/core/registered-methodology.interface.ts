@@ -1,4 +1,7 @@
-import type { OutputKind, RankingDefinition, RankingInput, RankingResult } from './engine';
+import type { OutputKind } from './output-kind.type';
+import type { RankingDefinition } from './ranking-definition.interface';
+import type { RankingInput } from './ranking-input.interface';
+import type { RankingResult } from './ranking-result.interface';
 
 /** Type-erased view of a methodology, as stored in the registry (no `as unknown as` casts needed). */
 export interface RegisteredMethodology {

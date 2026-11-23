@@ -1,7 +1,8 @@
 import { sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createDatabase, type DatabaseHandle } from '../client';
+import { createDatabase } from '../client';
+import type { DatabaseHandle } from '../interfaces/database-handle.interface';
 import { selectRows } from './select-rows.helper';
 
 describe('selectRows', () => {

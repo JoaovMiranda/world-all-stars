@@ -1,6 +1,10 @@
-import { createDatabase, type Database, type DatabaseHandle, type DatabaseOptions, loadRootEnv } from '../client';
+import { createDatabase } from '../client';
 import { databaseOptionsFromEnv } from '../helpers/database-env.helper';
+import { loadRootEnv } from '../helpers/repo-root.helper';
 import type { CliOptions } from '../interfaces/cli-options.interface';
+import type { DatabaseHandle } from '../interfaces/database-handle.interface';
+import type { DatabaseOptions } from '../interfaces/database-options.interface';
+import type { Database } from '../types/database.type';
 
 /**
  * Base of every command-line entry point (`pnpm db:*`, `pnpm ingest`, `pnpm rankings:calculate`): loads the root

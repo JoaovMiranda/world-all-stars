@@ -1,6 +1,7 @@
 // pnpm db:seed — migrations + configuration + the prototype mock DB (plan/front-prototype). Idempotent.
 // PGlite is single-process: stop the server (pnpm dev) before seeding the same .data/pglite.
-import { createDatabase, findRepoRoot } from '../client';
+import { createDatabase } from '../client';
+import { findRepoRoot } from '../helpers/repo-root.helper';
 import { seedDatabase } from '../seeds/seed';
 import { databaseOptionsFromEnv } from './env.helper';
 

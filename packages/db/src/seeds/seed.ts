@@ -1,7 +1,8 @@
-import type { Database } from '../client';
+import type { SeedReport } from '../interfaces/seed-report.interface';
+import type { Database } from '../types/database.type';
 import { seedConfig } from './config.seed';
 import { seedDomainVocabulary } from './domain.seed';
-import { type SeedReport, seedPrototype } from './prototype.seed';
+import { seedPrototype } from './prototype.seed';
 import { seedSourcesPolicy } from './sources-policy.seed';
 import { seedSportContent } from './sport-content.seed';
 import { seedSportsCatalog } from './sports-catalog.seed';

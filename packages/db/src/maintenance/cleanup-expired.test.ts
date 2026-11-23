@@ -1,7 +1,8 @@
 import { uuidv7 } from '@was/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createDatabase, type DatabaseHandle } from '../client';
+import { createDatabase } from '../client';
+import type { DatabaseHandle } from '../interfaces/database-handle.interface';
 import { authSessions, authVerifications } from '../tables/auth.table';
 import { rateLimitBuckets } from '../tables/rate-limit.table';
 import { users } from '../tables/user.table';

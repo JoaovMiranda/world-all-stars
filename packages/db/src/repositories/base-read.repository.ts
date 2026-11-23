@@ -2,10 +2,10 @@ import { DEFAULT_PAGE_SIZE } from '@was/shared';
 import type { SQL } from 'drizzle-orm';
 import type { PgColumn } from 'drizzle-orm/pg-core';
 
-import type { Database } from '../client';
+import { active } from '../helpers/active.helper';
 import { selectRows } from '../helpers/select-rows.helper';
 import type { PageWindow } from '../interfaces/page-window.interface';
-import { active } from './base.repository';
+import type { Database } from '../types/database.type';
 
 /** Largest page a read model serves, whatever the caller asks for. */
 const MAX_PAGE_SIZE = 100;

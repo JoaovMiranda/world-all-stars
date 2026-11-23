@@ -1,14 +1,12 @@
 import type { z } from 'zod';
 
-import {
-  type ComputedEntry,
-  type OutputKind,
-  type RankingDefinition,
-  type RankingInput,
-  type RankingMethodology,
-  type RankingResult,
-  runRanking,
-} from './engine';
+import type { ComputedEntry } from './computed-entry.interface';
+import { runRanking } from './engine.helper';
+import type { OutputKind } from './output-kind.type';
+import type { RankingDefinition } from './ranking-definition.interface';
+import type { RankingInput } from './ranking-input.interface';
+import type { RankingMethodology } from './ranking-methodology.interface';
+import type { RankingResult } from './ranking-result.interface';
 import type { RegisteredMethodology } from './registered-methodology.interface';
 
 /**

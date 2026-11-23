@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
 import { BaseMethodology } from './base.methodology';
-import type { ComputedEntry, RankingDefinition, RankingInput } from './engine';
+import type { ComputedEntry } from './computed-entry.interface';
+import type { RankingDefinition } from './ranking-definition.interface';
+import type { RankingInput } from './ranking-input.interface';
 import type { RegisteredMethodology } from './registered-methodology.interface';
 
 const ConfigSchema = z.object({ pointsPerTitle: z.number().default(10), minTitles: z.number().int().default(1) });

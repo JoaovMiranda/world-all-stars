@@ -1,4 +1,4 @@
-import type { RankingMethodology } from './core/engine';
+import type { RankingMethodology } from './core/ranking-methodology.interface';
 import { bjjCareer } from './methodologies/bjj-career/bjj-career.methodology';
 import { footballChampions } from './methodologies/football-champions/football-champions.methodology';
 

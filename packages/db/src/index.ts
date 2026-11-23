@@ -1,6 +1,19 @@
 // Public API of @was/db: client, schema (tables + pg enums), base repository and seed.
 export * from './client';
+export * from './consts/default-pglite-dir.const';
+export * from './helpers/repo-root.helper';
+export * from './interfaces/database-handle.interface';
+export * from './interfaces/database-options.interface';
+export * from './interfaces/pool-options.interface';
+export * from './types/database.type';
 export * from './repositories/base.repository';
+export * from './consts/system-actor.const';
+export * from './errors/entity-not-found.error';
+export * from './errors/version-conflict.error';
+export * from './helpers/active.helper';
+export * from './interfaces/actor.interface';
+export * from './interfaces/change-meta.interface';
+export type { BaseTable } from './types/base-table.type';
 export * from './repositories/base-read.repository';
 export * from './cli/base.cli';
 export * from './interfaces/cli-options.interface';
@@ -10,4 +23,5 @@ export { seedId } from './helpers/seed-id.helper';
 export { selectRows } from './helpers/select-rows.helper';
 export { seedDatabase } from './seeds/seed';
 export { seedSourcesPolicy } from './seeds/sources-policy.seed';
-export { cleanupExpired, type CleanupReport } from './maintenance/cleanup-expired';
+export { cleanupExpired } from './maintenance/cleanup-expired';
+export type { CleanupReport } from './interfaces/cleanup-report.interface';

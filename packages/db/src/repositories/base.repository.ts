@@ -1,54 +1,23 @@
 import { jsonPatchDiff, uuidv7 } from '@was/shared';
-import { and, eq, getTableName, isNull, type SQL, sql } from 'drizzle-orm';
+import { eq, getTableName, type SQL, sql } from 'drizzle-orm';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 
-import type { Database } from '../client';
+import { EntityNotFoundError } from '../errors/entity-not-found.error';
+import { VersionConflictError } from '../errors/version-conflict.error';
+import { active } from '../helpers/active.helper';
+import type { Actor } from '../interfaces/actor.interface';
+import type { ChangeMeta } from '../interfaces/change-meta.interface';
 import { auditLogs, entityVersions } from '../tables/system.table';
+import type { BaseCols, BaseTable } from '../types/base-table.type';
+import type { Database } from '../types/database.type';
 
-/** Who writes: a user (id + display name) or the system (null id). `via` goes to created_via ('user', 'seed', 'system:x'). */
-export interface Actor {
-  userId: string | null;
-  name?: string | null;
-  via?: string;
-  ipHash?: string | null;
-  userAgent?: string | null;
-}
-export const SYSTEM_ACTOR: Actor = { userId: null, name: 'system', via: 'system' };
-
-/** Every table has the base columns (columns/base.column.ts). */
-type BaseCols = { id: PgColumn; version: PgColumn; deletedAt: PgColumn; deletedBy: PgColumn; updatedAt: PgColumn; updatedBy: PgColumn };
-export type BaseTable = PgTable & BaseCols;
 type Row<T extends BaseTable> = T['$inferSelect'];
 type Insert<T extends BaseTable> = T['$inferInsert'];
 type Patch<T extends BaseTable> = Partial<Omit<Insert<T>, 'id' | 'version' | 'createdAt' | 'createdBy' | 'createdVia'>>;
 
-export interface ChangeMeta {
-  /** Human summary kept in entity_versions (profile "Versões" tab). */
-  summary?: string;
-  reason?: string | null;
-  /** Optimistic lock: refuse when the row moved on (3-way diff on the admin side). */
-  expectedVersion?: number;
-}
-
-export class VersionConflictError extends Error {
-  constructor(readonly entityType: string, readonly entityId: string, readonly expected: number, readonly actual: number) {
-    super(`Version conflict on ${entityType}/${entityId}: expected v${expected}, found v${actual}`);
-    this.name = 'VersionConflictError';
-  }
-}
-export class EntityNotFoundError extends Error {
-  constructor(readonly entityType: string, readonly entityId: string) {
-    super(`${entityType}/${entityId} not found`);
-    this.name = 'EntityNotFoundError';
-  }
-}
-
 const cols = (table: BaseTable) => table as unknown as BaseCols;
 const toJson = (row: unknown): Record<string, unknown> => JSON.parse(JSON.stringify(row)) as Record<string, unknown>;
 const NOT_VERSIONED = new Set(['entity_versions', 'audit_logs']);
-
-/** Live rows only (soft delete): the default filter of every read. */
-export const active = (table: { deletedAt: PgColumn }, ...where: (SQL | undefined)[]): SQL | undefined => and(isNull(table.deletedAt), ...where);
 
 /**
  * The ONLY way the app writes (doc 03): in one transaction it (1) applies the change and bumps `version`,
@@ -80,14 +49,21 @@ export class BaseRepository {
   }
 
   async findById<T extends BaseTable>(table: T, id: string): Promise<Row<T> | null> {
-    const rows = await this.db.select().from(table as PgTable).where(active(cols(table), eq(cols(table).id, id))).limit(1);
+    const rows = await this.db
+      .select()
+      .from(table as PgTable)
+      .where(active(cols(table), eq(cols(table).id, id)))
+      .limit(1);
     return (rows[0] as Row<T> | undefined) ?? null;
   }
 
   async insert<T extends BaseTable>(table: T, values: Insert<T>, actor: Actor, meta: ChangeMeta = {}): Promise<Row<T>> {
     return this.transaction(async (repo) => {
       const stamp = { id: uuidv7(), createdBy: actor.userId, updatedBy: actor.userId, createdVia: actor.via ?? 'user' };
-      const [row] = await repo.db.insert(table as PgTable).values({ ...stamp, ...(values as object) } as never).returning();
+      const [row] = await repo.db
+        .insert(table as PgTable)
+        .values({ ...stamp, ...(values as object) } as never)
+        .returning();
       await repo.track(table, null, row as Row<T>, actor, 'create', meta);
       return row as Row<T>;
     });
@@ -105,7 +81,13 @@ export class BaseRepository {
         .insert(table as PgTable)
         .values(values.map((v) => ({ ...stamp(), ...(v as object) })) as never)
         .returning()) as Row<T>[];
-      await repo.trackMany(table, rows.map((after) => ({ before: null, after })), actor, 'create', meta);
+      await repo.trackMany(
+        table,
+        rows.map((after) => ({ before: null, after })),
+        actor,
+        'create',
+        meta,
+      );
       return rows;
     });
   }
@@ -132,7 +114,13 @@ export class BaseRepository {
       const before = await repo.mustFind(table, id);
       const [row] = await repo.db
         .update(table as PgTable)
-        .set({ deletedAt: new Date(), deletedBy: actor.userId, version: (before as { version: number }).version + 1, updatedAt: new Date(), updatedBy: actor.userId } as never)
+        .set({
+          deletedAt: new Date(),
+          deletedBy: actor.userId,
+          version: (before as { version: number }).version + 1,
+          updatedAt: new Date(),
+          updatedBy: actor.userId,
+        } as never)
         .where(eq(cols(table).id, id))
         .returning();
       await repo.track(table, before, row as Row<T>, actor, 'soft_delete', meta);
@@ -150,7 +138,10 @@ export class BaseRepository {
     if (!target?.snapshot) throw new EntityNotFoundError(`${entityType}@v${toVersion}`, id);
     const { id: _id, version: _v, createdAt: _c, createdBy: _cb, createdVia: _cv, updatedAt: _u, updatedBy: _ub, ...data } = target.snapshot;
     return this.transaction(async (repo) => {
-      const [row] = await repo.db.select().from(table as PgTable).where(eq(cols(table).id, id));
+      const [row] = await repo.db
+        .select()
+        .from(table as PgTable)
+        .where(eq(cols(table).id, id));
       if (!row) throw new EntityNotFoundError(entityType, id);
       const restored = await repo.db
         .update(table as PgTable)
@@ -178,7 +169,14 @@ export class BaseRepository {
     return this.transaction(async (repo) => {
       const inserted = await repo.db
         .insert(table as PgTable)
-        .values({ id: uuidv7(), createdBy: actor.userId, updatedBy: actor.userId, createdVia: actor.via ?? 'user', ...(key as object), ...(values as object) } as never)
+        .values({
+          id: uuidv7(),
+          createdBy: actor.userId,
+          updatedBy: actor.userId,
+          createdVia: actor.via ?? 'user',
+          ...(key as object),
+          ...(values as object),
+        } as never)
         .onConflictDoNothing()
         .returning();
       if (inserted[0]) {
@@ -200,17 +198,31 @@ export class BaseRepository {
       const column = (table as unknown as Record<string, PgColumn>)[key]!;
       set[key] = sql`greatest(${column} + ${delta as number}, 0)`;
     }
-    const [row] = await this.db.update(table as PgTable).set(set as never).where(eq(cols(table).id, id)).returning();
+    const [row] = await this.db
+      .update(table as PgTable)
+      .set(set as never)
+      .where(eq(cols(table).id, id))
+      .returning();
     this.written(getTableName(table));
     return row as Row<T>;
   }
 
   /** Domain audit entry (admin decisions): action + target label + reason in metadata. */
-  async audit(actor: Actor, action: string, entity: { type: string; id: string | null; version?: number | null } | null, metadata: Record<string, unknown> = {}): Promise<void> {
+  async audit(
+    actor: Actor,
+    action: string,
+    entity: { type: string; id: string | null; version?: number | null } | null,
+    metadata: Record<string, unknown> = {},
+  ): Promise<void> {
     await this.db.insert(auditLogs).values(this.auditRow(actor, action, entity, metadata));
   }
 
-  private auditRow(actor: Actor, action: string, entity: { type: string; id: string | null; version?: number | null } | null, metadata: Record<string, unknown> = {}) {
+  private auditRow(
+    actor: Actor,
+    action: string,
+    entity: { type: string; id: string | null; version?: number | null } | null,
+    metadata: Record<string, unknown> = {},
+  ) {
     return {
       id: uuidv7(),
       createdBy: actor.userId,
@@ -228,7 +240,10 @@ export class BaseRepository {
   }
 
   private async mustFind<T extends BaseTable>(table: T, id: string): Promise<Row<T>> {
-    const [row] = await this.db.select().from(table as PgTable).where(active(cols(table), eq(cols(table).id, id)));
+    const [row] = await this.db
+      .select()
+      .from(table as PgTable)
+      .where(active(cols(table), eq(cols(table).id, id)));
     if (!row) throw new EntityNotFoundError(getTableName(table), id);
     return row as Row<T>;
   }
@@ -238,7 +253,13 @@ export class BaseRepository {
   }
 
   /** Version snapshots + audit entries of several changes of one table: one INSERT each. */
-  private async trackMany<T extends BaseTable>(table: T, changes: readonly { before: Row<T> | null; after: Row<T> }[], actor: Actor, action: string, meta: ChangeMeta): Promise<void> {
+  private async trackMany<T extends BaseTable>(
+    table: T,
+    changes: readonly { before: Row<T> | null; after: Row<T> }[],
+    actor: Actor,
+    action: string,
+    meta: ChangeMeta,
+  ): Promise<void> {
     const entityType = getTableName(table);
     this.written(entityType);
     if (NOT_VERSIONED.has(entityType) || !changes.length) return;

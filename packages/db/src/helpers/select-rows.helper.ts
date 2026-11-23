@@ -1,6 +1,6 @@
 import type { SQL } from 'drizzle-orm';
 
-import type { Database } from '../client';
+import type { Database } from '../types/database.type';
 
 /**
  * Runs a raw `sql` query and returns its rows typed as `T`. Both drivers (PGlite and node-postgres) return

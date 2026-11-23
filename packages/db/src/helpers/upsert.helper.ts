@@ -2,7 +2,7 @@ import { getTableColumns, getTableName, type SQL, sql } from 'drizzle-orm';
 import { toSnakeCase } from 'drizzle-orm/casing';
 import { getTableConfig, type PgColumn, type PgTable } from 'drizzle-orm/pg-core';
 
-import type { Database } from '../client';
+import type { Database } from '../types/database.type';
 
 const IMMUTABLE = new Set(['id', 'createdAt', 'createdBy', 'createdVia']);
 
@@ -19,8 +19,7 @@ export const naturalKeyOf = (table: PgTable): { columns: PgColumn[]; where: SQL 
 };
 
 /** Column TS key by its database (snake_case) name: the prototype rows use database names. */
-export const columnKeysByDbName = (table: PgTable): Map<string, string> =>
-  new Map(Object.keys(getTableColumns(table)).map((key) => [toSnakeCase(key), key]));
+export const columnKeysByDbName = (table: PgTable): Map<string, string> => new Map(Object.keys(getTableColumns(table)).map((key) => [toSnakeCase(key), key]));
 
 /** INSERT … ON CONFLICT (natural key or id) DO UPDATE, returning the id that is in the database. */
 export const upsertRow = async (db: Database, table: PgTable, values: Record<string, unknown>): Promise<string> => {

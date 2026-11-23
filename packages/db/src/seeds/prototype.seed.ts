@@ -7,54 +7,42 @@ import { pathToFileURL } from 'node:url';
 
 import { AdminAuditAction, ConsentPurpose, DEMO_SESSION_EMAILS, LEGAL_DOCUMENT_VERSIONS, NotificationKind, REQUIRED_LEGAL_DOCUMENTS } from '@was/shared';
 import { eq, getTableColumns, getTableName, isNull, sql } from 'drizzle-orm';
-import countryCodes from 'i18n-iso-countries';
 import type { PgTable } from 'drizzle-orm/pg-core';
+import countryCodes from 'i18n-iso-countries';
 
-import type { Database } from '../client';
 import { seedId } from '../helpers/seed-id.helper';
 import { columnKeysByDbName, upsertRow } from '../helpers/upsert.helper';
+import type { ProtoDb } from '../interfaces/proto-db.interface';
+import type { ProtoSchema } from '../interfaces/proto-schema.interface';
+import type { Prototype } from '../interfaces/prototype.interface';
+import type { SeedReport } from '../interfaces/seed-report.interface';
 import * as schema from '../schema';
 import { countries } from '../tables/geography.table';
 import { fieldConflicts } from '../tables/source.table';
-
-type ProtoRow = Record<string, unknown> & { id: string };
-interface ProtoDb {
-  tables: Record<string, ProtoRow[]>;
-  all(table: string): ProtoRow[];
-  get(table: string, id: string | null): ProtoRow | null;
-}
-interface ProtoSchema {
-  tables: Record<string, { fk: Record<string, string> }>;
-}
-interface Prototype {
-  schema: ProtoSchema;
-  api: Record<string, (...args: unknown[]) => unknown>;
-  db: ProtoDb;
-  catalog: {
-    governance: Record<string, { name: string; summary: string }>;
-    orgKinds: Record<string, [string, string]>;
-    prizeForms: Record<string, string>;
-  };
-  collectionRuns: Record<string, unknown>[];
-  collectedSports: { sport: string; reason_pt: string; facts: Record<string, unknown>[] }[];
-  slugRedirects: { table: string; oldSlug: string; newSlug: string; id: string }[];
-}
-
-export interface SeedReport {
-  tables: Record<string, number>;
-  skipped?: string;
-}
+import type { Database } from '../types/database.type';
+import type { ProtoRow } from '../types/proto-row.type';
 
 const LOCALE = 'pt-BR';
 /** Locales of content-translations.json written by the seed (pt-BR comes from the mock rows). */
 const CONTENT_LOCALES = ['en', 'es'] as const;
 /** Translation table → FK column of its parent (same map as scripts/translations/content-translations.mjs). */
 const CONTENT_FK: Record<string, string> = {
-  athlete_translations: 'athlete_id', athlete_milestone_translations: 'milestone_id', sport_translations: 'sport_id', sport_group_translations: 'group_id',
-  sport_subgroup_translations: 'subgroup_id', sport_category_translations: 'category_id', country_translations: 'country_id', city_translations: 'city_id',
-  competition_translations: 'competition_id', award_translations: 'award_id', observance_day_translations: 'observance_day_id',
-  greats_dossier_translations: 'dossier_id', greats_evidence_translations: 'evidence_id', governance_model_translations: 'governance_model_id',
-  organization_kind_translations: 'organization_kind_id', prize_form_translations: 'prize_form_id',
+  athlete_translations: 'athlete_id',
+  athlete_milestone_translations: 'milestone_id',
+  sport_translations: 'sport_id',
+  sport_group_translations: 'group_id',
+  sport_subgroup_translations: 'subgroup_id',
+  sport_category_translations: 'category_id',
+  country_translations: 'country_id',
+  city_translations: 'city_id',
+  competition_translations: 'competition_id',
+  award_translations: 'award_id',
+  observance_day_translations: 'observance_day_id',
+  greats_dossier_translations: 'dossier_id',
+  greats_evidence_translations: 'evidence_id',
+  governance_model_translations: 'governance_model_id',
+  organization_kind_translations: 'organization_kind_id',
+  prize_form_translations: 'prize_form_id',
 };
 const SIGNED_UP_AT = '2026-10-01T12:00:00.000Z';
 const SEED_CURATORS = [
@@ -84,7 +72,9 @@ const tableOrder = (protoSchema: ProtoSchema): string[] => {
 };
 
 const selfFkColumns = (protoSchema: ProtoSchema, name: string) =>
-  Object.entries(protoSchema.tables[name]?.fk ?? {}).filter(([, parent]) => parent === name).map(([col]) => col);
+  Object.entries(protoSchema.tables[name]?.fk ?? {})
+    .filter(([, parent]) => parent === name)
+    .map(([col]) => col);
 
 /** Rows ordered so a row comes after the row it references in the same table. */
 const parentsFirst = (rows: ProtoRow[], selfCols: string[]): ProtoRow[] => {
@@ -100,7 +90,9 @@ const parentsFirst = (rows: ProtoRow[], selfCols: string[]): ProtoRow[] => {
   return [...rows].sort((a, b) => depth(a) - depth(b));
 };
 
-const loadPrototype = async (repoRoot: string): Promise<{ proto: Prototype; mockDir: string; mappers: Record<string, (...a: unknown[]) => unknown> } | null> => {
+const loadPrototype = async (
+  repoRoot: string,
+): Promise<{ proto: Prototype; mockDir: string; mappers: Record<string, (...a: unknown[]) => unknown> } | null> => {
   const mockDir = path.join(repoRoot, 'plan/front-prototype/mock');
   const loaderFile = path.join(repoRoot, 'scripts/fixtures/prototype-loader.mjs');
   if (!fs.existsSync(mockDir) || !fs.existsSync(loaderFile)) return null;
@@ -108,7 +100,10 @@ const loadPrototype = async (repoRoot: string): Promise<{ proto: Prototype; mock
   const { runDemoActivity } = (await import(pathToFileURL(path.join(repoRoot, 'scripts/fixtures/prototype-demo-activity.mjs')).href)) as {
     runDemoActivity: (api: unknown, reader: string) => void;
   };
-  const mappers = (await import(pathToFileURL(path.join(repoRoot, 'scripts/fixtures/admin-fixture-mappers.mjs')).href)) as Record<string, (...a: unknown[]) => unknown>;
+  const mappers = (await import(pathToFileURL(path.join(repoRoot, 'scripts/fixtures/admin-fixture-mappers.mjs')).href)) as Record<
+    string,
+    (...a: unknown[]) => unknown
+  >;
   const proto = load(mockDir);
   runDemoActivity(proto.api, DEMO_SESSION_EMAILS.reader);
   return { proto, mockDir, mappers };
@@ -160,21 +155,47 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
   // ISO numeric of each country (globe ids), from ISO 3166 tables.
   for (const c of proto.db.all('countries')) {
     const numeric = countryCodes.alpha2ToNumeric(String(c.iso2));
-    if (numeric) await db.update(countries).set({ isoNumeric: numeric }).where(eq(countries.id, P(c.id)));
+    if (numeric)
+      await db
+        .update(countries)
+        .set({ isoNumeric: numeric })
+        .where(eq(countries.id, P(c.id)));
   }
 
   // 2 · Catalog labels as translations (governance models, organization kinds, prize forms).
   for (const g of proto.db.all('governance_models')) {
     const info = proto.catalog.governance[g.slug as string];
-    if (info) await put('governance_model_translations', { id: seedId('gm_tr', g.slug as string, LOCALE), createdVia: 'seed', governanceModelId: P(g.id), locale: LOCALE, name: info.name, summary: info.summary });
+    if (info)
+      await put('governance_model_translations', {
+        id: seedId('gm_tr', g.slug as string, LOCALE),
+        createdVia: 'seed',
+        governanceModelId: P(g.id),
+        locale: LOCALE,
+        name: info.name,
+        summary: info.summary,
+      });
   }
   for (const k of proto.db.all('organization_kinds')) {
     const info = proto.catalog.orgKinds[k.slug as string];
-    if (info) await put('organization_kind_translations', { id: seedId('ok_tr', k.slug as string, LOCALE), createdVia: 'seed', organizationKindId: P(k.id), locale: LOCALE, name: info[0] });
+    if (info)
+      await put('organization_kind_translations', {
+        id: seedId('ok_tr', k.slug as string, LOCALE),
+        createdVia: 'seed',
+        organizationKindId: P(k.id),
+        locale: LOCALE,
+        name: info[0],
+      });
   }
   for (const f of proto.db.all('prize_forms')) {
     const label = proto.catalog.prizeForms[f.slug as string];
-    if (label) await put('prize_form_translations', { id: seedId('pf_tr', f.slug as string, LOCALE), createdVia: 'seed', prizeFormId: P(f.id), locale: LOCALE, name: label });
+    if (label)
+      await put('prize_form_translations', {
+        id: seedId('pf_tr', f.slug as string, LOCALE),
+        createdVia: 'seed',
+        prizeFormId: P(f.id),
+        locale: LOCALE,
+        name: label,
+      });
   }
 
   // 2b · Content translations (handoff v3 §11): English base + Spanish from content-translations.json. Keys are the
@@ -207,13 +228,22 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
   const REDIRECT_TYPES: Record<string, string> = { sports: 'sport', competitions: 'competition', organizations: 'organization', teams: 'competitor' };
   for (const r of proto.slugRedirects) {
     const entityType = REDIRECT_TYPES[r.table];
-    if (entityType) await put('slug_redirects', { id: seedId('slug', r.table, r.oldSlug), createdVia: 'seed', entityType, entityId: P(r.id), oldSlug: r.oldSlug, scope: r.table === 'teams' ? 'teams' : '' });
+    if (entityType)
+      await put('slug_redirects', {
+        id: seedId('slug', r.table, r.oldSlug),
+        createdVia: 'seed',
+        entityType,
+        entityId: P(r.id),
+        oldSlug: r.oldSlug,
+        scope: r.table === 'teams' ? 'teams' : '',
+      });
   }
 
   // 3 · Collection reports of sports without athletes (doc 18) and AI collection runs (docs 11/18).
   for (const r of proto.collectedSports) {
     const sport = proto.db.all('sports').find((s) => s.slug === r.sport);
-    if (sport) await put('sport_collection_reports', { id: seedId('scr', r.sport), createdVia: 'seed', sportId: P(sport.id), reason: r.reason_pt, facts: r.facts });
+    if (sport)
+      await put('sport_collection_reports', { id: seedId('scr', r.sport), createdVia: 'seed', sportId: P(sport.id), reason: r.reason_pt, facts: r.facts });
   }
   for (const r of proto.collectionRuns) {
     await put('ai_collection_runs', {
@@ -233,31 +263,75 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
   // 4 · Ingestion logs (same lines the admin fixtures show) and conflict bases.
   const logsOf = mappers.logsOf as (run: Record<string, unknown>) => { at: string; level: string; message: string }[];
   for (const r of proto.db.all('ingestion_runs')) {
-    const lines = logsOf({ startedAt: r.started_at, checked: r.checked, mode: r.mode, unchanged: r.unchanged, updated: r.updated, errors: r.errors, tokens: 0 });
+    const lines = logsOf({
+      startedAt: r.started_at,
+      checked: r.checked,
+      mode: r.mode,
+      unchanged: r.unchanged,
+      updated: r.updated,
+      errors: r.errors,
+      tokens: 0,
+    });
     for (const [i, line] of lines.entries()) {
-      await put('ingestion_logs', { id: seedId('il', r.id, i), createdVia: 'seed', runId: P(r.id), level: line.level, message: line.message, at: new Date(line.at) });
+      await put('ingestion_logs', {
+        id: seedId('il', r.id, i),
+        createdVia: 'seed',
+        runId: P(r.id),
+        level: line.level,
+        message: line.message,
+        at: new Date(line.at),
+      });
     }
   }
   // The 3-way diff base of a seeded conflict is the value chosen when it was opened.
-  await db.update(fieldConflicts).set({ baseValue: sql`${fieldConflicts.chosenValue}` }).where(isNull(fieldConflicts.baseValue));
+  await db
+    .update(fieldConflicts)
+    .set({ baseValue: sql`${fieldConflicts.chosenValue}` })
+    .where(isNull(fieldConflicts.baseValue));
 
   // 5 · Curators (seed admins) and the approvals of the dossiers; demo "awaiting 2nd approval" dossiers.
   const curatorIds: string[] = [];
-  for (const c of SEED_CURATORS) curatorIds.push(await put('users', { id: seedId('user', c.email), createdVia: 'seed', email: c.email, displayName: c.name, role: 'admin' }));
+  for (const c of SEED_CURATORS)
+    curatorIds.push(await put('users', { id: seedId('user', c.email), createdVia: 'seed', email: c.email, displayName: c.name, role: 'admin' }));
   for (const d of proto.db.all('greats_dossiers')) {
     for (let i = 0; i < Number(d.approvals_count ?? 0) && i < curatorIds.length; i++) {
       await put('greats_dossier_approvals', { id: seedId('gda', d.id, i), createdVia: 'seed', dossierId: P(d.id), adminUserId: curatorIds[i] });
     }
   }
-  const demoDossiers = (mappers.demoPendingDossiers as (db: ProtoDb, dir: string) => {
-    slug: string; athleteId: string; headline: string; approvals: number; note: string | null; evidences: { type: string; description: string; sourceLinkId: string }[];
-  }[])(proto.db, mockDir);
+  const demoDossiers = (
+    mappers.demoPendingDossiers as (
+      db: ProtoDb,
+      dir: string,
+    ) => {
+      slug: string;
+      athleteId: string;
+      headline: string;
+      approvals: number;
+      note: string | null;
+      evidences: { type: string; description: string; sourceLinkId: string }[];
+    }[]
+  )(proto.db, mockDir);
   for (const d of demoDossiers) {
-    const dossierId = await put('greats_dossiers', { id: seedId('gd', d.slug), createdVia: 'seed', athleteId: P(d.athleteId), status: 'pending', approvalsRequired: 2, approvalsCount: d.approvals, reviewNote: d.note });
+    const dossierId = await put('greats_dossiers', {
+      id: seedId('gd', d.slug),
+      createdVia: 'seed',
+      athleteId: P(d.athleteId),
+      status: 'pending',
+      approvalsRequired: 2,
+      approvalsCount: d.approvals,
+      reviewNote: d.note,
+    });
     await put('greats_dossier_translations', { id: seedId('gd_tr', d.slug), createdVia: 'seed', dossierId, locale: LOCALE, headline: d.headline });
-    for (let i = 0; i < d.approvals && i < curatorIds.length; i++) await put('greats_dossier_approvals', { id: seedId('gda', d.slug, i), createdVia: 'seed', dossierId, adminUserId: curatorIds[i] });
+    for (let i = 0; i < d.approvals && i < curatorIds.length; i++)
+      await put('greats_dossier_approvals', { id: seedId('gda', d.slug, i), createdVia: 'seed', dossierId, adminUserId: curatorIds[i] });
     for (const [i, e] of d.evidences.entries()) {
-      const evidenceId = await put('greats_evidences', { id: seedId('ge', d.slug, i), createdVia: 'seed', dossierId, evidenceType: e.type, sourceLinkId: P(e.sourceLinkId) });
+      const evidenceId = await put('greats_evidences', {
+        id: seedId('ge', d.slug, i),
+        createdVia: 'seed',
+        dossierId,
+        evidenceType: e.type,
+        sourceLinkId: P(e.sourceLinkId),
+      });
       await put('greats_evidence_translations', { id: seedId('ge_tr', d.slug, i), createdVia: 'seed', evidenceId, locale: LOCALE, description: e.description });
     }
   }
@@ -287,9 +361,23 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
     if (!user) continue;
     for (const kind of REQUIRED_LEGAL_DOCUMENTS) {
       const { version } = LEGAL_DOCUMENT_VERSIONS[kind];
-      await put('legal_acceptances', { id: seedId('la', email, kind, version), createdVia: 'seed', userId: P(user.id), documentKind: kind, documentVersion: version, acceptedAt: new Date(SIGNED_UP_AT) });
+      await put('legal_acceptances', {
+        id: seedId('la', email, kind, version),
+        createdVia: 'seed',
+        userId: P(user.id),
+        documentKind: kind,
+        documentVersion: version,
+        acceptedAt: new Date(SIGNED_UP_AT),
+      });
     }
-    await put('user_consents', { id: seedId('uc', email), createdVia: 'seed', userId: P(user.id), purpose: ConsentPurpose.NotificationEmails, granted: true, decidedAt: new Date(SIGNED_UP_AT) });
+    await put('user_consents', {
+      id: seedId('uc', email),
+      createdVia: 'seed',
+      userId: P(user.id),
+      purpose: ConsentPurpose.NotificationEmails,
+      granted: true,
+      decidedAt: new Date(SIGNED_UP_AT),
+    });
   }
 
   // 8 · Admin audit: tier history (A4) and the demo privacy requests (A5) of the fixtures.
@@ -330,4 +418,3 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
   log(`prototype: ${Object.values(report).reduce((s, n) => s + n, 0)} rows in ${Object.keys(report).length} tables`);
   return { tables: report };
 };
-

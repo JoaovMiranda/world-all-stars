@@ -5,17 +5,31 @@ import { DEMO_SESSION_EMAILS, LEGAL_DOCUMENT_VERSIONS, REQUIRED_LEGAL_DOCUMENTS 
 import { sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createDatabase, type DatabaseHandle, findRepoRoot } from '../client';
+import { createDatabase } from '../client';
+import { findRepoRoot } from '../helpers/repo-root.helper';
 import { seedId } from '../helpers/seed-id.helper';
+import type { DatabaseHandle } from '../interfaces/database-handle.interface';
 import { seedDatabase } from './seed';
 
 const root = findRepoRoot();
 const hasPrototype = fs.existsSync(path.join(root, 'plan/front-prototype/mock'));
-const COUNTED = ['athletes', 'users', 'tier_votes', 'comments', 'notifications', 'greats_dossier_approvals', 'competition_levels', 'champion_tiers', 'sport_translations'];
+const COUNTED = [
+  'athletes',
+  'users',
+  'tier_votes',
+  'comments',
+  'notifications',
+  'greats_dossier_approvals',
+  'competition_levels',
+  'champion_tiers',
+  'sport_translations',
+];
 
 const counts = async (h: DatabaseHandle) =>
   Object.fromEntries(
-    await Promise.all(COUNTED.map(async (t) => [t, ((await h.db.execute(sql.raw(`select count(*)::int as n from ${t}`))) as unknown as { rows: { n: number }[] }).rows[0]!.n])),
+    await Promise.all(
+      COUNTED.map(async (t) => [t, ((await h.db.execute(sql.raw(`select count(*)::int as n from ${t}`))) as unknown as { rows: { n: number }[] }).rows[0]!.n]),
+    ),
   );
 
 describe('seed', () => {
@@ -43,13 +57,19 @@ describe('seed', () => {
 
   it.skipIf(!hasPrototype)('demo accounts accept the CURRENT legal versions, also when an older seed is upgraded', async () => {
     const accepted = async () =>
-      ((await h.db.execute(sql`
+      (
+        (await h.db.execute(sql`
         select u.email, la.document_kind as kind, la.document_version as version from legal_acceptances la join users u on u.id = la.user_id
-        where u.email in (${DEMO_SESSION_EMAILS.reader}, ${DEMO_SESSION_EMAILS.admin}) and la.deleted_at is null`)) as unknown as { rows: { email: string; kind: string; version: string }[] }).rows;
+        where u.email in (${DEMO_SESSION_EMAILS.reader}, ${DEMO_SESSION_EMAILS.admin}) and la.deleted_at is null`)) as unknown as {
+          rows: { email: string; kind: string; version: string }[];
+        }
+      ).rows;
     // A database seeded by an older version: one row per document (id without the version), an older version accepted.
     for (const email of [DEMO_SESSION_EMAILS.reader, DEMO_SESSION_EMAILS.admin]) {
       for (const kind of REQUIRED_LEGAL_DOCUMENTS) {
-        await h.db.execute(sql`update legal_acceptances set id = ${seedId('la', email, kind)}, document_version = '0.0-old' where id = ${seedId('la', email, kind, LEGAL_DOCUMENT_VERSIONS[kind].version)}`);
+        await h.db.execute(
+          sql`update legal_acceptances set id = ${seedId('la', email, kind)}, document_version = '0.0-old' where id = ${seedId('la', email, kind, LEGAL_DOCUMENT_VERSIONS[kind].version)}`,
+        );
       }
     }
     expect((await accepted()).every((r) => r.version === '0.0-old')).toBe(true);
@@ -64,7 +84,10 @@ describe('seed', () => {
 
   // The trigger is FOR EACH ROW: target a table the configuration seed always fills (CI has no plan/).
   it('refuses physical DELETE (soft delete only)', async () => {
-    const error = await h.db.execute(sql`delete from competition_levels`).then(() => null, (e: Error & { cause?: Error }) => e);
+    const error = await h.db.execute(sql`delete from competition_levels`).then(
+      () => null,
+      (e: Error & { cause?: Error }) => e,
+    );
     expect(String(error?.cause?.message ?? error?.message)).toMatch(/forbidden/i);
   });
 });

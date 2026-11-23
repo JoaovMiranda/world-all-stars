@@ -3,15 +3,10 @@
 // Used by the server scheduler (CLEANUP_INTERVAL_MINUTES) and by `pnpm db:cleanup` (cron).
 import { lt } from 'drizzle-orm';
 
-import type { Database } from '../client';
+import type { CleanupReport } from '../interfaces/cleanup-report.interface';
 import { authSessions, authVerifications } from '../tables/auth.table';
 import { rateLimitBuckets } from '../tables/rate-limit.table';
-
-export interface CleanupReport {
-  authSessions: number;
-  authVerifications: number;
-  rateLimitBuckets: number;
-}
+import type { Database } from '../types/database.type';
 
 export const cleanupExpired = async (db: Database, now: Date = new Date()): Promise<CleanupReport> => {
   const [sessions, verifications, buckets] = await Promise.all([

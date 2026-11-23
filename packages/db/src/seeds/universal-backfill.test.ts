@@ -4,7 +4,9 @@ import path from 'node:path';
 import { sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createDatabase, type DatabaseHandle, findRepoRoot } from '../client';
+import { createDatabase } from '../client';
+import { findRepoRoot } from '../helpers/repo-root.helper';
+import type { DatabaseHandle } from '../interfaces/database-handle.interface';
 import { seedDatabase } from './seed';
 
 const root = findRepoRoot();
@@ -24,7 +26,16 @@ describe.skipIf(!hasPrototype)('universal model backfill (handoff v3 §4)', () =
     expect(await n(h, 'select count(*)::int n from athletes a left join competitors c on c.id = a.id where c.id is null')).toBe(0);
     expect(await n(h, 'select count(*)::int n from teams t left join competitors c on c.id = t.id where c.id is null')).toBe(0);
     expect(await n(h, "select count(*)::int n from competitors where kind = 'person'")).toBe(await n(h, 'select count(*)::int n from athletes'));
-    for (const table of ['sports', 'competitions', 'organizations', 'competition_editions', 'countries', 'competitors', 'recognition_definitions', 'competition_events']) {
+    for (const table of [
+      'sports',
+      'competitions',
+      'organizations',
+      'competition_editions',
+      'countries',
+      'competitors',
+      'recognition_definitions',
+      'competition_events',
+    ]) {
       expect(await n(h, `select count(*)::int n from ${table} x left join entity_registry r on r.id = x.id where r.id is null`), table).toBe(0);
     }
   });
@@ -52,13 +63,26 @@ describe.skipIf(!hasPrototype)('universal model backfill (handoff v3 §4)', () =
     expect(await n(h, `select count(distinct slug)::int n from sports where deleted_at is null and slug in (${slugs})`)).toBe(catalog.sports.length);
     expect(await n(h, "select count(*)::int n from sports where slug = 'football'")).toBe(1);
     expect(await n(h, "select count(*)::int n from sport_relations r join sports s on s.id = r.from_sport_id where s.slug = 'cycling-bmx-racing'")).toBe(1);
-    expect(await n(h, "select count(*)::int n from competition_program_sports p join competitions c on c.id = p.competition_id where c.slug = 'olympic-games-summer'")).toBeGreaterThan(40);
-    expect(await n(h, "select count(*)::int n from competitions where is_multi_sport and sport_id is null")).toBeGreaterThanOrEqual(7);
+    expect(
+      await n(
+        h,
+        "select count(*)::int n from competition_program_sports p join competitions c on c.id = p.competition_id where c.slug = 'olympic-games-summer'",
+      ),
+    ).toBeGreaterThan(40);
+    expect(await n(h, 'select count(*)::int n from competitions where is_multi_sport and sport_id is null')).toBeGreaterThanOrEqual(7);
   });
 
   it('is idempotent', async () => {
-    const before = await n(h, 'select (select count(*) from recognition_grants) + (select count(*) from entity_aliases) + (select count(*) from competition_results) + (select count(*) from domain_values)::int n');
+    const before = await n(
+      h,
+      'select (select count(*) from recognition_grants) + (select count(*) from entity_aliases) + (select count(*) from competition_results) + (select count(*) from domain_values)::int n',
+    );
     await seedDatabase(h.db, root);
-    expect(await n(h, 'select (select count(*) from recognition_grants) + (select count(*) from entity_aliases) + (select count(*) from competition_results) + (select count(*) from domain_values)::int n')).toBe(before);
+    expect(
+      await n(
+        h,
+        'select (select count(*) from recognition_grants) + (select count(*) from entity_aliases) + (select count(*) from competition_results) + (select count(*) from domain_values)::int n',
+      ),
+    ).toBe(before);
   });
 });

@@ -1,29 +1,17 @@
 // Football World Champions V1 (plan/handoff/ranking-futebol.md §6–§8; METHODOLOGY.md next to this file).
 // 1 credit per VERIFIED winning squad membership (registered or replacement, never withdrawn/rejected); at most one
 // credit per player per edition. Rankings A–D by competition and gender; E is the consolidated overview.
-import { z } from 'zod';
-
-import type { ComputedEntry, RankingDefinition, RankingEvidence, RankingMethodology } from '../../core/engine';
-
-export const FootballConfigSchema = z.object({
-  creditPerTitle: z.number().positive().default(1),
-  countableRegistration: z.array(z.string()).default(['registered', 'replacement']),
-  countableVerification: z.array(z.string()).default(['verified']),
-});
-export type FootballConfig = z.infer<typeof FootballConfigSchema>;
-
-const WORLD_CUPS = new Set(['fifa-world-cup', 'fifa-womens-world-cup']);
-const OLYMPICS = new Set(['olympic-football', 'olympic-football-women']);
-const RANKINGS: RankingDefinition[] = [
-  { key: 'A', title: "Men's FIFA World Cup champions", scope: { competition: 'fifa-world-cup' } },
-  { key: 'B', title: "Women's FIFA World Cup champions", scope: { competition: 'fifa-womens-world-cup' } },
-  { key: 'C', title: "Men's Olympic football champions", scope: { competition: 'olympic-football' } },
-  { key: 'D', title: "Women's Olympic football champions", scope: { competition: 'olympic-football-women' } },
-  { key: 'E', title: 'All-time football champions overview', scope: { competition: null } },
-];
+import type { ComputedEntry } from '../../core/computed-entry.interface';
+import type { RankingEvidence } from '../../core/ranking-evidence.interface';
+import type { RankingMethodology } from '../../core/ranking-methodology.interface';
+import { FOOTBALL_CHAMPIONS_RANKINGS, OLYMPICS, WORLD_CUPS } from './football-champions.const';
+import { FootballConfigSchema } from './football-config.schema';
+import type { FootballConfig } from './football-config.type';
 
 const countable = (e: RankingEvidence, c: FootballConfig) =>
-  e.kind === 'squad_membership' && c.countableRegistration.includes(String(e.attributes.registration)) && c.countableVerification.includes(String(e.attributes.verification));
+  e.kind === 'squad_membership' &&
+  c.countableRegistration.includes(String(e.attributes.registration)) &&
+  c.countableVerification.includes(String(e.attributes.verification));
 
 export const footballChampions: RankingMethodology<FootballConfig> = {
   key: 'football-champions',
@@ -32,15 +20,19 @@ export const footballChampions: RankingMethodology<FootballConfig> = {
   outputKind: 'score',
   configSchema: FootballConfigSchema,
   defaultConfig: FootballConfigSchema.parse({}),
-  rankings: () => RANKINGS,
+  rankings: () => FOOTBALL_CHAMPIONS_RANKINGS,
   compute(ranking, input, config) {
     const scope = ranking.scope.competition as string | null;
     const byPerson = new Map<string, RankingEvidence[]>();
-    for (const e of input.evidence) if (e.kind === 'squad_membership' && (!scope || e.attributes.competition === scope)) (byPerson.get(e.competitorId) ?? byPerson.set(e.competitorId, []).get(e.competitorId)!).push(e);
+    for (const e of input.evidence)
+      if (e.kind === 'squad_membership' && (!scope || e.attributes.competition === scope))
+        (byPerson.get(e.competitorId) ?? byPerson.set(e.competitorId, []).get(e.competitorId)!).push(e);
     const out: ComputedEntry[] = [];
     for (const [competitorId, list] of byPerson) {
       const counted = new Map<string, RankingEvidence>(); // one credit per edition (duplicates ignored)
-      for (const e of list) if (countable(e, config)) counted.set(`${e.attributes.competition}:${e.attributes.year}`, counted.get(`${e.attributes.competition}:${e.attributes.year}`) ?? e);
+      for (const e of list)
+        if (countable(e, config))
+          counted.set(`${e.attributes.competition}:${e.attributes.year}`, counted.get(`${e.attributes.competition}:${e.attributes.year}`) ?? e);
       const credits = [...counted.values()];
       const wc = credits.filter((e) => WORLD_CUPS.has(String(e.attributes.competition))).length;
       const og = credits.filter((e) => OLYMPICS.has(String(e.attributes.competition))).length;
