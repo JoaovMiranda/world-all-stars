@@ -1,4 +1,4 @@
-// Applies an AI biography to the profile (handoff v3 Fase 13 §1.1): automatic when it passed the three validation
+// Applies an AI biography to the profile (handoff v3 Phase 13 §1.1): automatic when it passed the three validation
 // levels (review_status auto_accepted), or after a human decision on an exception (approved). Precedence: curated
 // bios (seed / manual) are never overwritten — only empty bios or bios written by the system itself.
 import { type Actor, aiExtractionQueue, athleteTranslations, type BaseRepository, type Database, fieldProvenance, selectRows, sourceLinks } from '@was/db';

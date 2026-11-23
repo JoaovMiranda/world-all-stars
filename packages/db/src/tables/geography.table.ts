@@ -4,7 +4,7 @@ import { integer, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 import { baseColumns, live } from '../columns/base.column';
 import { countryKindEnum } from '../columns/pg-enum.column';
 
-/** "02/03" exists once; 1987 and 2013 point to the same day ("Hoje na história" is a lookup by FK). */
+/** "02/03" exists once; 1987 and 2013 point to the same day ("On this day" is a lookup by FK). */
 export const calendarDays = pgTable(
   'calendar_days',
   { ...baseColumns(), month: integer().notNull(), day: integer().notNull() },

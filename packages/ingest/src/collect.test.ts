@@ -1,4 +1,4 @@
-// Fase 13 §1.4: first collection of a list produces complete profiles with no approval click, and an update right
+// Phase 13 §1.4: first collection of a list produces complete profiles with no approval click, and an update right
 // after calls the model 0 times. Network and model are fakes (no Wikipedia, no Ollama).
 import { createDatabase, type DatabaseHandle, findRepoRoot, seedDatabase, selectRows } from '@was/db';
 import { sql } from 'drizzle-orm';
@@ -75,7 +75,7 @@ const model: AiProvider = {
   },
 };
 
-describe('autonomous collection (Fase 13)', () => {
+describe('autonomous collection (Phase 13)', () => {
   let h: DatabaseHandle;
   const calls: string[] = [];
   beforeAll(async () => {

@@ -1,4 +1,4 @@
-// Competitions, editions, awards and teams (doc 03 "Competições, prêmios e troféus").
+// Competitions, editions, awards and teams (doc 03 "Competitions, awards and trophies").
 import { boolean, date, index, integer, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { baseColumns, live } from '../columns/base.column';

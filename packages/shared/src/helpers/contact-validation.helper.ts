@@ -11,7 +11,7 @@ import { isEmail } from './email.helper';
 import { cleanText, codePointLength } from './text-normalize.helper';
 import { validateFreeText } from './text-validation.helper';
 
-/** Validates the "Mensagem" tab (doc 21): name, e-mail, topic and body (≤ 1000, not empty, no banned words). */
+/** Validates the Message tab (doc 21): name, e-mail, topic and body (≤ 1000, not empty, no banned words). */
 export const validateContact = (
   draft: ContactDraft,
   bannedWords: readonly BannedWordRule[],

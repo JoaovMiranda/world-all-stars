@@ -3,7 +3,7 @@ import type { KnownAthlete } from '../types/known-athlete.type';
 import type { SourceDomainRule } from '../types/source-rule.type';
 import type { FieldErrors } from '../types/validation-result.type';
 
-/** Raw form values of "Sugerir atleta" (strings as typed; urls may contain blanks). */
+/** Raw form values of the "Suggest an athlete" form (strings as typed; urls may contain blanks). */
 export interface SuggestionDraft {
   athleteName: string;
   sport?: string | null | undefined;

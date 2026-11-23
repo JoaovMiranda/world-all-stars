@@ -166,7 +166,7 @@ export class CanonicalWriter {
     switch (o.contract) {
       case 'competitor': {
         const id = await this.person(o.record, o.record.sports[0] ?? null, row);
-        // Fase 13 §1.2: a person collected from a list was chosen to have a profile.
+        // Phase 13 §1.2: a person collected from a list was chosen to have a profile.
         if (id && row.providerKey === 'athlete-list') this.publicPeople.add(id);
         return;
       }

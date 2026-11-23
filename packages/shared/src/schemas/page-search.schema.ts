@@ -17,7 +17,7 @@ export const AthleteProfileSearchSchema = z.object({
 /** URL state of /contact (doc 21: `?tipo=mensagem` opens the message tab). */
 export const ContactSearchSchema = z.object({ tipo: optionalEnum(CONTACT_TAB_VALUES) });
 
-/** URL state of the home: `date` simulates another day for "Hoje na história" and the calendar. */
+/** URL state of the home: `date` simulates another day for "On this day" and the calendar. */
 export const HomeSearchSchema = z.object({ date: IsoDateSchema.optional().catch(undefined) });
 
 /** URL state of /me/notifications (E4): read-state filter (`?filtro=nao-lidas|lidas`). */

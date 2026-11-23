@@ -14,7 +14,7 @@ const root = findRepoRoot();
 const hasCache = fs.existsSync(path.join(root, 'data/seeds/.cache/fjelstul/squads.csv'));
 const n = async (h: DatabaseHandle, q: string) => (await selectRows<{ n: number }>(h.db, sql.raw(q)))[0]!.n;
 
-describe.skipIf(!hasCache)('deterministic ingestion pilot (handoff v3 Fase 5): offline, from the crawler cache', () => {
+describe.skipIf(!hasCache)('deterministic ingestion pilot (handoff v3 Phase 5): offline, from the crawler cache', () => {
   let h: DatabaseHandle;
   beforeAll(async () => {
     h = await createDatabase({ pgliteDataDir: 'memory://' });

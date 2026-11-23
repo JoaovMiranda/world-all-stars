@@ -1,4 +1,4 @@
-// Biography Enricher run (handoff v3 §7.2 task 3, Fase 13 §1.1): every call is recorded in ai_invocations; a
+// Biography Enricher run (handoff v3 §7.2 task 3, Phase 13 §1.1): every call is recorded in ai_invocations; a
 // proposal reaches the human queue only after the schema and literal-quote levels pass; level 3 is auto-applied.
 import { createHash } from 'node:crypto';
 
@@ -61,7 +61,7 @@ export const runBiography = async (db: Database, provider: AiProvider | null, it
   let accepted = 0;
   let unchanged = 0;
   for (const item of items) {
-    // Same prompt over the same text was already answered: no new call (Fase 13 §1.2 update mode).
+    // Same prompt over the same text was already answered: no new call (Phase 13 §1.2 update mode).
     const inputHash = createHash('sha256').update(`${BIOGRAPHY_PROMPT_VERSION}\n${item.sourceText}`).digest('hex');
     if (
       (
@@ -135,7 +135,7 @@ export const runBiography = async (db: Database, provider: AiProvider | null, it
       tokens,
       invocationId,
     );
-    // Fase 13 §1.1: level 3 is applied automatically; anything else waits in the exception queue.
+    // Phase 13 §1.1: level 3 is applied automatically; anything else waits in the exception queue.
     if (level === 3 && queueId) {
       const applied = await applyBiography(new BaseRepository(db), queueId, {
         approvedBy: null,

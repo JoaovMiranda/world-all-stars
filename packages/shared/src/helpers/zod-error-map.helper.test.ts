@@ -10,7 +10,7 @@ const Schema = z.object({
   tier: z.enum(['gold', 'silver']),
   adult: z.literal(true),
   links: z.array(z.string()).max(1),
-  own: z.string().refine((v) => v === 'ok', 'Mensagem própria do schema'),
+  own: z.string().refine((v) => v === 'ok', 'Schema-specific message'),
 });
 const input = { bio: 'ab', email: 'x', tier: 'iron', adult: false, links: ['a', 'b'], own: 'no' };
 const messages = (locale: 'pt-BR' | 'en' | 'es') => {
@@ -27,7 +27,7 @@ describe('zodErrorMap', () => {
       tier: 'Choose one of the options.',
       adult: 'Check this box to continue.',
       links: 'Choose at most 1.',
-      own: 'Mensagem própria do schema',
+      own: 'Schema-specific message',
     });
   });
 

@@ -129,10 +129,10 @@ export const AddCollectionLinksRequestSchema = z.object({
 
 /** A8 · Status of a contact message. */
 export const UpdateContactMessageRequestSchema = z.object({ status: z.enum(CONTACT_STATUS_VALUES) });
-/** A2 · "Rodar agora" (simulated). */
+/** A2 · 'Run now' (pt-BR UI: "Rodar agora"), simulated. */
 export const RunIngestionRequestSchema = z.object({
   jobKey: z.string().min(1),
-  /** collect.list: names, links or CSV lines (Fase 13). */ names: z.string().max(20_000).optional(),
+  /** collect.list: names, links or CSV lines (Phase 13). */ names: z.string().max(20_000).optional(),
 });
 /** A7 · Banned word key in the URL (DELETE /api/admin/banned-words/:locale/:term). */
 export const BannedWordKeyParamsSchema = z.object({ locale: z.string().min(2), term: z.string().min(1) });

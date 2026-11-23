@@ -1,4 +1,4 @@
-/** Kinds of milestones shown in "Hoje na história". */
+/** Kinds of milestones shown in "On this day". */
 export const OnThisDayKind = {
   Birth: 'birth',
   Death: 'death',

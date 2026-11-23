@@ -5,6 +5,7 @@ import { DomainKind, normalizeForSearch } from '@was/shared';
 import { eq, getTableName } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
 
+import { TITLE_END_REASON_PATTERNS } from '../consts/title-end-reason-patterns.const';
 import { seedId } from '../helpers/seed-id.helper';
 import { upsertRow } from '../helpers/upsert.helper';
 import type { BackfillReport } from '../interfaces/backfill-report.interface';
@@ -115,11 +116,7 @@ const AWARD_KIND: Record<string, string> = { individual: 'award', hall_of_fame: 
 const endReason = (text: unknown): string | null => {
   const t = String(text ?? '').toLowerCase();
   if (!t) return null;
-  if (/stripped|destitu/.test(t)) return 'stripped';
-  if (/vacat|vago/.test(t)) return 'vacated';
-  if (/abdic|did not defend|não defendeu/.test(t)) return 'abdicated';
-  if (/retir|returned|aposent|retornou/.test(t)) return 'retired';
-  if (/loss|lost|derrota|defeat/.test(t)) return 'lost';
+  for (const [reason, pattern] of TITLE_END_REASON_PATTERNS) if (pattern.test(t)) return reason;
   return 'unknown';
 };
 

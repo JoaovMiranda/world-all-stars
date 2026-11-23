@@ -1,4 +1,4 @@
-// Configuration aspects (doc 03 "exceção: enums"): created by migration/seed, never on demand.
+// Configuration aspects (doc 03 "exception: enums"): created by migration/seed, never on demand.
 import { boolean, integer, real, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 

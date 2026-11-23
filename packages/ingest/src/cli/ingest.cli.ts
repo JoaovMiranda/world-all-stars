@@ -10,7 +10,7 @@
 //   report                                                      counts per stage, last runs, AI usage
 //   identity-eval                                               precision/recall of the identity thresholds
 //   enrich [--athlete slug] [--task biography|facts|all] [--limit 20]   optional AI (OLLAMA_URL) → admin queue
-//   collect --list <file> [--sport slug] | --names "Cafu,Pelé" | --update [--limit N]   autonomous collection (Fase 13)
+//   collect --list <file> [--sport slug] | --names "Cafu,Pelé" | --update [--limit N]   autonomous collection (Phase 13)
 //   ai-report                                                   calls, tokens, latency, approvals per model × task
 // Flags: --offline (crawler cache only, no network). PGlite is single-process: stop `pnpm dev` first.
 import fs from 'node:fs';

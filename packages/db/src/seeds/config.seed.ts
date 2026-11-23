@@ -5,7 +5,7 @@ import { championTiers, competitionLevels } from '../tables/config.table';
 import type { Database } from '../types/database.type';
 
 /**
- * Configuration enums that exist even without the prototype (doc 03: "enums são configuração, não dado"):
+ * Configuration enums that exist even without the prototype (doc 03: "enums are configuration, not data"):
  * competition levels and champion tiers, straight from the shared consts.
  */
 export const seedConfig = async (db: Database): Promise<number> => {

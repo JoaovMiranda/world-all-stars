@@ -1,4 +1,4 @@
-// Identity review queue (handoff v3 §7.1, Fase 6): observations whose competitor could not be matched automatically.
+// Identity review queue (handoff v3 §7.1, Phase 6): observations whose competitor could not be matched automatically.
 import { z } from 'zod';
 
 import { IDENTITY_DECISION_VALUES, IDENTITY_STATUS_VALUES } from '../consts/admin-identity.const';

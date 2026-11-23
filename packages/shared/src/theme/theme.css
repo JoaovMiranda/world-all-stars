@@ -1,24 +1,24 @@
-/* World All Stars · theme tokens (single source of truth, doc 08 v3.1 "Noite de gala").
-   Copied from plan/front-prototype/assets/css/tokens.css. Light = "programa impresso", dark = "noite de gala".
+/* World All Stars · theme tokens (single source of truth, doc 08 v3.1 "Noite de gala", i.e. gala night).
+   Copied from plan/front-prototype/assets/css/tokens.css. Light = "programa impresso" (printed programme), dark = "noite de gala" (gala night).
    Theme selection: prefers-color-scheme by default; manual override via <html data-theme="light|dark">.
    Every text pair is AA (see doc 14), checked by apps/web/src/app/theme-contrast.test.ts. Do not hard-code colors in apps: use these variables. */
 :root {
-  /* Claro: "programa impresso" (papel marfim e tinta preta) */
-  --primary: #7A5A1C; --primary-hover: #5F4512; --primary-soft: #F1E6CC;   /* dourado escuro: links, ações, foco */
-  --accent: #B8913F; --accent-soft: #F3E9D2; --on-accent: #17140F;         /* dourado decorativo: filetes, ornamentos */
+  /* Light: "programa impresso", printed programme (ivory paper and black ink) */
+  --primary: #7A5A1C; --primary-hover: #5F4512; --primary-soft: #F1E6CC;   /* dark gold: links, actions, focus */
+  --accent: #B8913F; --accent-soft: #F3E9D2; --on-accent: #17140F;         /* decorative gold: rules, ornaments */
   --success: #357A52; --danger: #B5483B; --info: #3D6E9C; --pink: #9C5B7A;
   --bg: #F6F1E7; --surface: #FFFDF8; --surface-2: #EFE8DA; --border: #DDD2BE; --border-strong: #B8A47E;
-  --border-control: #8C7A58;   /* borda de campos e controles: ≥ 3:1 sobre bg/surface/surface-2 (WCAG 1.4.11) */
+  --border-control: #8C7A58;   /* border of fields and controls: ≥ 3:1 over bg/surface/surface-2 (WCAG 1.4.11) */
   --text: #17140F; --muted: #5E5648;
   --ocean: #EAE2D2; --land: #CDBF9F; --metal: #B8913F; --metal-2: #8C6A2C;
   --midnight: #0C0B09; --bronze: #A0652F; --platinum: #8E8B84;
-  /* Cores como TEXTO (AA) e texto SOBRE cor */
+  /* Colours as TEXT (AA) and text ON colour */
   --accent-text: #7A5A1C; --success-text: #2F6B47; --danger-text: #A3362B; --info-text: #2C5A85;
   --on-primary: #FFFDF8; --on-success: #FFFDF8; --on-info: #FFFDF8; --on-danger: #FFFDF8;
-  /* cores de esporte em tons de joia (barras e pontos; texto sobre elas = #0C0B09) */
+  /* sport colours in jewel tones (bars and dots; text on them = #0C0B09) */
   --c-teal: #5FA79D; --c-orange: #CF8A57; --c-lime: #A9B45E; --c-pink: #C27A9A;
   --on-c-teal: #0C0B09; --on-c-orange: #0C0B09; --on-c-lime: #0C0B09; --on-c-pink: #0C0B09;
-  /* dourado metálico: só em Mítico, logo e filetes de honra */
+  /* metallic gold: only for Mythic, the logo and honour rules */
   --grad: linear-gradient(135deg, #8C6A2C 0%, #E6CB86 45%, #A8833A 100%);
   --float-shadow: 0 12px 32px rgba(12, 11, 9, .14);
   /* "Sign in with Google" button (Google identity guidelines: neutral light/dark) and the 4-colour G mark. */
@@ -27,7 +27,7 @@
   --logo-bg: #FFFFFF;
   --on-midnight: #F2ECDF;   /* text over a dark scrim on photos (credits), same in both themes */   /* paper behind third-party logos (Commons), same in both themes */
 
-  /* Medalhas: ouro, prata e bronze com as cores reais (preenchimento) + versões de TEXTO com contraste AA */
+  /* Medals: gold, silver and bronze in their real colours (fill) + TEXT variants with AA contrast */
   --medal-gold: #D4AF37; --medal-silver: #C0C0C0; --medal-bronze: #CD7F32; --on-medal: #17140F;
   --grad-gold: linear-gradient(135deg, #9C7A1E 0%, #F1D774 45%, #B8921F 100%);
   --grad-silver: linear-gradient(135deg, #8C8C8C 0%, #F2F2F2 45%, #A6A6A6 100%);
@@ -35,9 +35,9 @@
   --gold-text: #7A5A1C; --silver-text: #595959; --bronze-text: #8A4B17;
 
   --lvl-world: var(--medal-gold); --lvl-continental: #6E7F8D; --lvl-national: var(--medal-bronze); --lvl-local: var(--muted);
-  /* Níveis = metais: Mítico ouro · Lendário prata · Elite bronze · Campeão neutro */
-  /* Níveis de campeão (separados das medalhas): Mítico = magia iridescente · Lendário = ouro · Elite = safira · Campeão = esmeralda.
-     --tier-X = texto (AA) · --tier-X-fill = cor sólida (anéis, barras) · --tier-X-grad = borda/preenchimento com brilho */
+  /* Tiers = metals: Mythic gold · Legendary silver · Elite bronze · Champion neutral */
+  /* Champion tiers (separate from medals): Mythic = iridescent magic · Legendary = gold · Elite = sapphire · Champion = emerald.
+     --tier-X = text (AA) · --tier-X-fill = solid colour (rings, bars) · --tier-X-grad = shiny border/fill */
   --tier-mythic: #6B2FC2; --tier-legendary: #7A5A1C; --tier-elite: #22509E; --tier-champion: #17684D;
   --tier-mythic-fill: #8B5CF6; --tier-mythic-glow: #D946EF; --tier-legendary-fill: #D4AF37; --tier-elite-fill: #3B6FD8; --tier-champion-fill: #2F9E74;
   --tier-mythic-grad: linear-gradient(115deg, #7C3AED 0%, #D946EF 22%, #F5C451 45%, #22D3EE 68%, #8B5CF6 90%, #D946EF 100%);
@@ -45,25 +45,25 @@
   --tier-elite-grad: linear-gradient(135deg, #1E3A8A 0%, #7AA2F7 45%, #2848A8 100%);
   --tier-champion-grad: linear-gradient(135deg, #0F5E45 0%, #6FD3A8 45%, #167A58 100%);
 
-  --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-pill: 999px;   /* cantos suaves: cartões 12, botões e campos 8, selos 4 */
-  --font-ui: "Manrope Variable", Manrope, "Helvetica Neue", system-ui, sans-serif;            /* texto e interface: moderna e legível */
-  --font-display: "Fraunces Variable", Fraunces, "Iowan Old Style", Georgia, serif;           /* títulos e números: serifa moderna de alto contraste */
-  --track: .1em;                                           /* espaçamento das versaletes (rótulos, botões, menu) */
-  /* Motion: durações (frequente = curto, raro = teatral) e curvas. Animar só transform/opacity quando houver movimento.
-     --ease-out: entradas e respostas · --ease-in-out: deslocamentos · --ease-snap: overshoot (squash, follow-through)
-     --ease-anticip: recua antes de ir (anticipation). Tudo é zerado por prefers-reduced-motion (apps/web styles.css). */
+  --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-pill: 999px;   /* soft corners: cards 12, buttons and fields 8, badges 4 */
+  --font-ui: "Manrope Variable", Manrope, "Helvetica Neue", system-ui, sans-serif;            /* body text and UI: modern and legible */
+  --font-display: "Fraunces Variable", Fraunces, "Iowan Old Style", Georgia, serif;           /* headings and numbers: modern high-contrast serif */
+  --track: .1em;                                           /* small-caps letter spacing (labels, buttons, menu) */
+  /* Motion: durations (frequent = short, rare = theatrical) and curves. Animate only transform/opacity when something moves.
+     --ease-out: entrances and responses · --ease-in-out: movements · --ease-snap: overshoot (squash, follow-through)
+     --ease-anticip: pulls back before going (anticipation). All of it is zeroed by prefers-reduced-motion (apps/web styles.css). */
   --dur-1: 90ms; --dur-2: 160ms; --dur-3: 240ms; --dur-4: 420ms; --dur-5: 700ms; --dur-6: 1100ms;
   --ease-out: cubic-bezier(.2, .8, .2, 1);
   --ease-in-out: cubic-bezier(.65, 0, .35, 1);
   --ease-snap: cubic-bezier(.3, 1.4, .5, 1);
   --ease-anticip: cubic-bezier(.6, -.28, .735, .045);
-  --ease-cinematic: cubic-bezier(.16, 1, .3, 1);   /* revelações longas (scroll, palcos): sai rápido e pousa devagar */
-  --ease-settle: cubic-bezier(.25, 1.12, .5, 1);   /* overshoot leve: indicadores que deslizam e assentam */
-  --t-fast: var(--dur-2) var(--ease-out);   /* atalho histórico: cor/borda em hover */
-  --t-press: var(--dur-1) var(--ease-out);  /* resposta ao toque (:active) */
+  --ease-cinematic: cubic-bezier(.16, 1, .3, 1);   /* long reveals (scroll, stages): leaves fast and lands slowly */
+  --ease-settle: cubic-bezier(.25, 1.12, .5, 1);   /* light overshoot: indicators that slide and settle */
+  --t-fast: var(--dur-2) var(--ease-out);   /* legacy shorthand: colour/border on hover */
+  --t-press: var(--dur-1) var(--ease-out);  /* press feedback (:active) */
   --header-h: 64px;
 }
-/* Escuro: "noite de gala" (preto quente, marfim e ouro) */
+/* Dark: "noite de gala", gala night (warm black, ivory and gold) */
 :root[data-theme="dark"] {
   --primary: #D9B96E; --primary-hover: #E8CC86; --primary-soft: #2A2316;
   --accent: #C9A35C; --accent-soft: #241E13;
@@ -108,5 +108,5 @@
   background: var(--midnight); color: var(--text);
 }
 
-/* Brilho "mágico" do Mítico: o gradiente iridescente desliza devagar (desligado com prefers-reduced-motion). */
+/* Mythic "magic" shimmer: the iridescent gradient slides slowly (off under prefers-reduced-motion). */
 @keyframes tier-mythic-shimmer { from { background-position: 0% 50%, 0% 50%; } to { background-position: 0% 50%, 200% 50%; } }

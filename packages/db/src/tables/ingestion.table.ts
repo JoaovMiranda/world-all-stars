@@ -1,4 +1,4 @@
-// Ingestion runs and logs (doc 03 "Fontes e coleta") + AI-assisted collection runs (docs 11/18).
+// Ingestion runs and logs (doc 03 "Sources and collection") + AI-assisted collection runs (docs 11/18).
 import { index, integer, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { baseColumns, live, timestamptz } from '../columns/base.column';

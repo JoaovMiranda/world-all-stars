@@ -39,7 +39,7 @@ export const organizationJsonLd = (origin: string): JsonLd => ({
   logo: siteUrl(origin, '/favicon.svg'),
 });
 
-/** Detail pages: Início › … › current page. */
+/** Detail pages: Home › … › current page. */
 export const breadcrumbJsonLd = (origin: string, crumbs: readonly Crumb[]): JsonLd => ({
   '@context': CONTEXT,
   '@type': 'BreadcrumbList',

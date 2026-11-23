@@ -14,7 +14,7 @@ export interface Formatters {
   month(date: Date): string;
   /** Short month (out · Oct · oct), no trailing dot. */
   monthShort(date: Date): string;
-  /** sábado, 7 de novembro · Saturday, November 7 · sábado, 7 de noviembre */
+  /** Saturday, November 7 (weekday, day and month in the active locale). */
   weekdayDayMonth(date: Date): string;
   /** 1.279 · 1,279 · 1279 */
   number(n: number): string;
@@ -22,9 +22,9 @@ export interface Formatters {
   percent(share: number): string;
   /** Single date when both ends are equal. */
   dateRange(start: IsoDate, end: IsoDate): string;
-  /** 1956–1977 or 2003–hoje (`untilNow` is a translated word). */
+  /** 1956–1977 or 2003–present (`untilNow` is a translated word). */
   years(from: number | null, to: number | null, untilNow: string): string;
-  /** hoje · ontem · há 3 dias (≤ 30 days), then the date. `now` = instant of the page load. */
+  /** today · yesterday · 3 days ago (≤ 30 days), then the date. `now` = instant of the page load. */
   relativeDay(isoDateTime: string, now: Date): string;
   /** Formatter of INSTANTS (ISO datetimes) in the time zone, so the server and the browser print the same hour. */
   instant(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat;

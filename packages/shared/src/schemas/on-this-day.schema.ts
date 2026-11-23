@@ -6,7 +6,7 @@ import { ContentLocaleSchema } from './locale.schema';
 import { MonthDaySchema } from './month-day.schema';
 import { ObservanceSchema } from './observance.schema';
 
-/** A dated milestone of an athlete (birth, title, record…) shown in "Hoje na história". */
+/** A dated milestone of an athlete (birth, title, record…) shown in "On this day". */
 export const OnThisDayItemSchema = z.object({
   year: z.number().int(),
   kind: z.enum(ON_THIS_DAY_KIND_VALUES),

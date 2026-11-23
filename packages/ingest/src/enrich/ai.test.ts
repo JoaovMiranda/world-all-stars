@@ -106,7 +106,7 @@ describe('Biography Enricher (§7.2 task 3)', () => {
     ],
   });
 
-  it('auto-accepts an original bio whose claims quote the source literally (Fase 13 §1.1)', async () => {
+  it('auto-accepts an original bio whose claims quote the source literally (Phase 13 §1.1)', async () => {
     const r = await runBiography(
       h2.db,
       fake(bio('Pelé is a Brazilian footballer who lifted three world titles with his national team.', 'won the FIFA World Cup in 1958, 1962 and 1970')),

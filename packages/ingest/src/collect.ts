@@ -1,4 +1,4 @@
-// Autonomous collection (handoff v3 Fase 13 §1.2): one orchestrator, two modes. Code, network, RAM and the local
+// Autonomous collection (handoff v3 Phase 13 §1.2): one orchestrator, two modes. Code, network, RAM and the local
 // model only: no human click on the happy path (validated AI output is auto-accepted, §1.1).
 //   firstCollect: list → identity (athlete-list) → Wikidata (QID, birth, gender) → profile (Wikidata + Commons)
 //                 → Wikipedia en text + revid → biography (Ollama) → auto-validation → profile.

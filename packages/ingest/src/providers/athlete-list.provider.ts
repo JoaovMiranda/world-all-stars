@@ -1,4 +1,4 @@
-// Provider `athlete-list` (handoff v3 Fase 13 §1.2): identities from a list (CSV, names or Wikipedia links). Each line
+// Provider `athlete-list` (handoff v3 Phase 13 §1.2): identities from a list (CSV, names or Wikipedia links). Each line
 // resolves to its English Wikipedia article (redirects followed); the article title is the stable id, so the
 // writer matches people that already exist and creates the rest. A listed person gets a public profile.
 import { type DiscoveredCompetitor, InformationKind, wikipediaApiUrl, wikipediaTitleFromUrl } from '@was/shared';
