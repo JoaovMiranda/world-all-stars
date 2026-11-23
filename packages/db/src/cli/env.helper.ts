@@ -1,13 +1,7 @@
-import path from 'node:path';
+import { loadRootEnv } from '../client';
 
-import { type DatabaseOptions, findRepoRoot, loadRootEnv } from '../client';
-
+// Side effect on purpose: the legacy db CLIs import this module first so the root .env is loaded before they run.
+// New CLIs extend BaseCli, which loads it explicitly.
 loadRootEnv();
 
-/** DATABASE_URL → Postgres; else PGLITE_DATA_DIR (relative to the repo root) or `.data/pglite`. */
-export const databaseOptionsFromEnv = (env: NodeJS.ProcessEnv = process.env): DatabaseOptions => ({
-  databaseUrl: env.DATABASE_URL || undefined,
-  pgliteDataDir: env.PGLITE_DATA_DIR
-    ? env.PGLITE_DATA_DIR.startsWith('memory://') ? env.PGLITE_DATA_DIR : path.resolve(findRepoRoot(), env.PGLITE_DATA_DIR)
-    : undefined,
-});
+export { databaseOptionsFromEnv } from '../helpers/database-env.helper';

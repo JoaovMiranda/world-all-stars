@@ -1,10 +1,11 @@
-import type { Actor, BaseRepository, Database } from '@was/db';
+import type { BaseRepository, Database } from '@was/db';
 import type { Locale } from '@was/shared';
 
 import type { AuthProvider, AuthUser, SessionContext } from '../auth/auth-provider.type';
 import type { ServerConfig } from '../config/env.config';
-import type { RateLimiter } from '../rate-limit/rate-limiter';
+import type { RequestContext } from '../core/request-context.interface';
 import type { CatalogCache } from '../modules/catalog/catalog.cache';
+import type { RateLimiter } from '../rate-limit/rate-limiter';
 
 /** Everything a handler/service needs, built once in createApp (tests build it with an in-memory PGlite). */
 export interface AppDeps {
@@ -17,16 +18,7 @@ export interface AppDeps {
   rateLimiter: RateLimiter;
 }
 
-/** Per-request context given to every contract handler. */
-export interface RequestContext {
-  deps: AppDeps;
-  session: SessionContext;
-  /** Writer identity for the BaseRepository (user id + name, ip hash, user agent). */
-  actor: Actor;
-  ipHash: string;
-  /** Language of the request (localeMiddleware): messages, labels and catalog content. */
-  locale: Locale;
-}
+export type { RequestContext } from '../core/request-context.interface';
 
 /** Same as RequestContext, with the signed-in user guaranteed (contracts with access reader/admin). */
 export type SignedInContext = RequestContext & { user: AuthUser };
