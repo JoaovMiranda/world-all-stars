@@ -50,3 +50,9 @@ JSON files and `pnpm-lock.yaml`.
 | `pnpm deadcode` (knip) | 1 unused file, 3 unused deps (the new Sentry/Excel deps, used in later phases), 2 unused devDeps, 27 unused exports, 19 unused exported types |
 | `pnpm e2e` | 1 smoke test listed (`playwright test --list`); browsers not downloaded yet |
 | `pnpm load` | k6 not installed on this machine |
+
+## Known issue
+
+Biome's `organizeImports` assist sorts the package barrels (`packages/*/src/index.ts`) as one block and moves their
+section comments (`// Consts`, `// Helpers`, …) to the wrong lines. Do not run `biome check --write` on the barrels
+until this is settled (T0.10: either drop the section comments or disable the assist for `**/src/index.ts`).

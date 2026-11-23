@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { canonicalizeForModeration, cleanText, codePointLength, includesNormalized, normalizeForSearch } from './text-normalize.helper';
+import { canonicalizeForModeration, cleanText, codePointLength, includesNormalized, normalizeForSearch, normalizeName, slugify } from './text-normalize.helper';
 
 describe('text normalization', () => {
   it('removes accents and case for search', () => {
@@ -27,5 +27,13 @@ describe('text normalization', () => {
   it('counts code points (emoji = 1)', () => {
     expect(codePointLength('⚽🏆')).toBe(2);
     expect(codePointLength('abc')).toBe(3);
+  });
+
+  it('builds slugs and name-matching keys', () => {
+    expect(slugify('Pelé Jr.')).toBe('pele-jr');
+    expect(slugify('  --São Paulo FC (1930)-- ')).toBe('sao-paulo-fc-1930');
+    expect(slugify(null)).toBe('');
+    expect(normalizeName("O'Neal,  Shaq")).toBe('o neal shaq');
+    expect(normalizeName('Hakuhō Shō')).toBe('hakuho sho');
   });
 });

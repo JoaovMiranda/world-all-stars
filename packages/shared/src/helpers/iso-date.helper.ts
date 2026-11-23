@@ -3,12 +3,23 @@ import type { MonthDay } from '../schemas/month-day.schema';
 
 const pad2 = (n: number): string => String(n).padStart(2, '0');
 
+/** `YYYY-MM-DD` from calendar parts (month 1–12). */
+export const isoDateFromParts = (year: number, month: number, day: number): IsoDate => `${year}-${pad2(month)}-${pad2(day)}`;
+
+/** `MM-DD` from calendar parts (month 1–12). */
+export const monthDayFromParts = (month: number, day: number): MonthDay => `${pad2(month)}-${pad2(day)}`;
+
 /** Local calendar day of `date` as `YYYY-MM-DD` (no UTC shift). */
-export const toIsoDate = (date: Date): IsoDate =>
-  `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+export const toIsoDate = (date: Date): IsoDate => isoDateFromParts(date.getFullYear(), date.getMonth() + 1, date.getDate());
 
 /** Local day of `date` as `MM-DD`. */
-export const toMonthDay = (date: Date): MonthDay => `${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+export const toMonthDay = (date: Date): MonthDay => monthDayFromParts(date.getMonth() + 1, date.getDate());
+
+/** UTC calendar day of a timestamp as `YYYY-MM-DD`; `null` for a missing date. */
+export const isoDate = (date: Date | null | undefined): IsoDate | null => (date ? date.toISOString().slice(0, 10) : null);
+
+/** Full ISO-8601 UTC timestamp (`toISOString`); `null` for a missing date (replaces local `isoOf` copies). */
+export const isoDateTime = (date: Date | null | undefined): string | null => (date ? date.toISOString() : null);
 
 /** Parses `YYYY-MM-DD` as a local date (midnight). */
 export const fromIsoDate = (iso: IsoDate): Date => {

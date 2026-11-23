@@ -9,7 +9,7 @@ declare class URL {
   readonly username: string;
 }
 declare class URLSearchParams {
-  constructor();
+  constructor(init?: Record<string, string>);
   set(name: string, value: string): void;
   toString(): string;
 }

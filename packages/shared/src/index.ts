@@ -96,6 +96,10 @@ export * from './consts/tier-medal.const';
 export * from './consts/tier-vote.const';
 export * from './consts/validation-messages.const';
 
+// Interfaces
+export * from './interfaces/retry-options.interface';
+export * from './interfaces/wikidata-entity.interface';
+
 // Types
 export * from './types/api-contract.type';
 export * from './types/banned-word.type';
@@ -167,6 +171,8 @@ export * from './helpers/api-access.helper';
 export * from './helpers/api-contract.helper';
 export * from './helpers/athlete-filter.helper';
 export * from './helpers/calendar-event.helper';
+export * from './helpers/chunk.helper';
+export * from './helpers/collection.helper';
 export * from './helpers/comment-thread.helper';
 export * from './helpers/banned-words.helper';
 export * from './helpers/contact-validation.helper';
@@ -176,6 +182,8 @@ export * from './helpers/iso-date.helper';
 export * from './helpers/json-diff.helper';
 export * from './helpers/month-day.helper';
 export * from './helpers/protocol.helper';
+export * from './helpers/retry.helper';
+export * from './helpers/sleep.helper';
 export * from './helpers/source-url.helper';
 export * from './helpers/sports-directory.helper';
 export * from './helpers/suggestion-validation.helper';
@@ -184,6 +192,7 @@ export * from './helpers/text-validation.helper';
 export * from './helpers/tier-rules.helper';
 export * from './helpers/tier-votes.helper';
 export * from './helpers/uuid.helper';
+export * from './helpers/wikimedia-url.helper';
 
 // SEO (doc 12): structured data, sitemap and robots, shared by the SSR (apps/web) and the server (apps/server)
 export * from './seo/json-ld.helper';

@@ -26,5 +26,16 @@ export const canonicalizeForModeration = (text: unknown): string =>
     .replace(/(.)\1+/gu, '$1');
 
 /** True when the (search-normalized) haystack contains the needle ("Pele" matches "Pelé"). */
-export const includesNormalized = (haystack: unknown, needle: unknown): boolean =>
-  normalizeForSearch(haystack).includes(normalizeForSearch(needle));
+export const includesNormalized = (haystack: unknown, needle: unknown): boolean => normalizeForSearch(haystack).includes(normalizeForSearch(needle));
+
+/** URL slug: search form with every run of non-alphanumerics turned into one `-`, no leading/trailing `-` ("Pelé Jr." → "pele-jr"). */
+export const slugify = (text: unknown): string =>
+  normalizeForSearch(text)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+/** Name-matching form: search form with punctuation collapsed to single spaces ("O'Neal,  Shaq" → "o neal shaq"). */
+export const normalizeName = (text: unknown): string =>
+  normalizeForSearch(text)
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
