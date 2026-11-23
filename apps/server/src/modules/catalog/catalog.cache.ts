@@ -1,8 +1,10 @@
 import type { Database } from '@was/db';
 import { DEFAULT_LOCALE, type Locale } from '@was/shared';
 
-import { CATALOG_TABLES, type CatalogRows, loadCatalogRows } from './catalog.repository';
-import { CatalogView } from './catalog.mapper';
+import { CATALOG_TABLES } from './catalog.const';
+import { loadCatalogRows } from './catalog.repository';
+import { CatalogView } from './catalog.view';
+import type { CatalogRows } from './catalog-rows.type';
 
 /**
  * In-memory catalog snapshot (one per process): the rows are loaded once and one view is built per locale (texts

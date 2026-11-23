@@ -21,7 +21,7 @@ await build({
   format: 'esm',
   target: 'node22',
   sourcemap: true,
-  // vite is only imported in dev (WEB_DEV, src/web/vite-dev.ts), from apps/web: never bundled.
+  // vite is only imported in dev (WEB_DEV, src/web/vite-dev.helper.ts), from apps/web: never bundled.
   external: [...external, ...external.map((d) => `${d}/*`), 'vite'],
   banner: { js: "import { createRequire as __cr } from 'node:module'; const require = __cr(import.meta.url);" },
   logLevel: 'info',

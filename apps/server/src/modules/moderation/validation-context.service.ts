@@ -1,6 +1,6 @@
 import { DEFAULT_LOCALE, type Locale, type SuggestionContext, type ValidationContext } from '@was/shared';
 
-import type { AppDeps } from '../../http/app-context.type';
+import type { AppDeps } from '../../http/app-deps.interface';
 import { loadBannedWords, loadSourceRules } from './moderation.repository';
 
 /** GET /api/validation-context: the exact inputs the server validates with, so forms warn with the same rules. */

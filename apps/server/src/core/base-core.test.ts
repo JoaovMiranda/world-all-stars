@@ -3,7 +3,8 @@ import { eq } from 'drizzle-orm';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { HttpError } from '../http/http-error.error';
-import { createTestApp, type TestApp } from '../test/test-app.helper';
+import { createTestApp } from '../test/test-app.helper';
+import type { TestApp } from '../test/test-app.interface';
 import { BaseController } from './base.controller';
 import { BaseMapper } from './base.mapper';
 import { BaseScheduler } from './base.scheduler';

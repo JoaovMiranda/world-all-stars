@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 
 // apps/web has no dev server of its own: apps/server (Hono) serves pages (SSR) and /api on one port.
-// Dev: Vite runs in middleware mode inside the Hono process (apps/server/src/web/vite-dev.ts).
+// Dev: Vite runs in middleware mode inside the Hono process (apps/server/src/web/vite-dev.helper.ts).
 // Build: `vite build` → dist/client (browser assets + .vite/manifest.json) and
 //        `vite build --ssr` → dist/server/entry-server.js (imported by the server in production).
 export default defineConfig(({ command, isSsrBuild }) => ({

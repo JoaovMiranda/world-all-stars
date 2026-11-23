@@ -2,10 +2,17 @@
 import { AdminApi, type ApiContract, ParticipationApi, PublicApi, RankingsApi } from '@was/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { ALL_ROUTES } from '../routes';
-import { HAS_PROTOTYPE, createTestApp, type TestApp } from './test-app.helper';
+import { ALL_ROUTES } from '../routes.const';
+import { HAS_PROTOTYPE } from './test-app.const';
+import { createTestApp } from './test-app.helper';
+import type { TestApp } from './test-app.interface';
 
-const ALL_CONTRACTS: ApiContract[] = [...Object.values(PublicApi), ...Object.values(ParticipationApi), ...Object.values(AdminApi), ...Object.values(RankingsApi)];
+const ALL_CONTRACTS: ApiContract[] = [
+  ...Object.values(PublicApi),
+  ...Object.values(ParticipationApi),
+  ...Object.values(AdminApi),
+  ...Object.values(RankingsApi),
+];
 
 /** Input of each GET for the seeded database. */
 const GET_INPUTS: Record<string, { params?: Record<string, string>; query?: Record<string, string> }> = {
@@ -76,6 +83,12 @@ describe('empty database (no seed)', () => {
       if (contract === PublicApi.athleteProfile || contract === PublicApi.sportPage) expect(res.status).toBe(404);
       else expect(res.status, contract.path).toBe(200);
     }
-    expect((await t.call(ParticipationApi.session, {}, 'reader')).json).toMatchObject({ kind: 'anon', user: null, pendingConsent: null, simulated: true, googleEnabled: false });
+    expect((await t.call(ParticipationApi.session, {}, 'reader')).json).toMatchObject({
+      kind: 'anon',
+      user: null,
+      pendingConsent: null,
+      simulated: true,
+      googleEnabled: false,
+    });
   });
 });

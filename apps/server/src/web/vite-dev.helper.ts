@@ -1,36 +1,15 @@
 import fs from 'node:fs';
-import type { IncomingMessage, Server, ServerResponse } from 'node:http';
+import type { Server } from 'node:http';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { CLIENT_ENTRY, type DocumentAssets, type WebRenderModule } from './web-assets.helper';
-
-/** The part of Vite's ViteDevServer used here (vite is a dependency of apps/web, resolved from there). */
-interface ViteDevServer {
-  middlewares: (req: IncomingMessage, res: ServerResponse, next: (error?: unknown) => void) => void;
-  ssrLoadModule(url: string): Promise<Record<string, unknown>>;
-  ssrFixStacktrace(error: Error): void;
-  transformIndexHtml(url: string, html: string): Promise<string>;
-  environments: { ssr: { moduleGraph: { idToModuleMap: Map<string, { id: string | null; url: string }> } } };
-  close(): Promise<void>;
-}
-interface ViteModule {
-  createServer(config: Record<string, unknown>): Promise<ViteDevServer>;
-}
-
-export interface ViteDev {
-  /** Connect middlewares: /@vite/client, /src/*, /@fs, public files, HMR. Calls `next` for everything else. */
-  middlewares: ViteDevServer['middlewares'];
-  loadRenderer(): Promise<WebRenderModule>;
-  assets(url: string): Promise<DocumentAssets>;
-  fixStacktrace(error: unknown): void;
-  close(): Promise<void>;
-}
-
-const ENTRY_SERVER = '/src/app/entry-server.tsx';
-/** Global stylesheet: imported by entry-client only, so not in the SSR graph. */
-const GLOBAL_CSS = '/src/app/styles.css';
+import type { DocumentAssets } from './document-assets.interface';
+import { ENTRY_SERVER, GLOBAL_CSS } from './vite-dev.const';
+import type { ViteDev } from './vite-dev.interface';
+import type { ViteModule } from './vite-module.interface';
+import { CLIENT_ENTRY } from './web-assets.const';
+import type { WebRenderModule } from './web-render-module.interface';
 
 /** Script tags Vite injects in an HTML document (vite client + React Refresh preamble), as router manifest scripts. */
 const scriptsOf = (html: string): DocumentAssets['scripts'] =>
@@ -72,9 +51,7 @@ export const createViteDev = async ({ webRoot, httpServer }: { webRoot: string; 
     loadRenderer: load,
     async assets(url) {
       const html = await vite.transformIndexHtml(url, '<!doctype html><html><head></head><body></body></html>');
-      const css = [...vite.environments.ssr.moduleGraph.idToModuleMap.values()]
-        .filter((m) => m.id && /\.css$/.test(m.id))
-        .map((m) => `${m.url}?direct`);
+      const css = [...vite.environments.ssr.moduleGraph.idToModuleMap.values()].filter((m) => m.id && /\.css$/.test(m.id)).map((m) => `${m.url}?direct`);
       css.unshift(`${GLOBAL_CSS}?direct`);
       return { scripts: [...scriptsOf(html), { attrs: { type: 'module', src: `/${CLIENT_ENTRY}` } }], css, preloads: [] };
     },

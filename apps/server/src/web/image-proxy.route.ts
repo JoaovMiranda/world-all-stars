@@ -1,10 +1,16 @@
 import { createHash } from 'node:crypto';
 
 import { commonsFileRef, commonsThumbUrl, IMAGE_PROXY_PREFIX, isWikimediaStep } from '@was/shared';
-import type { Context, Hono } from 'hono';
-
-import type { AppDeps, HonoEnv } from '../http/app-context.type';
+import type { Hono } from 'hono';
+import type { HonoEnv } from '../http/app-context.type';
+import type { AppDeps } from '../http/app-deps.interface';
 import { clientIp, hashIp } from '../middlewares/session.middleware';
+import type { CachedImage } from './cached-image.type';
+import { ImageLru } from './image-lru.cache';
+import { MAX_IMAGE_BYTES, MISS_TTL_MS } from './image-proxy.const';
+import { imageResponse } from './image-proxy.helper';
+import type { ImageProxyOptions } from './image-proxy-options.interface';
+import { UpstreamMissing } from './upstream-missing.error';
 
 /**
  * Same-origin proxy of Wikimedia Commons thumbnails: GET /img/wm/<project>/<a>/<ab>/<file>/<width>.
@@ -17,71 +23,6 @@ import { clientIp, hashIp } from '../middlewares/session.middleware';
  * of the pre-rendered widths are fetched, with a timeout, a size cap and an image content type. Misses are rate
  * limited per IP; hits come from an in-process LRU (bounded by bytes), concurrent misses share one upstream fetch.
  */
-
-export interface ImageProxyOptions {
-  /** LRU budget in bytes (0 = no in-process cache: every request goes upstream). */
-  cacheBytes: number;
-  timeoutMs: number;
-  /** Wikimedia's User-Agent policy asks for an identifiable client. */
-  userAgent: string;
-  /** Replaced in tests. */
-  fetch?: typeof fetch;
-}
-
-interface CachedImage {
-  body: ArrayBuffer;
-  type: string;
-  etag: string;
-}
-
-const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
-/** Thumbnail URLs never change content in practice; a month in the browser/CDN, revalidated in the background. */
-const CACHE_CONTROL = 'public, max-age=2592000, stale-while-revalidate=604800';
-const MISS_TTL_MS = 10 * 60_000;
-
-/** Byte-bounded LRU (Map keeps insertion order: re-inserting on read makes it most recent). */
-class ImageLru {
-  private readonly items = new Map<string, CachedImage>();
-  private bytes = 0;
-  constructor(private readonly budget: number) {}
-  get(key: string): CachedImage | undefined {
-    const hit = this.items.get(key);
-    if (hit) {
-      this.items.delete(key);
-      this.items.set(key, hit);
-    }
-    return hit;
-  }
-  set(key: string, value: CachedImage): void {
-    if (value.body.byteLength > this.budget) return;
-    this.items.delete(key);
-    this.items.set(key, value);
-    this.bytes += value.body.byteLength;
-    for (const [k, v] of this.items) {
-      if (this.bytes <= this.budget) break;
-      this.items.delete(k);
-      this.bytes -= v.body.byteLength;
-    }
-  }
-}
-
-class UpstreamMissing extends Error {}
-
-const imageResponse = (c: Context<HonoEnv>, image: CachedImage) => {
-  const headers = {
-    'Content-Type': image.type,
-    'Cache-Control': CACHE_CONTROL,
-    ETag: image.etag,
-    'X-Content-Type-Options': 'nosniff',
-    // An image is never a document: nothing in it may run or load anything, even if opened directly.
-    'Content-Security-Policy': "default-src 'none'; sandbox",
-    'Cross-Origin-Resource-Policy': 'same-site',
-  };
-  const inm = c.req.header('if-none-match');
-  if (inm && inm.split(',').some((t) => t.trim().replace(/^W\//, '') === image.etag.replace(/^W\//, ''))) return c.body(null, 304, headers);
-  return c.body(image.body, 200, headers);
-};
-
 export const mountImageProxy = (app: Hono<HonoEnv>, deps: Pick<AppDeps, 'rateLimiter' | 'config'>, options: ImageProxyOptions) => {
   const cache = new ImageLru(options.cacheBytes);
   const misses = new Map<string, number>();

@@ -1,24 +1,10 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
-import { createDatabase, type DatabaseHandle, findRepoRoot, seedDatabase } from '@was/db';
-import { type ApiContract, type SessionKind, buildApiPath, buildQueryString } from '@was/shared';
+import { createDatabase, findRepoRoot, seedDatabase } from '@was/db';
+import { buildApiPath, buildQueryString } from '@was/shared';
 
 import { createApp } from '../app';
-import { SESSION_HEADER } from '../auth/simulated-auth.provider';
+import { SESSION_HEADER } from '../auth/simulated-auth.const';
 import { loadConfig } from '../config/env.config';
-
-export const HAS_PROTOTYPE = fs.existsSync(path.join(findRepoRoot(), 'plan/front-prototype/mock'));
-
-export interface TestApp {
-  handle: DatabaseHandle;
-  app: ReturnType<typeof createApp>['app'];
-  /** The app's dependencies (db, repository with its cache hooks…) for service-level tests. */
-  deps: ReturnType<typeof createApp>['deps'];
-  /** Calls an endpoint BY ITS CONTRACT (same path builder as the web http client). */
-  call(contract: ApiContract, input?: { params?: Record<string, unknown>; query?: Record<string, unknown>; body?: unknown }, as?: SessionKind): Promise<{ status: number; json: any }>;
-  close(): Promise<void>;
-}
+import type { TestApp } from './test-app.interface';
 
 /** In-memory PGlite + migrations (+ the prototype seed when `seed`), the real app, no network. */
 export const createTestApp = async ({ seed = true, rateLimit = false } = {}): Promise<TestApp> => {

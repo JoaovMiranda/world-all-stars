@@ -1,22 +1,29 @@
-import { type BaseRepository, type Database, SYSTEM_ACTOR, authAccounts, authSessions, authVerifications, users } from '@was/db';
-import { API_ERROR_MESSAGES, ApiErrorCode, AUTH_BASE_PATH, AUTH_COOKIE_PREFIX, AuthAuditAction, LOCALE_COOKIE, resolveLocale, textFor, uuidv7 } from '@was/shared';
+import { authAccounts, authSessions, authVerifications, type BaseRepository, type Database, SYSTEM_ACTOR, users } from '@was/db';
+import {
+  API_ERROR_MESSAGES,
+  ApiErrorCode,
+  AUTH_BASE_PATH,
+  AUTH_COOKIE_PREFIX,
+  AuthAuditAction,
+  LOCALE_COOKIE,
+  resolveLocale,
+  textFor,
+  uuidv7,
+} from '@was/shared';
 import { APIError, betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { eq } from 'drizzle-orm';
 
-import type { ServerConfig } from '../config/env.config';
+import type { ServerConfig } from '../config/server-config.type';
 import { hashIp } from '../middlewares/session.middleware';
-import type { RateLimitStore } from '../rate-limit/rate-limit.store';
+import type { RateLimitStore } from '../rate-limit/rate-limit-store.interface';
 import { betterAuthRateLimitStorage } from '../rate-limit/rate-limiter';
 import { promoteAdminEmails } from './admin-bootstrap.helper';
+import type { HookContext } from './hook-context.interface';
 
 /** Path where Better Auth is mounted (app.ts): Google callback = `${BETTER_AUTH_URL}/api/auth/callback/google`. */
 export { AUTH_BASE_PATH };
 
-interface HookContext {
-  headers?: Headers | undefined;
-  request?: Request | undefined;
-}
 const headersOf = (ctx: HookContext | null): Headers | undefined => ctx?.headers ?? ctx?.request?.headers;
 const cookieOf = (headers: Headers | undefined, name: string): string | undefined =>
   headers
@@ -81,7 +88,9 @@ export const createBetterAuth = (db: Database, repo: BaseRepository, config: Ser
           after: async (user) => {
             const [row] = await db.select({ at: users.emailVerifiedAt }).from(users).where(eq(users.id, user.id));
             if (!row || (user.emailVerified ? row.at !== null : row.at === null)) return;
-            await repo.update(users, user.id, { emailVerifiedAt: user.emailVerified ? new Date() : null }, SYSTEM_ACTOR, { summary: 'e-mail verification synced' });
+            await repo.update(users, user.id, { emailVerifiedAt: user.emailVerified ? new Date() : null }, SYSTEM_ACTOR, {
+              summary: 'e-mail verification synced',
+            });
           },
         },
       },
@@ -92,15 +101,19 @@ export const createBetterAuth = (db: Database, repo: BaseRepository, config: Ser
           before: async (session, ctx) => {
             const headers = headersOf(ctx);
             const [account] = await db.select({ bannedAt: users.bannedAt }).from(users).where(eq(users.id, session.userId));
-            if (account?.bannedAt) throw new APIError('FORBIDDEN', { code: ApiErrorCode.Banned, message: textFor(API_ERROR_MESSAGES, localeOf(headers)).banned });
+            if (account?.bannedAt)
+              throw new APIError('FORBIDDEN', { code: ApiErrorCode.Banned, message: textFor(API_ERROR_MESSAGES, localeOf(headers)).banned });
             return { data: { ...session, ipAddress: hashIp(session.ipAddress || clientIp(headers), config.ipHashSalt) } };
           },
           after: async (session) => {
-            await repo.audit({ userId: session.userId, via: 'user', ipHash: session.ipAddress ?? null, userAgent: session.userAgent ?? null }, AuthAuditAction.SignedIn, { type: 'users', id: session.userId });
+            await repo.audit(
+              { userId: session.userId, via: 'user', ipHash: session.ipAddress ?? null, userAgent: session.userAgent ?? null },
+              AuthAuditAction.SignedIn,
+              { type: 'users', id: session.userId },
+            );
           },
         },
       },
     },
   });
 };
-export type BetterAuthInstance = ReturnType<typeof createBetterAuth>;

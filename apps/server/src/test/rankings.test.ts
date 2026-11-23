@@ -10,7 +10,9 @@ import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { approveSnapshot, calculateRankings } from '../modules/rankings/rankings.service';
-import { HAS_PROTOTYPE, createTestApp, type TestApp } from './test-app.helper';
+import { HAS_PROTOTYPE } from './test-app.const';
+import { createTestApp } from './test-app.helper';
+import type { TestApp } from './test-app.interface';
 
 const hasCache = fs.existsSync(path.join(findRepoRoot(), 'data/seeds/.cache/fjelstul/squads.csv'));
 const admin = (id: string) => ({ userId: id, name: `admin ${id.slice(-1)}`, via: 'user' });
@@ -45,7 +47,10 @@ describe.skipIf(!HAS_PROTOTYPE || !hasCache)('rankings: calculate → approve tw
 
     const list = (await (await t.app.request(RankingsApi.list.path)).json()) as { items: { id: string }[] };
     expect(list.items.map((i) => i.id)).toEqual([ids[0]]);
-    const detail = (await (await t.app.request(buildApiPath(RankingsApi.detail.path, { id: ids[0]! }))).json()) as { entries: { rank: number; competitor: { hasProfile: boolean } }[]; total: number };
+    const detail = (await (await t.app.request(buildApiPath(RankingsApi.detail.path, { id: ids[0]! }))).json()) as {
+      entries: { rank: number; competitor: { hasProfile: boolean } }[];
+      total: number;
+    };
     expect(detail.total).toBeGreaterThan(20);
     expect(RankingsApi.detail.response.safeParse(detail).success).toBe(true);
   });

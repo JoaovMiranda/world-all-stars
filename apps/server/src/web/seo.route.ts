@@ -1,7 +1,7 @@
 import { buildRobotsTxt, buildSitemapIndexXml, buildSitemapXml, PUBLIC_STATIC_PATHS, SITEMAP_PATHS, type SitemapUrl } from '@was/shared';
 import type { Context, Hono } from 'hono';
-
-import type { AppDeps, HonoEnv } from '../http/app-context.type';
+import type { HonoEnv } from '../http/app-context.type';
+import type { AppDeps } from '../http/app-deps.interface';
 
 /** Crawlers may cache these for an hour (CDN too); they are rebuilt from the in-memory catalog. */
 const CACHE = 'public, max-age=3600';
@@ -29,13 +29,33 @@ export const mountSeo = (app: Hono<HonoEnv>, deps: AppDeps): void => {
       ]),
     );
   });
-  app.get(SITEMAP_PATHS.static, (c) => xml(c, buildSitemapXml(origin, PUBLIC_STATIC_PATHS.map((path): SitemapUrl => ({ path })))));
+  app.get(SITEMAP_PATHS.static, (c) =>
+    xml(
+      c,
+      buildSitemapXml(
+        origin,
+        PUBLIC_STATIC_PATHS.map((path): SitemapUrl => ({ path })),
+      ),
+    ),
+  );
   app.get(SITEMAP_PATHS.athletes, async (c) => {
     const { athletes } = (await deps.catalog.get()).sitemapEntries();
-    return xml(c, buildSitemapXml(origin, athletes.map((a) => ({ path: `/athletes/${a.slug}`, lastmod: day(a.updatedAt) }))));
+    return xml(
+      c,
+      buildSitemapXml(
+        origin,
+        athletes.map((a) => ({ path: `/athletes/${a.slug}`, lastmod: day(a.updatedAt) })),
+      ),
+    );
   });
   app.get(SITEMAP_PATHS.sports, async (c) => {
     const { sports } = (await deps.catalog.get()).sitemapEntries();
-    return xml(c, buildSitemapXml(origin, sports.map((s) => ({ path: `/sports/${s.slug}`, lastmod: day(s.updatedAt) }))));
+    return xml(
+      c,
+      buildSitemapXml(
+        origin,
+        sports.map((s) => ({ path: `/sports/${s.slug}`, lastmod: day(s.updatedAt) })),
+      ),
+    );
   });
 };

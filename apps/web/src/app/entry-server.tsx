@@ -19,7 +19,7 @@ export interface DocumentAssets {
   routeChunks?: Record<string, string[]>;
 }
 
-/** Contract with apps/server (src/web/web-handler.ts): one call per page request. */
+/** Contract with apps/server (src/web/web.route.ts): one call per page request. */
 export interface RenderOptions {
   request: Request;
   /** Per-request CSP nonce (the server sends the matching Content-Security-Policy header). */

@@ -8,12 +8,15 @@ import { createDatabase, findRepoRoot, loadRootEnv } from '@was/db';
 
 import { createApp } from './app';
 import { promoteAdminEmails } from './auth/admin-bootstrap.helper';
-import { loadConfig, type ServerConfig } from './config/env.config';
+import { loadConfig } from './config/env.config';
+import type { ServerConfig } from './config/server-config.type';
 import { startCleanupScheduler } from './maintenance/cleanup.scheduler';
 import { startCollectScheduler } from './modules/admin/ingestion-runner';
-import { readProdAssets, type WebRenderModule } from './web/web-assets.helper';
-import type { WebRuntime } from './web/web-handler';
-import { createViteDev, type ViteDev } from './web/vite-dev';
+import { createViteDev } from './web/vite-dev.helper';
+import type { ViteDev } from './web/vite-dev.interface';
+import { readProdAssets } from './web/web-assets.helper';
+import type { WebRenderModule } from './web/web-render-module.interface';
+import type { WebRuntime } from './web/web-runtime.interface';
 
 // Root .env (Google + Better Auth secrets, ADMIN_EMAILS…), never overriding the shell. See .env.example.
 const envLoaded = loadRootEnv();
@@ -75,7 +78,9 @@ if (promoted) console.log(`[auth] ADMIN_EMAILS: ${promoted} account(s) promoted 
 
 httpServer.listen(config.port, config.host, () => {
   const mode = config.webDev ? 'pages: SSR + Vite HMR' : web ? 'pages: SSR (build)' : 'API only';
-  console.log(`[server] World All Stars on http://${config.host === '127.0.0.1' ? 'localhost' : config.host}:${config.port} (${mode}; db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name}, rate limit: ${config.rateLimitStore}${config.google ? ' (Google on)' : ''}${envLoaded ? ', .env loaded' : ''})`);
+  console.log(
+    `[server] World All Stars on http://${config.host === '127.0.0.1' ? 'localhost' : config.host}:${config.port} (${mode}; db: ${handle.driver} ${handle.location}, auth: ${deps.auth.name}, rate limit: ${config.rateLimitStore}${config.google ? ' (Google on)' : ''}${envLoaded ? ', .env loaded' : ''})`,
+  );
 });
 
 const shutdown = async () => {

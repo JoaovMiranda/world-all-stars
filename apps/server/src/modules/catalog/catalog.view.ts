@@ -3,6 +3,7 @@
 import {
   type Achievement,
   AchievementKind,
+  type AnalysisDimensionsResponse,
   type AthleteFilters,
   type AthleteProfile,
   type AthleteRef,
@@ -11,98 +12,40 @@ import {
   CalendarEventType,
   type CompetitionEvent,
   type CountryRef,
+  DEFAULT_LOCALE,
   type GlobeCountry,
   type GovernanceModelInfo,
   type HallOfGreatsEntry,
   type IsoDate,
+  type Locale,
   type MediaLink,
+  matchesAthleteFilters,
+  normalizeAnalysis,
   type Observance,
   type OnThisDayResponse,
+  ORG_LABELS_MESSAGES,
   type Organization,
   type OrgTreeNode,
   type SourceOverview,
   type SourceRef,
   type SportAssociation,
+  type SportCard,
   type SportGroup,
   type SportInfo,
   type SportPage,
-  type SportCard,
   type SportProgramme,
   type SportRef,
   Tier,
-  WINNING_ACHIEVEMENT_TYPES,
-  matchesAthleteFilters,
-  normalizeAnalysis,
-  type AnalysisDimensionsResponse,
-  CONTENT_SOURCE_LOCALE,
-  DEFAULT_LOCALE,
-  isLocale,
-  type Locale,
-  ORG_LABELS_MESSAGES,
   textFor,
 } from '@was/shared';
-
-import type { CatalogRows } from './catalog.repository';
-
-/** Content fallback after the requested locale: the data's source language (English), then the interface default. */
-const FALLBACK_CHAIN: readonly Locale[] = [CONTENT_SOURCE_LOCALE, DEFAULT_LOCALE];
-/** Placeholder organizer of the prototype: never shown as an association. */
-const UNKNOWN_ORGANIZER_SLUG = 'organizador-nao-informado';
-const WINNING = new Set<string>(WINNING_ACHIEVEMENT_TYPES);
-/** Flag shown for a historical entity without an emoji (its Commons flag comes via flag_media_link_id later). */
-const HISTORICAL_FLAG = '🏳️';
+import { isoOf } from '../../helpers/date.helper';
+import { FALLBACK_CHAIN, HISTORICAL_FLAG, UNKNOWN_ORGANIZER_SLUG, WINNING } from './catalog.const';
+import { byId, groupBy, memo } from './catalog-collection.helper';
+import { pad2 } from './catalog-date.helper';
+import type { CatalogRows } from './catalog-rows.type';
+import { contentLocaleOf, translator } from './catalog-translation.helper';
 
 type R = CatalogRows;
-type Translated = { locale: string } & Record<string, unknown>;
-
-const pad2 = (n: number) => String(n).padStart(2, '0');
-export const isoOf = (d: Date | null | undefined): string | null => (d ? d.toISOString() : null);
-const byId = <X extends { id: string }>(rows: X[]) => new Map(rows.map((r) => [r.id, r]));
-const groupBy = <X, K>(rows: X[], key: (r: X) => K) => {
-  const out = new Map<K, X[]>();
-  for (const r of rows) {
-    const k = key(r);
-    const list = out.get(k);
-    if (list) list.push(r);
-    else out.set(k, [r]);
-  }
-  return out;
-};
-const memo = <K, V>(fn: (k: K) => V) => {
-  const cache = new Map<K, V>();
-  return (k: K): V => {
-    if (!cache.has(k)) cache.set(k, fn(k));
-    return cache.get(k) as V;
-  };
-};
-
-/**
- * Translation lookup of one translation table: requested locale, then pt-BR, then en, then any locale. `localeOf`
- * tells which language a record's text actually came in (the `contentLocale` of detail responses).
- */
-const translator = <X extends Translated>(rows: X[], parentKey: keyof X, locale: Locale) => {
-  const index = groupBy(rows, (r) => r[parentKey] as string);
-  const order = [locale, ...FALLBACK_CHAIN.filter((l) => l !== locale)];
-  const pick = (id: string | null | undefined): X | undefined => {
-    if (!id) return undefined;
-    const list = index.get(id) ?? [];
-    for (const l of order) {
-      const hit = list.find((r) => r.locale === l);
-      if (hit) return hit;
-    }
-    return list[0];
-  };
-  const text = (id: string | null | undefined, field: keyof X): string | null => (pick(id)?.[field] as string | null | undefined) ?? null;
-  return Object.assign(text, {
-    localeOf: (id: string | null | undefined): Locale | null => {
-      const hit = pick(id)?.locale;
-      return isLocale(hit) ? hit : null;
-    },
-  });
-};
-
-/** Language the content of a response came in: the first record not in the requested locale wins (else the requested one). */
-const contentLocaleOf = (requested: Locale, found: readonly (Locale | null)[]): Locale => found.find((l) => l && l !== requested) ?? requested;
 
 /** Read model over one catalog snapshot (built once per snapshot by the CatalogCache, memoized inside). */
 export class CatalogView {
@@ -247,7 +190,15 @@ export class CatalogView {
   // ── achievements, legacy, summaries ──
   private achievementView(x: R['achievements'][number]): Achievement {
     const type = this.maps.types.get(x.achievementTypeId)!;
-    const base = { id: x.id, type: type.slug as Achievement['type'], weight: type.rankWeight, year: x.year, date: this.cdIso(x.calendarDayId, x.year), rank: x.rank, source: this.source(x.sourceLinkId) };
+    const base = {
+      id: x.id,
+      type: type.slug as Achievement['type'],
+      weight: type.rankWeight,
+      year: x.year,
+      date: this.cdIso(x.calendarDayId, x.year),
+      rank: x.rank,
+      source: this.source(x.sourceLinkId),
+    };
     if (x.competitionEditionId) {
       const ed = this.maps.editions.get(x.competitionEditionId)!;
       const c = this.maps.competitions.get(ed.competitionId)!;
@@ -378,13 +329,28 @@ export class CatalogView {
         .filter((x) => x.athleteId === a.id)
         .map((x) => {
           const t = this.maps.teams.get(x.teamId)!;
-          return { name: t.name, kind: t.kind, country: this.country(t.countryId), from: x.fromYear, to: x.toYear, fromDate: x.fromDate, toDate: x.toDate, role: x.role };
+          return {
+            name: t.name,
+            kind: t.kind,
+            country: this.country(t.countryId),
+            from: x.fromYear,
+            to: x.toYear,
+            fromDate: x.fromDate,
+            toDate: x.toDate,
+            role: x.role,
+          };
         })
         .sort((p, q) => (p.from ?? 0) - (q.from ?? 0)),
       stats: stats ? { ...stats.stats, schema: stats.statsSchemaKey } : null,
       reigns: r.reigns
         .filter((x) => x.athleteId === a.id)
-        .map((x) => ({ competition: this.competitionName(x.competitionId), won: x.wonDate, lost: x.lostDate, endReason: x.endReason, source: this.source(x.sourceLinkId) })),
+        .map((x) => ({
+          competition: this.competitionName(x.competitionId),
+          won: x.wonDate,
+          lost: x.lostDate,
+          endReason: x.endReason,
+          source: this.source(x.sourceLinkId),
+        })),
       milestones: r.milestones
         .filter((x) => x.athleteId === a.id)
         .map((x) => ({ date: x.date, kind: x.kind, title: this.t.milestone(x.id, 'title') ?? x.kind, source: this.source(x.sourceLinkId) }))
@@ -555,7 +521,11 @@ export class CatalogView {
         subgroups: this.rows.subgroups
           .filter((s) => s.groupId === g.id)
           .sort((a, b) => a.sortOrder - b.sortOrder)
-          .map((s) => ({ slug: s.slug, name: this.t.subgroup(s.id, 'name') ?? s.slug, sports: this.rows.sports.filter((x) => x.subgroupId === s.id).map((x) => this.sportCard(x.id)) })),
+          .map((s) => ({
+            slug: s.slug,
+            name: this.t.subgroup(s.id, 'name') ?? s.slug,
+            sports: this.rows.sports.filter((x) => x.subgroupId === s.id).map((x) => this.sportCard(x.id)),
+          })),
       }));
   }
   sportCards(): SportCard[] {
@@ -578,7 +548,10 @@ export class CatalogView {
     const cats = this.rows.categories.filter((c) => c.sportId === s.id);
     const gov = s.governanceModelId ? this.maps.governance.get(s.governanceModelId) : undefined;
     const report = this.rows.collectionReports.find((r) => r.sportId === s.id);
-    const prizeFormIds = [...this.rows.competitions.filter((c) => c.sportId === s.id).map((c) => c.prizeFormId), ...this.rows.awards.filter((a) => a.sportId === s.id).map((a) => a.prizeFormId)];
+    const prizeFormIds = [
+      ...this.rows.competitions.filter((c) => c.sportId === s.id).map((c) => c.prizeFormId),
+      ...this.rows.awards.filter((a) => a.sportId === s.id).map((a) => a.prizeFormId),
+    ];
     return {
       ...info,
       contentLocale: contentLocaleOf(this.locale, [this.t.sport.localeOf(s.id)]),
@@ -615,7 +588,8 @@ export class CatalogView {
             periodicity: c.periodicity,
             org: this.maps.orgs.get(c.organizationId)?.name ?? '?',
             editions: eds.length,
-            winnersInDb: new Set(this.rows.achievements.filter((x) => x.competitionEditionId && edIds.has(x.competitionEditionId)).map((x) => x.athleteId)).size,
+            winnersInDb: new Set(this.rows.achievements.filter((x) => x.competitionEditionId && edIds.has(x.competitionEditionId)).map((x) => x.athleteId))
+              .size,
           };
         })
         .sort((a, b) => a.levelOrder - b.levelOrder),
@@ -634,7 +608,16 @@ export class CatalogView {
         .sort((a, b) => a.sortOrder - b.sortOrder)
         .flatMap((c) => {
           const t = this.sectionText(c.id);
-          return t ? [{ key: c.sectionKey, title: t.title, body: t.body, sources: this.rows.sourceLinks.filter((l) => l.entityType === 'sport_content_sections' && l.entityId === c.id).map((l) => l.url) }] : [];
+          return t
+            ? [
+                {
+                  key: c.sectionKey,
+                  title: t.title,
+                  body: t.body,
+                  sources: this.rows.sourceLinks.filter((l) => l.entityType === 'sport_content_sections' && l.entityId === c.id).map((l) => l.url),
+                },
+              ]
+            : [];
         }),
     };
   }
@@ -747,7 +730,15 @@ export class CatalogView {
           })
           .sort((a, b) => b.titles - a.titles);
         const ref = this.country(c.id)!;
-        return { isoNumeric: c.isoNumeric!, iso2: ref.iso2, name: ref.name, flag: ref.flag, totalTitles: list.reduce((s, x) => s + x.titles, 0), sports: list, athletes };
+        return {
+          isoNumeric: c.isoNumeric!,
+          iso2: ref.iso2,
+          name: ref.name,
+          flag: ref.flag,
+          totalTitles: list.reduce((s, x) => s + x.titles, 0),
+          sports: list,
+          athletes,
+        };
       })
       .sort((a, b) => b.totalTitles - a.totalTitles);
   }
@@ -775,7 +766,14 @@ export class CatalogView {
           status: l.lastStatus,
           athlete: l.entityType === 'athletes' ? athleteName(l.entityId) : null,
         })),
-        athletes: [...new Set(links.filter((l) => l.entityType === 'athletes').map((l) => athleteName(l.entityId)).filter((n): n is string => !!n))],
+        athletes: [
+          ...new Set(
+            links
+              .filter((l) => l.entityType === 'athletes')
+              .map((l) => athleteName(l.entityId))
+              .filter((n): n is string => !!n),
+          ),
+        ],
         fields: this.rows.provenance.filter((p) => p.sourceLinkId && linkIds.has(p.sourceLinkId)).length,
         achievements: this.rows.achievements.filter((x) => x.sourceLinkId && linkIds.has(x.sourceLinkId)).length,
         lastRun: lastRun

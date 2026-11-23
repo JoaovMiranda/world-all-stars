@@ -2,7 +2,7 @@ import type { Actor } from '@was/db';
 import type { Locale } from '@was/shared';
 
 import type { SessionContext } from '../auth/auth-provider.type';
-import type { AppDeps } from '../http/app-context.type';
+import type { AppDeps } from '../http/app-deps.interface';
 
 /** Per-request context given to every contract handler, controller and service. */
 export interface RequestContext {

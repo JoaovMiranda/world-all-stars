@@ -1,21 +1,22 @@
-import { BaseRepository, type Database } from '@was/db';
+import { httpInstrumentationMiddleware } from '@hono/otel';
+import { BaseRepository } from '@was/db';
 import { ApiErrorCode, LOCALE_HEADER } from '@was/shared';
+import { sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
-import { httpInstrumentationMiddleware } from '@hono/otel';
 import { timing } from 'hono/timing';
-import { sql } from 'drizzle-orm';
 
-import type { AuthProvider } from './auth/auth-provider.type';
 import { AUTH_BASE_PATH, createBetterAuth } from './auth/better-auth.config';
-import { createBetterAuthProvider, type SessionLookup } from './auth/better-auth.provider';
+import { createBetterAuthProvider } from './auth/better-auth.provider';
 import { createCompositeAuthProvider } from './auth/composite.provider';
-import { createSimulatedAuthProvider, SESSION_HEADER } from './auth/simulated-auth.provider';
-import type { ServerConfig } from './config/env.config';
-import type { AppDeps, HonoEnv } from './http/app-context.type';
+import { SESSION_HEADER } from './auth/simulated-auth.const';
+import { createSimulatedAuthProvider } from './auth/simulated-auth.provider';
+import type { CreateAppOptions } from './create-app-options.interface';
+import type { HonoEnv } from './http/app-context.type';
+import type { AppDeps } from './http/app-deps.interface';
 import { registerRoutes } from './http/contract-route.helper';
-import { httpError } from './http/http-error.error';
+import { httpError } from './http/http-error.helper';
 import { compress } from './middlewares/compress.middleware';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 import { localeMiddleware } from './middlewares/locale.middleware';
@@ -25,25 +26,13 @@ import { sessionMiddleware } from './middlewares/session.middleware';
 import { CatalogCache } from './modules/catalog/catalog.cache';
 import { createRateLimitStore } from './rate-limit/rate-limit.store';
 import { createRateLimiter } from './rate-limit/rate-limiter';
-import { ALL_ROUTES } from './routes';
-import { affectsPublicPages, HtmlCache } from './web/html-cache';
+import { ALL_ROUTES } from './routes.const';
+import { HtmlCache } from './web/html.cache';
+import { affectsPublicPages } from './web/html-cache.helper';
 import { mountImageProxy } from './web/image-proxy.route';
 import { mountSeo } from './web/seo.route';
-import { mountSlugRedirects } from './web/slug-redirect';
-import { mountWeb, type WebRuntime } from './web/web-handler';
-
-export interface CreateAppOptions {
-  db: Database;
-  config: ServerConfig;
-  /** Replaces the whole provider chain (tests). Default: Better Auth + simulated when AUTH_SIMULATED. */
-  auth?: AuthProvider;
-  /** Replaces Better Auth's session lookup (tests: a stubbed getSession). */
-  sessionLookup?: SessionLookup;
-  /** Server-rendered pages (apps/web). Absent = API only (tests, missing build). */
-  web?: WebRuntime;
-  /** Upstream fetch of the image proxy (tests: a stub instead of Wikimedia). */
-  imageFetch?: typeof fetch;
-}
+import { mountSlugRedirects } from './web/slug-redirect.route';
+import { mountWeb } from './web/web.route';
 
 /** Builds the Hono app (no listening): main.ts serves it, tests call `app.request()`. */
 export const createApp = ({ db, config, auth, sessionLookup, web, imageFetch }: CreateAppOptions) => {
@@ -74,7 +63,11 @@ export const createApp = ({ db, config, auth, sessionLookup, web, imageFetch }: 
     config,
     rateLimiter: createRateLimiter(rateLimitStore, config.rateLimitEnabled),
   };
-  const dbPing = () => db.execute(sql`select 1`).then(() => true, () => false);
+  const dbPing = () =>
+    db.execute(sql`select 1`).then(
+      () => true,
+      () => false,
+    );
   const app = new Hono<HonoEnv>();
   app.onError(errorHandler);
   app.notFound(notFoundHandler);
@@ -85,13 +78,29 @@ export const createApp = ({ db, config, auth, sessionLookup, web, imageFetch }: 
   app.use('*', compress());
   // Server-Timing (total + ssr on pages): the server's share of every response, visible in DevTools and to RUM tools.
   app.use('*', timing({ crossOrigin: false, totalDescription: 'server' }));
-  // CSP: /api never loads anything (default-src 'none'); pages get a per-request nonce policy (web-handler).
+  // CSP: /api never loads anything (default-src 'none'); pages get a per-request nonce policy (web.route).
   app.use('/api/*', apiSecureHeaders());
   // Language of every API answer (messages, labels, catalog content): before CORS/session so errors use it too.
   app.use('/api/*', localeMiddleware());
-  app.use('/api/*', cors({ origin: config.corsOrigins, credentials: true, allowHeaders: ['content-type', SESSION_HEADER, LOCALE_HEADER], allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] }));
+  app.use(
+    '/api/*',
+    cors({
+      origin: config.corsOrigins,
+      credentials: true,
+      allowHeaders: ['content-type', SESSION_HEADER, LOCALE_HEADER],
+      allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    }),
+  );
   // Bodies above the limit are refused while streaming in (413), before any JSON parsing or database work.
-  app.use('/api/*', bodyLimit({ maxSize: config.bodyLimitBytes, onError: () => { throw httpError(413, ApiErrorCode.PayloadTooLarge, 'payloadTooLarge'); } }));
+  app.use(
+    '/api/*',
+    bodyLimit({
+      maxSize: config.bodyLimitBytes,
+      onError: () => {
+        throw httpError(413, ApiErrorCode.PayloadTooLarge, 'payloadTooLarge');
+      },
+    }),
+  );
   // Liveness + database (load balancer / Docker HEALTHCHECK): 503 when the database does not answer within 2 s.
   app.get('/api/health', async (c) => {
     const db = await Promise.race([dbPing(), new Promise<false>((resolve) => setTimeout(() => resolve(false), 2_000).unref())]);

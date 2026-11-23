@@ -1,8 +1,7 @@
 import { AdminApi, adminPendingCounts } from '@was/shared';
 
-import type { RequestContext } from '../../http/app-context.type';
+import type { RequestContext } from '../../core/request-context.interface';
 import { defineRoute } from '../../http/contract-route.helper';
-import { decideIdentity, listIdentities } from './admin-identity.service';
 import { addCollectionLinks, listAdminSources, listIngestion, runIngestion, updateSource } from './admin-collection.service';
 import {
   addBannedWord,
@@ -17,15 +16,32 @@ import {
   updatePrivacy,
   updateUser,
 } from './admin-community.service';
+import { decideIdentity, listIdentities } from './admin-identity.service';
 import { listDossiers, listProposals, listTierSignals, reviewDossier, reviewProposal } from './admin-review.service';
 
 /** Painel: the same queues as each section, counted by the shared rule (adminPendingCounts). */
 const summary = async (ctx: RequestContext) => {
   const [proposals, signals, ingestion, sources, comments, inbox, dossiers, privacy] = await Promise.all([
-    listProposals(ctx), listTierSignals(ctx), listIngestion(ctx), listAdminSources(ctx), listAdminComments(ctx), listInbox(ctx), listDossiers(ctx), listPrivacy(ctx),
+    listProposals(ctx),
+    listTierSignals(ctx),
+    listIngestion(ctx),
+    listAdminSources(ctx),
+    listAdminComments(ctx),
+    listInbox(ctx),
+    listDossiers(ctx),
+    listPrivacy(ctx),
   ]);
   return {
-    pending: adminPendingCounts({ proposals: proposals.items, signals: signals.items, runs: ingestion.runs, sources, comments: comments.items, inbox, dossiers: dossiers.items, privacy: privacy.items }),
+    pending: adminPendingCounts({
+      proposals: proposals.items,
+      signals: signals.items,
+      runs: ingestion.runs,
+      sources,
+      comments: comments.items,
+      inbox,
+      dossiers: dossiers.items,
+      privacy: privacy.items,
+    }),
   };
 };
 

@@ -1,14 +1,10 @@
-import { ApiErrorCode, RATE_LIMITS, type RateLimitKey } from '@was/shared';
+import { ApiErrorCode, RATE_LIMITS } from '@was/shared';
 import type { BetterAuthOptions } from 'better-auth';
 
-import { httpError } from '../http/http-error.error';
+import { httpError } from '../http/http-error.helper';
 import { hashIp } from '../middlewares/session.middleware';
-import type { RateLimitStore } from './rate-limit.store';
-
-export interface RateLimiter {
-  /** Counts a hit of `subject` (user id or ip hash) in the bucket; throws 429 over the limit. */
-  hit(key: RateLimitKey, subject: string): Promise<void>;
-}
+import type { RateLimitStore } from './rate-limit-store.interface';
+import type { RateLimiter } from './rate-limiter.interface';
 
 /** API limits (RATE_LIMITS of @was/shared, per route) on top of a store (memory or the shared database table). */
 export const createRateLimiter = (store: RateLimitStore, enabled: boolean, now: () => Date = () => new Date()): RateLimiter => ({

@@ -1,11 +1,10 @@
 import type { Database } from '@was/db';
-import { APP_COOKIE, DEMO_SESSION_EMAILS, HTTP_HEADER, SESSION_KIND_VALUES, SessionKind } from '@was/shared';
+import { DEMO_SESSION_EMAILS, SESSION_KIND_VALUES, SessionKind } from '@was/shared';
 
 import type { AuthProvider } from './auth-provider.type';
-import { ANON_SESSION, accountSession, loadAuthUser } from './auth-user.helper';
-
-export const SESSION_HEADER = HTTP_HEADER.session;
-export const SESSION_COOKIE = APP_COOKIE.session;
+import { ANON_SESSION } from './auth-user.const';
+import { accountSession, loadAuthUser } from './auth-user.helper';
+import { SESSION_COOKIE, SESSION_HEADER } from './simulated-auth.const';
 
 const isKind = (v: string | undefined): v is SessionKind => !!v && SESSION_KIND_VALUES.includes(v as SessionKind);
 

@@ -1,19 +1,19 @@
-import { athleteTierHistory, athletes, tierVotes, users } from '@was/db';
+import { athletes, athleteTierHistory, tierVotes, users } from '@was/db';
 import {
   AdminAuditAction,
   type CastTierVoteResponse,
+  officialTierChangeError,
   type SetOfficialTierRequest,
   type Tier,
   type TierVotesResponse,
-  officialTierChangeError,
   tierVoteCounts,
   toIsoDate,
 } from '@was/shared';
 
 import type { AuthUser } from '../../auth/auth-provider.type';
-import type { RequestContext } from '../../http/app-context.type';
-import { notFound, unprocessable } from '../../http/http-error.error';
-import type { CatalogView } from '../catalog/catalog.mapper';
+import type { RequestContext } from '../../core/request-context.interface';
+import { notFound, unprocessable } from '../../http/http-error.helper';
+import type { CatalogView } from '../catalog/catalog.view';
 import { findVote, votesOfAthlete } from './tier-votes.repository';
 
 const athleteOrThrow = (view: CatalogView, slug: string) => {
@@ -28,7 +28,12 @@ export const getTierVotes = async ({ deps, locale }: RequestContext, user: AuthU
   const view = await deps.catalog.get(locale);
   const a = athleteOrThrow(view, slug);
   const votes = await votesOfAthlete(deps.db, a.id);
-  return { counts: tierVoteCounts(votes.map((v) => v.tier)), total: votes.length, official: view.tierOf(a.championTierId), myVote: votes.find((v) => v.userId === user.id)?.tier ?? null };
+  return {
+    counts: tierVoteCounts(votes.map((v) => v.tier)),
+    total: votes.length,
+    official: view.tierOf(a.championTierId),
+    myVote: votes.find((v) => v.userId === user.id)?.tier ?? null,
+  };
 };
 
 /** PUT my vote: one per athlete; changing it does NOT change the user's counter (doc 17). */
@@ -57,8 +62,15 @@ export const setOfficialTier = async ({ deps, actor, locale }: RequestContext, s
   const refusal = officialTierChangeError({ current, target: body.tier, dossierStatus: view.dossierOf(a.id)?.status ?? null }, locale);
   if (refusal) throw unprocessable(refusal.error, refusal.message);
   await deps.repo.transaction(async (repo) => {
-    await repo.update(athletes, a.id, { championTierId: tierId(view, body.tier) }, actor, { summary: `Tier: ${current} → ${body.tier} (${body.reason})`, reason: body.reason });
-    await repo.insert(athleteTierHistory, { athleteId: a.id, fromTierId: a.championTierId, toTierId: tierId(view, body.tier), reason: body.reason, decidedAt: toIsoDate(new Date()) }, actor);
+    await repo.update(athletes, a.id, { championTierId: tierId(view, body.tier) }, actor, {
+      summary: `Tier: ${current} → ${body.tier} (${body.reason})`,
+      reason: body.reason,
+    });
+    await repo.insert(
+      athleteTierHistory,
+      { athleteId: a.id, fromTierId: a.championTierId, toTierId: tierId(view, body.tier), reason: body.reason, decidedAt: toIsoDate(new Date()) },
+      actor,
+    );
     await repo.audit(actor, AdminAuditAction.TierChanged, { type: 'athletes', id: a.id }, { target: a.knownAs, reason: body.reason });
   });
   return { official: body.tier };

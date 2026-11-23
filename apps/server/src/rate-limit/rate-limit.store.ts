@@ -1,26 +1,9 @@
 import { type Database, rateLimitBuckets } from '@was/db';
 import { sql } from 'drizzle-orm';
 
-/** A fixed window: at most `max` hits per `windowMs` (same shape as RATE_LIMITS in @was/shared). */
-export interface RateLimitRule {
-  windowMs: number;
-  max: number;
-}
-export interface RateLimitDecision {
-  allowed: boolean;
-  /** Time until the window restarts (0 when allowed). */
-  retryAfterMs: number;
-}
-
-/**
- * Where the counters live (doc 05). `consume` counts one hit and decides in a single atomic step, so concurrent
- * requests (or several server instances, with the database store) can never all pass a stale read.
- */
-export interface RateLimitStore {
-  readonly kind: 'memory' | 'database';
-  consume(key: string, rule: RateLimitRule, now?: Date): Promise<RateLimitDecision>;
-}
-export type RateLimitStoreKind = RateLimitStore['kind'];
+import type { RateLimitDecision } from './rate-limit-decision.interface';
+import type { RateLimitStore } from './rate-limit-store.interface';
+import type { RateLimitStoreKind } from './rate-limit-store-kind.type';
 
 const decision = (count: number, max: number, expiresAt: number, now: number): RateLimitDecision =>
   count <= max ? { allowed: true, retryAfterMs: 0 } : { allowed: false, retryAfterMs: Math.max(0, expiresAt - now) };

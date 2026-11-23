@@ -1,34 +1,16 @@
-import { type ApiContract, ApiErrorCode, ApiAccess, type Locale, type RateLimitKey, accessDenial, zodErrorMap } from '@was/shared';
+import { ApiAccess, type ApiContract, ApiErrorCode, accessDenial, type Locale, zodErrorMap } from '@was/shared';
 import type { Context, Hono } from 'hono';
 import type { z } from 'zod';
 
 import type { AuthUser } from '../auth/auth-provider.type';
-import type { HonoEnv, RequestContext } from './app-context.type';
-import { HttpError, forbidden, httpError, invalidFields } from './http-error.error';
+import type { HonoEnv } from './app-context.type';
+import type { ContractHandler } from './contract-handler.type';
+import type { ContractInputOf } from './contract-input-of.interface';
+import { HttpError } from './http-error.error';
+import { forbidden, httpError, invalidFields } from './http-error.helper';
+import type { RouteDefinition } from './route-definition.interface';
+import type { RouteOptions } from './route-options.interface';
 import { fieldErrorsOf } from './zod-errors.helper';
-
-type Parsed<S> = S extends z.ZodType ? z.output<S> : undefined;
-/** Validated input of a contract: params/query/body parsed by the contract's own schemas. */
-export interface ContractInputOf<C extends ApiContract> {
-  params: Parsed<C['params']>;
-  query: Parsed<C['query']>;
-  body: Parsed<C['body']>;
-}
-type UserOf<C extends ApiContract> = C['access'] extends typeof ApiAccess.Public ? AuthUser | null : AuthUser;
-export type ContractHandler<C extends ApiContract> = (
-  input: ContractInputOf<C>,
-  ctx: RequestContext & { user: UserOf<C> },
-) => Promise<z.input<C['response']>> | z.input<C['response']>;
-
-export interface RouteOptions {
-  /** Rate-limit bucket of RATE_LIMITS (@was/shared), per user or IP. */
-  rateLimit?: RateLimitKey;
-}
-export interface RouteDefinition {
-  contract: ApiContract;
-  handler: ContractHandler<ApiContract>;
-  options: RouteOptions;
-}
 
 /** One endpoint = one shared contract + one handler. Method, path, access and every schema come from the contract. */
 export const defineRoute = <C extends ApiContract>(contract: C, handler: ContractHandler<C>, options: RouteOptions = {}): RouteDefinition => ({
@@ -67,7 +49,8 @@ export const registerRoutes = (app: Hono<HonoEnv>, routes: readonly RouteDefinit
       const denial = accessDenial(contract.access, request.session.kind, !!request.session.user?.bannedAt, request.locale);
       if (denial) throw new HttpError(denial.status, denial.body);
       // Accounts must come with an e-mail the identity provider verified (Google always does; doc 05).
-      if (contract.access !== ApiAccess.Public && request.session.user && !request.session.user.emailVerified) throw forbidden(ApiErrorCode.EmailUnverified, 'emailUnverified');
+      if (contract.access !== ApiAccess.Public && request.session.user && !request.session.user.emailVerified)
+        throw forbidden(ApiErrorCode.EmailUnverified, 'emailUnverified');
       if (options.rateLimit) await request.deps.rateLimiter.hit(options.rateLimit, request.session.user?.id ?? request.ipHash);
 
       const input = {

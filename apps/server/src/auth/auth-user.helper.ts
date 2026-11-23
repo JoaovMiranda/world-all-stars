@@ -1,10 +1,9 @@
-import { type Database, active, authSessions, legalAcceptances, users } from '@was/db';
+import { active, authSessions, type Database, legalAcceptances, users } from '@was/db';
 import { LEGAL_DOCUMENT_VERSIONS, REQUIRED_LEGAL_DOCUMENTS, SessionKind, UserRole } from '@was/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 
 import type { AuthUser, SessionContext, SessionSource } from './auth-provider.type';
-
-export const ANON_SESSION: SessionContext = { kind: SessionKind.Anon, user: null, pending: null, source: null };
+import { ANON_SESSION } from './auth-user.const';
 
 /** Live account by id or e-mail, in the shape the API needs (shared by every provider and the session service). */
 export const loadAuthUser = async (db: Database, where: { email?: string; id?: string }): Promise<AuthUser | null> => {

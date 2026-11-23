@@ -1,21 +1,21 @@
 import { commentReactions, comments, notifications, users } from '@was/db';
 import {
   ApiErrorCode,
+  buildCommentThreads,
+  COMMENTS_PAGE_SIZE,
   type Comment,
   type CommentReaction,
-  CommentStatus,
   type CommentSort,
+  CommentStatus,
   type CommentsResponse,
   NotificationKind,
   type ReactToCommentResponse,
-  buildCommentThreads,
-  COMMENTS_PAGE_SIZE,
   validateComment,
 } from '@was/shared';
 
 import type { AuthUser } from '../../auth/auth-provider.type';
-import type { RequestContext } from '../../http/app-context.type';
-import { forbidden, notFound, unprocessable, unprocessableKey } from '../../http/http-error.error';
+import type { RequestContext } from '../../core/request-context.interface';
+import { forbidden, notFound, unprocessable, unprocessableKey } from '../../http/http-error.helper';
 import { loadBannedWords } from '../moderation/moderation.repository';
 import { countVisibleComments, findComment, findReaction, reactionsOf, repliesOf, topCommentsPage } from './comments.repository';
 
@@ -38,10 +38,24 @@ export const listComments = async (ctx: RequestContext, slug: string, sort: Comm
   const from = cursor && (await findComment(db, cursor))?.athleteId === athleteId ? cursor : null;
   const [page, total] = await Promise.all([topCommentsPage(db, athleteId, sort, from, COMMENTS_PAGE_SIZE), countVisibleComments(db, athleteId)]);
   const tops = page.slice(0, COMMENTS_PAGE_SIZE);
-  const replies = await repliesOf(db, athleteId, tops.map((r) => r.c.id));
+  const replies = await repliesOf(
+    db,
+    athleteId,
+    tops.map((r) => r.c.id),
+  );
   const rows = [...tops, ...replies];
   const me = ctx.session.user;
-  const mine = me ? new Map((await reactionsOf(db, me.id, rows.map((r) => r.c.id))).map((r) => [r.commentId, r.reaction])) : new Map();
+  const mine = me
+    ? new Map(
+        (
+          await reactionsOf(
+            db,
+            me.id,
+            rows.map((r) => r.c.id),
+          )
+        ).map((r) => [r.commentId, r.reaction]),
+      )
+    : new Map();
   const flat: Comment[] = rows.map(({ c, author }) => ({
     id: c.id,
     parentId: c.parentCommentId,
@@ -60,7 +74,11 @@ export const listComments = async (ctx: RequestContext, slug: string, sort: Comm
 /** POST comment/reply: shared validateComment (422), reply to a reply goes to the top comment, notifies the parent author. */
 export const postComment = async (ctx: RequestContext, user: AuthUser, slug: string, body: string, parentId: string | null | undefined) => {
   // Independent reads in one round-trip: the athlete (404 when unknown), the banned words and the parent comment.
-  const [athleteId, words, found] = await Promise.all([athleteIdOf(ctx, slug), loadBannedWords(ctx.deps.db), parentId ? findComment(ctx.deps.db, parentId) : null]);
+  const [athleteId, words, found] = await Promise.all([
+    athleteIdOf(ctx, slug),
+    loadBannedWords(ctx.deps.db),
+    parentId ? findComment(ctx.deps.db, parentId) : null,
+  ]);
   const result = validateComment(body, words, ctx.locale);
   if (!result.ok) throw unprocessable(result.error, result.message, { body: result.message });
   let parent = found;
@@ -76,7 +94,14 @@ export const postComment = async (ctx: RequestContext, user: AuthUser, slug: str
       if (parent.userId !== user.id) {
         await repo.insert(
           notifications,
-          { userId: parent.userId, kind: NotificationKind.CommentReply, entityType: 'comments', entityId: row.id, actorId: user.id, payload: { excerpt: result.text.slice(0, NOTIFICATION_EXCERPT), athleteId, commentId: row.id } },
+          {
+            userId: parent.userId,
+            kind: NotificationKind.CommentReply,
+            entityType: 'comments',
+            entityId: row.id,
+            actorId: user.id,
+            payload: { excerpt: result.text.slice(0, NOTIFICATION_EXCERPT), athleteId, commentId: row.id },
+          },
           ctx.actor,
         );
       }

@@ -1,31 +1,37 @@
 import { active, authAccounts, legalAcceptances, userConsents, users } from '@was/db';
 import {
   type AcceptConsentRequest,
-  AuthAuditAction,
-  CONSENT_PURPOSE_VALUES,
-  LEGAL_DOCUMENT_VERSIONS,
-  LegalDocumentKind,
-  type ConsentPurpose,
-  type DeleteAccountResponse,
-  type MyDataExport,
-  type MyDataResponse,
   ApiErrorCode,
+  AuthAuditAction,
   accountDeleteConfirmationError,
   anonymizedUserName,
+  CONSENT_PURPOSE_VALUES,
+  type ConsentPurpose,
+  type DeleteAccountResponse,
+  LEGAL_DOCUMENT_VERSIONS,
+  LegalDocumentKind,
+  type MyDataExport,
+  type MyDataResponse,
 } from '@was/shared';
 import { and, eq } from 'drizzle-orm';
 
 import type { AuthUser } from '../../auth/auth-provider.type';
 import { revokeAuthSessions } from '../../auth/auth-user.helper';
-import type { RequestContext } from '../../http/app-context.type';
-import { httpError, unprocessable } from '../../http/http-error.error';
+import type { RequestContext } from '../../core/request-context.interface';
+import { httpError, unprocessable } from '../../http/http-error.helper';
 import { getMe, getNotifications } from '../session/session.service';
 
 /** GET /api/me/data (E6): Terms/Privacy acceptances + every optional purpose (never granted = false). */
 export const getMyData = async ({ deps }: RequestContext, user: AuthUser): Promise<MyDataResponse> => {
   const [acceptances, consents] = await Promise.all([
-    deps.db.select().from(legalAcceptances).where(active(legalAcceptances, eq(legalAcceptances.userId, user.id))),
-    deps.db.select().from(userConsents).where(active(userConsents, eq(userConsents.userId, user.id))),
+    deps.db
+      .select()
+      .from(legalAcceptances)
+      .where(active(legalAcceptances, eq(legalAcceptances.userId, user.id))),
+    deps.db
+      .select()
+      .from(userConsents)
+      .where(active(userConsents, eq(userConsents.userId, user.id))),
   ]);
   return {
     acceptances: acceptances.map((a) => ({ document: a.documentKind, version: a.documentVersion, acceptedAt: a.acceptedAt.toISOString() })),
@@ -39,7 +45,10 @@ export const getMyData = async ({ deps }: RequestContext, user: AuthUser): Promi
 /** PUT /api/me/consents/:purpose. */
 export const updateConsent = async ({ deps, actor }: RequestContext, user: AuthUser, purpose: ConsentPurpose, granted: boolean) => {
   const now = new Date();
-  const [existing] = await deps.db.select().from(userConsents).where(active(userConsents, and(eq(userConsents.userId, user.id), eq(userConsents.purpose, purpose))));
+  const [existing] = await deps.db
+    .select()
+    .from(userConsents)
+    .where(active(userConsents, and(eq(userConsents.userId, user.id), eq(userConsents.purpose, purpose))));
   if (existing) await deps.repo.update(userConsents, existing.id, { granted, decidedAt: now }, actor, { summary: granted ? 'granted' : 'revoked' });
   else await deps.repo.insert(userConsents, { userId: user.id, purpose, granted, decidedAt: now }, actor);
   return { purpose, granted, updatedAt: now.toISOString() };
@@ -52,7 +61,8 @@ export const updateConsent = async ({ deps, actor }: RequestContext, user: AuthU
  */
 export const acceptConsent = async ({ deps, session, ipHash, actor }: RequestContext, body: AcceptConsentRequest) => {
   const user = session.pending;
-  if (!user) throw httpError(session.user ? 409 : 401, session.user ? ApiErrorCode.ConsentOutdated : ApiErrorCode.Auth, session.user ? 'consentNotPending' : 'signIn');
+  if (!user)
+    throw httpError(session.user ? 409 : 401, session.user ? ApiErrorCode.ConsentOutdated : ApiErrorCode.Auth, session.user ? 'consentNotPending' : 'signIn');
   if (body.termsVersion !== LEGAL_DOCUMENT_VERSIONS.terms.version || body.privacyVersion !== LEGAL_DOCUMENT_VERSIONS.privacy.version) {
     throw httpError(409, ApiErrorCode.ConsentOutdated, 'consentOutdated');
   }
@@ -65,9 +75,19 @@ export const acceptConsent = async ({ deps, session, ipHash, actor }: RequestCon
   ] as const;
   await deps.repo.transaction(async (repo) => {
     for (const [documentKind, documentVersion] of accepted) {
-      await repo.ensure(legalAcceptances, { userId: user.id, documentKind, documentVersion }, { userId: user.id, documentKind, documentVersion, acceptedAt: now, ipHash }, who);
+      await repo.ensure(
+        legalAcceptances,
+        { userId: user.id, documentKind, documentVersion },
+        { userId: user.id, documentKind, documentVersion, acceptedAt: now, ipHash },
+        who,
+      );
     }
-    await repo.audit(who, AuthAuditAction.ConsentAccepted, { type: 'users', id: user.id }, { terms: body.termsVersion, privacy: body.privacyVersion, adult: true, actorName: user.name });
+    await repo.audit(
+      who,
+      AuthAuditAction.ConsentAccepted,
+      { type: 'users', id: user.id },
+      { terms: body.termsVersion, privacy: body.privacyVersion, adult: true, actorName: user.name },
+    );
   });
   return { ok: true as const };
 };

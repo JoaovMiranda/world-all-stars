@@ -1,4 +1,4 @@
-import type { RouteDefinition } from './http/contract-route.helper';
+import type { RouteDefinition } from './http/route-definition.interface';
 import { accountRoutes } from './modules/account/account.route';
 import { adminRoutes } from './modules/admin/admin.route';
 import { athletesRoutes } from './modules/athletes/athletes.route';

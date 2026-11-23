@@ -6,9 +6,9 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../app';
 import { loadConfig } from '../config/env.config';
-import { PRIVATE_HTML_CACHE_CONTROL, PUBLIC_HTML_CACHE_CONTROL } from '../web/html-cache';
-import type { WebRuntime } from '../web/web-handler';
-import { HAS_PROTOTYPE } from './test-app.helper';
+import { PRIVATE_HTML_CACHE_CONTROL, PUBLIC_HTML_CACHE_CONTROL } from '../web/html-cache.const';
+import type { WebRuntime } from '../web/web-runtime.interface';
+import { HAS_PROTOTYPE } from './test-app.const';
 
 describe('web pages mounted on the API server', () => {
   let handle: DatabaseHandle;
@@ -28,7 +28,10 @@ describe('web pages mounted on the API server', () => {
           seen.nonce = nonce;
           seen.apiStatus = (await apiFetch(new Request('http://ssr.internal/api/health'))).status;
           const status = new URL(request.url).pathname === '/nao-existe' ? 404 : 200;
-          return new Response(`<!DOCTYPE html><html><body><script nonce="${nonce}"></script></body></html>`, { status, headers: { 'content-type': 'text/html; charset=UTF-8' } });
+          return new Response(`<!DOCTYPE html><html><body><script nonce="${nonce}"></script></body></html>`, {
+            status,
+            headers: { 'content-type': 'text/html; charset=UTF-8' },
+          });
         },
       }),
     };
@@ -119,7 +122,18 @@ describe('web pages mounted on the API server', () => {
     await created.deps.repo.insert(bannedWords, { term: `cache${Date.now()}`, matchMode: 'word', locale: 'pt-BR' } as never, system);
     expect(created.htmlCache.size).toBeGreaterThan(0);
     // Catalog content does.
-    await created.deps.repo.insert(sources, { slug: `cache-${Date.now()}`, name: 'Cache', baseUrl: 'https://cache.invalid', originKind: 'official', commercialUse: 'no', usageStatus: 'link_only' } as never, system);
+    await created.deps.repo.insert(
+      sources,
+      {
+        slug: `cache-${Date.now()}`,
+        name: 'Cache',
+        baseUrl: 'https://cache.invalid',
+        originKind: 'official',
+        commercialUse: 'no',
+        usageStatus: 'link_only',
+      } as never,
+      system,
+    );
     expect(created.htmlCache.size).toBe(0);
   });
 
@@ -153,7 +167,11 @@ describe('web pages mounted on the API server', () => {
   });
 
   it('refuses API bodies above BODY_LIMIT_KB with a 413 in the API error shape', async () => {
-    const res = await app().request('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message: 'x'.repeat(70 * 1024) }) });
+    const res = await app().request('/api/contact', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ message: 'x'.repeat(70 * 1024) }),
+    });
     expect(res.status).toBe(413);
     expect(await res.json()).toMatchObject({ error: 'payload_too_large' });
   });
@@ -163,15 +181,25 @@ describe('web pages mounted on the API server', () => {
     const log = console.log;
     console.log = (line: string) => void lines.push(line);
     try {
-      const metrics = [{ name: 'LCP', value: 2310.5, rating: 'good', path: '/athletes/pele', navigationType: 'navigate', connection: '4g' }, { name: 'CLS', value: 0.31, rating: 'poor', path: '/athletes/pele' }];
+      const metrics = [
+        { name: 'LCP', value: 2310.5, rating: 'good', path: '/athletes/pele', navigationType: 'navigate', connection: '4g' },
+        { name: 'CLS', value: 0.31, rating: 'poor', path: '/athletes/pele' },
+      ];
       const res = await app().request('/api/vitals', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ metrics }) });
       expect(res.status).toBe(200);
     } finally {
       console.log = log;
     }
     const vitals = lines.filter((l) => l.includes('"web-vital"')).map((l) => JSON.parse(l));
-    expect(vitals).toMatchObject([{ name: 'LCP', value: 2310.5, rating: 'good', level: 'info', conn: '4g' }, { name: 'CLS', rating: 'poor', level: 'warn' }]);
-    const bad = await app().request('/api/vitals', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ metrics: [{ name: 'XYZ', value: -1, rating: 'good', path: 'x' }] }) });
+    expect(vitals).toMatchObject([
+      { name: 'LCP', value: 2310.5, rating: 'good', level: 'info', conn: '4g' },
+      { name: 'CLS', rating: 'poor', level: 'warn' },
+    ]);
+    const bad = await app().request('/api/vitals', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ metrics: [{ name: 'XYZ', value: -1, rating: 'good', path: 'x' }] }),
+    });
     expect(bad.status).toBe(422);
   });
 

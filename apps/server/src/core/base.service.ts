@@ -1,6 +1,6 @@
 import type { Actor, BaseRepository, Database } from '@was/db';
 
-import { notFound } from '../http/http-error.error';
+import { notFound } from '../http/http-error.helper';
 import type { RequestContext } from './request-context.interface';
 
 /**

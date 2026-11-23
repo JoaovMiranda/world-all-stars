@@ -1,14 +1,27 @@
 // Same-URL i18n (doc 12): the API answers in the request locale (x-was-locale → cookie → Accept-Language → pt-BR),
 // content falls back to the English source (then pt-BR) with `contentLocale`, and anonymous pages are cached per language.
 import { createDatabase, type DatabaseHandle } from '@was/db';
-import { API_ERROR_MESSAGES, LOCALE_COOKIE, ORG_LABELS_MESSAGES, LOCALE_HEADER, ParticipationApi, PublicApi, VALIDATION_MESSAGES, buildApiPath, resolveLocale, textFor } from '@was/shared';
+import {
+  API_ERROR_MESSAGES,
+  buildApiPath,
+  LOCALE_COOKIE,
+  LOCALE_HEADER,
+  ORG_LABELS_MESSAGES,
+  ParticipationApi,
+  PublicApi,
+  resolveLocale,
+  textFor,
+  VALIDATION_MESSAGES,
+} from '@was/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createApp } from '../app';
 import { loadConfig } from '../config/env.config';
-import { PUBLIC_HTML_CACHE_CONTROL } from '../web/html-cache';
-import type { WebRuntime } from '../web/web-handler';
-import { HAS_PROTOTYPE, createTestApp, type TestApp } from './test-app.helper';
+import { PUBLIC_HTML_CACHE_CONTROL } from '../web/html-cache.const';
+import type { WebRuntime } from '../web/web-runtime.interface';
+import { HAS_PROTOTYPE } from './test-app.const';
+import { createTestApp } from './test-app.helper';
+import type { TestApp } from './test-app.interface';
 
 const readCookie = (header: string | null, name: string) =>
   header
@@ -26,7 +39,11 @@ describe('API in the request locale', () => {
   afterAll(() => t.close());
 
   const post = (body: unknown, headers: Record<string, string>) =>
-    t.app.request(ParticipationApi.submitContact.path, { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) });
+    t.app.request(ParticipationApi.submitContact.path, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...headers },
+      body: JSON.stringify(body),
+    });
 
   it('422 field errors and message come in English with x-was-locale: en', async () => {
     const res = await post(EMPTY, { [LOCALE_HEADER]: 'en' });
@@ -106,8 +123,14 @@ describe('anonymous pages cached per language', () => {
       loadRenderer: async () => ({
         async render({ request, nonce }) {
           renders += 1;
-          const lang = resolveLocale({ cookie: readCookie(request.headers.get('cookie'), LOCALE_COOKIE), acceptLanguage: request.headers.get('accept-language') });
-          return new Response(`<!DOCTYPE html><html lang="${lang}"><body><script nonce="${nonce}"></script></body></html>`, { status: 200, headers: { 'content-type': 'text/html; charset=UTF-8' } });
+          const lang = resolveLocale({
+            cookie: readCookie(request.headers.get('cookie'), LOCALE_COOKIE),
+            acceptLanguage: request.headers.get('accept-language'),
+          });
+          return new Response(`<!DOCTYPE html><html lang="${lang}"><body><script nonce="${nonce}"></script></body></html>`, {
+            status: 200,
+            headers: { 'content-type': 'text/html; charset=UTF-8' },
+          });
         },
       }),
     };

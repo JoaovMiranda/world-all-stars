@@ -1,24 +1,36 @@
 // A1 (proposals + tier signals) and A6 (dossiers).
-import { applyBiography } from '@was/ingest';
-import { active, aiExtractionQueue, athleteTranslations, type BaseRepository, fieldConflicts, fieldProvenance, greatsDossierApprovals, greatsDossiers, sourceLinks, users } from '@was/db';
+
 import {
-  type AdminDecision,
+  active,
+  aiExtractionQueue,
+  athleteTranslations,
+  type BaseRepository,
+  fieldConflicts,
+  fieldProvenance,
+  greatsDossierApprovals,
+  greatsDossiers,
+  sourceLinks,
+  users,
+} from '@was/db';
+import { applyBiography } from '@was/ingest';
+import {
   AdminAuditAction,
-  AdminDecision as Decision,
+  type AdminDecision,
   type AdminDossier,
   ApiErrorCode,
   type CrawlerProposal,
+  AdminDecision as Decision,
   ReviewStatus,
-  type TierSignal,
   reviewDossierOutcome,
+  type TierSignal,
   tierSignalOf,
   tierVoteCounts,
 } from '@was/shared';
 import { and, eq, inArray } from 'drizzle-orm';
 
-import type { RequestContext } from '../../http/app-context.type';
-import { notFound, unprocessable, unprocessableKey } from '../../http/http-error.error';
-import { isoOf } from '../catalog/catalog.mapper';
+import type { RequestContext } from '../../core/request-context.interface';
+import { isoOf } from '../../helpers/date.helper';
+import { notFound, unprocessable, unprocessableKey } from '../../http/http-error.helper';
 import { allVotes } from '../tier-votes/tier-votes.repository';
 
 const iso = (d: Date | string | null) => (d instanceof Date ? d.toISOString() : d ? `${d}T00:00:00.000Z` : new Date(0).toISOString());
@@ -59,10 +71,20 @@ export const listProposals = async ({ deps, locale }: RequestContext): Promise<{
     skippedAtGate: null,
     createdAt: c.createdAt.toISOString(),
   }));
-  const bioOf = (athleteId: string | null | undefined) => (athleteId ? view.rows.athleteTr.find((t) => t.athleteId === athleteId && t.locale === 'en')?.shortBio ?? null : null);
+  const bioOf = (athleteId: string | null | undefined) =>
+    athleteId ? (view.rows.athleteTr.find((t) => t.athleteId === athleteId && t.locale === 'en')?.shortBio ?? null) : null;
   const ai: CrawlerProposal[] = queue.map((q) => {
     const link = view.sourceLink(q.sourceLinkId);
-    const r = (q.resultJson ?? {}) as { type?: string; en?: string; pt?: string; es?: string; claims?: { evidence_quote: string }[]; field?: string; value?: unknown; evidence_quote?: string };
+    const r = (q.resultJson ?? {}) as {
+      type?: string;
+      en?: string;
+      pt?: string;
+      es?: string;
+      claims?: { evidence_quote: string }[];
+      field?: string;
+      value?: unknown;
+      evidence_quote?: string;
+    };
     if (r.type === 'biography' || r.type === 'fact') {
       return {
         id: q.id,
@@ -73,7 +95,10 @@ export const listProposals = async ({ deps, locale }: RequestContext): Promise<{
         current: r.type === 'biography' ? bioOf(link?.entityId) : null,
         proposed: r.type === 'biography' ? `${r.en}\n\n[pt-BR] ${r.pt}\n\n[es] ${r.es}` : String(r.value),
         source: view.source(q.sourceLinkId),
-        evidenceQuote: r.type === 'biography' ? (r.claims ?? []).map((c) => `${(c as { literal?: boolean }).literal === false ? '[NOT VERIFIED] ' : ''}${c.evidence_quote}`).join(' … ') : (r.evidence_quote ?? null),
+        evidenceQuote:
+          r.type === 'biography'
+            ? (r.claims ?? []).map((c) => `${(c as { literal?: boolean }).literal === false ? '[NOT VERIFIED] ' : ''}${c.evidence_quote}`).join(' … ')
+            : (r.evidence_quote ?? null),
         extractedByAi: true,
         model: q.model,
         status: queueStatus(q.status),
@@ -105,23 +130,25 @@ export const listProposals = async ({ deps, locale }: RequestContext): Promise<{
     .flatMap((f) => {
       const value = statValue(view.rows.stats.find((s) => s.athleteId === f.entityId && s.period === 'career')?.stats, f.fieldName);
       if (value === null) return [];
-      return [{
-        id: f.id,
-        origin: 'ai_extraction' as const,
-        entity: { type: 'athletes', id: f.entityId, label: label('athletes', f.entityId) },
-        field: f.fieldName,
-        base: null,
-        current: value,
-        proposed: value,
-        source: view.source(f.sourceLinkId),
-        evidenceQuote: f.evidenceQuote,
-        extractedByAi: true,
-        model: f.model,
-        status: ReviewStatus.Approved,
-        reviewNote: null,
-        skippedAtGate: null,
-        createdAt: iso(f.retrievedAt),
-      }];
+      return [
+        {
+          id: f.id,
+          origin: 'ai_extraction' as const,
+          entity: { type: 'athletes', id: f.entityId, label: label('athletes', f.entityId) },
+          field: f.fieldName,
+          base: null,
+          current: value,
+          proposed: value,
+          source: view.source(f.sourceLinkId),
+          evidenceQuote: f.evidenceQuote,
+          extractedByAi: true,
+          model: f.model,
+          status: ReviewStatus.Approved,
+          reviewNote: null,
+          skippedAtGate: null,
+          createdAt: iso(f.retrievedAt),
+        },
+      ];
     });
   return { items: [...conflicts, ...ai, ...extracted] };
 };
@@ -134,13 +161,19 @@ export const reviewProposal = async (ctx: RequestContext, id: string, decision: 
   const approve = decision === Decision.Approve;
   const review = { reviewNote: reason, reviewedBy: ctx.actor.userId, reviewedAt: new Date() };
   await ctx.deps.repo.transaction(async (repo) => {
-    if (item.origin === 'field_conflict') await repo.update(fieldConflicts, id, { resolution: approve ? 'approved' : 'rejected', ...review }, ctx.actor, { reason });
+    if (item.origin === 'field_conflict')
+      await repo.update(fieldConflicts, id, { resolution: approve ? 'approved' : 'rejected', ...review }, ctx.actor, { reason });
     else {
       await repo.update(aiExtractionQueue, id, { status: approve ? 'approved' : 'rejected', ...review }, ctx.actor, { reason });
       // An approved AI proposal is applied to the profile, with an approved provenance row (G03: a human decided).
       if (approve) await applyAiProposal(repo, ctx, id, reason);
     }
-    await repo.audit(ctx.actor, approve ? AdminAuditAction.ProposalApproved : AdminAuditAction.ProposalRejected, { type: item.origin, id }, { target: `${item.entity.label} · ${item.field}`, reason });
+    await repo.audit(
+      ctx.actor,
+      approve ? AdminAuditAction.ProposalApproved : AdminAuditAction.ProposalRejected,
+      { type: item.origin, id },
+      { target: `${item.entity.label} · ${item.field}`, reason },
+    );
   });
   return { ok: true as const };
 };
@@ -177,7 +210,12 @@ export const listDossiers = async ({ deps, locale }: RequestContext): Promise<{ 
     approvalsRequired: d.approvalsRequired,
     approvedBy: (approvalsByDossier.get(d.id) ?? []).sort((a, b) => a.at.getTime() - b.at.getTime()).map((a) => a.name),
     reviewNote: d.reviewNote,
-    evidences: (evidencesByDossier.get(d.id) ?? []).map((e) => ({ id: e.id, type: e.evidenceType as AdminDossier['evidences'][number]['type'], description: view.evidenceDescription(e.id), source: view.source(e.sourceLinkId) })),
+    evidences: (evidencesByDossier.get(d.id) ?? []).map((e) => ({
+      id: e.id,
+      type: e.evidenceType as AdminDossier['evidences'][number]['type'],
+      description: view.evidenceDescription(e.id),
+      source: view.source(e.sourceLinkId),
+    })),
     updatedAt: isoOf(d.updatedAt)!,
   }));
   return { items: items.sort((a, b) => Number(b.status === 'pending') - Number(a.status === 'pending')) };
@@ -188,7 +226,10 @@ export const reviewDossier = async (ctx: RequestContext, id: string, decision: A
   const view = await ctx.deps.catalog.get(ctx.locale);
   const dossier = view.rows.dossiers.find((d) => d.id === id);
   if (!dossier) throw notFound();
-  const approvers = await ctx.deps.db.select().from(greatsDossierApprovals).where(active(greatsDossierApprovals, inArray(greatsDossierApprovals.dossierId, [id])));
+  const approvers = await ctx.deps.db
+    .select()
+    .from(greatsDossierApprovals)
+    .where(active(greatsDossierApprovals, inArray(greatsDossierApprovals.dossierId, [id])));
   const outcome = reviewDossierOutcome(
     { status: dossier.status, approvedBy: approvers.map((a) => a.adminUserId), approvalsRequired: dossier.approvalsRequired },
     decision,
@@ -199,10 +240,15 @@ export const reviewDossier = async (ctx: RequestContext, id: string, decision: A
   await ctx.deps.repo.transaction(async (repo) => {
     if (decision === Decision.Approve) await repo.insert(greatsDossierApprovals, { dossierId: id, adminUserId: ctx.actor.userId!, reason }, ctx.actor);
     await repo.update(greatsDossiers, id, { status: outcome.status, approvalsCount: outcome.approvedBy.length, reviewNote: reason }, ctx.actor, { reason });
-    await repo.audit(ctx.actor, decision === Decision.Approve ? AdminAuditAction.DossierApproved : AdminAuditAction.DossierRejected, { type: 'greats_dossiers', id }, {
-      target: view.athleteRef(dossier.athleteId).knownAs,
-      reason,
-    });
+    await repo.audit(
+      ctx.actor,
+      decision === Decision.Approve ? AdminAuditAction.DossierApproved : AdminAuditAction.DossierRejected,
+      { type: 'greats_dossiers', id },
+      {
+        target: view.athleteRef(dossier.athleteId).knownAs,
+        reason,
+      },
+    );
   });
   return { ok: true as const };
 };

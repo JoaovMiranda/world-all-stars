@@ -1,7 +1,7 @@
-import { PublicApi, composeCompare, pageOf } from '@was/shared';
+import { composeCompare, PublicApi, pageOf } from '@was/shared';
 
 import { defineRoute } from '../../http/contract-route.helper';
-import { notFound } from '../../http/http-error.error';
+import { notFound } from '../../http/http-error.helper';
 
 /** P2/P4 + analysis (doc 16): everything read from the catalog snapshot. */
 export const athletesRoutes = [

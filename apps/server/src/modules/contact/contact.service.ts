@@ -2,16 +2,16 @@ import { athleteSuggestions, contactMessages } from '@was/db';
 import {
   type ContactRequest,
   type ContactTopic,
+  cleanText,
   type SubmissionResponse,
   type SuggestionRequest,
-  cleanText,
   submissionProtocol,
   validateContact,
   validateSuggestion,
 } from '@was/shared';
 
-import type { RequestContext } from '../../http/app-context.type';
-import { invalidFields } from '../../http/http-error.error';
+import type { RequestContext } from '../../core/request-context.interface';
+import { invalidFields } from '../../http/http-error.helper';
 import { loadBannedWords } from '../moderation/moderation.repository';
 import { getSuggestionContext } from '../moderation/validation-context.service';
 
@@ -47,7 +47,15 @@ export const submitContact = async (ctx: RequestContext, body: ContactRequest): 
   const protocol = submissionProtocol('CTT');
   await ctx.deps.repo.insert(
     contactMessages,
-    { name: cleanText(body.name), email: body.email.trim(), topic: body.topic as ContactTopic, body: cleanText(body.body), userId: ctx.session.user?.id ?? null, protocol, ipHash: ctx.ipHash },
+    {
+      name: cleanText(body.name),
+      email: body.email.trim(),
+      topic: body.topic as ContactTopic,
+      body: cleanText(body.body),
+      userId: ctx.session.user?.id ?? null,
+      protocol,
+      ipHash: ctx.ipHash,
+    },
     ctx.actor,
   );
   return { protocol, notes: [] };

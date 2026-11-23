@@ -3,7 +3,9 @@ import { AdminApi, ParticipationApi, PublicApi } from '@was/shared';
 import { sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { HAS_PROTOTYPE, createTestApp, type TestApp } from './test-app.helper';
+import { HAS_PROTOTYPE } from './test-app.const';
+import { createTestApp } from './test-app.helper';
+import type { TestApp } from './test-app.interface';
 
 describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
   let t: TestApp;
@@ -13,7 +15,8 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
   afterAll(() => t.close());
 
   describe('comments (doc 20)', () => {
-    const post = (body: string, parentId?: string) => t.call(ParticipationApi.postComment, { params: { slug: 'pele' }, body: { body, ...(parentId ? { parentId } : {}) } }, 'reader');
+    const post = (body: string, parentId?: string) =>
+      t.call(ParticipationApi.postComment, { params: { slug: 'pele' }, body: { body, ...(parentId ? { parentId } : {}) } }, 'reader');
 
     it('refuses an empty comment with 422 + field error', async () => {
       const res = await post('   \n  ');
@@ -84,7 +87,9 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
         expect(pages).toBeGreaterThan(1);
         expect(new Set(seen).size).toBe(seen.length);
         // total counts threads + replies; every top-level comment was listed exactly once.
-        const all = await t.handle.db.execute(sql`select count(*)::int as n from comments c join athletes a on a.id = c.athlete_id where a.slug = 'pele' and c.deleted_at is null and c.status = 'visible' and c.parent_comment_id is null`);
+        const all = await t.handle.db.execute(
+          sql`select count(*)::int as n from comments c join athletes a on a.id = c.athlete_id where a.slug = 'pele' and c.deleted_at is null and c.status = 'visible' and c.parent_comment_id is null`,
+        );
         expect(seen.length).toBe((all as unknown as { rows: { n: number }[] }).rows[0]?.n);
         expect(total).toBeGreaterThan(seen.length);
       }
@@ -94,7 +99,10 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
 
     it('an unknown cursor restarts at the first page', async () => {
       const first = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort: 'top' } });
-      const bogus = await t.call(ParticipationApi.comments, { params: { slug: 'pele' }, query: { sort: 'top', cursor: '00000000-0000-7000-8000-000000000000' } });
+      const bogus = await t.call(ParticipationApi.comments, {
+        params: { slug: 'pele' },
+        query: { sort: 'top', cursor: '00000000-0000-7000-8000-000000000000' },
+      });
       expect(bogus.json.threads.map((x: { id: string }) => x.id)).toEqual(first.json.threads.map((x: { id: string }) => x.id));
     });
   });
@@ -113,11 +121,17 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
     it('refuses Mythic without an approved dossier (422) and the same tier', async () => {
       const hall = (await t.call(PublicApi.hallOfGreats)).json;
       const dossiers = (await t.call(AdminApi.dossiers, {}, 'admin')).json.items;
-      const candidate = hall.candidates.find((c: { slug: string }) => !dossiers.some((d: { athlete: { slug: string }; status: string }) => d.athlete.slug === c.slug && d.status === 'approved'));
+      const candidate = hall.candidates.find(
+        (c: { slug: string }) => !dossiers.some((d: { athlete: { slug: string }; status: string }) => d.athlete.slug === c.slug && d.status === 'approved'),
+      );
       const res = await t.call(AdminApi.setOfficialTier, { params: { slug: candidate.slug }, body: { tier: 'mythic', reason: 'teste de regra' } }, 'admin');
       expect(res.status).toBe(422);
       expect(res.json.error).toBe('dossier_required');
-      const same = await t.call(AdminApi.setOfficialTier, { params: { slug: candidate.slug }, body: { tier: candidate.tier, reason: 'teste de regra' } }, 'admin');
+      const same = await t.call(
+        AdminApi.setOfficialTier,
+        { params: { slug: candidate.slug }, body: { tier: candidate.tier, reason: 'teste de regra' } },
+        'admin',
+      );
       expect(same.json.error).toBe('same_tier');
     });
 
@@ -135,7 +149,8 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
   });
 
   describe('suggestion and contact (doc 21)', () => {
-    const suggest = (body: Record<string, unknown>) => t.call(ParticipationApi.submitSuggestion, { body: { athleteName: 'Fulano', urls: ['https://en.wikipedia.org/wiki/Fulano'], ...body } });
+    const suggest = (body: Record<string, unknown>) =>
+      t.call(ParticipationApi.submitSuggestion, { body: { athleteName: 'Fulano', urls: ['https://en.wikipedia.org/wiki/Fulano'], ...body } });
 
     it('accepts a valid suggestion with a protocol', async () => {
       const res = await suggest({});
@@ -195,7 +210,9 @@ describe.skipIf(!HAS_PROTOTYPE)('mutations', () => {
     });
     it('proposal decided once; suggestion approval queues links; message answered', async () => {
       const proposal = (await t.call(AdminApi.proposals, {}, 'admin')).json.items.find((p: { status: string }) => p.status === 'pending');
-      expect((await t.call(AdminApi.reviewProposal, { params: { id: proposal.id }, body: { decision: 'reject', reason: 'fonte fraca' } }, 'admin')).status).toBe(200);
+      expect(
+        (await t.call(AdminApi.reviewProposal, { params: { id: proposal.id }, body: { decision: 'reject', reason: 'fonte fraca' } }, 'admin')).status,
+      ).toBe(200);
       const twice = await t.call(AdminApi.reviewProposal, { params: { id: proposal.id }, body: { decision: 'approve', reason: 'mudei de ideia' } }, 'admin');
       expect(twice.json.error).toBe('already_decided');
       const inbox = (await t.call(AdminApi.inbox, {}, 'admin')).json;

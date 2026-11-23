@@ -6,28 +6,8 @@ import { HTTP_HEADER } from '@was/shared';
 import type { MiddlewareHandler } from 'hono';
 
 import type { HonoEnv } from '../http/app-context.type';
-
-/** Text-like bodies worth compressing (HTML, JSON, JS, CSS, SVG, XML). Images/fonts are already compressed. */
-const COMPRESSIBLE = /^(text\/|application\/(json|javascript|xml|manifest\+json|ld\+json)|image\/svg\+xml)/i;
-/** Below this, the headers cost more than the bytes saved. Unknown length (streamed SSR) is always compressed. */
-const MIN_BYTES = 1024;
-
-type Encoding = 'br' | 'gzip';
-
-/** Picks brotli over gzip when the client accepts it (q=0 means refused). */
-export const pickEncoding = (acceptEncoding: string | undefined): Encoding | null => {
-  if (!acceptEncoding) return null;
-  const accepted = new Set(
-    acceptEncoding
-      .split(',')
-      .map((part) => part.trim().split(';'))
-      .filter(([, q]) => !q || Number.parseFloat(q.split('=')[1] ?? '1') > 0)
-      .map(([name = '']) => name.trim().toLowerCase()),
-  );
-  if (accepted.has('br')) return 'br';
-  if (accepted.has('gzip') || accepted.has('*')) return 'gzip';
-  return null;
-};
+import { COMPRESSIBLE, MIN_BYTES } from './compress.const';
+import { pickEncoding } from './compress.helper';
 
 /**
  * Brotli/gzip for dynamic responses (SSR pages, API JSON, robots/sitemap). Each chunk is flushed, so streamed SSR

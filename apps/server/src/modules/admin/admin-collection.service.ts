@@ -1,4 +1,6 @@
 // A2 (ingestion runs + AI queue) and A3 (source registry + links queued for the next collection).
+
+import type { Actor, BaseRepository } from '@was/db';
 import { active, aiExtractionQueue, ingestionLogs, ingestionRuns, sourceLinks, sources } from '@was/db';
 import {
   type AddCollectionLinksRequest,
@@ -6,19 +8,18 @@ import {
   type AdminIngestionResponse,
   type AdminQueuedLink,
   type AdminSourcesResponse,
+  checkSourceUrl,
   type FieldErrors,
   INGESTION_GATE_VALUES,
   IngestionRunStatus,
   type Locale,
   type UpdateSourceRequest,
-  checkSourceUrl,
 } from '@was/shared';
 import { asc, desc, eq, inArray, isNull } from 'drizzle-orm';
-
-import type { Actor, BaseRepository } from '@was/db';
-import type { AppDeps, RequestContext } from '../../http/app-context.type';
-import { invalidFields, notFound } from '../../http/http-error.error';
-import { isoOf } from '../catalog/catalog.mapper';
+import type { RequestContext } from '../../core/request-context.interface';
+import { isoOf } from '../../helpers/date.helper';
+import type { AppDeps } from '../../http/app-deps.interface';
+import { invalidFields, notFound } from '../../http/http-error.helper';
 import { loadSourceRules } from '../moderation/moderation.repository';
 import { startIngestion } from './ingestion-runner';
 
@@ -86,17 +87,42 @@ export const runIngestion = async (ctx: RequestContext, jobKey: string, names?: 
     await ctx.deps.repo.audit(ctx.actor, AdminAuditAction.IngestionTriggered, { type: 'ingestion_runs', id: real.runId }, { target: jobKey, reason: null });
     return { ok: true as const };
   }
-  const [last] = await ctx.deps.db.select().from(ingestionRuns).where(active(ingestionRuns, eq(ingestionRuns.jobKey, jobKey))).orderBy(desc(ingestionRuns.startedAt)).limit(1);
+  const [last] = await ctx.deps.db
+    .select()
+    .from(ingestionRuns)
+    .where(active(ingestionRuns, eq(ingestionRuns.jobKey, jobKey)))
+    .orderBy(desc(ingestionRuns.startedAt))
+    .limit(1);
   if (!last) throw notFound();
   const at = new Date();
   await ctx.deps.repo.transaction(async (repo) => {
     const run = await repo.insert(
       ingestionRuns,
-      { jobKey, sourceId: last.sourceId, mode: 'manual', startedAt: at, finishedAt: at, status: IngestionRunStatus.Success, checked: last.checked, unchanged: last.checked, updated: 0, errors: 0, skipped: { ...emptyGates(), unchanged: last.checked }, tokens: 0 },
+      {
+        jobKey,
+        sourceId: last.sourceId,
+        mode: 'manual',
+        startedAt: at,
+        finishedAt: at,
+        status: IngestionRunStatus.Success,
+        checked: last.checked,
+        unchanged: last.checked,
+        updated: 0,
+        errors: 0,
+        skipped: { ...emptyGates(), unchanged: last.checked },
+        tokens: 0,
+      },
       { ...ctx.actor, via: 'system:manual' },
     );
-    const messages = [`${last.checked} link(s) checked (manual, simulated: no provider for this job yet)`, `${last.checked} unchanged: "unchanged" gate, 0 tokens`];
-    await repo.insertMany(ingestionLogs, messages.map((message) => ({ runId: run.id, level: 'info', message, at })), ctx.actor);
+    const messages = [
+      `${last.checked} link(s) checked (manual, simulated: no provider for this job yet)`,
+      `${last.checked} unchanged: "unchanged" gate, 0 tokens`,
+    ];
+    await repo.insertMany(
+      ingestionLogs,
+      messages.map((message) => ({ runId: run.id, level: 'info', message, at })),
+      ctx.actor,
+    );
     await repo.audit(ctx.actor, AdminAuditAction.IngestionTriggered, { type: 'ingestion_runs', id: run.id }, { target: jobKey, reason: null });
   });
   return { ok: true as const };
@@ -171,16 +197,18 @@ export const prepareCollectionLinks = async (
   if (Object.keys(errors).length) throw invalidFields(errors, 'invalidLinks');
   return checked.flatMap((r) =>
     r.ok
-      ? [{
-          entityType: 'athletes',
-          entityId: null,
-          url: r.url,
-          sourceId: (r.source ? view.rows.sources.find((s) => s.name === r.source!.name)?.id : undefined) ?? null,
-          origin: link.origin,
-          suggestionId: link.suggestionId ?? null,
-          pendingLabel: link.athleteName,
-          pendingSport: link.sport,
-        }]
+      ? [
+          {
+            entityType: 'athletes',
+            entityId: null,
+            url: r.url,
+            sourceId: (r.source ? view.rows.sources.find((s) => s.name === r.source!.name)?.id : undefined) ?? null,
+            origin: link.origin,
+            suggestionId: link.suggestionId ?? null,
+            pendingLabel: link.athleteName,
+            pendingSport: link.sport,
+          },
+        ]
       : [],
   );
 };
@@ -198,4 +226,3 @@ export const addCollectionLinks = async (ctx: RequestContext, body: AddCollectio
   });
   return { ok: true as const };
 };
-

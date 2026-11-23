@@ -1,12 +1,9 @@
 import type { Database } from '@was/db';
 
 import type { AuthProvider } from './auth-provider.type';
-import { ANON_SESSION, sessionForUserId } from './auth-user.helper';
-
-/** The part of Better Auth the provider needs (tests stub it). */
-export interface SessionLookup {
-  getSession(input: { headers: Headers }): Promise<{ user: { id: string } } | null>;
-}
+import { ANON_SESSION } from './auth-user.const';
+import { sessionForUserId } from './auth-user.helper';
+import type { SessionLookup } from './session-lookup.interface';
 
 /**
  * Real sign-in (Google via Better Auth): the `was.session_token` cookie → Better Auth session → our `users` row

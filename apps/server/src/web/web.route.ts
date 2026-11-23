@@ -2,62 +2,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { serveStatic } from '@hono/node-server/serve-static';
-import { type Locale, LOCALE_COOKIE, resolveLocale } from '@was/shared';
-import type { Context, Hono } from 'hono';
-import { getCookie } from 'hono/cookie';
+import type { Hono } from 'hono';
 import { endTime, startTime } from 'hono/timing';
 
-import type { ServerConfig } from '../config/env.config';
-import type { HonoEnv, SsrSessionMemo } from '../http/app-context.type';
+import type { ServerConfig } from '../config/server-config.type';
+import type { HonoEnv } from '../http/app-context.type';
+import type { SsrSessionMemo } from '../http/ssr-session-memo.interface';
 import { pageSecureHeaders } from '../middlewares/secure-headers.middleware';
-import { type CachedPage, etagMatches, type HtmlCache, htmlEtag, isShareablePageRequest, PRIVATE_HTML_CACHE_CONTROL, PUBLIC_HTML_CACHE_CONTROL } from './html-cache';
-import type { DocumentAssets, WebRenderModule } from './web-assets.helper';
-
-/** How pages are produced: Vite dev (middleware mode) or the production build (dist/client + dist/server). */
-export interface WebRuntime {
-  dev: boolean;
-  loadRenderer(): Promise<WebRenderModule>;
-  assets(url: string): Promise<DocumentAssets>;
-  /** Production: dist/client (hashed /assets/* and public files). Dev: Vite serves them before Hono. */
-  clientDir?: string;
-  /** Dev: maps SSR stack traces back to the sources. */
-  fixStacktrace?(error: unknown): void;
-}
-
-const IMMUTABLE = 'public, max-age=31536000, immutable';
-// HTML caching (docs 05/12): anonymous pages are public (CDN s-maxage + in-process LRU in production, dropped on any
-// write); pages with app cookies, ?as=/?fixture=, account/admin and non-200 are `private, no-cache`.
-// Language (doc 12 i18n): same URL, so pages vary by the `was_locale` cookie and Accept-Language. The locale is a
-// cacheable variant (not personal): it is part of the in-process cache key and of `Vary`, never makes a page private.
-const PAGE_VARY = 'Cookie, Accept-Language';
-/** Locale of a page request: the same rule the renderer (boot) and the API apply (cookie → Accept-Language → pt-BR). */
-export const pageLocale = (c: Context<HonoEnv>): Locale => resolveLocale({ cookie: getCookie(c, LOCALE_COOKIE), acceptLanguage: c.req.header('accept-language') });
-/** In-process cache key: one entry per language of each path + search. */
-export const pageCacheKey = (locale: Locale, url: URL): string => `${locale}|${url.pathname}${url.search}`;
-class SsrTimeoutError extends Error {}
-/** Rejects when the render has not produced its Response in time (the client gets a 503 instead of a hung socket). */
-const withTimeout = <T>(ms: number, work: Promise<T>): Promise<T> => {
-  let timer: NodeJS.Timeout | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new SsrTimeoutError()), ms);
-  });
-  return Promise.race([work, timeout]).finally(() => clearTimeout(timer));
-};
-const isApi = (p: string) => p === '/api' || p.startsWith('/api/');
-
-/** A shareable page (fresh render or cache hit): CDN-ready headers, 304 when the client already has these bytes. */
-const respond = (c: Context<HonoEnv>, page: Pick<CachedPage, 'status' | 'headers' | 'body' | 'etag'>, ifNoneMatch: string | undefined) => {
-  const headers = new Headers(page.headers);
-  headers.set('Cache-Control', PUBLIC_HTML_CACHE_CONTROL);
-  headers.set('ETag', page.etag);
-  headers.set('Vary', PAGE_VARY);
-  headers.set('Content-Language', c.get('locale'));
-  if (etagMatches(ifNoneMatch, page.etag)) {
-    headers.delete('content-type');
-    return c.body(null, 304, Object.fromEntries(headers));
-  }
-  return new Response(page.body, { status: page.status, headers });
-};
+import type { HtmlCache } from './html.cache';
+import { PRIVATE_HTML_CACHE_CONTROL } from './html-cache.const';
+import { htmlEtag, isShareablePageRequest } from './html-cache.helper';
+import { SsrTimeoutError } from './ssr-timeout.error';
+import { IMMUTABLE, PAGE_VARY } from './web.const';
+import { isApi, pageCacheKey, pageLocale, respond, withTimeout } from './web.helper';
+import type { WebRuntime } from './web-runtime.interface';
 
 /**
  * Mounts the web app after the API: static files (production) then SSR for every other GET. The API is called
@@ -107,14 +65,17 @@ export const mountWeb = (app: Hono<HonoEnv>, web: WebRuntime, config: ServerConf
       const nonce = c.var.cspNonce;
       const ssrSession: SsrSessionMemo = {};
       startTime(c, 'ssr', 'render');
-      const response = await withTimeout(config.ssrTimeoutMs, renderer.render({
-        request: c.req.raw,
-        nonce,
-        apiFetch: (request) => Promise.resolve(app.fetch(request, { ssrSession })),
-        timeZone: config.appTimeZone,
-        publicUrl: config.publicUrl,
-        assets,
-      }));
+      const response = await withTimeout(
+        config.ssrTimeoutMs,
+        renderer.render({
+          request: c.req.raw,
+          nonce,
+          apiFetch: (request) => Promise.resolve(app.fetch(request, { ssrSession })),
+          timeZone: config.appTimeZone,
+          publicUrl: config.publicUrl,
+          assets,
+        }),
+      );
       endTime(c, 'ssr');
       const headers = new Headers(response.headers);
       headers.set('Vary', PAGE_VARY);

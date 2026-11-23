@@ -1,14 +1,21 @@
-import { type Database, active, athletes, championTiers, comments, notifications, tierVotes, users } from '@was/db';
+import { active, athletes, championTiers, comments, type Database, notifications, tierVotes, users } from '@was/db';
 import { type AthleteRef, type MeResponse, NOTIFICATIONS_LIMIT, type NotificationsResponse, type SessionResponse, type SessionUser } from '@was/shared';
 import { and, count, desc, eq, inArray, isNull } from 'drizzle-orm';
 
 import type { AuthUser, SessionContext } from '../../auth/auth-provider.type';
-import type { AppDeps } from '../../http/app-context.type';
-import { notFound } from '../../http/http-error.error';
 import { loadAuthUser } from '../../auth/auth-user.helper';
-import type { ServerConfig } from '../../config/env.config';
+import type { ServerConfig } from '../../config/server-config.type';
+import type { AppDeps } from '../../http/app-deps.interface';
+import { notFound } from '../../http/http-error.helper';
 
-export const sessionUserOf = (u: AuthUser): SessionUser => ({ email: u.email, name: u.name, avatarUrl: u.avatarUrl, role: u.role, tierVotesCount: u.tierVotesCount, commentsCount: u.commentsCount });
+export const sessionUserOf = (u: AuthUser): SessionUser => ({
+  email: u.email,
+  name: u.name,
+  avatarUrl: u.avatarUrl,
+  role: u.role,
+  tierVotesCount: u.tierVotesCount,
+  commentsCount: u.commentsCount,
+});
 
 /** GET /api/session: who is browsing + what the login dialog can offer (Google configured, dev switcher). */
 export const getSession = (session: SessionContext, config: ServerConfig): SessionResponse => ({
@@ -41,7 +48,11 @@ export const getMe = async (deps: AppDeps, user: AuthUser): Promise<MeResponse> 
       .innerJoin(championTiers, eq(championTiers.id, tierVotes.championTierId))
       .where(active(tierVotes, eq(tierVotes.userId, user.id)))
       .orderBy(desc(tierVotes.updatedAt)),
-    deps.db.select().from(comments).where(active(comments, eq(comments.userId, user.id))).orderBy(desc(comments.createdAt)),
+    deps.db
+      .select()
+      .from(comments)
+      .where(active(comments, eq(comments.userId, user.id)))
+      .orderBy(desc(comments.createdAt)),
   ]);
   // Independent reads: athlete refs of my votes/comments and the fresh counters.
   const [refs, fresh] = await Promise.all([
@@ -52,7 +63,9 @@ export const getMe = async (deps: AppDeps, user: AuthUser): Promise<MeResponse> 
     user: fresh,
     votes: votes.flatMap((v) => (refs.has(v.athleteId) ? [{ athlete: refs.get(v.athleteId)!, tier: v.tier, at: v.at.toISOString() }] : [])),
     comments: mine.flatMap((c) =>
-      refs.has(c.athleteId) ? [{ id: c.id, athlete: refs.get(c.athleteId)!, body: c.body, at: c.createdAt.toISOString(), isReply: c.parentCommentId !== null }] : [],
+      refs.has(c.athleteId)
+        ? [{ id: c.id, athlete: refs.get(c.athleteId)!, body: c.body, at: c.createdAt.toISOString(), isReply: c.parentCommentId !== null }]
+        : [],
     ),
   };
 };
@@ -69,9 +82,15 @@ export const getNotifications = async (deps: AppDeps, user: AuthUser): Promise<N
       .where(mine)
       .orderBy(desc(notifications.createdAt))
       .limit(NOTIFICATIONS_LIMIT),
-    deps.db.select({ n: count() }).from(notifications).where(and(mine, isNull(notifications.readAt))),
+    deps.db
+      .select({ n: count() })
+      .from(notifications)
+      .where(and(mine, isNull(notifications.readAt))),
   ]);
-  const refs = await athleteRefs(deps.db, rows.map((r) => r.n.payload.athleteId).filter((id): id is string => !!id));
+  const refs = await athleteRefs(
+    deps.db,
+    rows.map((r) => r.n.payload.athleteId).filter((id): id is string => !!id),
+  );
   const items = rows.map(({ n, actor }) => ({
     id: n.id,
     kind: n.kind,
@@ -87,7 +106,10 @@ export const getNotifications = async (deps: AppDeps, user: AuthUser): Promise<N
 
 /** PATCH /api/notifications/:id/read — only my own notifications. */
 export const markNotificationRead = async (deps: AppDeps, user: AuthUser, actor: Parameters<AppDeps['repo']['update']>[3], id: string) => {
-  const [n] = await deps.db.select().from(notifications).where(active(notifications, and(eq(notifications.id, id), eq(notifications.userId, user.id))));
+  const [n] = await deps.db
+    .select()
+    .from(notifications)
+    .where(active(notifications, and(eq(notifications.id, id), eq(notifications.userId, user.id))));
   if (!n) throw notFound();
   if (!n.readAt) await deps.repo.update(notifications, n.id, { readAt: new Date() }, actor, { summary: 'read' });
   return { ok: true as const };

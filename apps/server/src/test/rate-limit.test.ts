@@ -3,7 +3,8 @@
 import { createDatabase, type DatabaseHandle, rateLimitBuckets } from '@was/db';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createDatabaseRateLimitStore, createMemoryRateLimitStore, type RateLimitStore } from '../rate-limit/rate-limit.store';
+import { createDatabaseRateLimitStore, createMemoryRateLimitStore } from '../rate-limit/rate-limit.store';
+import type { RateLimitStore } from '../rate-limit/rate-limit-store.interface';
 import { betterAuthRateLimitStorage, createRateLimiter } from '../rate-limit/rate-limiter';
 
 let handle: DatabaseHandle;
