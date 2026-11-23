@@ -85,8 +85,27 @@ export const categoryValueTranslations = pgTable(
   (t) => [uniqueIndex().on(t.valueId, t.locale).where(live(t.deletedAt))],
 );
 
-/** A combination used as a division ("IBJJF · black · adult · −76 kg · gi · men"). */
-export const categorySets = pgTable('category_sets', { ...baseColumns(), slug: text().notNull(), label: text().notNull() }, (t) => [uniqueIndex().on(t.slug).where(live(t.deletedAt))]);
+/**
+ * A combination used as a division ("IBJJF · black · adult · −76 kg · gi · men"). A set bound to a sport is also a
+ * named category of that sport (sport pages, profile categories; replaces sport_categories), optionally nested.
+ */
+export const categorySets = pgTable(
+  'category_sets',
+  {
+    ...baseColumns(),
+    slug: text().notNull(),
+    label: text().notNull(),
+    sportId: uuid().references(() => sports.id),
+    parentSetId: uuid().references((): AnyPgColumn => categorySets.id),
+    sortOrder: integer().notNull().default(0),
+  },
+  (t) => [uniqueIndex().on(t.slug).where(live(t.deletedAt)), index().on(t.sportId).where(live(t.deletedAt))],
+);
+export const categorySetTranslations = pgTable(
+  'category_set_translations',
+  { ...baseColumns(), setId: uuid().notNull().references(() => categorySets.id), locale: text().notNull(), name: text().notNull() },
+  (t) => [uniqueIndex().on(t.setId, t.locale).where(live(t.deletedAt))],
+);
 export const categorySetValues = pgTable(
   'category_set_values',
   { ...baseColumns(), setId: uuid().notNull().references(() => categorySets.id), valueId: uuid().notNull().references(() => categoryValues.id) },

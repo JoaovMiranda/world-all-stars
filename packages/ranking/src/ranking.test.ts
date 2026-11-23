@@ -45,7 +45,7 @@ describe('football champions V1 (ranking-futebol §16)', () => {
   };
 
   it('A: one credit per verified edition; duplicates, pending, rejected and disputed do not count', () => {
-    const r = runRanking(footballChampions, 'A', input);
+    const r = runRanking(footballChampions, 'world-cup-men', input);
     const by = Object.fromEntries(r.entries.map((e) => [e.competitorId, e]));
     expect(by.pele).toMatchObject({ rank: 1, score: 3 });
     expect(by.cafu).toMatchObject({ rank: 2, score: 2 });
@@ -58,25 +58,25 @@ describe('football champions V1 (ranking-futebol §16)', () => {
   });
 
   it('C: Olympic golds rank separately; B (women) is a separate classification', () => {
-    const c = runRanking(footballChampions, 'C', input);
+    const c = runRanking(footballChampions, 'olympic-men', input);
     expect(c.entries.find((e) => e.competitorId === 'gold2')).toMatchObject({ rank: 1, score: 2 });
     expect(c.entries.some((e) => e.competitorId === 'pele')).toBe(false);
-    expect(runRanking(footballChampions, 'B', input).entries.find((e) => e.competitorId === 'marta')?.eligible).toBe(false);
+    expect(runRanking(footballChampions, 'world-cup-women', input).entries.find((e) => e.competitorId === 'marta')?.eligible).toBe(false);
   });
 
   it('E: consolidated total, World Cup + Olympic combined (Messi = 2)', () => {
-    const e = runRanking(footballChampions, 'E', input);
+    const e = runRanking(footballChampions, 'overview', input);
     expect(e.entries.find((x) => x.competitorId === 'messi')).toMatchObject({ score: 2, metrics: { worldCups: 1, olympicGolds: 1 } });
   });
 
   it('ties share the position; the result is reproducible (same manifest ⇒ same output hash)', () => {
     const tie: RankingInput = { competitors: people('a', 'b'), evidence: [m('a', 'fifa-world-cup', 1990), m('b', 'fifa-world-cup', 1990)] };
-    const r1 = runRanking(footballChampions, 'A', tie);
+    const r1 = runRanking(footballChampions, 'world-cup-men', tie);
     expect(r1.entries.map((e) => [e.rank, e.rankTied])).toEqual([
       [1, true],
       [1, true],
     ]);
-    const r2 = runRanking(footballChampions, 'A', { competitors: [...tie.competitors].reverse(), evidence: [...tie.evidence].reverse() });
+    const r2 = runRanking(footballChampions, 'world-cup-men', { competitors: [...tie.competitors].reverse(), evidence: [...tie.evidence].reverse() });
     expect(r2.outputHash).toBe(r1.outputHash);
     expect(r2.inputHash).toBe(r1.inputHash);
   });
@@ -135,6 +135,6 @@ describe('BJJ career V1 (ranking.md §9–§10)', () => {
     const input: RankingInput = { competitors: people('x'), evidence: [r('x', 1, 'world', { giMode: 'no-gi' }), m('x', 'fifa-world-cup', 2002)] };
     expect(runRanking(bjjCareer, 'black-gi-men', input).entries).toHaveLength(0);
     expect(runRanking(bjjCareer, 'nogi-men', input).entries[0]).toMatchObject({ score: 1000 });
-    expect(runRanking(footballChampions, 'E', input).entries[0]).toMatchObject({ score: 1 });
+    expect(runRanking(footballChampions, 'overview', input).entries[0]).toMatchObject({ score: 1 });
   });
 });

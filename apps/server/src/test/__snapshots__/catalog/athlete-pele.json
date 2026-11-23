@@ -1,0 +1,1805 @@
+{
+  "slug": "pele",
+  "knownAs": "Pelé",
+  "tier": "mythic",
+  "id": "019a3f2c-7d00-7000-8000-00000000007f",
+  "percentile": 100,
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Pele_con_brasil_%28cropped%29.jpg",
+    "original": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Pele_con_brasil_%28cropped%29.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Pele_con_brasil_(cropped).jpg",
+    "author": "Autor desconhecido",
+    "license": "Domínio público",
+    "year": 1970
+  },
+  "sport": {
+    "slug": "football",
+    "name": "Futebol",
+    "colorToken": "success",
+    "id": "019a3f2c-7d00-7000-8000-000000000050",
+    "statsSchema": "football",
+    "group": "Físico",
+    "groupSlug": "physical",
+    "subgroup": "Coletivos",
+    "environment": "open",
+    "format": "team",
+    "governance": "pyramid"
+  },
+  "nationalities": [
+    {
+      "iso2": "BR",
+      "flag": "🇧🇷",
+      "name": "Brasil"
+    }
+  ],
+  "careerFrom": 1956,
+  "careerTo": 1977,
+  "status": "deceased",
+  "titles": 28,
+  "worldTitles": 5,
+  "isHallOfGreats": true,
+  "contentLocale": "pt-BR",
+  "wikidataQid": "Q12897",
+  "fullName": "Edson Arantes do Nascimento",
+  "nicknames": [
+    "O Rei",
+    "Rei do Futebol",
+    "Pérola Negra"
+  ],
+  "position": "Atacante",
+  "category": "Masculino",
+  "birth": {
+    "date": "1940-10-23",
+    "city": {
+      "name": "Três Corações",
+      "region": "Minas Gerais",
+      "country": {
+        "iso2": "BR",
+        "flag": "🇧🇷",
+        "name": "Brasil"
+      }
+    }
+  },
+  "death": {
+    "date": "2022-12-29",
+    "city": {
+      "name": "São Paulo",
+      "region": "São Paulo",
+      "country": {
+        "iso2": "BR",
+        "flag": "🇧🇷",
+        "name": "Brasil"
+      }
+    }
+  },
+  "heightCm": 173,
+  "dominantFoot": "right",
+  "shortBio": "Considerado por muitos o maior jogador de futebol de todos os tempos. Único atleta tricampeão mundial como jogador (1958, 1962 e 1970), defendeu o Santos por quase duas décadas e levou o futebol aos Estados Unidos pelo New York Cosmos.",
+  "externalIds": {
+    "rsssf": "pele"
+  },
+  "social": {},
+  "inclusionReason": "Three-time World Cup winner",
+  "achievements": [
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000a3",
+      "type": "champion",
+      "weight": 10,
+      "year": 1958,
+      "date": "1958-06-29",
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "fifa",
+        "name": "FIFA",
+        "license": "Citação de fato",
+        "url": "https://www.fifa.com",
+        "home": "https://www.fifa.com"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "fifa-world-cup",
+        "name": "Copa do Mundo FIFA"
+      },
+      "edition": {
+        "label": null,
+        "number": 6,
+        "host": {
+          "iso2": "SE",
+          "flag": "🇸🇪",
+          "name": "Suécia"
+        }
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Brazil national team"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000aa",
+      "type": "champion",
+      "weight": 10,
+      "year": 1962,
+      "date": "1962-06-17",
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "fifa",
+        "name": "FIFA",
+        "license": "Citação de fato",
+        "url": "https://www.fifa.com",
+        "home": "https://www.fifa.com"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "fifa-world-cup",
+        "name": "Copa do Mundo FIFA"
+      },
+      "edition": {
+        "label": null,
+        "number": 7,
+        "host": {
+          "iso2": "CL",
+          "flag": "🇨🇱",
+          "name": "Chile"
+        }
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Brazil national team"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000b1",
+      "type": "champion",
+      "weight": 10,
+      "year": 1970,
+      "date": "1970-06-21",
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "fifa",
+        "name": "FIFA",
+        "license": "Citação de fato",
+        "url": "https://www.fifa.com",
+        "home": "https://www.fifa.com"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "fifa-world-cup",
+        "name": "Copa do Mundo FIFA"
+      },
+      "edition": {
+        "label": null,
+        "number": 9,
+        "host": {
+          "iso2": "MX",
+          "flag": "🇲🇽",
+          "name": "México"
+        }
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Brazil national team"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000bb",
+      "type": "champion",
+      "weight": 10,
+      "year": 1962,
+      "date": null,
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "intercontinental-cup",
+        "name": "Copa Intercontinental"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000bd",
+      "type": "champion",
+      "weight": 10,
+      "year": 1963,
+      "date": null,
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "intercontinental-cup",
+        "name": "Copa Intercontinental"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000c1",
+      "type": "champion",
+      "weight": 10,
+      "year": 1962,
+      "date": null,
+      "level": "continental",
+      "levelWeight": 4,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "copa-libertadores",
+        "name": "Copa Libertadores da América"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000c3",
+      "type": "champion",
+      "weight": 10,
+      "year": 1963,
+      "date": null,
+      "level": "continental",
+      "levelWeight": 4,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "copa-libertadores",
+        "name": "Copa Libertadores da América"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000c7",
+      "type": "champion",
+      "weight": 10,
+      "year": 1961,
+      "date": null,
+      "level": "national",
+      "levelWeight": 2,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "brazilian-championship",
+        "name": "Campeonato Brasileiro"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000c9",
+      "type": "champion",
+      "weight": 10,
+      "year": 1962,
+      "date": null,
+      "level": "national",
+      "levelWeight": 2,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "brazilian-championship",
+        "name": "Campeonato Brasileiro"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000cb",
+      "type": "champion",
+      "weight": 10,
+      "year": 1963,
+      "date": null,
+      "level": "national",
+      "levelWeight": 2,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "brazilian-championship",
+        "name": "Campeonato Brasileiro"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000cd",
+      "type": "champion",
+      "weight": 10,
+      "year": 1964,
+      "date": null,
+      "level": "national",
+      "levelWeight": 2,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "brazilian-championship",
+        "name": "Campeonato Brasileiro"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000cf",
+      "type": "champion",
+      "weight": 10,
+      "year": 1965,
+      "date": null,
+      "level": "national",
+      "levelWeight": 2,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "brazilian-championship",
+        "name": "Campeonato Brasileiro"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000d1",
+      "type": "champion",
+      "weight": 10,
+      "year": 1968,
+      "date": null,
+      "level": "national",
+      "levelWeight": 2,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "brazilian-championship",
+        "name": "Campeonato Brasileiro"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000d6",
+      "type": "champion",
+      "weight": 10,
+      "year": 1977,
+      "date": null,
+      "level": "national",
+      "levelWeight": 2,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "nasl",
+        "name": "North American Soccer League"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "New York Cosmos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000da",
+      "type": "champion",
+      "weight": 10,
+      "year": 1958,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000dc",
+      "type": "champion",
+      "weight": 10,
+      "year": 1960,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000de",
+      "type": "champion",
+      "weight": 10,
+      "year": 1961,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000e0",
+      "type": "champion",
+      "weight": 10,
+      "year": 1962,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000e2",
+      "type": "champion",
+      "weight": 10,
+      "year": 1964,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000e4",
+      "type": "champion",
+      "weight": 10,
+      "year": 1965,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000e6",
+      "type": "champion",
+      "weight": 10,
+      "year": 1967,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000e8",
+      "type": "champion",
+      "weight": 10,
+      "year": 1968,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000ea",
+      "type": "champion",
+      "weight": 10,
+      "year": 1969,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000ec",
+      "type": "champion",
+      "weight": 10,
+      "year": 1973,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "campeonato-paulista",
+        "name": "Campeonato Paulista"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000f0",
+      "type": "champion",
+      "weight": 10,
+      "year": 1959,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "rio-sao-paulo-tournament",
+        "name": "Torneio Rio-São Paulo"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000f2",
+      "type": "champion",
+      "weight": 10,
+      "year": 1963,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "rio-sao-paulo-tournament",
+        "name": "Torneio Rio-São Paulo"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000f4",
+      "type": "champion",
+      "weight": 10,
+      "year": 1964,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "rio-sao-paulo-tournament",
+        "name": "Torneio Rio-São Paulo"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000f6",
+      "type": "champion",
+      "weight": 10,
+      "year": 1966,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "competition",
+      "competition": {
+        "slug": "rio-sao-paulo-tournament",
+        "name": "Torneio Rio-São Paulo"
+      },
+      "edition": {
+        "label": null,
+        "number": null,
+        "host": null
+      },
+      "isOlympic": false,
+      "category": null,
+      "team": "Santos"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000fa",
+      "type": "award",
+      "weight": 6,
+      "year": 2000,
+      "date": null,
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "fifa-player-of-the-century",
+        "name": "Jogador do Século (FIFA)",
+        "kind": "individual"
+      },
+      "label": "dividido com Maradona"
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-0000000000fe",
+      "type": "award",
+      "weight": 6,
+      "year": 1999,
+      "date": null,
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "ioc-athlete-of-the-century",
+        "name": "Atleta do Século (COI)",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000102",
+      "type": "award",
+      "weight": 6,
+      "year": 2014,
+      "date": null,
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "ballon-dor-prix-dhonneur",
+        "name": "Bola de Ouro FIFA: Prêmio de Honra",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000106",
+      "type": "award",
+      "weight": 6,
+      "year": 1970,
+      "date": null,
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "fifa",
+        "name": "FIFA",
+        "license": "Citação de fato",
+        "url": "https://www.fifa.com",
+        "home": "https://www.fifa.com"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "world-cup-golden-ball",
+        "name": "Bola de Ouro da Copa do Mundo",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-00000000010a",
+      "type": "award",
+      "weight": 6,
+      "year": 1958,
+      "date": null,
+      "level": "world",
+      "levelWeight": 8,
+      "rank": null,
+      "source": {
+        "slug": "fifa",
+        "name": "FIFA",
+        "license": "Citação de fato",
+        "url": "https://www.fifa.com",
+        "home": "https://www.fifa.com"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "world-cup-best-young-player",
+        "name": "Melhor Jogador Jovem da Copa do Mundo",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-00000000010e",
+      "type": "award",
+      "weight": 6,
+      "year": 1957,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000110",
+      "type": "award",
+      "weight": 6,
+      "year": 1958,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000112",
+      "type": "award",
+      "weight": 6,
+      "year": 1959,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000114",
+      "type": "award",
+      "weight": 6,
+      "year": 1960,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000116",
+      "type": "award",
+      "weight": 6,
+      "year": 1961,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000118",
+      "type": "award",
+      "weight": 6,
+      "year": 1962,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-00000000011a",
+      "type": "award",
+      "weight": 6,
+      "year": 1963,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-00000000011c",
+      "type": "award",
+      "weight": 6,
+      "year": 1964,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-00000000011e",
+      "type": "award",
+      "weight": 6,
+      "year": 1965,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000120",
+      "type": "award",
+      "weight": 6,
+      "year": 1969,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    },
+    {
+      "id": "019a3f2c-7d00-7000-8000-000000000122",
+      "type": "award",
+      "weight": 6,
+      "year": 1973,
+      "date": null,
+      "level": "local",
+      "levelWeight": 1,
+      "rank": null,
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      },
+      "kind": "award",
+      "award": {
+        "slug": "campeonato-paulista-top-scorer",
+        "name": "Artilheiro do Campeonato Paulista",
+        "kind": "individual"
+      },
+      "label": null
+    }
+  ],
+  "teams": [
+    {
+      "name": "Santos",
+      "kind": "club",
+      "country": {
+        "iso2": "BR",
+        "flag": "🇧🇷",
+        "name": "Brasil"
+      },
+      "from": 1956,
+      "to": 1974,
+      "fromDate": null,
+      "toDate": null,
+      "role": null
+    },
+    {
+      "name": "Brazil national team",
+      "kind": "national",
+      "country": {
+        "iso2": "BR",
+        "flag": "🇧🇷",
+        "name": "Brasil"
+      },
+      "from": 1957,
+      "to": 1971,
+      "fromDate": null,
+      "toDate": null,
+      "role": null
+    },
+    {
+      "name": "New York Cosmos",
+      "kind": "club",
+      "country": {
+        "iso2": "US",
+        "flag": "🇺🇸",
+        "name": "Estados Unidos"
+      },
+      "from": 1975,
+      "to": 1977,
+      "fromDate": null,
+      "toDate": null,
+      "role": null
+    }
+  ],
+  "stats": {
+    "schema": "football",
+    "world_cups": [
+      {
+        "note": "aos 17 anos",
+        "year": 1958,
+        "goals": 6,
+        "result": "Campeão",
+        "matches": 4
+      },
+      {
+        "note": "lesionado no 2º jogo",
+        "year": 1962,
+        "goals": 1,
+        "result": "Campeão",
+        "matches": 2
+      },
+      {
+        "note": "",
+        "year": 1966,
+        "goals": 1,
+        "result": "Fase de grupos",
+        "matches": 2
+      },
+      {
+        "note": "Bola de Ouro da Copa",
+        "year": 1970,
+        "goals": 4,
+        "result": "Campeão",
+        "matches": 6
+      }
+    ],
+    "career_goals": 1279,
+    "national_team": {
+      "team": "selecao-brasileira",
+      "wins": 67,
+      "draws": 14,
+      "goals": 77,
+      "losses": 11,
+      "matches": 92
+    },
+    "career_matches": 1363,
+    "career_goals_note": "Guinness, inclui amistosos"
+  },
+  "reigns": [],
+  "milestones": [
+    {
+      "date": "1940-10-23",
+      "kind": "birth",
+      "title": "Nasce em Três Corações (MG)",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1956-09-07",
+      "kind": "career",
+      "title": "Estreia pelo Santos, com gol",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1957-07-07",
+      "kind": "career",
+      "title": "Estreia pela Seleção, com gol, contra a Argentina no Maracanã",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1958-06-29",
+      "kind": "title",
+      "title": "Campeão mundial na Suécia, com 2 gols na final",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1961-03-05",
+      "kind": "career",
+      "title": "O \"gol de placa\" contra o Fluminense, no Maracanã",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1969-11-19",
+      "kind": "record",
+      "title": "Milésimo gol, de pênalti, contra o Vasco no Maracanã",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1970-06-21",
+      "kind": "title",
+      "title": "Tricampeão mundial no México, com gol na final",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1971-07-18",
+      "kind": "career",
+      "title": "Despedida da Seleção, contra a Iugoslávia",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "1977-10-01",
+      "kind": "career",
+      "title": "Jogo de despedida: Cosmos × Santos",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "date": "2022-12-29",
+      "kind": "death",
+      "title": "Morre em São Paulo, aos 82 anos",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    }
+  ],
+  "dossier": {
+    "status": "approved",
+    "approvals": 2,
+    "headline": "O jogador que transformou o futebol em linguagem universal.",
+    "evidences": [
+      {
+        "type": "decades_record",
+        "text": "Único jogador tricampeão da Copa do Mundo (1958, 1962 e 1970).",
+        "source": {
+          "slug": "fifa",
+          "name": "FIFA",
+          "license": "Citação de fato",
+          "url": "https://www.fifa.com",
+          "home": "https://www.fifa.com"
+        }
+      },
+      {
+        "type": "institutional_recognition",
+        "text": "Eleito Atleta do Século pelo COI (1999) e Jogador do Século pela FIFA (2000).",
+        "source": {
+          "slug": "wikipedia-pt",
+          "name": "Wikipedia (pt)",
+          "license": "CC BY-SA 4.0",
+          "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+          "home": "https://pt.wikipedia.org"
+        }
+      },
+      {
+        "type": "technique_named",
+        "text": "A expressão \"gol de placa\" nasceu de um gol dele contra o Fluminense no Maracanã, em 1961, homenageado com uma placa no estádio.",
+        "source": {
+          "slug": "wikipedia-pt",
+          "name": "Wikipedia (pt)",
+          "license": "CC BY-SA 4.0",
+          "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+          "home": "https://pt.wikipedia.org"
+        }
+      },
+      {
+        "type": "rule_or_market_change",
+        "text": "Como ministro do Esporte, deu nome à Lei 9.615/1998 (Lei Pelé), que mudou a legislação esportiva brasileira.",
+        "source": {
+          "slug": "wikipedia-pt",
+          "name": "Wikipedia (pt)",
+          "license": "CC BY-SA 4.0",
+          "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+          "home": "https://pt.wikipedia.org"
+        }
+      },
+      {
+        "type": "global_popularization",
+        "text": "No New York Cosmos (1975–1977), foi o rosto da popularização do futebol nos Estados Unidos.",
+        "source": {
+          "slug": "wikipedia-pt",
+          "name": "Wikipedia (pt)",
+          "license": "CC BY-SA 4.0",
+          "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+          "home": "https://pt.wikipedia.org"
+        }
+      }
+    ]
+  },
+  "tierHistory": [],
+  "provenance": [
+    {
+      "field": "full_name",
+      "ref": "Q12897 · P1477",
+      "retrievedAt": "2026-11-02",
+      "source": {
+        "slug": "wikidata",
+        "name": "Wikidata",
+        "license": "CC0",
+        "url": "https://www.wikidata.org/wiki/Q12897",
+        "home": "https://www.wikidata.org"
+      }
+    },
+    {
+      "field": "birth_date",
+      "ref": "Q12897 · P569/P19",
+      "retrievedAt": "2026-11-02",
+      "source": {
+        "slug": "wikidata",
+        "name": "Wikidata",
+        "license": "CC0",
+        "url": "https://www.wikidata.org/wiki/Q12897",
+        "home": "https://www.wikidata.org"
+      }
+    },
+    {
+      "field": "death_date",
+      "ref": "Q12897 · P570/P20",
+      "retrievedAt": "2026-11-02",
+      "source": {
+        "slug": "wikidata",
+        "name": "Wikidata",
+        "license": "CC0",
+        "url": "https://www.wikidata.org/wiki/Q12897",
+        "home": "https://www.wikidata.org"
+      }
+    },
+    {
+      "field": "height_cm",
+      "ref": "Q12897 · P2048",
+      "retrievedAt": "2026-11-02",
+      "source": {
+        "slug": "wikidata",
+        "name": "Wikidata",
+        "license": "CC0",
+        "url": "https://www.wikidata.org/wiki/Q12897",
+        "home": "https://www.wikidata.org"
+      }
+    },
+    {
+      "field": "photo_media_link_id",
+      "ref": "Pele_con_brasil_(cropped).jpg",
+      "retrievedAt": "2026-11-02",
+      "source": {
+        "slug": "commons",
+        "name": "Wikimedia Commons",
+        "license": "Por arquivo",
+        "url": "https://commons.wikimedia.org/wiki/File:Pele_con_brasil_(cropped).jpg",
+        "home": "https://commons.wikimedia.org"
+      }
+    },
+    {
+      "field": "short_bio",
+      "ref": "Pelé (revisão de exemplo)",
+      "retrievedAt": "2026-11-02",
+      "source": {
+        "slug": "wikipedia-pt",
+        "name": "Wikipedia (pt)",
+        "license": "CC BY-SA 4.0",
+        "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+        "home": "https://pt.wikipedia.org"
+      }
+    },
+    {
+      "field": "athlete_teams",
+      "ref": "Q12897 · P54",
+      "retrievedAt": "2026-11-02",
+      "source": {
+        "slug": "wikidata",
+        "name": "Wikidata",
+        "license": "CC0",
+        "url": "https://www.wikidata.org/wiki/Q12897",
+        "home": "https://www.wikidata.org"
+      }
+    },
+    {
+      "field": "stats.career_goals",
+      "ref": "Most career goals (football)",
+      "retrievedAt": "2026-10-15",
+      "source": {
+        "slug": "guinness",
+        "name": "Guinness World Records",
+        "license": "Citação de fato",
+        "url": "https://www.guinnessworldrecords.com",
+        "home": "https://www.guinnessworldrecords.com"
+      }
+    },
+    {
+      "field": "stats.national_team",
+      "ref": "Pelé: jogos pela Seleção (autor da página)",
+      "retrievedAt": "2026-10-15",
+      "source": {
+        "slug": "rsssf-brazil",
+        "name": "RSSSF Brasil",
+        "license": "Cópia com atribuição ao autor",
+        "url": "https://www.rsssfbrasil.com/players/pele.htm",
+        "home": "https://www.rsssfbrasil.com"
+      }
+    }
+  ],
+  "conflicts": [],
+  "legacy": {
+    "total": 1066,
+    "rows": [
+      {
+        "level": "world",
+        "type": "champion",
+        "count": 5,
+        "points": 400,
+        "unit": 80
+      },
+      {
+        "level": "world",
+        "type": "award",
+        "count": 5,
+        "points": 240,
+        "unit": 48
+      },
+      {
+        "level": "national",
+        "type": "champion",
+        "count": 7,
+        "points": 140,
+        "unit": 20
+      },
+      {
+        "level": "local",
+        "type": "champion",
+        "count": 14,
+        "points": 140,
+        "unit": 10
+      },
+      {
+        "level": "continental",
+        "type": "champion",
+        "count": 2,
+        "points": 80,
+        "unit": 40
+      },
+      {
+        "level": "local",
+        "type": "award",
+        "count": 11,
+        "points": 66,
+        "unit": 6
+      }
+    ]
+  },
+  "version": {
+    "current": 14,
+    "history": [
+      {
+        "n": 14,
+        "summary": "Atualização de proveniência (Wikidata)",
+        "author": "system:wikidata"
+      },
+      {
+        "n": 13,
+        "summary": "Correção da data de estreia pela Seleção",
+        "author": "system:wikidata"
+      }
+    ]
+  },
+  "sourceLinks": [
+    {
+      "slug": "wikidata",
+      "name": "Wikidata",
+      "license": "CC0",
+      "url": "https://www.wikidata.org/wiki/Q12897",
+      "home": "https://www.wikidata.org"
+    },
+    {
+      "slug": "wikipedia-pt",
+      "name": "Wikipedia (pt)",
+      "license": "CC BY-SA 4.0",
+      "url": "https://pt.wikipedia.org/wiki/Pel%C3%A9",
+      "home": "https://pt.wikipedia.org"
+    },
+    {
+      "slug": "rsssf-brazil",
+      "name": "RSSSF Brasil",
+      "license": "Cópia com atribuição ao autor",
+      "url": "https://www.rsssfbrasil.com/players/pele.htm",
+      "home": "https://www.rsssfbrasil.com"
+    },
+    {
+      "slug": "fifa",
+      "name": "FIFA",
+      "license": "Citação de fato",
+      "url": "https://www.fifa.com",
+      "home": "https://www.fifa.com"
+    },
+    {
+      "slug": "guinness",
+      "name": "Guinness World Records",
+      "license": "Citação de fato",
+      "url": "https://www.guinnessworldrecords.com",
+      "home": "https://www.guinnessworldrecords.com"
+    }
+  ]
+}

@@ -11,7 +11,18 @@ const fake = (output: unknown): AiProvider => ({
   provider: 'fake',
   model: 'fake-1',
   version: '1',
-  generate: async () => ({ output, tokensIn: 100, tokensOut: 20 }),
+  generate: async (prompt) => ({
+    output: prompt.includes('Validate each proposed biography claim')
+      ? {
+          claims: [
+            { text: 'world cups', status: 'supported', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' },
+            { text: 'nickname', status: 'supported', evidence_quote: 'Edson Arantes do Nascimento, known as Pelé' },
+          ],
+        }
+      : output,
+    tokensIn: 100,
+    tokensOut: 20,
+  }),
 });
 
 describe('AI layer (D03/D04)', () => {
@@ -73,8 +84,10 @@ describe('AI layer (D03/D04)', () => {
 import { athletes, athleteTranslations, BaseRepository, championTiers, fieldProvenance, aiExtractionQueue as queueTable } from '@was/db';
 import { eq as eqOp } from 'drizzle-orm';
 
+import { biographyPrompt } from './biography-prompt.helper';
 import { copiesSource } from './evidence.helper';
 import { runBiography } from './run-biography.service';
+import { runFactCheck } from './run-fact-check.service';
 
 describe('Biography Enricher (§7.2 task 3)', () => {
   let h2: DatabaseHandle;
@@ -133,5 +146,185 @@ describe('Biography Enricher (§7.2 task 3)', () => {
     };
     expect((await runBiography(h2.db, fake(invented), [{ ...item, sourceText: `${SOURCE} (revised)` }])).rejected).toBe(1);
     expect(copiesSource('known as Pelé, won the FIFA World Cup in 1958, 1962 and 1970 with Brazil.', SOURCE)).toBe(true);
+  });
+});
+
+describe('biography prompt rules (T1.6)', () => {
+  const prompt = biographyPrompt('Pelé', 'titles: FIFA World Cup 1958', SOURCE);
+
+  it('asks for character-for-character quotes from SOURCE or FACTS, at most 6 claims, the verbatim schema and no 12-word run', () => {
+    expect(prompt).toContain('copy evidence_quote character-for-character from SOURCE or FACTS; never paraphrase');
+    expect(prompt).toContain('at most 6 claims');
+    expect(prompt).toContain('{"bio_en":"string","bio_pt":"string","bio_es":"string","claims":[{"text":"string","evidence_quote":"string"}]}');
+    expect(prompt).toContain('must not reuse any run of 12 consecutive words from SOURCE');
+    expect(prompt).toContain(`--- SOURCE ---\n${SOURCE}`);
+    expect(prompt).toContain('FACTS: titles: FIFA World Cup 1958');
+  });
+
+  it('flags a reused run of 12 words, ignoring case and whitespace, but not an 11-word run', () => {
+    const twelve = 'Edson Arantes do Nascimento, known as Pelé, won the FIFA World Cup';
+    const eleven = 'Edson Arantes do Nascimento, known as Pelé, won the FIFA World';
+    expect(copiesSource(`Born in Brazil, ${twelve.toUpperCase().replace(/ /g, '  ')} three times.`, SOURCE)).toBe(true);
+    expect(copiesSource(`${eleven} trophy three times.`, SOURCE)).toBe(false);
+  });
+});
+
+describe('Fact validator stage (T1.7)', () => {
+  let h3: DatabaseHandle;
+  let entityId = '';
+  beforeAll(async () => {
+    h3 = await createDatabase({ pgliteDataDir: 'memory://' });
+    await h3.migrate();
+    const repo = new BaseRepository(h3.db);
+    const actor = { userId: null, name: 'test', via: 'system:canonical' } as const;
+    const [tier] = await h3.db.select().from(championTiers).limit(1);
+    const tierId = tier?.id ?? (await repo.insert(championTiers, { slug: 'champion', sortOrder: 1 } as never, actor)).id;
+    entityId = (await repo.insert(athletes, { slug: 'pele-retry', knownAs: 'Pelé', status: 'unknown', championTierId: tierId } as never, actor)).id;
+  });
+  afterAll(() => h3.close());
+
+  const proposal = (en: string) => ({
+    bio_en: en,
+    bio_pt: `${en} pt`,
+    bio_es: `${en} es`,
+    claims: [
+      { text: 'world cups', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' },
+      { text: 'nickname', evidence_quote: 'Edson Arantes do Nascimento, known as Pelé' },
+    ],
+  });
+
+  it('regenerates the biography once when a claim is unsupported, then auto-accepts', async () => {
+    let factCalls = 0;
+    const provider: AiProvider = {
+      provider: 'fake',
+      model: 'fake-retry',
+      version: '1',
+      async generate(prompt) {
+        if (prompt.includes('Validate each proposed biography claim')) {
+          factCalls++;
+          return {
+            output: {
+              claims: [
+                { text: 'world cups', status: 'supported', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' },
+                { text: 'nickname', status: factCalls > 1 ? 'supported' : 'unsupported', evidence_quote: 'Edson Arantes do Nascimento, known as Pelé' },
+              ],
+            },
+            tokensIn: 1,
+            tokensOut: 1,
+          };
+        }
+        return { output: proposal('The striker collected three world titles across three different decades of his career.'), tokensIn: 1, tokensOut: 1 };
+      },
+    };
+    const r = await runBiography(h3.db, provider, [
+      { entityId, name: 'Pelé', sourceText: SOURCE, sourceUrl: 'https://en.wikipedia.org/wiki/Pel%C3%A9', sectionKey: 'retry-ok', facts: '' },
+    ]);
+    expect(r).toMatchObject({ accepted: 1, proposals: 0 });
+    expect(factCalls).toBe(2);
+    const logged = await h3.db.select().from(aiInvocations);
+    expect(logged.filter((i) => i.task === 'biography')).toHaveLength(2);
+    const factLog = logged.filter((i) => i.task === 'fact-check');
+    expect(factLog.map((i) => i.validationLevel).sort()).toEqual([3, 4]);
+    expect(factLog.every((i) => i.status === 'ok')).toBe(true);
+  });
+
+  it('leaves the proposal in the exception queue when the regenerated text also fails', async () => {
+    const provider: AiProvider = {
+      provider: 'fake',
+      model: 'fake-retry',
+      version: '1',
+      async generate(prompt) {
+        if (prompt.includes('Validate each proposed biography claim'))
+          return {
+            output: {
+              claims: [
+                { text: 'world cups', status: 'unsupported', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' },
+                { text: 'nickname', status: 'unsupported', evidence_quote: 'Edson Arantes do Nascimento, known as Pelé' },
+              ],
+            },
+            tokensIn: 1,
+            tokensOut: 1,
+          };
+        return { output: proposal('A forward who became a reference for a whole generation of Brazilian players.'), tokensIn: 1, tokensOut: 1 };
+      },
+    };
+    const r = await runBiography(h3.db, provider, [
+      {
+        entityId,
+        name: 'Pelé',
+        sourceText: `${SOURCE} Yet another source text.`,
+        sourceUrl: 'https://en.wikipedia.org/wiki/Pel%C3%A9',
+        sectionKey: 'retry-queue',
+        facts: '',
+      },
+    ]);
+    expect(r).toMatchObject({ accepted: 0, proposals: 1, rejected: 0 });
+    const queued = await h3.db.select().from(queueTable).where(eqOp(queueTable.sectionKey, 'biography'));
+    expect(queued.some((q) => q.status === 'pending')).toBe(true);
+  });
+
+  it('a copied bio stays at level 2: queued for review, never fact-checked', async () => {
+    let factCalls = 0;
+    const provider: AiProvider = {
+      provider: 'fake',
+      model: 'fake-copy',
+      version: '1',
+      async generate(prompt) {
+        if (prompt.includes('Validate each proposed biography claim')) factCalls++;
+        return { output: proposal(`Born in Brazil, ${SOURCE}`), tokensIn: 1, tokensOut: 1 };
+      },
+    };
+    const r = await runBiography(h3.db, provider, [
+      { entityId, name: 'Pelé', sourceText: `${SOURCE} Copied.`, sourceUrl: 'https://en.wikipedia.org/wiki/Pel%C3%A9', sectionKey: 'copied', facts: '' },
+    ]);
+    expect(r).toMatchObject({ accepted: 0, proposals: 1, rejected: 0 });
+    expect(factCalls).toBe(0);
+    const queued = await h3.db.select().from(queueTable).where(eqOp(queueTable.sectionKey, 'biography'));
+    const copied = queued.filter((q) => (q.resultJson as { copied?: boolean }).copied);
+    expect(copied).toHaveLength(1);
+    expect(copied[0]).toMatchObject({ status: 'pending', resultJson: { copied: true, level: 2 } });
+  });
+
+  it('an unusable regeneration sends the first proposal to the exception queue', async () => {
+    let bioCalls = 0;
+    const provider: AiProvider = {
+      provider: 'fake',
+      model: 'fake-bad-retry',
+      version: '1',
+      async generate(prompt) {
+        if (prompt.includes('Validate each proposed biography claim'))
+          return {
+            output: { claims: [{ text: 'world cups', status: 'unsupported', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' }] },
+            tokensIn: 1,
+            tokensOut: 1,
+          };
+        bioCalls++;
+        return {
+          output: bioCalls === 1 ? proposal('A forward whose three world titles spanned twelve years of international play.') : { nope: true },
+          tokensIn: 1,
+          tokensOut: 1,
+        };
+      },
+    };
+    const r = await runBiography(h3.db, provider, [
+      { entityId, name: 'Pelé', sourceText: `${SOURCE} Bad retry.`, sourceUrl: 'https://en.wikipedia.org/wiki/Pel%C3%A9', sectionKey: 'bad-retry', facts: '' },
+    ]);
+    expect(r).toMatchObject({ accepted: 0, proposals: 1, rejected: 0 });
+    expect(bioCalls).toBe(2);
+  });
+
+  it('the fact-check answer is audited: a non-literal quote counts as unsupported, a bad shape as invalid', async () => {
+    const answer = (output: unknown): AiProvider => ({
+      provider: 'fake',
+      model: 'fake-fc',
+      version: '1',
+      generate: async () => ({ output, tokensIn: 1, tokensOut: 1 }),
+    });
+    const claims = [{ text: 'world cups', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' }];
+    const invented = { claims: [{ text: 'world cups', status: 'supported', evidence_quote: 'he won five World Cups with Brazil' }] };
+    expect((await runFactCheck(answer(invented), claims, SOURCE, '')).status).toBe('unsupported');
+    expect((await runFactCheck(answer({ claims: [] }), claims, SOURCE, '')).status).toBe('invalid');
+    const literal = { claims: [{ text: 'world cups', status: 'supported', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' }] };
+    expect((await runFactCheck(answer(literal), claims, SOURCE, '')).status).toBe('supported');
   });
 });

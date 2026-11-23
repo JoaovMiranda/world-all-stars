@@ -21,6 +21,11 @@ export const AdminAuditAction = {
   RankingCalculated: 'ranking_calculated',
   RankingApproved: 'ranking_approved',
   RankingPublished: 'ranking_published',
+  RankingAutoPublished: 'ranking_auto_published',
+  RankingReverted: 'ranking_reverted',
+  RankingAutoPublishSkipped: 'ranking_auto_publish_skipped',
+  EntityMerged: 'entity_merged',
+  EntityUnmerged: 'entity_unmerged',
 } as const;
 export type AdminAuditAction = (typeof AdminAuditAction)[keyof typeof AdminAuditAction];
 export const ADMIN_AUDIT_ACTION_VALUES = Object.values(AdminAuditAction) as [AdminAuditAction, ...AdminAuditAction[]];

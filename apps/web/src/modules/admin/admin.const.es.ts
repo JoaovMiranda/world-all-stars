@@ -70,6 +70,8 @@ export const ADMIN_TEXT_ES = {
     approve: 'Aprobar',
     approveTitle: '¿Aprobar esta clasificación? La segunda aprobación, de otro curador, la publica.',
     decisionLabel: 'Publicación de la clasificación',
+    revert: 'Revertir',
+    revertTitle: '¿Revertir esta publicación? Se archiva y la instantánea publicada anteriormente vuelve a estar en línea. Indique el motivo.',
     status: { draft: 'borrador', calculated: 'candidata', published: 'publicada', archived: 'archivada', failed: 'falló' },
   },
   review: {

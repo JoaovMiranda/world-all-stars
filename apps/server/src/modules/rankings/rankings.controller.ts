@@ -35,4 +35,9 @@ export class RankingsController extends BaseController {
     await this.service(RankingsService).approve(params.id, body.reason);
     return { ok: true as const };
   }
+
+  async revert({ params, body }: ContractInputOf<typeof RankingsApi.revert>) {
+    await this.service(RankingsService).revert(params.id, body.reason);
+    return { ok: true as const };
+  }
 }

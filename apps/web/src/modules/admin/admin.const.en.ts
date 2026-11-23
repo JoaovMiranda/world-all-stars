@@ -70,6 +70,8 @@ export const ADMIN_TEXT_EN = {
     approve: 'Approve',
     approveTitle: 'Approve this ranking? The second approval, by another curator, publishes it.',
     decisionLabel: 'Ranking publication',
+    revert: 'Revert',
+    revertTitle: 'Revert this publication? It is archived and the previously published snapshot goes live again. Give the reason.',
     status: { draft: 'draft', calculated: 'candidate', published: 'published', archived: 'archived', failed: 'failed' },
   },
   review: {

@@ -20,4 +20,5 @@ export const RankingsApi = {
   adminList: defineContract({ access: ApiAccess.Admin, method: HttpMethod.Get, path: '/api/admin/rankings', summary: 'All snapshots (calculated, published, archived) with approvals', response: RankingsListResponseSchema }),
   calculate: defineContract({ access: ApiAccess.Admin, method: HttpMethod.Post, path: '/api/admin/rankings', summary: 'Calculate candidate snapshots of a methodology', body: CalculateRankingRequestSchema, response: OkResponseSchema }),
   approve: defineContract({ access: ApiAccess.Admin, method: HttpMethod.Post, path: '/api/admin/rankings/:id/approvals', summary: 'Approve a snapshot (2 different admins publish it)', params: IdParams, body: ApproveRankingRequestSchema, response: OkResponseSchema }),
+  revert: defineContract({ access: ApiAccess.Admin, method: HttpMethod.Post, path: '/api/admin/rankings/:id/revert', summary: 'Archive the published snapshot and republish the previous one', params: IdParams, body: ApproveRankingRequestSchema, response: OkResponseSchema }),
 };

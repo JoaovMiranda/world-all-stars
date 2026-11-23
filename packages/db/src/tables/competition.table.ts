@@ -1,4 +1,4 @@
-// Competitions, editions, awards and teams (doc 03 "Competitions, awards and trophies").
+// Competitions, editions and teams (doc 03 "Competitions, awards and trophies"; awards are recognition definitions).
 import { boolean, date, index, integer, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { baseColumns, live } from '../columns/base.column';
@@ -6,7 +6,8 @@ import { competitionStatusEnum } from '../columns/pg-enum.column';
 import { competitionLevels, prizeForms } from './config.table';
 import { calendarDays, cities, countries } from './geography.table';
 import { organizations } from './organization.table';
-import { sportCategories, sports } from './sport.table';
+import { sports } from './sport.table';
+import { categorySets } from './taxonomy.table';
 
 export const competitions = pgTable(
   'competitions',
@@ -15,7 +16,8 @@ export const competitions = pgTable(
     slug: text().notNull(),
     /** Null only for multi-sport events (Olympic Games, World Games…): CHECK in migration 0009. */
     sportId: uuid().references(() => sports.id),
-    sportCategoryId: uuid().references(() => sportCategories.id),
+    /** Category (division) of the competition: a category set of its sport. */
+    sportCategoryId: uuid().references(() => categorySets.id),
     organizationId: uuid().notNull().references(() => organizations.id),
     competitionLevelId: uuid().notNull().references(() => competitionLevels.id),
     isOlympic: boolean().notNull().default(false),
@@ -61,32 +63,6 @@ export const competitionEditions = pgTable(
   },
   (t) => [index().on(t.startDate, t.endDate).where(live(t.deletedAt))],
 );
-
-export const awards = pgTable(
-  'awards',
-  {
-    ...baseColumns(),
-    slug: text().notNull(),
-    sportId: uuid().references(() => sports.id),
-    organizationId: uuid().references(() => organizations.id),
-    competitionLevelId: uuid().notNull().references(() => competitionLevels.id),
-    awardKind: text().notNull(),
-    prizeFormId: uuid().references(() => prizeForms.id),
-  },
-  (t) => [uniqueIndex().on(t.slug).where(live(t.deletedAt))],
-);
-export const awardTranslations = pgTable(
-  'award_translations',
-  { ...baseColumns(), awardId: uuid().notNull().references(() => awards.id), locale: text().notNull(), name: text().notNull() },
-  (t) => [uniqueIndex().on(t.awardId, t.locale).where(live(t.deletedAt))],
-);
-export const awardEditions = pgTable('award_editions', {
-  ...baseColumns(),
-  awardId: uuid().notNull().references(() => awards.id),
-  year: integer().notNull(),
-  calendarDayId: uuid().references(() => calendarDays.id),
-  label: text(),
-});
 
 export const teams = pgTable(
   'teams',

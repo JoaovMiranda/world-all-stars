@@ -37,6 +37,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): ServerConfig =
     logFormat: e.LOG_FORMAT ?? (production ? 'json' : 'text'),
     slowRequestMs: e.SLOW_REQUEST_MS,
     otelEndpoint: e.OTEL_EXPORTER_OTLP_ENDPOINT ?? (env.OTEL_TRACES_EXPORTER === 'console' ? 'console' : null),
+    rankingAutoPublish: e.RANKING_AUTO_PUBLISH,
     migrateOnBoot: e.MIGRATE_ON_BOOT,
     webDev: e.WEB_DEV,
     webDistDir: path.resolve(findRepoRoot(), e.WEB_DIST_DIR),

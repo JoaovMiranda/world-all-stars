@@ -21,6 +21,8 @@ export type ServerConfig = {
   slowRequestMs: number;
   /** OTLP endpoint of the OpenTelemetry collector; null = tracing off. */
   otelEndpoint: string | null;
+  /** D12: auto-publish validated snapshots (RANKING_AUTO_PUBLISH). */
+  rankingAutoPublish: boolean;
   migrateOnBoot: boolean;
   webDev: boolean;
   /** Absolute path of the web build. */

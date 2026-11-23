@@ -94,7 +94,7 @@ export class BaseRepository {
 
   async update<T extends BaseTable>(table: T, id: string, patch: Patch<T>, actor: Actor, meta: ChangeMeta = {}): Promise<Row<T>> {
     return this.transaction(async (repo) => {
-      const before = await repo.mustFind(table, id);
+      const before = await repo.mustFind(table, id, true);
       const current = (before as { version: number }).version;
       if (meta.expectedVersion !== undefined && meta.expectedVersion !== current) {
         throw new VersionConflictError(getTableName(table), id, meta.expectedVersion, current);
@@ -111,7 +111,7 @@ export class BaseRepository {
 
   async softDelete<T extends BaseTable>(table: T, id: string, actor: Actor, meta: ChangeMeta = {}): Promise<Row<T>> {
     return this.transaction(async (repo) => {
-      const before = await repo.mustFind(table, id);
+      const before = await repo.mustFind(table, id, true);
       const [row] = await repo.db
         .update(table as PgTable)
         .set({
@@ -239,11 +239,16 @@ export class BaseRepository {
     };
   }
 
-  private async mustFind<T extends BaseTable>(table: T, id: string): Promise<Row<T>> {
-    const [row] = await this.db
+  /**
+   * Live row by id. `lock` takes a row lock (SELECT … FOR UPDATE) for the rest of the transaction, so a concurrent
+   * writer waits and then sees the new version (VersionConflictError instead of a unique-index violation).
+   */
+  private async mustFind<T extends BaseTable>(table: T, id: string, lock = false): Promise<Row<T>> {
+    const query = this.db
       .select()
       .from(table as PgTable)
       .where(active(cols(table), eq(cols(table).id, id)));
+    const [row] = lock ? await query.for('update') : await query;
     if (!row) throw new EntityNotFoundError(getTableName(table), id);
     return row as Row<T>;
   }

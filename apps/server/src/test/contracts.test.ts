@@ -1,6 +1,6 @@
 // Contract conformance: every GET answers 200 with a body that the shared response schema accepts.
 import { AdminApi, type ApiContract, ParticipationApi, PublicApi, RankingsApi } from '@was/shared';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { ALL_ROUTES } from '../routes.const';
 import { HAS_PROTOTYPE } from './test-app.const';
@@ -67,6 +67,62 @@ describe.skipIf(!HAS_PROTOTYPE)('GET conformance (seeded database)', () => {
   it('404 for an unknown athlete or sport', async () => {
     expect((await t.call(PublicApi.athleteProfile, { params: { slug: 'nobody' } })).status).toBe(404);
     expect((await t.call(PublicApi.sportPage, { params: { slug: 'nothing' } })).json.error).toBe('not_found');
+  });
+});
+
+/**
+ * Byte-level contract snapshots of the catalog read model (handoff T1.1): the JSON of every catalog-backed public GET
+ * on the seeded database. Any change in the bytes fails; refresh only for an intended contract change (`vitest -u`).
+ */
+const SNAPSHOT_CALLS: [name: string, contract: ApiContract, input?: { params?: Record<string, string>; query?: Record<string, string> }][] = [
+  ['home', PublicApi.home, { query: { date: '2026-10-23' } }],
+  ['athletes', PublicApi.athletes],
+  ['athletes-search', PublicApi.athletes, { query: { q: 'pel' } }],
+  ['analysis-dimensions', PublicApi.analysisDimensions],
+  ['compare', PublicApi.compare, { query: { slugs: 'pele,michael-phelps' } }],
+  ['sports', PublicApi.sports],
+  ['governance-models', PublicApi.governanceModels],
+  ['organizations', PublicApi.organizations],
+  ['hall-of-greats', PublicApi.hallOfGreats],
+  ['sources', PublicApi.sources],
+  ['calendar', PublicApi.calendar, { query: { from: '2026-01-01', to: '2026-12-31' } }],
+  ['on-this-day', PublicApi.onThisDay, { params: { md: '10-23' } }],
+  ['validation-context', PublicApi.validationContext],
+];
+
+describe.skipIf(!HAS_PROTOTYPE)('catalog contract snapshots (seeded database)', () => {
+  let t: TestApp;
+  beforeAll(async () => {
+    // Career-length dimensions read the current year: pin the clock so the bytes do not drift with time.
+    vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-10-23T12:00:00.000Z') });
+    t = await createTestApp();
+  });
+  afterAll(async () => {
+    vi.useRealTimers();
+    await t.close();
+  });
+  const snapshot = (name: string) => `./__snapshots__/catalog/${name}.json`;
+  const body = (json: unknown) => `${JSON.stringify(json, null, 2)}\n`;
+
+  for (const [name, contract, input] of SNAPSHOT_CALLS) {
+    it(`${contract.path} (${name})`, async () => {
+      const res = await t.call(contract, input ?? {});
+      expect(res.status).toBe(200);
+      await expect(body(res.json)).toMatchFileSnapshot(snapshot(name));
+    });
+  }
+
+  it('every athlete profile and every sport page', async () => {
+    const list = await t.call(PublicApi.athletes);
+    const profiles: Record<string, unknown> = {};
+    for (const a of list.json.items as { slug: string }[]) profiles[a.slug] = (await t.call(PublicApi.athleteProfile, { params: { slug: a.slug } })).json;
+    await expect(body(profiles)).toMatchFileSnapshot(snapshot('athlete-profiles'));
+    await expect(body(profiles.pele)).toMatchFileSnapshot(snapshot('athlete-pele'));
+    const sports = await t.call(PublicApi.sports);
+    const pages: Record<string, unknown> = {};
+    for (const g of sports.json as { subgroups: { sports: { slug: string }[] }[] }[])
+      for (const sg of g.subgroups) for (const s of sg.sports) pages[s.slug] = (await t.call(PublicApi.sportPage, { params: { slug: s.slug } })).json;
+    await expect(body(pages)).toMatchFileSnapshot(snapshot('sport-pages'));
   });
 });
 

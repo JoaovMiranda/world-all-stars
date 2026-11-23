@@ -1,0 +1,3279 @@
+[
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000007de",
+    "slug": "adcc",
+    "name": "ADCC",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "ADCC Submission Fighting World Championship",
+        "sport": "Jiu-jitsu"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "jiu-jitsu",
+        "name": "Jiu-jitsu",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-0000000007d9",
+        "statsSchema": "bjj",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/ADCC_Submission_Fighting_World_Championship",
+    "image": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/ae/ADCC_Submission_Wrestling_World_Championship.png/250px-ADCC_Submission_Wrestling_World_Championship.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Grappling competitions",
+    "qid": "Q76800",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000007e0",
+    "slug": "ajp",
+    "name": "AJP",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "jiu-jitsu",
+        "name": "Jiu-jitsu",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-0000000007d9",
+        "statsSchema": "bjj",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000424",
+    "slug": "americas-cup",
+    "name": "America's Cup",
+    "kind": "brand",
+    "kindLabel": "Marca",
+    "nature": "brand",
+    "natureLabel": "Marca",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "America's Cup",
+        "sport": "Vela"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "sailing",
+        "name": "Vela",
+        "colorToken": "c-teal",
+        "id": "019a3f2c-7d00-7000-8000-00000000041d",
+        "statsSchema": "sailing",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Náuticos",
+        "environment": "closed",
+        "format": "individual",
+        "governance": "pyramid",
+        "role": "private_circuit"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/America%27s_Cup",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/The_America%27s_Cup.jpg/250px-The_America%27s_Cup.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Sailing race competition",
+    "qid": "Q467557",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000896",
+    "slug": "arnold-sports-festival",
+    "name": "Arnold Sports Festival",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Arnold_Sports_Festival",
+    "image": null,
+    "description": "IFBB Pro annual multi-sport event",
+    "qid": "Q21411001",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000009e3",
+    "slug": "associated-press",
+    "name": "Associated Press",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Associated_Press",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Associated_Press_logo_2012.svg/250px-Associated_Press_logo_2012.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "American not-for-profit news agency",
+    "qid": "Q40469",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000073f",
+    "slug": "atp",
+    "name": "ATP",
+    "kind": "athlete_association",
+    "kindLabel": "Associação de atletas (circuito)",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "tennis",
+        "name": "Tênis",
+        "colorToken": "c-lime",
+        "id": "019a3f2c-7d00-7000-8000-00000000073c",
+        "statsSchema": "tennis",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Raquete",
+        "environment": "open",
+        "format": "duel",
+        "governance": "condominium",
+        "role": "circuit"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Association_of_Tennis_Professionals",
+    "image": null,
+    "description": "Men's professional tennis governing body",
+    "qid": "Q744089",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000098a",
+    "slug": "augusta-national",
+    "name": "Augusta National Golf Club",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "The Masters",
+        "sport": "Golfe"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Augusta_National_Golf_Club",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/AugustaNationalMastersLogoFlowers.jpg/250px-AugustaNationalMastersLogoFlowers.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Golf course in Georgia, United States",
+    "qid": "Q765780",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000009d7",
+    "slug": "bbc",
+    "name": "BBC",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/BBC",
+    "image": null,
+    "description": "British public service broadcaster",
+    "qid": "Q9531",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000498",
+    "slug": "british-crown",
+    "name": "British Crown",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Monarchy_of_the_United_Kingdom",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Coat_of_arms_of_the_United_Kingdom_%282022%2C_both_variants%29.svg/250px-Coat_of_arms_of_the_United_Kingdom_%282022%2C_both_variants%29.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": null,
+    "qid": "Q739941",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000007e2",
+    "slug": "cbjje",
+    "name": "CBJJE",
+    "kind": "federation",
+    "kindLabel": "Federação / confederação",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "BR",
+      "flag": "🇧🇷",
+      "name": "Brasil"
+    },
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "jiu-jitsu",
+        "name": "Jiu-jitsu",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-0000000007d9",
+        "statsSchema": "bjj",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000071",
+    "slug": "chess-com",
+    "name": "Chess.com",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "chess",
+        "name": "Xadrez",
+        "colorToken": "primary",
+        "id": "019a3f2c-7d00-7000-8000-00000000006a",
+        "statsSchema": "chess",
+        "group": "Mental",
+        "groupSlug": "mental",
+        "subgroup": "Tabuleiro",
+        "environment": "open",
+        "format": "duel",
+        "governance": "condominium",
+        "role": "private_circuit"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Chess.com",
+    "image": null,
+    "description": "Internet chess server",
+    "qid": "Q16829376",
+    "children": []
+  },
+  {
+    "id": "fde14aa2-aa09-51a8-9bff-ebc0395cf5eb",
+    "slug": "cgf",
+    "name": "Commonwealth Games Federation",
+    "kind": "multisport_committee",
+    "kindLabel": "Comitê multiesportivo",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Jogos da Commonwealth",
+        "sport": "Multiesportivo"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000064e",
+    "slug": "east-vs-west",
+    "name": "East vs West",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "East vs West",
+        "sport": "Queda de braço"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "arm-wrestling",
+        "name": "Queda de braço",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-00000000064b",
+        "statsSchema": "armwrestling",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Força",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000394",
+    "slug": "el-pais-uy",
+    "name": "El País (Uruguay)",
+    "kind": "media",
+    "kindLabel": "Mídia / premiação editorial",
+    "nature": "media",
+    "natureLabel": "Mídia",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "UY",
+      "flag": "🇺🇾",
+      "name": "Uruguai"
+    },
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/El_Pa%C3%ADs_(Uruguay)",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Diario_El_Pais_Uruguay.jpg/250px-Diario_El_Pais_Uruguay.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Daily newspaper based in Uruguay",
+    "qid": "Q933854",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000002f0",
+    "slug": "esports-awards",
+    "name": "Esports Awards",
+    "kind": "media",
+    "kindLabel": "Mídia / premiação editorial",
+    "nature": "media",
+    "natureLabel": "Mídia",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Esports_Awards",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/97/Esports_Awards_logo.svg/250px-Esports_Awards_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Annual international gaming awards ceremony",
+    "qid": "Q137731525",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000066a",
+    "slug": "eaf",
+    "name": "European Armwrestling Federation",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Campeonato Europeu de Queda de Braço (EuroArm)",
+        "sport": "Queda de braço"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003f9",
+    "slug": "fight-matrix",
+    "name": "Fight Matrix",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Fight_Matrix",
+    "image": null,
+    "description": "Mixed martial arts websites",
+    "qid": "Q17053443",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000382",
+    "slug": "france-football",
+    "name": "France Football",
+    "kind": "media",
+    "kindLabel": "Mídia / premiação editorial",
+    "nature": "media",
+    "natureLabel": "Mídia",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/France_Football",
+    "image": null,
+    "description": "French weekly association football magazine",
+    "qid": "Q308705",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000002dd",
+    "slug": "hltv",
+    "name": "HLTV",
+    "kind": "media",
+    "kindLabel": "Mídia / premiação editorial",
+    "nature": "media",
+    "natureLabel": "Mídia",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/HLTV",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/HLTV_logo_2017.svg/250px-HLTV_logo_2017.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Counter-Strike news website and forum",
+    "qid": "Q1294504",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000007dc",
+    "slug": "ibjjf",
+    "name": "IBJJF",
+    "kind": "federation",
+    "kindLabel": "Federação / confederação",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Campeonato Mundial de Jiu-Jitsu (IBJJF)",
+        "sport": "Jiu-jitsu"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "jiu-jitsu",
+        "name": "Jiu-jitsu",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-0000000007d9",
+        "statsSchema": "bjj",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Brazilian_Jiu-Jitsu_Federation",
+    "image": null,
+    "description": "Grappling competition organizer",
+    "qid": "Q6048842",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000088a",
+    "slug": "ifbb",
+    "name": "IFBB",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Campeonato Mundial Amador da IFBB",
+        "sport": "Fisiculturismo"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Fitness_and_Bodybuilding_Federation",
+    "image": null,
+    "description": "International professional sports governing body for bodybuilding and fitness",
+    "qid": "Q511252",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000858",
+    "slug": "ifbb-pro-league",
+    "name": "IFBB Pro League",
+    "kind": "league",
+    "kindLabel": "Liga / circuito comercial",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Arnold Classic",
+        "sport": "Fisiculturismo"
+      },
+      {
+        "name": "Mr. Olympia",
+        "sport": "Fisiculturismo"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "bodybuilding",
+        "name": "Fisiculturismo",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-000000000855",
+        "statsSchema": "bodybuilding",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Força",
+        "environment": "closed",
+        "format": "judged",
+        "governance": "free_market",
+        "role": "league"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Federation_of_Bodybuilding_%26_Fitness_Professional_League",
+    "image": null,
+    "description": "Sports governing body federation",
+    "qid": "Q5970647",
+    "children": [
+      {
+        "id": "019a3f2c-7d00-7000-8000-00000000085a",
+        "slug": "npc",
+        "name": "NPC",
+        "kind": "league",
+        "kindLabel": "Liga / circuito comercial",
+        "nature": "company",
+        "natureLabel": "Empresa",
+        "relation": "affiliated_to",
+        "relationLabel": "afiliada a",
+        "scope": "national",
+        "country": {
+          "iso2": "US",
+          "flag": "🇺🇸",
+          "name": "Estados Unidos"
+        },
+        "competitions": [],
+        "sports": [
+          {
+            "slug": "bodybuilding",
+            "name": "Fisiculturismo",
+            "colorToken": "c-orange",
+            "id": "019a3f2c-7d00-7000-8000-000000000855",
+            "statsSchema": "bodybuilding",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Força",
+            "environment": "closed",
+            "format": "judged",
+            "governance": "free_market",
+            "role": "amateur_league"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/National_Physique_Committee",
+        "image": null,
+        "description": "Organization of competitive amateur bodybuilders in the United States",
+        "qid": "Q6974914",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003cf",
+    "slug": "immaf",
+    "name": "IMMAF",
+    "kind": "federation",
+    "kindLabel": "Federação / confederação",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "mma",
+        "name": "MMA",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-0000000003c6",
+        "statsSchema": "mma",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "amateur_federation"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Mixed_Martial_Arts_Federation",
+    "image": null,
+    "description": "Sports governing body",
+    "qid": "Q10280598",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000230",
+    "slug": "ibf",
+    "name": "International Boxing Federation",
+    "kind": "sanctioning_body",
+    "kindLabel": "Entidade de cinturão",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão mundial dos pesados IBF",
+        "sport": "Boxe"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "boxing",
+        "name": "Boxe",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-000000000229",
+        "statsSchema": "boxing",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "sanctioning_body"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Boxing_Federation",
+    "image": null,
+    "description": "Sanctioning organization for professional boxing bouts",
+    "qid": "Q742944",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000026f",
+    "slug": "ibhof",
+    "name": "International Boxing Hall of Fame",
+    "kind": "hall_of_fame",
+    "kindLabel": "Hall da fama",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Boxing_Hall_of_Fame",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/International_Boxing_Hall_of_Fame_Logo.jpg/250px-International_Boxing_Hall_of_Fame_Logo.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": null,
+    "qid": "Q572227",
+    "children": []
+  },
+  {
+    "id": "093e8798-ad0e-513f-a780-b439b8bc805d",
+    "slug": "imsa",
+    "name": "International Mind Sports Association",
+    "kind": "multisport_committee",
+    "kindLabel": "Comitê multiesportivo",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Jogos de Esportes da Mente",
+        "sport": "Multiesportivo"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000053",
+    "slug": "ioc",
+    "name": "International Olympic Committee",
+    "kind": "multisport_committee",
+    "kindLabel": "Comitê multiesportivo",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Jogos Olímpicos (futebol)",
+        "sport": "Futebol"
+      },
+      {
+        "name": "Jogos Olímpicos de Verão",
+        "sport": "Multiesportivo"
+      },
+      {
+        "name": "Jogos Olímpicos de Inverno",
+        "sport": "Multiesportivo"
+      },
+      {
+        "name": "Jogos Olímpicos (natação)",
+        "sport": "Natação"
+      },
+      {
+        "name": "Jogos Olímpicos da Juventude",
+        "sport": "Multiesportivo"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Olympic_Committee",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Si%C3%A8ge_CIO_2020_%281%29.jpg/250px-Si%C3%A8ge_CIO_2020_%281%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Governing body of Olympic sports",
+    "qid": "Q40970",
+    "children": [
+      {
+        "id": "019a3f2c-7d00-7000-8000-00000000006d",
+        "slug": "fide",
+        "name": "FIDE",
+        "kind": "federation",
+        "kindLabel": "Federação / confederação",
+        "nature": "association",
+        "natureLabel": "Associação sem fins lucrativos",
+        "relation": "recognized_by",
+        "relationLabel": "reconhecida por",
+        "scope": "world",
+        "country": null,
+        "competitions": [
+          {
+            "name": "Copa do Mundo de Xadrez",
+            "sport": "Xadrez"
+          },
+          {
+            "name": "Campeonato Mundial de Xadrez Freestyle",
+            "sport": "Xadrez"
+          },
+          {
+            "name": "Campeonato Mundial de Xadrez Blitz",
+            "sport": "Xadrez"
+          },
+          {
+            "name": "Campeonato Mundial de Xadrez",
+            "sport": "Xadrez"
+          },
+          {
+            "name": "Mundial de Xadrez Rápido e Blitz",
+            "sport": "Xadrez"
+          },
+          {
+            "name": "Campeonato Mundial de Xadrez Rápido",
+            "sport": "Xadrez"
+          }
+        ],
+        "sports": [
+          {
+            "slug": "chess",
+            "name": "Xadrez",
+            "colorToken": "primary",
+            "id": "019a3f2c-7d00-7000-8000-00000000006a",
+            "statsSchema": "chess",
+            "group": "Mental",
+            "groupSlug": "mental",
+            "subgroup": "Tabuleiro",
+            "environment": "open",
+            "format": "duel",
+            "governance": "condominium",
+            "role": "world_federation"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/FIDE",
+        "image": null,
+        "description": "International chess governing body",
+        "qid": "Q102178",
+        "children": [
+          {
+            "id": "019a3f2c-7d00-7000-8000-00000000006f",
+            "slug": "cbx",
+            "name": "CBX",
+            "kind": "federation",
+            "kindLabel": "Federação / confederação",
+            "nature": "association",
+            "natureLabel": "Associação sem fins lucrativos",
+            "relation": "member_of",
+            "relationLabel": "membro de",
+            "scope": "national",
+            "country": {
+              "iso2": "BR",
+              "flag": "🇧🇷",
+              "name": "Brasil"
+            },
+            "competitions": [],
+            "sports": [
+              {
+                "slug": "chess",
+                "name": "Xadrez",
+                "colorToken": "primary",
+                "id": "019a3f2c-7d00-7000-8000-00000000006a",
+                "statsSchema": "chess",
+                "group": "Mental",
+                "groupSlug": "mental",
+                "subgroup": "Tabuleiro",
+                "environment": "open",
+                "format": "duel",
+                "governance": "condominium",
+                "role": "national_federation"
+              }
+            ],
+            "wikipedia": "https://pt.wikipedia.org/wiki/Confedera%C3%A7%C3%A3o_Brasileira_de_Xadrez",
+            "image": "https://upload.wikimedia.org/wikipedia/pt/4/48/CBX_%28Logo%29.png?utm_source=pt.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+            "description": null,
+            "qid": "Q2992634",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "019a3f2c-7d00-7000-8000-000000000054",
+        "slug": "fifa",
+        "name": "FIFA",
+        "kind": "federation",
+        "kindLabel": "Federação / confederação",
+        "nature": "association",
+        "natureLabel": "Associação sem fins lucrativos",
+        "relation": "recognized_by",
+        "relationLabel": "reconhecida por",
+        "scope": "world",
+        "country": null,
+        "competitions": [
+          {
+            "name": "Mundial de Clubes da FIFA",
+            "sport": "Futebol"
+          },
+          {
+            "name": "Copa das Confederações",
+            "sport": "Futebol"
+          },
+          {
+            "name": "Copa do Mundo FIFA",
+            "sport": "Futebol"
+          },
+          {
+            "name": "Copa Intercontinental",
+            "sport": "Futebol"
+          }
+        ],
+        "sports": [
+          {
+            "slug": "football",
+            "name": "Futebol",
+            "colorToken": "success",
+            "id": "019a3f2c-7d00-7000-8000-000000000050",
+            "statsSchema": "football",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Coletivos",
+            "environment": "open",
+            "format": "team",
+            "governance": "pyramid",
+            "role": "world_federation"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/FIFA",
+        "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/FIFA_logo_without_slogan.svg/250px-FIFA_logo_without_slogan.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "description": "International governing body of association football",
+        "qid": "Q253414",
+        "children": [
+          {
+            "id": "019a3f2c-7d00-7000-8000-000000000372",
+            "slug": "afc",
+            "name": "AFC",
+            "kind": "federation",
+            "kindLabel": "Federação / confederação",
+            "nature": "association",
+            "natureLabel": "Associação sem fins lucrativos",
+            "relation": "member_of",
+            "relationLabel": "membro de",
+            "scope": "continental",
+            "country": null,
+            "competitions": [],
+            "sports": [],
+            "wikipedia": "https://en.wikipedia.org/wiki/Asian_Football_Confederation",
+            "image": "https://thumb.wikimedia.org/wikipedia/en/thumb/2/28/Asian_Football_Confederation_logo_2025.svg/250px-Asian_Football_Confederation_logo_2025.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+            "description": "International governing body for association football in Asia",
+            "qid": "Q83276",
+            "children": [
+              {
+                "id": "019a3f2c-7d00-7000-8000-000000000373",
+                "slug": "saff",
+                "name": "Saudi Arabian Football Federation",
+                "kind": "federation",
+                "kindLabel": "Federação / confederação",
+                "nature": "association",
+                "natureLabel": "Associação sem fins lucrativos",
+                "relation": "member_of",
+                "relationLabel": "membro de",
+                "scope": "national",
+                "country": {
+                  "iso2": "SA",
+                  "flag": "🇸🇦",
+                  "name": "Arábia Saudita"
+                },
+                "competitions": [
+                  {
+                    "name": "Saudi Pro League",
+                    "sport": "Futebol"
+                  }
+                ],
+                "sports": [],
+                "wikipedia": "https://en.wikipedia.org/wiki/Saudi_Arabian_Football_Federation",
+                "image": null,
+                "description": "National football-governing body",
+                "qid": "Q621084",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "019a3f2c-7d00-7000-8000-000000000056",
+            "slug": "conmebol",
+            "name": "CONMEBOL",
+            "kind": "federation",
+            "kindLabel": "Federação / confederação",
+            "nature": "association",
+            "natureLabel": "Associação sem fins lucrativos",
+            "relation": "member_of",
+            "relationLabel": "membro de",
+            "scope": "continental",
+            "country": null,
+            "competitions": [
+              {
+                "name": "Copa Libertadores da América",
+                "sport": "Futebol"
+              },
+              {
+                "name": "Recopa Sul-Americana",
+                "sport": "Futebol"
+              }
+            ],
+            "sports": [
+              {
+                "slug": "football",
+                "name": "Futebol",
+                "colorToken": "success",
+                "id": "019a3f2c-7d00-7000-8000-000000000050",
+                "statsSchema": "football",
+                "group": "Físico",
+                "groupSlug": "physical",
+                "subgroup": "Coletivos",
+                "environment": "open",
+                "format": "team",
+                "governance": "pyramid",
+                "role": "confederation"
+              }
+            ],
+            "wikipedia": "https://en.wikipedia.org/wiki/CONMEBOL",
+            "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Hotel_Bourbon-Conmebol_%28frente%29.JPG/250px-Hotel_Bourbon-Conmebol_%28frente%29.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+            "description": "International governing body for association football in South America",
+            "qid": "Q58733",
+            "children": [
+              {
+                "id": "019a3f2c-7d00-7000-8000-000000000058",
+                "slug": "cbf",
+                "name": "CBF",
+                "kind": "federation",
+                "kindLabel": "Federação / confederação",
+                "nature": "association",
+                "natureLabel": "Associação sem fins lucrativos",
+                "relation": "member_of",
+                "relationLabel": "membro de",
+                "scope": "national",
+                "country": {
+                  "iso2": "BR",
+                  "flag": "🇧🇷",
+                  "name": "Brasil"
+                },
+                "competitions": [
+                  {
+                    "name": "Campeonato Brasileiro",
+                    "sport": "Futebol"
+                  },
+                  {
+                    "name": "Copa do Brasil",
+                    "sport": "Futebol"
+                  },
+                  {
+                    "name": "Torneio Rio-São Paulo",
+                    "sport": "Futebol"
+                  }
+                ],
+                "sports": [
+                  {
+                    "slug": "football",
+                    "name": "Futebol",
+                    "colorToken": "success",
+                    "id": "019a3f2c-7d00-7000-8000-000000000050",
+                    "statsSchema": "football",
+                    "group": "Físico",
+                    "groupSlug": "physical",
+                    "subgroup": "Coletivos",
+                    "environment": "open",
+                    "format": "team",
+                    "governance": "pyramid",
+                    "role": "national_federation"
+                  }
+                ],
+                "wikipedia": "https://en.wikipedia.org/wiki/Brazilian_Football_Confederation",
+                "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Brazilian_Football_Confederation_logo.svg/250px-Brazilian_Football_Confederation_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+                "description": "Governing body of association football in Brazil",
+                "qid": "Q244754",
+                "children": [
+                  {
+                    "id": "019a3f2c-7d00-7000-8000-00000000005a",
+                    "slug": "fpf",
+                    "name": "São Paulo Football Federation",
+                    "kind": "federation",
+                    "kindLabel": "Federação / confederação",
+                    "nature": "association",
+                    "natureLabel": "Associação sem fins lucrativos",
+                    "relation": "member_of",
+                    "relationLabel": "membro de",
+                    "scope": "local",
+                    "country": {
+                      "iso2": "BR",
+                      "flag": "🇧🇷",
+                      "name": "Brasil"
+                    },
+                    "competitions": [
+                      {
+                        "name": "Campeonato Paulista",
+                        "sport": "Futebol"
+                      }
+                    ],
+                    "sports": [
+                      {
+                        "slug": "football",
+                        "name": "Futebol",
+                        "colorToken": "success",
+                        "id": "019a3f2c-7d00-7000-8000-000000000050",
+                        "statsSchema": "football",
+                        "group": "Físico",
+                        "groupSlug": "physical",
+                        "subgroup": "Coletivos",
+                        "environment": "open",
+                        "format": "team",
+                        "governance": "pyramid",
+                        "role": "regional_federation"
+                      }
+                    ],
+                    "wikipedia": "https://en.wikipedia.org/wiki/Federa%C3%A7%C3%A3o_Paulista_de_Futebol",
+                    "image": null,
+                    "description": "Governing body of association football",
+                    "qid": "Q3741086",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "019a3f2c-7d00-7000-8000-000000000335",
+            "slug": "uefa",
+            "name": "UEFA",
+            "kind": "federation",
+            "kindLabel": "Federação / confederação",
+            "nature": "association",
+            "natureLabel": "Associação sem fins lucrativos",
+            "relation": "member_of",
+            "relationLabel": "membro de",
+            "scope": "continental",
+            "country": null,
+            "competitions": [
+              {
+                "name": "UEFA Champions League",
+                "sport": "Futebol"
+              }
+            ],
+            "sports": [],
+            "wikipedia": "https://en.wikipedia.org/wiki/UEFA",
+            "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/97/UEFA_member_associations_map.svg/250px-UEFA_member_associations_map.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+            "description": "International governing body for association football in Europe",
+            "qid": "Q35572",
+            "children": [
+              {
+                "id": "019a3f2c-7d00-7000-8000-000000000358",
+                "slug": "fff",
+                "name": "French Football Federation",
+                "kind": "federation",
+                "kindLabel": "Federação / confederação",
+                "nature": "association",
+                "natureLabel": "Associação sem fins lucrativos",
+                "relation": "member_of",
+                "relationLabel": "membro de",
+                "scope": "national",
+                "country": {
+                  "iso2": "FR",
+                  "flag": "🇫🇷",
+                  "name": "França"
+                },
+                "competitions": [
+                  {
+                    "name": "Copa da França",
+                    "sport": "Futebol"
+                  }
+                ],
+                "sports": [],
+                "wikipedia": "https://en.wikipedia.org/wiki/French_Football_Federation",
+                "image": null,
+                "description": "Governing body of association football in France",
+                "qid": "Q244750",
+                "children": [
+                  {
+                    "id": "019a3f2c-7d00-7000-8000-000000000359",
+                    "slug": "lfp",
+                    "name": "Ligue de Football Professionnel",
+                    "kind": "league",
+                    "kindLabel": "Liga / circuito comercial",
+                    "nature": "company",
+                    "natureLabel": "Empresa",
+                    "relation": "affiliated_to",
+                    "relationLabel": "afiliada a",
+                    "scope": "national",
+                    "country": {
+                      "iso2": "FR",
+                      "flag": "🇫🇷",
+                      "name": "França"
+                    },
+                    "competitions": [
+                      {
+                        "name": "Copa da Liga Francesa",
+                        "sport": "Futebol"
+                      },
+                      {
+                        "name": "Ligue 1",
+                        "sport": "Futebol"
+                      }
+                    ],
+                    "sports": [],
+                    "wikipedia": "https://en.wikipedia.org/wiki/Ligue_de_Football_Professionnel",
+                    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Ligue_de_Football_Professionnel_logo_%282%29.svg/250px-Ligue_de_Football_Professionnel_logo_%282%29.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+                    "description": "French professional football league",
+                    "qid": "Q1331838",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "019a3f2c-7d00-7000-8000-000000000344",
+                "slug": "rfef",
+                "name": "Royal Spanish Football Federation",
+                "kind": "federation",
+                "kindLabel": "Federação / confederação",
+                "nature": "association",
+                "natureLabel": "Associação sem fins lucrativos",
+                "relation": "member_of",
+                "relationLabel": "membro de",
+                "scope": "national",
+                "country": {
+                  "iso2": "ES",
+                  "flag": "🇪🇸",
+                  "name": "Espanha"
+                },
+                "competitions": [
+                  {
+                    "name": "Copa do Rei",
+                    "sport": "Futebol"
+                  },
+                  {
+                    "name": "Supercopa da Espanha",
+                    "sport": "Futebol"
+                  }
+                ],
+                "sports": [],
+                "wikipedia": "https://en.wikipedia.org/wiki/Royal_Spanish_Football_Federation",
+                "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Royal_Spanish_Football_Federation_logo.svg/250px-Royal_Spanish_Football_Federation_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+                "description": "Governing body of association football in Spain",
+                "qid": "Q207615",
+                "children": [
+                  {
+                    "id": "019a3f2c-7d00-7000-8000-000000000345",
+                    "slug": "laliga",
+                    "name": "LaLiga",
+                    "kind": "league",
+                    "kindLabel": "Liga / circuito comercial",
+                    "nature": "company",
+                    "natureLabel": "Empresa",
+                    "relation": "affiliated_to",
+                    "relationLabel": "afiliada a",
+                    "scope": "national",
+                    "country": {
+                      "iso2": "ES",
+                      "flag": "🇪🇸",
+                      "name": "Espanha"
+                    },
+                    "competitions": [
+                      {
+                        "name": "La Liga",
+                        "sport": "Futebol"
+                      }
+                    ],
+                    "sports": [],
+                    "wikipedia": "https://en.wikipedia.org/wiki/La_Liga",
+                    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/LaLiga_EA_Sports_2023_Vertical_Logo.svg/250px-LaLiga_EA_Sports_2023_Vertical_Logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+                    "description": "Spanish association football league",
+                    "qid": "Q324867",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "019a3f2c-7d00-7000-8000-0000000008b7",
+        "slug": "ifma",
+        "name": "IFMA",
+        "kind": "federation",
+        "kindLabel": "Federação / confederação",
+        "nature": "association",
+        "natureLabel": "Associação sem fins lucrativos",
+        "relation": "recognized_by",
+        "relationLabel": "reconhecida por",
+        "scope": "world",
+        "country": null,
+        "competitions": [],
+        "sports": [
+          {
+            "slug": "muay-thai",
+            "name": "Muay thai",
+            "colorToken": "danger",
+            "id": "019a3f2c-7d00-7000-8000-0000000008af",
+            "statsSchema": "muaythai",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Combate",
+            "environment": "open",
+            "format": "duel",
+            "governance": "free_market",
+            "role": "amateur_federation"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/International_Federation_of_Muaythai_Associations",
+        "image": null,
+        "description": "Sport governing body",
+        "qid": "Q1110704",
+        "children": []
+      },
+      {
+        "id": "019a3f2c-7d00-7000-8000-000000000977",
+        "slug": "igf",
+        "name": "International Golf Federation",
+        "kind": "federation",
+        "kindLabel": "Federação / confederação",
+        "nature": "association",
+        "natureLabel": "Associação sem fins lucrativos",
+        "relation": "recognized_by",
+        "relationLabel": "reconhecida por",
+        "scope": "world",
+        "country": null,
+        "competitions": [],
+        "sports": [
+          {
+            "slug": "golf",
+            "name": "Golfe",
+            "colorToken": "c-teal",
+            "id": "019a3f2c-7d00-7000-8000-000000000972",
+            "statsSchema": "golf",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Precisão",
+            "environment": "closed",
+            "format": "individual",
+            "governance": "condominium",
+            "role": "world_federation"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/International_Golf_Federation",
+        "image": "https://thumb.wikimedia.org/wikipedia/en/thumb/0/0a/IGF_official_logo.svg/250px-IGF_official_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "description": "International golf governing body",
+        "qid": "Q1047626",
+        "children": []
+      },
+      {
+        "id": "019a3f2c-7d00-7000-8000-000000000743",
+        "slug": "itf",
+        "name": "ITF",
+        "kind": "federation",
+        "kindLabel": "Federação / confederação",
+        "nature": "association",
+        "natureLabel": "Associação sem fins lucrativos",
+        "relation": "recognized_by",
+        "relationLabel": "reconhecida por",
+        "scope": "world",
+        "country": null,
+        "competitions": [
+          {
+            "name": "Australian Open",
+            "sport": "Tênis"
+          },
+          {
+            "name": "Jogos Olímpicos – Tênis",
+            "sport": "Tênis"
+          },
+          {
+            "name": "Roland Garros",
+            "sport": "Tênis"
+          },
+          {
+            "name": "US Open",
+            "sport": "Tênis"
+          },
+          {
+            "name": "Wimbledon",
+            "sport": "Tênis"
+          }
+        ],
+        "sports": [
+          {
+            "slug": "tennis",
+            "name": "Tênis",
+            "colorToken": "c-lime",
+            "id": "019a3f2c-7d00-7000-8000-00000000073c",
+            "statsSchema": "tennis",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Raquete",
+            "environment": "open",
+            "format": "duel",
+            "governance": "condominium",
+            "role": "world_federation"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/World_Tennis",
+        "image": null,
+        "description": "Governing body of international tennis",
+        "qid": "Q223041",
+        "children": []
+      },
+      {
+        "id": "019a3f2c-7d00-7000-8000-00000000015a",
+        "slug": "world-aquatics",
+        "name": "World Aquatics",
+        "kind": "federation",
+        "kindLabel": "Federação / confederação",
+        "nature": "association",
+        "natureLabel": "Associação sem fins lucrativos",
+        "relation": "recognized_by",
+        "relationLabel": "reconhecida por",
+        "scope": "world",
+        "country": null,
+        "competitions": [
+          {
+            "name": "Campeonato Mundial de Esportes Aquáticos",
+            "sport": "Natação"
+          },
+          {
+            "name": "Campeonato Mundial de Esportes Aquáticos – High Diving",
+            "sport": "Salto de penhasco"
+          },
+          {
+            "name": "Campeonato Mundial de Natação (25 m)",
+            "sport": "Natação"
+          }
+        ],
+        "sports": [
+          {
+            "slug": "swimming",
+            "name": "Natação",
+            "colorToken": "info",
+            "id": "019a3f2c-7d00-7000-8000-000000000157",
+            "statsSchema": "swimming",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Aquáticos",
+            "environment": "closed",
+            "format": "individual",
+            "governance": "pyramid",
+            "role": "world_federation"
+          },
+          {
+            "slug": "cliff-diving",
+            "name": "Salto de penhasco",
+            "colorToken": "c-teal",
+            "id": "019a3f2c-7d00-7000-8000-000000000576",
+            "statsSchema": "highdiving",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Radicais",
+            "environment": "closed",
+            "format": "judged",
+            "governance": "publisher",
+            "role": "world_federation"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/World_Aquatics",
+        "image": null,
+        "description": "International governing body for water sports",
+        "qid": "Q189289",
+        "children": [
+          {
+            "id": "019a3f2c-7d00-7000-8000-00000000015c",
+            "slug": "cbda",
+            "name": "CBDA",
+            "kind": "federation",
+            "kindLabel": "Federação / confederação",
+            "nature": "association",
+            "natureLabel": "Associação sem fins lucrativos",
+            "relation": "member_of",
+            "relationLabel": "membro de",
+            "scope": "national",
+            "country": {
+              "iso2": "BR",
+              "flag": "🇧🇷",
+              "name": "Brasil"
+            },
+            "competitions": [
+              {
+                "name": "Troféu José Finkel",
+                "sport": "Natação"
+              }
+            ],
+            "sports": [
+              {
+                "slug": "swimming",
+                "name": "Natação",
+                "colorToken": "info",
+                "id": "019a3f2c-7d00-7000-8000-000000000157",
+                "statsSchema": "swimming",
+                "group": "Físico",
+                "groupSlug": "physical",
+                "subgroup": "Aquáticos",
+                "environment": "closed",
+                "format": "individual",
+                "governance": "pyramid",
+                "role": "national_federation"
+              }
+            ],
+            "wikipedia": "https://pt.wikipedia.org/wiki/Confedera%C3%A7%C3%A3o_Brasileira_de_Desportos_Aqu%C3%A1ticos",
+            "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Nova_Logo_CBDA_2021.png/250px-Nova_Logo_CBDA_2021.png?utm_source=pt.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+            "description": null,
+            "qid": "Q19704843",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "019a3f2c-7d00-7000-8000-000000000420",
+        "slug": "world-sailing",
+        "name": "World Sailing",
+        "kind": "federation",
+        "kindLabel": "Federação / confederação",
+        "nature": "association",
+        "natureLabel": "Associação sem fins lucrativos",
+        "relation": "recognized_by",
+        "relationLabel": "reconhecida por",
+        "scope": "world",
+        "country": null,
+        "competitions": [
+          {
+            "name": "Finn Gold Cup (Mundial da classe Finn)",
+            "sport": "Vela"
+          },
+          {
+            "name": "Campeonato Mundial de Laser",
+            "sport": "Vela"
+          },
+          {
+            "name": "Campeonato Mundial de Match Racing",
+            "sport": "Vela"
+          },
+          {
+            "name": "Jogos Olímpicos – Vela",
+            "sport": "Vela"
+          }
+        ],
+        "sports": [
+          {
+            "slug": "sailing",
+            "name": "Vela",
+            "colorToken": "c-teal",
+            "id": "019a3f2c-7d00-7000-8000-00000000041d",
+            "statsSchema": "sailing",
+            "group": "Físico",
+            "groupSlug": "physical",
+            "subgroup": "Náuticos",
+            "environment": "closed",
+            "format": "individual",
+            "governance": "pyramid",
+            "role": "world_federation"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/World_Sailing",
+        "image": "https://thumb.wikimedia.org/wikipedia/en/thumb/3/3c/World_Sailing_logo_local.svg/250px-World_Sailing_logo_local.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "description": "International sailing sports body",
+        "qid": "Q381929",
+        "children": [
+          {
+            "id": "019a3f2c-7d00-7000-8000-000000000422",
+            "slug": "cbvela",
+            "name": "CBVela",
+            "kind": "federation",
+            "kindLabel": "Federação / confederação",
+            "nature": "association",
+            "natureLabel": "Associação sem fins lucrativos",
+            "relation": "member_of",
+            "relationLabel": "membro de",
+            "scope": "national",
+            "country": {
+              "iso2": "BR",
+              "flag": "🇧🇷",
+              "name": "Brasil"
+            },
+            "competitions": [],
+            "sports": [
+              {
+                "slug": "sailing",
+                "name": "Vela",
+                "colorToken": "c-teal",
+                "id": "019a3f2c-7d00-7000-8000-00000000041d",
+                "statsSchema": "sailing",
+                "group": "Físico",
+                "groupSlug": "physical",
+                "subgroup": "Náuticos",
+                "environment": "closed",
+                "format": "individual",
+                "governance": "pyramid",
+                "role": "national_federation"
+              }
+            ],
+            "wikipedia": "https://pt.wikipedia.org/wiki/Confedera%C3%A7%C3%A3o_Brasileira_de_Vela",
+            "image": null,
+            "description": null,
+            "qid": "Q5159861",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000890",
+    "slug": "international-sports-hall-of-fame",
+    "name": "International Sports Hall of Fame",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Sports_Hall_of_Fame",
+    "image": null,
+    "description": "American non-profit organization",
+    "qid": "Q65064012",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000005c8",
+    "slug": "ifs",
+    "name": "International Sumo Federation (IFS)",
+    "kind": "federation",
+    "kindLabel": "Federação / confederação",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "sumo",
+        "name": "Sumô",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-0000000005c3",
+        "statsSchema": "sumo",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "cultural",
+        "role": "amateur_federation"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/International_Sumo_Federation",
+    "image": null,
+    "description": "International sport governing body",
+    "qid": "Q3799706",
+    "children": []
+  },
+  {
+    "id": "413d77ef-5142-5e00-975c-454116f5a1e0",
+    "slug": "iwga",
+    "name": "International World Games Association",
+    "kind": "multisport_committee",
+    "kindLabel": "Comitê multiesportivo",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Jogos Mundiais",
+        "sport": "Multiesportivo"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003be",
+    "slug": "intertribal-committee",
+    "name": "Intertribal Committee (ITC)",
+    "kind": "cultural_body",
+    "kindLabel": "Entidade cultural / comunitária",
+    "nature": "community",
+    "natureLabel": "Comunidade / cultura",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "BR",
+      "flag": "🇧🇷",
+      "name": "Brasil"
+    },
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "indigenous-sports",
+        "name": "Esportes indígenas",
+        "colorToken": "c-lime",
+        "id": "019a3f2c-7d00-7000-8000-0000000003bb",
+        "statsSchema": "traditional",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Tradicionais e indígenas",
+        "environment": "open",
+        "format": "team",
+        "governance": "cultural",
+        "role": "cultural_body"
+      }
+    ],
+    "wikipedia": "https://pt.wikipedia.org/wiki/Comit%C3%AA_Intertribal",
+    "image": null,
+    "description": null,
+    "qid": "Q18244717",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000005c6",
+    "slug": "jsa",
+    "name": "Japan Sumo Association (JSA)",
+    "kind": "federation",
+    "kindLabel": "Federação / confederação",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "JP",
+      "flag": "🇯🇵",
+      "name": "Japão"
+    },
+    "competitions": [
+      {
+        "name": "Honbasho – Divisão Makuuchi",
+        "sport": "Sumô"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "sumo",
+        "name": "Sumô",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-0000000005c3",
+        "statsSchema": "sumo",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "cultural",
+        "role": "world_federation"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Japan_Sumo_Association",
+    "image": null,
+    "description": "Wrestling regulatory agency",
+    "qid": "Q1426308",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000650",
+    "slug": "king-of-the-table",
+    "name": "King of the Table",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "arm-wrestling",
+        "name": "Queda de braço",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-00000000064b",
+        "statsSchema": "armwrestling",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Força",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000007a8",
+    "slug": "laureus",
+    "name": "Laureus Sport for Good",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Laureus_World_Sports_Awards",
+    "image": null,
+    "description": "Annual award ceremony honouring individuals and teams from the world of sports",
+    "qid": "Q900341",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000008b2",
+    "slug": "lumpinee",
+    "name": "Lumpinee Stadium",
+    "kind": "stadium",
+    "kindLabel": "Estádio / arena",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "TH",
+      "flag": "🇹🇭",
+      "name": "Tailândia"
+    },
+    "competitions": [
+      {
+        "name": "Cinturão do Estádio Lumpinee",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "muay-thai",
+        "name": "Muay thai",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-0000000008af",
+        "statsSchema": "muaythai",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "stadium"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Lumpinee_Boxing_Stadium",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Bangkok_Lumpinee_Boxing_Stadium_1.jpg/250px-Bangkok_Lumpinee_Boxing_Stadium_1.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Stadium in Bangkok, Thailand",
+    "qid": "Q2427500",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000094e",
+    "slug": "microsoft",
+    "name": "Microsoft (World's Edge)",
+    "kind": "publisher",
+    "kindLabel": "Dona do jogo (publisher)",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "age-of-mythology",
+        "name": "Age of Mythology",
+        "colorToken": "c-pink",
+        "id": "019a3f2c-7d00-7000-8000-00000000094b",
+        "statsSchema": "rts",
+        "group": "Eletrônico",
+        "groupSlug": "electronic",
+        "subgroup": "Estratégia em tempo real",
+        "environment": "open",
+        "format": "duel",
+        "governance": "publisher",
+        "role": "publisher"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Xbox_Game_Studios",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Xbox_Game_Studios.svg/250px-Xbox_Game_Studios.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "American video game publisher",
+    "qid": "Q73801",
+    "children": [
+      {
+        "id": "019a3f2c-7d00-7000-8000-000000000950",
+        "slug": "aom-community",
+        "name": "Community organizers",
+        "kind": "community",
+        "kindLabel": "Comunidade organizadora",
+        "nature": "community",
+        "natureLabel": "Comunidade / cultura",
+        "relation": "licensed_by",
+        "relationLabel": "licenciada por",
+        "scope": "world",
+        "country": null,
+        "competitions": [],
+        "sports": [
+          {
+            "slug": "age-of-mythology",
+            "name": "Age of Mythology",
+            "colorToken": "c-pink",
+            "id": "019a3f2c-7d00-7000-8000-00000000094b",
+            "statsSchema": "rts",
+            "group": "Eletrônico",
+            "groupSlug": "electronic",
+            "subgroup": "Estratégia em tempo real",
+            "environment": "open",
+            "format": "duel",
+            "governance": "publisher",
+            "role": "organizer"
+          }
+        ],
+        "wikipedia": null,
+        "image": null,
+        "description": null,
+        "qid": null,
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000008db",
+    "slug": "mtaa",
+    "name": "Muay Thai Association of America",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão mundial da MTAA",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000000d2",
+    "slug": "nasl",
+    "name": "North American Soccer League",
+    "kind": "league",
+    "kindLabel": "Liga / circuito comercial",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "US",
+      "flag": "🇺🇸",
+      "name": "Estados Unidos"
+    },
+    "competitions": [
+      {
+        "name": "North American Soccer League",
+        "sport": "Futebol"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/North_American_Soccer_League",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/North_American_Soccer_League_logo_%281975-1984%2C_with_name%29.svg/250px-North_American_Soccer_League_logo_%281975-1984%2C_with_name%29.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Soccer league in the United States (1968–1984)",
+    "qid": "Q1095556",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000050e",
+    "slug": "oca",
+    "name": "Olympic Council of Asia",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Jogos Asiáticos",
+        "sport": "Multiesportivo"
+      },
+      {
+        "name": "Jogos Asiáticos – esports (League of Legends)",
+        "sport": "League of Legends"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Olympic_Council_of_Asia",
+    "image": null,
+    "description": "Governing body of sports in Asia",
+    "qid": "Q844293",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003cd",
+    "slug": "one-championship",
+    "name": "ONE Championship",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "mma",
+        "name": "MMA",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-0000000003c6",
+        "statsSchema": "mma",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      },
+      {
+        "slug": "muay-thai",
+        "name": "Muay thai",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-0000000008af",
+        "statsSchema": "muaythai",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/ONE_Championship",
+    "image": "https://thumb.wikimedia.org/wikipedia/en/thumb/b/b0/ONE_Championship_company_logo.png/250px-ONE_Championship_company_logo.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Martial arts promoter based in Singapore",
+    "qid": "Q3880200",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000091b",
+    "slug": "paba",
+    "name": "Pan Asian Boxing Association",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão peso-pena da PABA (boxe)",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Pan_Asian_Boxing_Association",
+    "image": null,
+    "description": "Boxing organization",
+    "qid": "Q3275155",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003cb",
+    "slug": "pfl",
+    "name": "PFL",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "mma",
+        "name": "MMA",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-0000000003c6",
+        "statsSchema": "mma",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Professional_Fighters_League",
+    "image": null,
+    "description": "Mixed martial arts combat sport promoter",
+    "qid": "Q891610",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000991",
+    "slug": "pga-of-america",
+    "name": "PGA of America",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "PGA Championship",
+        "sport": "Golfe"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Professional_Golfers%27_Association_of_America",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/PGA_of_America_Logo_-_2023_update.png/250px-PGA_of_America_Logo_-_2023_update.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "American organization of golf professionals",
+    "qid": "Q1363321",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000975",
+    "slug": "pga-tour",
+    "name": "PGA Tour",
+    "kind": "league",
+    "kindLabel": "Liga / circuito comercial",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": {
+      "iso2": "US",
+      "flag": "🇺🇸",
+      "name": "Estados Unidos"
+    },
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "golf",
+        "name": "Golfe",
+        "colorToken": "c-teal",
+        "id": "019a3f2c-7d00-7000-8000-000000000972",
+        "statsSchema": "golf",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Precisão",
+        "environment": "closed",
+        "format": "individual",
+        "governance": "condominium",
+        "role": "circuit"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/PGA_Tour",
+    "image": null,
+    "description": "Golf tour in the United States",
+    "qid": "Q910409",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000009e9",
+    "slug": "us-government",
+    "name": "Presidency of the United States",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/President_of_the_United_States",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Seal_of_the_President_of_the_United_States.svg/250px-Seal_of_the_President_of_the_United_States.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Head of state and government",
+    "qid": "Q11696",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000008b4",
+    "slug": "rajadamnern",
+    "name": "Rajadamnern Stadium",
+    "kind": "stadium",
+    "kindLabel": "Estádio / arena",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "TH",
+      "flag": "🇹🇭",
+      "name": "Tailândia"
+    },
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "muay-thai",
+        "name": "Muay thai",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-0000000008af",
+        "statsSchema": "muaythai",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "stadium"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Rajadamnern_Stadium",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/RajInfront.jpg/250px-RajInfront.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Stadium in Bangkok, Thailand",
+    "qid": "Q2631915",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000579",
+    "slug": "red-bull",
+    "name": "Red Bull",
+    "kind": "brand",
+    "kindLabel": "Marca",
+    "nature": "brand",
+    "natureLabel": "Marca",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Red Bull Cliff Diving World Series",
+        "sport": "Salto de penhasco"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "cliff-diving",
+        "name": "Salto de penhasco",
+        "colorToken": "c-teal",
+        "id": "019a3f2c-7d00-7000-8000-000000000576",
+        "statsSchema": "highdiving",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Radicais",
+        "environment": "closed",
+        "format": "judged",
+        "governance": "publisher",
+        "role": "brand_owner"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Red_Bull_GmbH",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/97/Red_Bull_Headquarters.jpg/250px-Red_Bull_Headquarters.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Austrian conglomerate company",
+    "qid": "Q698639",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000006f1",
+    "slug": "revista-64",
+    "name": "Revista 64",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/64_(magazine)",
+    "image": null,
+    "description": "Russian chess and draughts periodical",
+    "qid": "Q2705448",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000004b9",
+    "slug": "riot-games",
+    "name": "Riot Games",
+    "kind": "publisher",
+    "kindLabel": "Dona do jogo (publisher)",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "League of Legends Champions Korea (LCK)",
+        "sport": "League of Legends"
+      },
+      {
+        "name": "Mid-Season Invitational (MSI)",
+        "sport": "League of Legends"
+      },
+      {
+        "name": "Campeonato Mundial de League of Legends (Worlds)",
+        "sport": "League of Legends"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "league-of-legends",
+        "name": "League of Legends",
+        "colorToken": "c-pink",
+        "id": "019a3f2c-7d00-7000-8000-0000000004b6",
+        "statsSchema": "moba",
+        "group": "Eletrônico",
+        "groupSlug": "electronic",
+        "subgroup": "MOBA",
+        "environment": "open",
+        "format": "team",
+        "governance": "publisher",
+        "role": "publisher"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Riot_Games",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/12333_Olympic_Boulevard.jpg/250px-12333_Olympic_Boulevard.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "American video game developer",
+    "qid": "Q1060165",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003e4",
+    "slug": "shooto",
+    "name": "Shooto",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão peso-médio do Shooto",
+        "sport": "MMA"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Shooto",
+    "image": null,
+    "description": "Combat sport and mixed martial art promotion developed in Japan",
+    "qid": "Q2117986",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000092b",
+    "slug": "sat",
+    "name": "Sports Authority of Thailand",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Sports_Authority_of_Thailand",
+    "image": null,
+    "description": "National sports governing body of Thailand",
+    "qid": "Q13012824",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000201",
+    "slug": "si",
+    "name": "Sports Illustrated",
+    "kind": "media",
+    "kindLabel": "Mídia / premiação editorial",
+    "nature": "media",
+    "natureLabel": "Mídia",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Sports_Illustrated",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Sports_Illustrated_January_4%2C_1960_johansson_sportsman_of_the_year.jpg/250px-Sports_Illustrated_January_4%2C_1960_johansson_sportsman_of_the_year.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "American sports magazine",
+    "qid": "Q275837",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000922",
+    "slug": "swat",
+    "name": "Sports Writers Association of Thailand",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000001e8",
+    "slug": "swimming-world",
+    "name": "Swimming World",
+    "kind": "media",
+    "kindLabel": "Mídia / premiação editorial",
+    "nature": "media",
+    "natureLabel": "Mídia",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Swimming_World",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Swimming_World_logo.png/250px-Swimming_World_logo.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "US-based quarterly swimming magazine",
+    "qid": "Q2603450",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000900",
+    "slug": "thai-fight",
+    "name": "THAI FIGHT",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "King's Cup do THAI FIGHT",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Thai_Fight",
+    "image": null,
+    "description": "Thai boxing event",
+    "qid": "Q1153893",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000009dd",
+    "slug": "california-museum",
+    "name": "The California Museum",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/The_California_Museum",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/California_Museum.jpg/250px-California_Museum.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "State history museum",
+    "qid": "Q7720978",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000539",
+    "slug": "the-game-awards",
+    "name": "The Game Awards",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/The_Game_Awards",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/The_Game_Awards_Logo_2024.svg/250px-The_Game_Awards_Logo_2024.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Annual video game awards ceremony",
+    "qid": "Q18642757",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000099d",
+    "slug": "randa",
+    "name": "The R&A",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "The Open Championship",
+        "sport": "Golfe"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/The_R%26A",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/R%26A%2C_Beach_House%2C_Golf_Place%2C_St_Andrews-geograph-6167330-by-Richard-Sutcliffe_%28cropped%29.jpg/250px-R%26A%2C_Beach_House%2C_Golf_Place%2C_St_Andrews-geograph-6167330-by-Richard-Sutcliffe_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Golf governing body",
+    "qid": "Q104901447",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000253",
+    "slug": "the-ring",
+    "name": "The Ring",
+    "kind": "media",
+    "kindLabel": "Mídia / premiação editorial",
+    "nature": "media",
+    "natureLabel": "Mídia",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Título linear The Ring (pesados)",
+        "sport": "Boxe"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/The_Ring_(magazine)",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Ring_Magazine_Cover.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "description": "Boxing magazine",
+    "qid": "Q1140774",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000008f4",
+    "slug": "toyota-marathon",
+    "name": "Toyota Marathon",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Torneio Toyota Marathon",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003c9",
+    "slug": "ufc",
+    "name": "UFC",
+    "kind": "promoter",
+    "kindLabel": "Promotora de eventos",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão peso-médio do UFC",
+        "sport": "MMA"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "mma",
+        "name": "MMA",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-0000000003c6",
+        "statsSchema": "mma",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "promoter"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Ultimate_Fighting_Championship",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/UFC_Logo.svg/250px-UFC_Logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "American mixed martial arts promotion company",
+    "qid": "Q186471",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000262",
+    "slug": "usa-boxing",
+    "name": "USA Boxing",
+    "kind": "federation",
+    "kindLabel": "Federação / confederação",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "national",
+    "country": {
+      "iso2": "US",
+      "flag": "🇺🇸",
+      "name": "Estados Unidos"
+    },
+    "competitions": [
+      {
+        "name": "Junior Olympics (boxe amador)",
+        "sport": "Boxe"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/USA_Boxing",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/2018-10-18_Boxing_flyweight_Girls%27_%E2%80%9351_kg_at_2018_Summer_Youth_Olympics_%E2%80%93_Bronze_Medal_Bout_%E2%80%93_USA-BUL_%28Martin_Rulsch%29_16.jpg/250px-2018-10-18_Boxing_flyweight_Girls%27_%E2%80%9351_kg_at_2018_Summer_Youth_Olympics_%E2%80%93_Bronze_Medal_Bout_%E2%80%93_USA-BUL_%28Martin_Rulsch%29_16.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Governing body for Olympic-style boxing in the United States",
+    "qid": "Q2501992",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000997",
+    "slug": "usga",
+    "name": "USGA",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "US Open de Golfe",
+        "sport": "Golfe"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/United_States_Golf_Association",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/USGA_Museum%2C_Liberty_Corner%2C_NJ.jpg/250px-USGA_Museum%2C_Liberty_Corner%2C_NJ.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Governing body for golf in the United States",
+    "qid": "Q1187243",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000029e",
+    "slug": "valve",
+    "name": "Valve",
+    "kind": "publisher",
+    "kindLabel": "Dona do jogo (publisher)",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Major de Counter-Strike",
+        "sport": "Counter-Strike"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "counter-strike",
+        "name": "Counter-Strike",
+        "colorToken": "accent",
+        "id": "019a3f2c-7d00-7000-8000-00000000029b",
+        "statsSchema": "cs",
+        "group": "Eletrônico",
+        "groupSlug": "electronic",
+        "subgroup": "FPS tático",
+        "environment": "open",
+        "format": "team",
+        "governance": "publisher",
+        "role": "publisher"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Valve_Corporation",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Valve_Lobby_2016.jpg/250px-Valve_Lobby_2016.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "American video game company",
+    "qid": "Q193559",
+    "children": [
+      {
+        "id": "019a3f2c-7d00-7000-8000-0000000002a2",
+        "slug": "blast",
+        "name": "BLAST",
+        "kind": "event_organizer",
+        "kindLabel": "Organizadora licenciada",
+        "nature": "company",
+        "natureLabel": "Empresa",
+        "relation": "licensed_by",
+        "relationLabel": "licenciada por",
+        "scope": "world",
+        "country": null,
+        "competitions": [],
+        "sports": [
+          {
+            "slug": "counter-strike",
+            "name": "Counter-Strike",
+            "colorToken": "accent",
+            "id": "019a3f2c-7d00-7000-8000-00000000029b",
+            "statsSchema": "cs",
+            "group": "Eletrônico",
+            "groupSlug": "electronic",
+            "subgroup": "FPS tático",
+            "environment": "open",
+            "format": "team",
+            "governance": "publisher",
+            "role": "organizer"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/Blast_Premier",
+        "image": "https://thumb.wikimedia.org/wikipedia/en/thumb/f/ff/Blast_Premier_logo.svg/250px-Blast_Premier_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "description": "Professional esports league",
+        "qid": "Q85744598",
+        "children": []
+      },
+      {
+        "id": "019a3f2c-7d00-7000-8000-0000000002a0",
+        "slug": "esl",
+        "name": "ESL",
+        "kind": "event_organizer",
+        "kindLabel": "Organizadora licenciada",
+        "nature": "company",
+        "natureLabel": "Empresa",
+        "relation": "licensed_by",
+        "relationLabel": "licenciada por",
+        "scope": "world",
+        "country": null,
+        "competitions": [
+          {
+            "name": "ESL One Cologne",
+            "sport": "Counter-Strike"
+          },
+          {
+            "name": "ESL Pro League (finais)",
+            "sport": "Counter-Strike"
+          }
+        ],
+        "sports": [
+          {
+            "slug": "counter-strike",
+            "name": "Counter-Strike",
+            "colorToken": "accent",
+            "id": "019a3f2c-7d00-7000-8000-00000000029b",
+            "statsSchema": "cs",
+            "group": "Eletrônico",
+            "groupSlug": "electronic",
+            "subgroup": "FPS tático",
+            "environment": "open",
+            "format": "team",
+            "governance": "publisher",
+            "role": "organizer"
+          }
+        ],
+        "wikipedia": "https://en.wikipedia.org/wiki/ESL_(company)",
+        "image": null,
+        "description": "Esports organizer and production company",
+        "qid": "Q1326127",
+        "children": [
+          {
+            "id": "019a3f2c-7d00-7000-8000-0000000002d7",
+            "slug": "dreamhack",
+            "name": "DreamHack",
+            "kind": "event_organizer",
+            "kindLabel": "Organizadora licenciada",
+            "nature": "company",
+            "natureLabel": "Empresa",
+            "relation": "owned_by",
+            "relationLabel": "pertence a",
+            "scope": "world",
+            "country": null,
+            "competitions": [
+              {
+                "name": "DreamHack Open",
+                "sport": "Counter-Strike"
+              }
+            ],
+            "sports": [],
+            "wikipedia": "https://en.wikipedia.org/wiki/DreamHack",
+            "image": null,
+            "description": "Swedish production company",
+            "qid": "Q1256146",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000670",
+    "slug": "vendetta",
+    "name": "Vendetta",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Vendetta All Stars / Top 8",
+        "sport": "Queda de braço"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000008e8",
+    "slug": "wbc-muaythai",
+    "name": "WBC Muay Thai",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão WBC Muay Thai Diamond",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000652",
+    "slug": "waf",
+    "name": "World Armwrestling Federation",
+    "kind": "federation",
+    "kindLabel": "Federação / confederação",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Campeonato Mundial de Queda de Braço",
+        "sport": "Queda de braço"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "arm-wrestling",
+        "name": "Queda de braço",
+        "colorToken": "c-orange",
+        "id": "019a3f2c-7d00-7000-8000-00000000064b",
+        "statsSchema": "armwrestling",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Força",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "amateur_federation"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/World_Armwrestling_Federation",
+    "image": null,
+    "description": "Sports organization",
+    "qid": "Q18395376",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000022c",
+    "slug": "wba",
+    "name": "World Boxing Association",
+    "kind": "sanctioning_body",
+    "kindLabel": "Entidade de cinturão",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão mundial dos pesados WBA",
+        "sport": "Boxe"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "boxing",
+        "name": "Boxe",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-000000000229",
+        "statsSchema": "boxing",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "sanctioning_body"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/World_Boxing_Association",
+    "image": null,
+    "description": "Sanctioning organization for professional boxing bouts",
+    "qid": "Q725676",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000022e",
+    "slug": "wbc",
+    "name": "World Boxing Council",
+    "kind": "sanctioning_body",
+    "kindLabel": "Entidade de cinturão",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão mundial dos pesados WBC",
+        "sport": "Boxe"
+      }
+    ],
+    "sports": [
+      {
+        "slug": "boxing",
+        "name": "Boxe",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-000000000229",
+        "statsSchema": "boxing",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "sanctioning_body"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/World_Boxing_Council",
+    "image": null,
+    "description": "Sanctioning organization for professional boxing bouts",
+    "qid": "Q724450",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000232",
+    "slug": "wbo",
+    "name": "World Boxing Organization",
+    "kind": "sanctioning_body",
+    "kindLabel": "Entidade de cinturão",
+    "nature": "company",
+    "natureLabel": "Empresa",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "boxing",
+        "name": "Boxe",
+        "colorToken": "danger",
+        "id": "019a3f2c-7d00-7000-8000-000000000229",
+        "statsSchema": "boxing",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Combate",
+        "environment": "open",
+        "format": "duel",
+        "governance": "free_market",
+        "role": "sanctioning_body"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/World_Boxing_Organization",
+    "image": null,
+    "description": "Sanctioning organization for professional boxing bouts",
+    "qid": "Q830940",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000008e2",
+    "slug": "wmc",
+    "name": "World Muaythai Council",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão mundial da WMC",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/World_Muaythai_Council",
+    "image": null,
+    "description": "Sports organization",
+    "qid": "Q10766582",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-00000000065f",
+    "slug": "wpfg",
+    "name": "World Police and Fire Games Federation",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Jogos Mundiais de Policiais e Bombeiros",
+        "sport": "Queda de braço"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/World_Police_and_Fire_Games",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Police_and_Fire_Hockey_%2819275390946%29.jpg/250px-Police_and_Fire_Hockey_%2819275390946%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Sporting events for police officers, firefighters and paramedics",
+    "qid": "Q1859105",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000008ee",
+    "slug": "wpmf",
+    "name": "World Professional Muaythai Federation",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão mundial da WPMF",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/World_Muaythai_Federation",
+    "image": null,
+    "description": null,
+    "qid": "Q56273894",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-0000000003f3",
+    "slug": "wrestling-observer-newsletter",
+    "name": "Wrestling Observer Newsletter",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Wrestling_Observer_Newsletter",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/WONF4W_logo.png/250px-WONF4W_logo.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "Professional wrestling magazine",
+    "qid": "Q43898963",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000741",
+    "slug": "wta",
+    "name": "WTA",
+    "kind": "athlete_association",
+    "kindLabel": "Associação de atletas (circuito)",
+    "nature": "association",
+    "natureLabel": "Associação sem fins lucrativos",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [
+      {
+        "slug": "tennis",
+        "name": "Tênis",
+        "colorToken": "c-lime",
+        "id": "019a3f2c-7d00-7000-8000-00000000073c",
+        "statsSchema": "tennis",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Raquete",
+        "environment": "open",
+        "format": "duel",
+        "governance": "condominium",
+        "role": "circuit"
+      }
+    ],
+    "wikipedia": "https://en.wikipedia.org/wiki/Women%27s_Tennis_Association",
+    "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/WTA_2025.svg/250px-WTA_2025.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "description": "International organization for women's tennis",
+    "qid": "Q948442",
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000489",
+    "slug": "yachting-journalists-association",
+    "name": "Yachting Journalists' Association",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [],
+    "sports": [],
+    "wikipedia": null,
+    "image": null,
+    "description": null,
+    "qid": null,
+    "children": []
+  },
+  {
+    "id": "019a3f2c-7d00-7000-8000-000000000915",
+    "slug": "yokkao",
+    "name": "YOKKAO",
+    "kind": "unknown",
+    "kindLabel": "Não classificada (curadoria)",
+    "nature": "unknown",
+    "natureLabel": "A classificar",
+    "relation": null,
+    "relationLabel": null,
+    "scope": "world",
+    "country": null,
+    "competitions": [
+      {
+        "name": "Cinturão YOKKAO",
+        "sport": "Muay thai"
+      }
+    ],
+    "sports": [],
+    "wikipedia": "https://en.wikipedia.org/wiki/Yokkao",
+    "image": null,
+    "description": "Muay Thai brand based in Thailand",
+    "qid": "Q39053360",
+    "children": []
+  }
+]

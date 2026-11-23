@@ -113,6 +113,20 @@
       "when": 1795059416405,
       "tag": "0015_athlete-status-unknown",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1795459457501,
+      "tag": "0016_cross-sport-mappings",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1795469139746,
+      "tag": "0017_drop-legacy",
+      "breakpoints": true
     }
   ]
 }

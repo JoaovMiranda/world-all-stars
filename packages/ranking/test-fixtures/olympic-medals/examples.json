@@ -1,0 +1,120 @@
+{
+  "description": "Examples 1-3 of olympic-medals/METHODOLOGY.md: all-round medalist (a), two-time silver (b), team bronze (c).",
+  "competitors": [
+    {
+      "id": "a",
+      "name": "A",
+      "kind": "person"
+    },
+    {
+      "id": "b",
+      "name": "B",
+      "kind": "person"
+    },
+    {
+      "id": "c",
+      "name": "C",
+      "kind": "person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "o01",
+      "version": 1,
+      "kind": "olympic_medal",
+      "competitorId": "a",
+      "attributes": {
+        "medal": "gold",
+        "sport": "swimming",
+        "year": 2008,
+        "noc": "BRA",
+        "edition": "swimming-2008",
+        "team": false
+      }
+    },
+    {
+      "id": "o02",
+      "version": 1,
+      "kind": "olympic_medal",
+      "competitorId": "a",
+      "attributes": {
+        "medal": "silver",
+        "sport": "swimming",
+        "year": 2012,
+        "noc": "BRA",
+        "edition": "swimming-2012",
+        "team": false
+      }
+    },
+    {
+      "id": "o03",
+      "version": 1,
+      "kind": "olympic_medal",
+      "competitorId": "a",
+      "attributes": {
+        "medal": "bronze",
+        "sport": "athletics",
+        "year": 2016,
+        "noc": "BRA",
+        "edition": "athletics-2016",
+        "team": false
+      }
+    },
+    {
+      "id": "o04",
+      "version": 1,
+      "kind": "olympic_medal",
+      "competitorId": "a",
+      "attributes": {
+        "medal": "gold",
+        "sport": "football",
+        "year": 2020,
+        "noc": "BRA",
+        "edition": "football-2020",
+        "team": true
+      }
+    },
+    {
+      "id": "o05",
+      "version": 1,
+      "kind": "olympic_medal",
+      "competitorId": "b",
+      "attributes": {
+        "medal": "silver",
+        "sport": "swimming",
+        "year": 2012,
+        "noc": "USA",
+        "edition": "swimming-2012",
+        "team": false
+      }
+    },
+    {
+      "id": "o06",
+      "version": 1,
+      "kind": "olympic_medal",
+      "competitorId": "b",
+      "attributes": {
+        "medal": "silver",
+        "sport": "swimming",
+        "year": 2016,
+        "noc": "USA",
+        "edition": "swimming-2016",
+        "team": false
+      }
+    },
+    {
+      "id": "o07",
+      "version": 1,
+      "kind": "olympic_medal",
+      "competitorId": "c",
+      "attributes": {
+        "medal": "bronze",
+        "sport": "football",
+        "year": 2020,
+        "noc": "BRA",
+        "edition": "football-2020",
+        "team": true
+      }
+    }
+  ]
+}

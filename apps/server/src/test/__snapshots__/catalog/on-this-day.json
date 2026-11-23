@@ -1,0 +1,53 @@
+{
+  "md": "10-23",
+  "items": [
+    {
+      "year": 1940,
+      "kind": "birth",
+      "title": "Nasce em Três Corações (MG)",
+      "athlete": {
+        "slug": "pele",
+        "knownAs": "Pelé",
+        "tier": "mythic",
+        "id": "019a3f2c-7d00-7000-8000-00000000007f",
+        "percentile": 100,
+        "photo": {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Pele_con_brasil_%28cropped%29.jpg",
+          "original": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Pele_con_brasil_%28cropped%29.jpg",
+          "page": "https://commons.wikimedia.org/wiki/File:Pele_con_brasil_(cropped).jpg",
+          "author": "Autor desconhecido",
+          "license": "Domínio público",
+          "year": 1970
+        },
+        "sport": {
+          "slug": "football",
+          "name": "Futebol",
+          "colorToken": "success",
+          "id": "019a3f2c-7d00-7000-8000-000000000050",
+          "statsSchema": "football",
+          "group": "Físico",
+          "groupSlug": "physical",
+          "subgroup": "Coletivos",
+          "environment": "open",
+          "format": "team",
+          "governance": "pyramid"
+        },
+        "nationalities": [
+          {
+            "iso2": "BR",
+            "flag": "🇧🇷",
+            "name": "Brasil"
+          }
+        ],
+        "careerFrom": 1956,
+        "careerTo": 1977,
+        "status": "deceased",
+        "titles": 28,
+        "worldTitles": 5,
+        "isHallOfGreats": true
+      }
+    }
+  ],
+  "observance": null,
+  "contentLocale": "pt-BR"
+}

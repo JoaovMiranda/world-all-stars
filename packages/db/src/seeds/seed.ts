@@ -1,6 +1,7 @@
 import type { SeedReport } from '../interfaces/seed-report.interface';
 import type { Database } from '../types/database.type';
 import { seedConfig } from './config.seed';
+import { seedCrossSportMappings } from './cross-sport.seed';
 import { seedDomainVocabulary } from './domain.seed';
 import { seedPrototype } from './prototype.seed';
 import { seedSourcesPolicy } from './sources-policy.seed';
@@ -16,7 +17,7 @@ export const seedDatabase = async (db: Database, repoRoot: string, log: (msg: st
     log(`config: ${config} rows (competition levels, champion tiers)`);
     const vocabulary = await seedDomainVocabulary(t);
     log(`domain vocabulary: ${vocabulary} values`);
-    const report = await seedPrototype(t, repoRoot, log);
+    const { legacy, ...report } = await seedPrototype(t, repoRoot, log);
     if (report.skipped) log(report.skipped);
     const policies = await seedSourcesPolicy(t);
     log(`source policies: ${policies} sources`);
@@ -24,7 +25,10 @@ export const seedDatabase = async (db: Database, repoRoot: string, log: (msg: st
     if (catalog) log(`sports catalog: ${catalog.sports} sports/disciplines, ${catalog.programmes} programme entries`);
     const sections = await seedSportContent(t, repoRoot);
     if (sections) log(`sport content: ${sections} sections`);
-    const backfill = await backfillUniversalModel(t);
+    const crossSport = await seedCrossSportMappings(t);
+    log(`cross-sport mappings: ${crossSport} rows`);
+    // The universal model (recognitions, holdings, representations…) from the prototype's legacy rows.
+    const backfill = await backfillUniversalModel(t, legacy);
     log(`universal model: ${Object.values(backfill).reduce((a, b) => a + b, 0)} rows`);
     Object.assign(report.tables, Object.fromEntries(Object.entries(backfill).map(([k, v]) => [k, (report.tables[k] ?? 0) + v])));
     return { ...report, config };

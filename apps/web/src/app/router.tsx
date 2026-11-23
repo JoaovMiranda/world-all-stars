@@ -68,6 +68,7 @@ const AdminPrivacyPage = lazyPage('admin/admin-privacy', 'AdminPrivacyPage');
 const AdminDossiersPage = lazyPage('admin/admin-dossiers', 'AdminDossiersPage');
 const AdminCommentsPage = lazyPage('admin/admin-comments', 'AdminCommentsPage');
 const AdminContactPage = lazyPage('admin/admin-contact', 'AdminContactPage');
+const AdminMergePage = lazyPage('admin/admin-merge', 'AdminMergePage');
 const AthleteProfilePage = lazyPage('athletes/athlete-profile', 'AthleteProfilePage');
 const AthletesPage = lazyPage('athletes/athletes', 'AthletesPage');
 const ContactPage = lazyPage('contact/contact', 'ContactPage');
@@ -455,6 +456,8 @@ const adminPrivacyRoute = adminPage('/admin/privacy', AdminQueueSearchSchema, Ad
 const adminDossiersRoute = adminPage('/admin/dossiers', AdminQueueSearchSchema, AdminDossiersPage, 'dossiers');
 const adminCommentsRoute = adminPage('/admin/comments', AdminCommentsSearchSchema, AdminCommentsPage, 'comments');
 const adminContactRoute = adminPage('/admin/contact', AdminContactSearchSchema, AdminContactPage, 'contact');
+/** D14: merge/unmerge of competitors (not an A1–A8 queue: own title catalog). */
+const adminMergeRoute = privatePage('/admin/merge', AdminMergePage, async () => currentText((await import('@/modules/admin/admin-merge.const')).ADMIN_MERGE_MESSAGES).title);
 
 export const routeTree = rootRoute.addChildren([
   homeRoute,
@@ -487,4 +490,5 @@ export const routeTree = rootRoute.addChildren([
   adminDossiersRoute,
   adminCommentsRoute,
   adminContactRoute,
+  adminMergeRoute,
 ]);

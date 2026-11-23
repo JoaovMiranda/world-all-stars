@@ -12,4 +12,5 @@ export const rankingsRoutes = [
   defineRoute(RankingsApi.adminList, (_input, ctx) => new RankingsController(ctx).adminList()),
   defineRoute(RankingsApi.calculate, (input, ctx) => new RankingsController(ctx).calculate(input)),
   defineRoute(RankingsApi.approve, (input, ctx) => new RankingsController(ctx).approve(input)),
+  defineRoute(RankingsApi.revert, (input, ctx) => new RankingsController(ctx).revert(input)),
 ];

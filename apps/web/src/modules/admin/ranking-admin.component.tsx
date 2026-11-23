@@ -1,6 +1,6 @@
 import type { RankingSnapshotSummary } from '@was/shared';
 
-import { adminRankingsQuery, approveRanking, calculateRanking, rankingMethodologiesQuery } from '@/data/endpoints/rankings.query';
+import { adminRankingsQuery, approveRanking, calculateRanking, rankingMethodologiesQuery, revertRanking } from '@/data/endpoints/rankings.query';
 import { useText } from '@/i18n/use-text.hook';
 import { Button } from '@/shared-ui/button.component';
 import { DecisionBar } from '@/shared-ui/decision-bar.component';
@@ -15,6 +15,7 @@ import { ADMIN_REASON } from './admin-queue.const';
 function SnapshotRow({ s }: { s: RankingSnapshotSummary }) {
   const T = useText(ADMIN_MESSAGES).rankings;
   const approve = approveRanking.useMutation();
+  const revert = revertRanking.useMutation();
   return (
     <li className="admin-detail">
       <div className="admin-detail-head">
@@ -38,11 +39,29 @@ function SnapshotRow({ s }: { s: RankingSnapshotSummary }) {
           ]}
         />
       )}
+      {s.status === 'published' && (
+        // D12 revert: archive this publication and republish the previous one. Re-authentication arrives in T6.2; until
+        // then the confirm dialog requires a reason, which goes to the audit log.
+        <DecisionBar
+          label={T.decisionLabel}
+          actions={[
+            {
+              key: 'revert',
+              label: T.revert,
+              variant: 'danger',
+              confirmTitle: T.revertTitle,
+              reason: ADMIN_REASON,
+              onConfirm: (reason: string) => revert.mutateAsync({ params: { id: s.id }, body: { reason } }),
+            },
+          ]}
+        />
+      )}
     </li>
   );
 }
 
-/** Admin · rankings: calculate candidates per methodology; publish with two approvals by different curators (E04). */
+/** Admin · rankings: calculate candidates per methodology; publish with two approvals by different curators (E04) or
+ * automatically when the reproducibility gate passes (D12); revert a publication to the previous snapshot. */
 export function RankingAdmin() {
   const T = useText(ADMIN_MESSAGES).rankings;
   const snapshots = adminRankingsQuery.useQuery();

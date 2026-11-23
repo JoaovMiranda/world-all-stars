@@ -26,6 +26,16 @@ import {
   UpdateUserRequestSchema,
 } from '../schemas/admin-curation.schema';
 import { AdminIdentitiesResponseSchema, DecideIdentityRequestSchema } from '../schemas/admin-identity.schema';
+import {
+  MergeCandidatesQuerySchema,
+  MergeCandidatesResponseSchema,
+  MergeHistoryResponseSchema,
+  MergePreviewRequestSchema,
+  MergePreviewResponseSchema,
+  MergeRequestSchema,
+  MergeResponseSchema,
+  UnmergeRequestSchema,
+} from '../schemas/entity-merge.schema';
 import { OkResponseSchema } from '../schemas/api-error.schema';
 import { BannedWordSchema } from '../schemas/moderation-rules.schema';
 import { AthleteSlugParamsSchema } from '../schemas/athlete-profile.schema';
@@ -63,4 +73,9 @@ export const AdminApi = {
   removeBannedWord: defineContract({ ...admin, method: HttpMethod.Delete, path: '/api/admin/banned-words/:locale/:term', summary: 'Remove a banned word (A7)', params: BannedWordKeyParamsSchema, response: OkResponseSchema }),
   updateContactMessage: defineContract({ ...admin, method: HttpMethod.Patch, path: '/api/admin/contact/:id', summary: 'Mark a message as answered/closed (A8)', params: IdParams, body: UpdateContactMessageRequestSchema, response: OkResponseSchema }),
   setOfficialTier: defineContract({ ...admin, method: HttpMethod.Patch, path: '/api/admin/athletes/:slug/tier', summary: 'Change the official tier (reason required)', params: AthleteSlugParamsSchema, body: SetOfficialTierRequestSchema, response: SetOfficialTierResponseSchema }),
+  mergeCandidates: defineContract({ ...admin, method: HttpMethod.Get, path: '/api/admin/merges/candidates', summary: 'Competitors to merge, searched by name or slug (D14)', query: MergeCandidatesQuerySchema, response: MergeCandidatesResponseSchema }),
+  previewMerge: defineContract({ ...admin, method: HttpMethod.Post, path: '/api/admin/merges/preview', summary: 'Side-by-side fields of two competitors with their sources (D14)', body: MergePreviewRequestSchema, response: MergePreviewResponseSchema }),
+  merge: defineContract({ ...admin, method: HttpMethod.Post, path: '/api/admin/merges', summary: 'Merge a competitor into another with per-field winners and reason (D14)', body: MergeRequestSchema, response: MergeResponseSchema }),
+  unmerge: defineContract({ ...admin, method: HttpMethod.Post, path: '/api/admin/merges/:id/undo', summary: 'Undo a merge exactly (D14)', params: IdParams, body: UnmergeRequestSchema, response: OkResponseSchema }),
+  listMerges: defineContract({ ...admin, method: HttpMethod.Get, path: '/api/admin/merges', summary: 'Merge history, newest first (D14)', response: MergeHistoryResponseSchema }),
 } as const;

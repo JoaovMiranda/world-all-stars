@@ -1,0 +1,389 @@
+{
+  "description": "Synthetic squads for the World Cup, Olympic and continental (CONMEBOL men) families, men and women (METHODOLOGY.md, Worked examples).",
+  "competitors": [
+    {
+      "id": "m1",
+      "name": "M1",
+      "kind": "person"
+    },
+    {
+      "id": "m2",
+      "name": "M2",
+      "kind": "person"
+    },
+    {
+      "id": "m3",
+      "name": "M3",
+      "kind": "person"
+    },
+    {
+      "id": "m4",
+      "name": "M4",
+      "kind": "person"
+    },
+    {
+      "id": "w1",
+      "name": "W1",
+      "kind": "person"
+    },
+    {
+      "id": "w2",
+      "name": "W2",
+      "kind": "person"
+    },
+    {
+      "id": "w3",
+      "name": "W3",
+      "kind": "person"
+    },
+    {
+      "id": "o1",
+      "name": "O1",
+      "kind": "person"
+    },
+    {
+      "id": "o2",
+      "name": "O2",
+      "kind": "person"
+    },
+    {
+      "id": "o3",
+      "name": "O3",
+      "kind": "person"
+    },
+    {
+      "id": "c1",
+      "name": "C1",
+      "kind": "person"
+    },
+    {
+      "id": "c2",
+      "name": "C2",
+      "kind": "person"
+    },
+    {
+      "id": "c3",
+      "name": "C3",
+      "kind": "person"
+    },
+    {
+      "id": "c4",
+      "name": "C4",
+      "kind": "person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "f01",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m1",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 1958,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f02",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m1",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 1962,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f03",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m1",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 1970,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f04",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m2",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 1994,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f05",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m2",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 2002,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f06",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m2",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 2002,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f07",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m3",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 2002,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": false
+      }
+    },
+    {
+      "id": "f08",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "m4",
+      "attributes": {
+        "competition": "fifa-world-cup",
+        "year": 2002,
+        "registration": "withdrawn",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f09",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "w1",
+      "attributes": {
+        "competition": "fifa-womens-world-cup",
+        "year": 1991,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f10",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "w1",
+      "attributes": {
+        "competition": "fifa-womens-world-cup",
+        "year": 1999,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f11",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "w1",
+      "attributes": {
+        "competition": "olympic-football-women",
+        "year": 1996,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f12",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "w2",
+      "attributes": {
+        "competition": "fifa-womens-world-cup",
+        "year": 2015,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": false
+      }
+    },
+    {
+      "id": "f13",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "w3",
+      "attributes": {
+        "competition": "fifa-womens-world-cup",
+        "year": 2019,
+        "registration": "registered",
+        "verification": "provisional",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f14",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "o1",
+      "attributes": {
+        "competition": "olympic-football",
+        "year": 1952,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f15",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "o1",
+      "attributes": {
+        "competition": "olympic-football",
+        "year": 1964,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f16",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "o2",
+      "attributes": {
+        "competition": "olympic-football",
+        "year": 2016,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f17",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "o3",
+      "attributes": {
+        "competition": "olympic-football",
+        "year": 2016,
+        "registration": "replacement",
+        "verification": "verified",
+        "appeared": false
+      }
+    },
+    {
+      "id": "f18",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "c1",
+      "attributes": {
+        "competition": "copa-america",
+        "year": 1997,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f19",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "c1",
+      "attributes": {
+        "competition": "copa-america",
+        "year": 1999,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f20",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "c1",
+      "attributes": {
+        "competition": "copa-america",
+        "year": 2004,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f21",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "c2",
+      "attributes": {
+        "competition": "copa-america",
+        "year": 2021,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f22",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "c2",
+      "attributes": {
+        "competition": "copa-america",
+        "year": 2024,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": true
+      }
+    },
+    {
+      "id": "f23",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "c3",
+      "attributes": {
+        "competition": "copa-america",
+        "year": 2021,
+        "registration": "registered",
+        "verification": "verified",
+        "appeared": false
+      }
+    },
+    {
+      "id": "f24",
+      "version": 1,
+      "kind": "squad_membership",
+      "competitorId": "c4",
+      "attributes": {
+        "competition": "copa-america",
+        "year": 2024,
+        "registration": "registered",
+        "verification": "disputed",
+        "appeared": true
+      }
+    }
+  ]
+}

@@ -82,15 +82,15 @@ export class CatalogView {
       orgs: indexById(rows.organizations),
       competitions: indexById(rows.competitions),
       editions: indexById(rows.editions),
-      awards: indexById(rows.awards),
-      awardEditions: indexById(rows.awardEditions),
+      awardDefinitions: indexById(rows.awardDefinitions),
+      awardCycles: indexById(rows.awardCycles),
       teams: indexById(rows.teams),
       sources: indexById(rows.sources),
       links: indexById(rows.sourceLinks),
       media: indexById(rows.mediaLinks),
       athletes: indexById(rows.athletes),
       prizeForms: indexById(rows.prizeForms),
-      achievementsByAthlete: groupBy(rows.achievements, (a) => a.athleteId),
+      grantsByAthlete: groupBy(rows.grants, (g) => g.athleteId),
       athleteSportsByAthlete: groupBy(rows.athleteSports, (a) => a.athleteId),
       nationalitiesByAthlete: groupBy(rows.nationalities, (n) => n.athleteId),
       orgChildren: groupBy(rows.organizations, (o) => o.parentOrganizationId),
@@ -105,9 +105,9 @@ export class CatalogView {
       group: translator(rows.groupTr, 'groupId', locale),
       subgroup: translator(rows.subgroupTr, 'subgroupId', locale),
       sport: translator(rows.sportTr, 'sportId', locale),
-      category: translator(rows.categoryTr, 'categoryId', locale),
+      category: translator(rows.categoryTr, 'parentId', locale),
       competition: translator(rows.competitionTr, 'competitionId', locale),
-      award: translator(rows.awardTr, 'awardId', locale),
+      award: translator(rows.awardTr, 'parentId', locale),
       observance: translator(rows.observanceTr, 'observanceDayId', locale),
       athlete: translator(rows.athleteTr, 'athleteId', locale),
       milestone: translator(rows.milestoneTr, 'milestoneId', locale),
@@ -139,7 +139,7 @@ export class CatalogView {
         governance: s.governanceModelId ? (m.governance.get(s.governanceModelId)?.slug ?? null) : null,
       };
     });
-    this.achievementsById = memo((athleteId: string) => (m.achievementsByAthlete.get(athleteId) ?? []).map((x) => this.achievementView(x)));
+    this.achievementsById = memo((athleteId: string) => (m.grantsByAthlete.get(athleteId) ?? []).map((x) => this.achievementView(x)));
     this.summaryById = memo((id: string) => this.buildSummary(id));
     this.orgViewById = memo((id: string) => this.buildOrgView(id));
   }
@@ -169,7 +169,11 @@ export class CatalogView {
   }
   athleteNames(id: string): string[] {
     const a = this.maps.athletes.get(id)!;
-    return [a.knownAs, a.fullName, ...a.nicknames].filter((n): n is string => !!n);
+    return [a.knownAs, a.fullName, ...this.identityOf(id).nicknames].filter((n): n is string => !!n);
+  }
+  /** Wikidata QID, nicknames, catalog identifiers and social profiles of an athlete. */
+  identityOf(id: string) {
+    return this.rows.identity.get(id) ?? { athleteId: id, wikidataQid: null, nicknames: [], externalIds: {}, social: {} };
   }
   competitionName(id: string): string {
     return this.t.competition(id, 'name') ?? this.maps.competitions.get(id)?.slug ?? id;
@@ -190,8 +194,8 @@ export class CatalogView {
     return id ? (this.maps.links.get(id) ?? null) : null;
   }
 
-  // ── achievements, legacy, summaries ──
-  private achievementView(x: R['achievements'][number]): Achievement {
+  // ── recognitions, legacy score, summaries ──
+  private achievementView(x: R['grants'][number]): Achievement {
     const type = this.maps.types.get(x.achievementTypeId)!;
     const base = {
       id: x.id,
@@ -214,12 +218,12 @@ export class CatalogView {
         level: level.slug,
         levelWeight: level.weight,
         isOlympic: c.isOlympic,
-        category: x.sportCategoryId ? this.t.category(x.sportCategoryId, 'name') : null,
+        category: x.categoryId ? this.t.category(x.categoryId, 'name') : null,
         team: x.teamId ? (this.maps.teams.get(x.teamId)?.name ?? null) : null,
       };
     }
-    const ae = this.maps.awardEditions.get(x.awardEditionId!)!;
-    const aw = this.maps.awards.get(ae.awardId)!;
+    const ae = this.maps.awardCycles.get(x.awardCycleId!)!;
+    const aw = this.maps.awardDefinitions.get(ae.awardId)!;
     const level = this.maps.levels.get(aw.competitionLevelId)!;
     return {
       ...base,
@@ -311,12 +315,13 @@ export class CatalogView {
     };
     const stats = r.stats.find((s) => s.athleteId === a.id && s.period === 'career');
     const dossier = this.dossierOf(a.id);
+    const identity = this.identityOf(a.id);
     return {
       ...this.summaryById(a.id),
       contentLocale: contentLocaleOf(this.locale, [this.t.athlete.localeOf(a.id)]),
-      wikidataQid: a.wikidataQid,
+      wikidataQid: identity.wikidataQid,
       fullName: a.fullName,
-      nicknames: a.nicknames,
+      nicknames: identity.nicknames,
       position: as.position,
       category: as.primaryCategoryId ? this.t.category(as.primaryCategoryId, 'name') : null,
       birth: { date: a.birthDate, city: city(a.birthCityId) },
@@ -324,11 +329,11 @@ export class CatalogView {
       heightCm: a.heightCm,
       dominantFoot: a.dominantFoot,
       shortBio: this.t.athlete(a.id, 'shortBio'),
-      externalIds: a.externalIds,
-      social: a.socialLinks,
+      externalIds: identity.externalIds,
+      social: identity.social,
       inclusionReason: a.inclusionReason,
       achievements: this.achievementsOf(a.id),
-      teams: r.athleteTeams
+      teams: r.memberships
         .filter((x) => x.athleteId === a.id)
         .map((x) => {
           const t = this.maps.teams.get(x.teamId)!;
@@ -345,7 +350,7 @@ export class CatalogView {
         })
         .sort((p, q) => (p.from ?? 0) - (q.from ?? 0)),
       stats: stats ? { ...stats.stats, schema: stats.statsSchemaKey } : null,
-      reigns: r.reigns
+      reigns: r.holdings
         .filter((x) => x.athleteId === a.id)
         .map((x) => ({
           competition: this.competitionName(x.competitionId),
@@ -464,7 +469,7 @@ export class CatalogView {
     });
     return [...(this.maps.orgChildren.get(null) ?? [])].sort((a, b) => a.name.localeCompare(b.name)).map(node);
   }
-  /** Who governs a sport + who organizes its competitions and awards, top of the hierarchy first. */
+  /** Who governs a sport + who organizes its competitions and award definitions, top of the hierarchy first. */
   sportAssociations(sportId: string): SportAssociation[] {
     const out = new Map<string, Omit<SportAssociation, 'chain'>>();
     const add = (orgId: string | null, role: string) => {
@@ -477,7 +482,7 @@ export class CatalogView {
     };
     for (const b of this.rows.governingBodies) if (b.sportId === sportId) add(b.organizationId, b.role);
     for (const c of this.rows.competitions) if (c.sportId === sportId) add(c.organizationId, 'organizer');
-    for (const a of this.rows.awards) if (a.sportId === sportId) add(a.organizationId, 'award');
+    for (const a of this.rows.awardDefinitions) if (a.sportId === sportId) add(a.organizationId, 'award');
     return [...out.values()]
       .map((o) => ({ ...o, chain: this.orgChain(o.id).map((c) => ({ slug: c.slug, name: c.name, wikipedia: c.wikipedia, relationLabel: c.relationLabel })) }))
       .sort((a, b) => Number(b.governs) - Number(a.governs) || a.chain.length - b.chain.length || a.name.localeCompare(b.name));
@@ -553,7 +558,7 @@ export class CatalogView {
     const report = this.rows.collectionReports.find((r) => r.sportId === s.id);
     const prizeFormIds = [
       ...this.rows.competitions.filter((c) => c.sportId === s.id).map((c) => c.prizeFormId),
-      ...this.rows.awards.filter((a) => a.sportId === s.id).map((a) => a.prizeFormId),
+      ...this.rows.awardDefinitions.filter((a) => a.sportId === s.id).map((a) => a.prizeFormId),
     ];
     return {
       ...info,
@@ -591,7 +596,7 @@ export class CatalogView {
             periodicity: c.periodicity,
             org: this.maps.orgs.get(c.organizationId)?.name ?? '?',
             editions: eds.length,
-            winnersInDb: new Set(this.rows.achievements.filter((x) => x.competitionEditionId && edIds.has(x.competitionEditionId)).map((x) => x.athleteId))
+            winnersInDb: new Set(this.rows.grants.filter((x) => x.competitionEditionId && edIds.has(x.competitionEditionId)).map((x) => x.athleteId))
               .size,
           };
         })
@@ -778,7 +783,7 @@ export class CatalogView {
           ),
         ],
         fields: this.rows.provenance.filter((p) => p.sourceLinkId && linkIds.has(p.sourceLinkId)).length,
-        achievements: this.rows.achievements.filter((x) => x.sourceLinkId && linkIds.has(x.sourceLinkId)).length,
+        achievements: this.rows.grants.filter((x) => x.sourceLinkId && linkIds.has(x.sourceLinkId)).length,
         lastRun: lastRun
           ? {
               id: lastRun.id,

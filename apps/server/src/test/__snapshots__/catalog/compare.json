@@ -1,0 +1,130 @@
+{
+  "athletes": [
+    {
+      "slug": "pele",
+      "knownAs": "Pelé",
+      "tier": "mythic",
+      "id": "019a3f2c-7d00-7000-8000-00000000007f",
+      "percentile": 100,
+      "photo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Pele_con_brasil_%28cropped%29.jpg",
+        "original": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Pele_con_brasil_%28cropped%29.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Pele_con_brasil_(cropped).jpg",
+        "author": "Autor desconhecido",
+        "license": "Domínio público",
+        "year": 1970
+      },
+      "sport": {
+        "slug": "football",
+        "name": "Futebol",
+        "colorToken": "success",
+        "id": "019a3f2c-7d00-7000-8000-000000000050",
+        "statsSchema": "football",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Coletivos",
+        "environment": "open",
+        "format": "team",
+        "governance": "pyramid"
+      },
+      "nationalities": [
+        {
+          "iso2": "BR",
+          "flag": "🇧🇷",
+          "name": "Brasil"
+        }
+      ],
+      "careerFrom": 1956,
+      "careerTo": 1977,
+      "status": "deceased",
+      "titles": 28,
+      "worldTitles": 5,
+      "isHallOfGreats": true,
+      "scores": {
+        "raw": {
+          "worldTitles": 5,
+          "awards": 16,
+          "longevity": 22,
+          "dominance": 1.27,
+          "breadth": 7,
+          "legacy": 100
+        },
+        "norm": {
+          "worldTitles": 46,
+          "awards": 100,
+          "longevity": 84,
+          "dominance": 27,
+          "breadth": 75,
+          "legacy": 100
+        }
+      }
+    },
+    {
+      "slug": "michael-phelps",
+      "knownAs": "Michael Phelps",
+      "tier": "mythic",
+      "id": "019a3f2c-7d00-7000-8000-000000000152",
+      "percentile": 100,
+      "photo": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Michael_Phelps_Rio_Olympics_2016.jpg/960px-Michael_Phelps_Rio_Olympics_2016.jpg",
+        "original": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Michael_Phelps_Rio_Olympics_2016.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Michael_Phelps_Rio_Olympics_2016.jpg",
+        "author": "Agência Brasil Fotografias",
+        "license": "CC BY 2.0",
+        "year": 2016
+      },
+      "sport": {
+        "slug": "swimming",
+        "name": "Natação",
+        "colorToken": "info",
+        "id": "019a3f2c-7d00-7000-8000-000000000157",
+        "statsSchema": "swimming",
+        "group": "Físico",
+        "groupSlug": "physical",
+        "subgroup": "Aquáticos",
+        "environment": "closed",
+        "format": "individual",
+        "governance": "pyramid"
+      },
+      "nationalities": [
+        {
+          "iso2": "US",
+          "flag": "🇺🇸",
+          "name": "Estados Unidos"
+        }
+      ],
+      "careerFrom": 2000,
+      "careerTo": 2016,
+      "status": "retired",
+      "titles": 49,
+      "worldTitles": 49,
+      "isHallOfGreats": true,
+      "scores": {
+        "raw": {
+          "worldTitles": 49,
+          "awards": 11,
+          "longevity": 17,
+          "dominance": 2.88,
+          "breadth": 2,
+          "legacy": 100
+        },
+        "norm": {
+          "worldTitles": 100,
+          "awards": 88,
+          "longevity": 78,
+          "dominance": 45,
+          "breadth": 40,
+          "legacy": 100
+        }
+      }
+    }
+  ],
+  "max": {
+    "worldTitles": 49,
+    "awards": 16,
+    "longevity": 40,
+    "dominance": 19,
+    "breadth": 15,
+    "legacy": 100
+  }
+}

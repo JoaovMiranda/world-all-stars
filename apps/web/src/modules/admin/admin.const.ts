@@ -72,6 +72,8 @@ export const ADMIN_TEXT = {
     approve: 'Aprovar',
     approveTitle: 'Aprovar este ranking? A segunda aprovação, de outro curador, publica.',
     decisionLabel: 'Publicação do ranking',
+    revert: 'Reverter',
+    revertTitle: 'Reverter esta publicação? Ela será arquivada e o snapshot publicado anteriormente volta ao ar. Informe o motivo.',
     status: { draft: 'rascunho', calculated: 'candidato', published: 'publicado', archived: 'arquivado', failed: 'falhou' } as Record<string, string>,
   },
   review: {

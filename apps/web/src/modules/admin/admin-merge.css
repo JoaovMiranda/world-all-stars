@@ -1,0 +1,84 @@
+/* Merge/unmerge screen (D14). Tokens only. */
+@layer components {
+  .merge-pickers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .merge-picker {
+    display: grid;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    min-width: 0;
+  }
+  .merge-picker h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+  .merge-picked {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    overflow-wrap: anywhere;
+  }
+  .merge-picked p {
+    margin: 0;
+  }
+  .merge-results {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .merge-results button {
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .merge-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .merge-table td,
+  .merge-table th {
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+  .merge-choice {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+  .merge-choice input {
+    margin-top: 3px;
+    flex: none;
+  }
+  .merge-choice small {
+    display: block;
+    color: var(--muted);
+  }
+  .merge-value-empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .merge-history-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,1058 @@
+{
+  "bannedWords": [
+    {
+      "term": "arrombado",
+      "matchMode": "contains",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "caralho",
+      "matchMode": "contains",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "fdp",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "filho da puta",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "fuck",
+      "matchMode": "contains",
+      "locale": "en"
+    },
+    {
+      "term": "idiota",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "imbecil",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "lixo humano",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "merda",
+      "matchMode": "contains",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "mierda",
+      "matchMode": "contains",
+      "locale": "es"
+    },
+    {
+      "term": "otario",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "pendejo",
+      "matchMode": "word",
+      "locale": "es"
+    },
+    {
+      "term": "porra",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "puta",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "puto",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    },
+    {
+      "term": "shit",
+      "matchMode": "word",
+      "locale": "en"
+    },
+    {
+      "term": "vagabundo",
+      "matchMode": "word",
+      "locale": "pt-BR"
+    }
+  ],
+  "sources": [
+    {
+      "name": "AllSportDB",
+      "baseUrl": "https://allsportdb.com",
+      "usageStatus": "rejected"
+    },
+    {
+      "name": "BoxRec",
+      "baseUrl": "https://boxrec.com",
+      "usageStatus": "link_only"
+    },
+    {
+      "name": "Wikimedia Commons",
+      "baseUrl": "https://commons.wikimedia.org",
+      "usageStatus": "active"
+    },
+    {
+      "name": "FBref / Sports Reference",
+      "baseUrl": "https://fbref.com",
+      "usageStatus": "link_only"
+    },
+    {
+      "name": "FIFA",
+      "baseUrl": "https://www.fifa.com",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Fjelstul World Cup Database (© 2023 Joshua C. Fjelstul, Ph.D.)",
+      "baseUrl": "https://github.com/jfjelstul/worldcup",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Guinness World Records",
+      "baseUrl": "https://www.guinnessworldrecords.com",
+      "usageStatus": "active"
+    },
+    {
+      "name": "HLTV",
+      "baseUrl": "https://www.hltv.org",
+      "usageStatus": "link_only"
+    },
+    {
+      "name": "IBJJF (results site; scraping forbidden, link only)",
+      "baseUrl": "https://ibjjf.com",
+      "usageStatus": "link_only"
+    },
+    {
+      "name": "IOC Olympic World Library (anti-bot: not crawled)",
+      "baseUrl": "https://library.olympics.com",
+      "usageStatus": "link_only"
+    },
+    {
+      "name": "Liquipedia",
+      "baseUrl": "https://liquipedia.net/counterstrike",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Natural Earth",
+      "baseUrl": "https://www.naturalearthdata.com",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Olympedia",
+      "baseUrl": "https://www.olympedia.org",
+      "usageStatus": "pending_permission"
+    },
+    {
+      "name": "rdy.gg",
+      "baseUrl": "https://rdy.gg",
+      "usageStatus": "rejected"
+    },
+    {
+      "name": "RSSSF Brasil",
+      "baseUrl": "https://www.rsssfbrasil.com",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Transfermarkt",
+      "baseUrl": "https://www.transfermarkt.com",
+      "usageStatus": "link_only"
+    },
+    {
+      "name": "UN (resolutions)",
+      "baseUrl": "https://www.un.org/en/observances/list-days-weeks",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Wikidata",
+      "baseUrl": "https://www.wikidata.org",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Wikipedia (en)",
+      "baseUrl": "https://en.wikipedia.org",
+      "usageStatus": "active"
+    },
+    {
+      "name": "Wikipedia (pt)",
+      "baseUrl": "https://pt.wikipedia.org",
+      "usageStatus": "active"
+    },
+    {
+      "name": "WorldCups.ai (CC BY-NC-SA: not used as data)",
+      "baseUrl": "https://www.worldcups.ai",
+      "usageStatus": "link_only"
+    }
+  ],
+  "knownAthletes": [
+    {
+      "slug": "pele",
+      "knownAs": "Pelé",
+      "tier": "mythic",
+      "fullName": "Edson Arantes do Nascimento"
+    },
+    {
+      "slug": "michael-phelps",
+      "knownAs": "Michael Phelps",
+      "tier": "mythic",
+      "fullName": "Michael Fred Phelps II"
+    },
+    {
+      "slug": "mike-tyson",
+      "knownAs": "Mike Tyson",
+      "tier": "legendary",
+      "fullName": "Michael Gerard Tyson"
+    },
+    {
+      "slug": "fallen",
+      "knownAs": "FalleN",
+      "tier": "elite",
+      "fullName": "Gabriel Toledo de Alcântara Sguario"
+    },
+    {
+      "slug": "neymar",
+      "knownAs": "Neymar",
+      "tier": "champion",
+      "fullName": "Neymar da Silva Santos Júnior"
+    },
+    {
+      "slug": "anderson-silva",
+      "knownAs": "Anderson Silva",
+      "tier": "legendary",
+      "fullName": "Anderson da Silva"
+    },
+    {
+      "slug": "ben-ainslie",
+      "knownAs": "Ben Ainslie",
+      "tier": "legendary",
+      "fullName": "Charles Benedict Ainslie"
+    },
+    {
+      "slug": "faker",
+      "knownAs": "Faker",
+      "tier": "mythic",
+      "fullName": "Lee Sang-hyeok"
+    },
+    {
+      "slug": "gary-hunt",
+      "knownAs": "Gary Hunt",
+      "tier": "legendary",
+      "fullName": "Roger Gary Hunt"
+    },
+    {
+      "slug": "hakuho",
+      "knownAs": "Hakuhō Shō",
+      "tier": "mythic",
+      "fullName": "Mönkhbatyn Davaajargal"
+    },
+    {
+      "slug": "levan-saginashvili",
+      "knownAs": "Levan Saginashvili",
+      "tier": "legendary",
+      "fullName": "Levan Saginashvili"
+    },
+    {
+      "slug": "magnus-carlsen",
+      "knownAs": "Magnus Carlsen",
+      "tier": "mythic",
+      "fullName": "Sven Magnus Øen Carlsen"
+    },
+    {
+      "slug": "novak-djokovic",
+      "knownAs": "Novak Djokovic",
+      "tier": "mythic",
+      "fullName": "Novak Djokovic"
+    },
+    {
+      "slug": "roger-gracie",
+      "knownAs": "Roger Gracie",
+      "tier": "mythic",
+      "fullName": "Roger Gracie Gomes"
+    },
+    {
+      "slug": "ronnie-coleman",
+      "knownAs": "Ronnie Coleman",
+      "tier": "legendary",
+      "fullName": "Ronald Dean Coleman"
+    },
+    {
+      "slug": "saenchai",
+      "knownAs": "Saenchai",
+      "tier": "legendary",
+      "fullName": "Suphachai Saenpong"
+    },
+    {
+      "slug": "themista",
+      "knownAs": "TheMista",
+      "tier": "elite",
+      "fullName": "Themistoklis Bonidis"
+    },
+    {
+      "slug": "tiger-woods",
+      "knownAs": "Tiger Woods",
+      "tier": "mythic",
+      "fullName": "Eldrick Tont Woods"
+    }
+  ],
+  "sports": [
+    {
+      "slug": "american-football",
+      "name": "Futebol americano",
+      "colorToken": "success"
+    },
+    {
+      "slug": "baseball",
+      "name": "Basebol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "baseball5",
+      "name": "Baseball5",
+      "colorToken": "success"
+    },
+    {
+      "slug": "basketball",
+      "name": "Basquetebol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "basketball-3x3",
+      "name": "Basquetebol 3x3",
+      "colorToken": "success"
+    },
+    {
+      "slug": "beach-handball",
+      "name": "Andebol de praia",
+      "colorToken": "success"
+    },
+    {
+      "slug": "beach-volleyball",
+      "name": "Voleibol de praia",
+      "colorToken": "success"
+    },
+    {
+      "slug": "cricket",
+      "name": "Críquete",
+      "colorToken": "success"
+    },
+    {
+      "slug": "field-hockey",
+      "name": "Hóquei em campo",
+      "colorToken": "success"
+    },
+    {
+      "slug": "fistball",
+      "name": "Faustebol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "flag-football",
+      "name": "Flag football",
+      "colorToken": "success"
+    },
+    {
+      "slug": "floorball",
+      "name": "Floorball",
+      "colorToken": "success"
+    },
+    {
+      "slug": "flying-disc",
+      "name": "Disco voador (ultimate)",
+      "colorToken": "success"
+    },
+    {
+      "slug": "football",
+      "name": "Futebol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "futsal",
+      "name": "Futsal",
+      "colorToken": "success"
+    },
+    {
+      "slug": "handball",
+      "name": "Andebol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "kabaddi",
+      "name": "Kabaddi",
+      "colorToken": "success"
+    },
+    {
+      "slug": "korfball",
+      "name": "Corfebol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "lacrosse",
+      "name": "Lacrosse",
+      "colorToken": "success"
+    },
+    {
+      "slug": "netball",
+      "name": "Netball",
+      "colorToken": "success"
+    },
+    {
+      "slug": "rugby",
+      "name": "Râguebi",
+      "colorToken": "success"
+    },
+    {
+      "slug": "rugby-sevens",
+      "name": "Râguebi de sete",
+      "colorToken": "success"
+    },
+    {
+      "slug": "rugby-union",
+      "name": "Râguebi de quinze",
+      "colorToken": "success"
+    },
+    {
+      "slug": "sepak-takraw",
+      "name": "Sepaktakraw",
+      "colorToken": "success"
+    },
+    {
+      "slug": "softball",
+      "name": "Softbol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "volleyball",
+      "name": "Voleibol",
+      "colorToken": "success"
+    },
+    {
+      "slug": "aquatics",
+      "name": "Aquatics",
+      "colorToken": "info"
+    },
+    {
+      "slug": "artistic-swimming",
+      "name": "Nado artístico",
+      "colorToken": "info"
+    },
+    {
+      "slug": "diving",
+      "name": "Salto ornamental",
+      "colorToken": "info"
+    },
+    {
+      "slug": "lifesaving",
+      "name": "Salvamento de vidas",
+      "colorToken": "info"
+    },
+    {
+      "slug": "marathon-swimming",
+      "name": "Natação de águas abertas",
+      "colorToken": "info"
+    },
+    {
+      "slug": "swimming",
+      "name": "Natação",
+      "colorToken": "info"
+    },
+    {
+      "slug": "underwater-sports",
+      "name": "Desportos subaquáticos",
+      "colorToken": "info"
+    },
+    {
+      "slug": "water-polo",
+      "name": "Polo aquático",
+      "colorToken": "info"
+    },
+    {
+      "slug": "canoe",
+      "name": "Canoagem",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "canoe-slalom",
+      "name": "Canoagem slalom",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "canoe-sprint",
+      "name": "Canoagem de velocidade",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "coastal-rowing",
+      "name": "Remo costeiro (beach sprint)",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "dragon-boat",
+      "name": "Barco dragão",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "motorboating",
+      "name": "Motonáutica",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "rowing",
+      "name": "Remo",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "sailing",
+      "name": "Vela",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "surfing",
+      "name": "Surfe",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "water-skiing",
+      "name": "Esqui aquático",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "badminton",
+      "name": "Badmínton",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "basque-pelota",
+      "name": "Pelota basca",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "jeu-de-paume",
+      "name": "Ténis real",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "rackets",
+      "name": "Raquetes",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "racquetball",
+      "name": "Raquetebol",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "soft-tennis",
+      "name": "Soft tênis",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "squash",
+      "name": "Squash",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "table-tennis",
+      "name": "Tênis de mesa",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "tennis",
+      "name": "Tênis",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "archery",
+      "name": "Tiro com arco",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "boules",
+      "name": "Boules",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "bowling",
+      "name": "Boliche",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "casting",
+      "name": "Casting (arremesso de pesca)",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "croquet",
+      "name": "Croquet",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "cue-sports",
+      "name": "Bilhar",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "golf",
+      "name": "Golfe",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "lawn-bowls",
+      "name": "Lawn bowls",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "minigolf",
+      "name": "Minigolfe",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "roque",
+      "name": "Roque",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "shooting",
+      "name": "Desportos de tiro",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "aikido",
+      "name": "Aikido",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "beach-wrestling",
+      "name": "Luta de praia",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "boxing",
+      "name": "Boxe",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "fencing",
+      "name": "Esgrima",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "jiu-jitsu",
+      "name": "Jiu-jitsu",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "ju-jitsu",
+      "name": "Jiu-jitsu",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "judo",
+      "name": "Judo",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "karate",
+      "name": "Caraté",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "kickboxing",
+      "name": "Kickboxing",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "mma",
+      "name": "MMA",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "muay-thai",
+      "name": "Muay thai",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "sambo",
+      "name": "Sambo",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "sumo",
+      "name": "Sumô",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "taekwondo",
+      "name": "Taekwondo",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "wrestling",
+      "name": "Luta",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "wrestling-freestyle",
+      "name": "Luta livre olímpica",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "wrestling-greco-roman",
+      "name": "Luta greco-romana",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "wushu",
+      "name": "Wushu",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "wushu-taolu",
+      "name": "Wushu taolu",
+      "colorToken": "danger"
+    },
+    {
+      "slug": "arm-wrestling",
+      "name": "Queda de braço",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "bodybuilding",
+      "name": "Fisiculturismo",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "powerlifting",
+      "name": "Levantamento de peso básico",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "tug-of-war",
+      "name": "Cabo de guerra",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "weightlifting",
+      "name": "Halterofilismo",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "air-sports",
+      "name": "Desportos aéreos",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "cliff-diving",
+      "name": "Salto de penhasco",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "sport-climbing",
+      "name": "Escalada desportiva",
+      "colorToken": "c-teal"
+    },
+    {
+      "slug": "indigenous-sports",
+      "name": "Esportes indígenas",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "alpine-skiing",
+      "name": "Esqui alpino",
+      "colorToken": "info"
+    },
+    {
+      "slug": "biathlon",
+      "name": "Biatlo",
+      "colorToken": "info"
+    },
+    {
+      "slug": "bobsleigh",
+      "name": "Bobsleigh",
+      "colorToken": "info"
+    },
+    {
+      "slug": "cross-country-skiing",
+      "name": "Esqui cross-country",
+      "colorToken": "info"
+    },
+    {
+      "slug": "curling",
+      "name": "Curling",
+      "colorToken": "info"
+    },
+    {
+      "slug": "figure-skating",
+      "name": "Patinagem artística no gelo",
+      "colorToken": "info"
+    },
+    {
+      "slug": "freestyle-skiing",
+      "name": "Esqui estilo livre",
+      "colorToken": "info"
+    },
+    {
+      "slug": "ice-hockey",
+      "name": "Hóquei no gelo",
+      "colorToken": "info"
+    },
+    {
+      "slug": "luge",
+      "name": "Luge",
+      "colorToken": "info"
+    },
+    {
+      "slug": "nordic-combined",
+      "name": "Combinado nórdico",
+      "colorToken": "info"
+    },
+    {
+      "slug": "short-track-speed-skating",
+      "name": "Patinagem de velocidade de pista curta",
+      "colorToken": "info"
+    },
+    {
+      "slug": "skating",
+      "name": "Patinagem no gelo",
+      "colorToken": "info"
+    },
+    {
+      "slug": "skeleton",
+      "name": "Skeleton",
+      "colorToken": "info"
+    },
+    {
+      "slug": "ski-jumping",
+      "name": "Salto de esqui",
+      "colorToken": "info"
+    },
+    {
+      "slug": "ski-mountaineering",
+      "name": "Esqui-alpinismo",
+      "colorToken": "info"
+    },
+    {
+      "slug": "skiing",
+      "name": "Esqui",
+      "colorToken": "info"
+    },
+    {
+      "slug": "snowboarding",
+      "name": "Snowboard",
+      "colorToken": "info"
+    },
+    {
+      "slug": "speed-skating",
+      "name": "Patinação de velocidade no gelo",
+      "colorToken": "info"
+    },
+    {
+      "slug": "athletics",
+      "name": "Atletismo",
+      "colorToken": "accent"
+    },
+    {
+      "slug": "modern-pentathlon",
+      "name": "Pentatlo moderno",
+      "colorToken": "accent"
+    },
+    {
+      "slug": "orienteering",
+      "name": "Orientação",
+      "colorToken": "accent"
+    },
+    {
+      "slug": "triathlon",
+      "name": "Triatlo",
+      "colorToken": "accent"
+    },
+    {
+      "slug": "breaking",
+      "name": "Breakdance",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "cheerleading",
+      "name": "Animadora de torcida",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "dancesport",
+      "name": "Dança esportiva",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "gymnastics",
+      "name": "Ginástica",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "gymnastics-acrobatic",
+      "name": "Ginástica acrobática",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "gymnastics-artistic",
+      "name": "Ginástica artística",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "gymnastics-rhythmic",
+      "name": "Ginástica rítmica",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "gymnastics-trampoline",
+      "name": "Trampolim acrobático",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "cycling",
+      "name": "Ciclismo de competição",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "cycling-bmx-freestyle",
+      "name": "Ciclismo BMX freestyle",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "cycling-bmx-racing",
+      "name": "Ciclismo BMX racing",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "cycling-mountain-bike",
+      "name": "Ciclismo mountain bike",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "cycling-road",
+      "name": "Ciclismo de estrada",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "cycling-track",
+      "name": "Ciclismo de pista",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "inline-speed-skating",
+      "name": "Patinagem de velocidade em patins em linha",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "roller-sports",
+      "name": "Patinação sobre rodas",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "skateboarding",
+      "name": "Skate",
+      "colorToken": "c-orange"
+    },
+    {
+      "slug": "equestrian",
+      "name": "Equitação",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "equestrian-dressage",
+      "name": "Adestramento",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "equestrian-eventing",
+      "name": "Concurso completo de equitação",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "equestrian-jumping",
+      "name": "Saltos",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "polo",
+      "name": "Polo",
+      "colorToken": "c-lime"
+    },
+    {
+      "slug": "backgammon",
+      "name": "Gamão",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "chess",
+      "name": "Xadrez",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "draughts",
+      "name": "Damas",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "go",
+      "name": "Go",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "mastermind",
+      "name": "Mastermind",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "othello",
+      "name": "Reversi",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "shogi",
+      "name": "Shogi",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "xiangqi",
+      "name": "Xiangqi",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "bridge",
+      "name": "Bridge",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "cribbage",
+      "name": "Cribbage",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "poker",
+      "name": "Pôquer",
+      "colorToken": "primary"
+    },
+    {
+      "slug": "counter-strike",
+      "name": "Counter-Strike",
+      "colorToken": "accent"
+    },
+    {
+      "slug": "league-of-legends",
+      "name": "League of Legends",
+      "colorToken": "c-pink"
+    },
+    {
+      "slug": "age-of-mythology",
+      "name": "Age of Mythology",
+      "colorToken": "c-pink"
+    }
+  ]
+}

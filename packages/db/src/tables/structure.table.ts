@@ -181,3 +181,28 @@ export const competitorStatSnapshots = pgTable(
   },
   (t) => [uniqueIndex().on(t.competitorId, t.sportId, t.periodLabel, t.metricId).where(live(t.deletedAt))],
 );
+
+/**
+ * Key prefix of the registered extension schemas that carry a competitor's sport statistics document
+ * (`athlete-stats.<sport stats schema key>`): the catalog strips it to get the schema key of the profile panel.
+ */
+export const ATHLETE_STATS_EXTENSION_PREFIX = 'athlete-stats.';
+
+/**
+ * Sport-specific statistics of a competitor that are not flat metrics (per-edition tables, records, presentation
+ * hints), validated by a registered extension schema (`athlete-stats.<sport schema>`). Flat numeric values also go to
+ * competitor_stat_snapshots.
+ */
+export const competitorStatExtensions = pgTable(
+  'competitor_stat_extensions',
+  {
+    ...baseColumns(),
+    competitorId: uuid().notNull().references(() => competitors.id),
+    sportId: uuid().references(() => sports.id),
+    periodLabel: text().notNull().default('career'),
+    extensionSchemaId: uuid().notNull().references(() => extensionSchemas.id),
+    data: jsonb().$type<Record<string, unknown>>().notNull(),
+    sourceLinkId: uuid(),
+  },
+  (t) => [uniqueIndex().on(t.competitorId, t.periodLabel, t.extensionSchemaId).where(live(t.deletedAt))],
+);

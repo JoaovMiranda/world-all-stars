@@ -56,6 +56,17 @@ const model: AiProvider = {
   model: 'fake-1',
   version: '1',
   async generate(prompt) {
+    if (prompt.includes('Validate each proposed biography claim'))
+      return {
+        output: {
+          claims: [
+            { text: 'world cup', status: 'supported', evidence_quote: 'won the FIFA World Cup with Brazil' },
+            { text: 'nationality', status: 'supported', evidence_quote: 'is a Brazilian former professional footballer' },
+          ],
+        },
+        tokensIn: 10,
+        tokensOut: 10,
+      };
     modelCalls++;
     const name = PEOPLE.find((n) => prompt.includes(`${n} is a Brazilian`)) ?? 'Someone';
     calledFor.push(name);

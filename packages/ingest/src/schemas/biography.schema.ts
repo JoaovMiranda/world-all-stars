@@ -8,5 +8,5 @@ export const BiographyOutputSchema = z.object({
   claims: z
     .array(z.object({ text: z.string().min(3), evidence_quote: z.string().min(10).max(400) }))
     .min(1)
-    .max(12),
+    .max(6),
 });

@@ -44,6 +44,8 @@ export const EnvSchema = z.object({
   OTEL_EXPORTER_OTLP_ENDPOINT: unsetIfEmpty(z.url()),
   /** `console` prints the spans (dev check of the tracing). */
   OTEL_TRACES_EXPORTER: z.string().optional(),
+  /** D12: publish a calculated snapshot automatically when the reproducibility gate passes (true in production). */
+  RANKING_AUTO_PUBLISH: flag.default(false),
   /** Apply pending migrations on boot (the app starts on an empty database). */
   MIGRATE_ON_BOOT: flag.default(true),
   /** Dev: Vite in middleware mode inside this process (SSR + HMR on the same port). `pnpm dev` sets it. */

@@ -30,7 +30,16 @@ describe.skipIf(!HAS_PROTOTYPE || !hasCache)('rankings: calculate → approve tw
 
   it('calculates candidates that are NOT public until two different admins approve', async () => {
     const ids = await calculateRankings(t.deps, 'football-champions', admin('00000000-0000-7000-8000-00000000000a'));
-    expect(ids).toHaveLength(5);
+    const keys = (await t.deps.db.select().from(rankingSnapshots)).map((s) => s.rankingKey);
+    expect(keys).toEqual(
+      expect.arrayContaining([
+        'football-champions:world-cup-men',
+        'football-champions:world-cup-women',
+        'football-champions:olympic-men',
+        'football-champions:olympic-women',
+        'football-champions:overview',
+      ]),
+    );
     const [a] = await t.deps.db.select().from(rankingSnapshots).where(eq(rankingSnapshots.id, ids[0]!));
     expect(a?.status).toBe('calculated');
     expect(((await (await t.app.request(RankingsApi.list.path)).json()) as { items: unknown[] }).items).toHaveLength(0);
@@ -66,6 +75,7 @@ describe.skipIf(!HAS_PROTOTYPE || !hasCache)('rankings: calculate → approve tw
 
   it('BJJ: Wikipedia results stay provisional, so the candidate has no eligible entry until the sample is approved', async () => {
     const ids = await calculateRankings(t.deps, 'bjj-career', admin('00000000-0000-7000-8000-00000000000a'));
+    // BJJ rankings: black-gi-men, black-gi-women, nogi-men, nogi-women — ADCC 2019 is a no-gi result.
     const entries = await t.deps.db.select().from(rankingEntries).where(eq(rankingEntries.snapshotId, ids[2]!));
     expect(entries.length).toBeGreaterThan(0);
     expect(entries.every((e) => !e.eligible)).toBe(true);

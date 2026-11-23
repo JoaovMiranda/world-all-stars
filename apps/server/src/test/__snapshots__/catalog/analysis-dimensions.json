@@ -1,0 +1,344 @@
+{
+  "keys": [
+    "worldTitles",
+    "awards",
+    "longevity",
+    "dominance",
+    "breadth",
+    "legacy"
+  ],
+  "max": {
+    "worldTitles": 49,
+    "awards": 16,
+    "longevity": 40,
+    "dominance": 19,
+    "breadth": 15,
+    "legacy": 100
+  },
+  "bySlug": {
+    "pele": {
+      "raw": {
+        "worldTitles": 5,
+        "awards": 16,
+        "longevity": 22,
+        "dominance": 1.27,
+        "breadth": 7,
+        "legacy": 100
+      },
+      "norm": {
+        "worldTitles": 46,
+        "awards": 100,
+        "longevity": 84,
+        "dominance": 27,
+        "breadth": 75,
+        "legacy": 100
+      }
+    },
+    "michael-phelps": {
+      "raw": {
+        "worldTitles": 49,
+        "awards": 11,
+        "longevity": 17,
+        "dominance": 2.88,
+        "breadth": 2,
+        "legacy": 100
+      },
+      "norm": {
+        "worldTitles": 100,
+        "awards": 88,
+        "longevity": 78,
+        "dominance": 45,
+        "breadth": 40,
+        "legacy": 100
+      }
+    },
+    "mike-tyson": {
+      "raw": {
+        "worldTitles": 6,
+        "awards": 3,
+        "longevity": 40,
+        "dominance": 0.2,
+        "breadth": 5,
+        "legacy": 97
+      },
+      "norm": {
+        "worldTitles": 50,
+        "awards": 49,
+        "longevity": 100,
+        "dominance": 6,
+        "breadth": 65,
+        "legacy": 97
+      }
+    },
+    "fallen": {
+      "raw": {
+        "worldTitles": 4,
+        "awards": 7,
+        "longevity": 24,
+        "dominance": 0.21,
+        "breadth": 4,
+        "legacy": 88
+      },
+      "norm": {
+        "worldTitles": 41,
+        "awards": 73,
+        "longevity": 87,
+        "dominance": 6,
+        "breadth": 58,
+        "legacy": 88
+      }
+    },
+    "neymar": {
+      "raw": {
+        "worldTitles": 3,
+        "awards": 9,
+        "longevity": 18,
+        "dominance": 1.44,
+        "breadth": 15,
+        "legacy": 72
+      },
+      "norm": {
+        "worldTitles": 35,
+        "awards": 81,
+        "longevity": 79,
+        "dominance": 30,
+        "breadth": 100,
+        "legacy": 72
+      }
+    },
+    "anderson-silva": {
+      "raw": {
+        "worldTitles": 2,
+        "awards": 5,
+        "longevity": 24,
+        "dominance": 0.08,
+        "breadth": 2,
+        "legacy": 99
+      },
+      "norm": {
+        "worldTitles": 28,
+        "awards": 63,
+        "longevity": 87,
+        "dominance": 3,
+        "breadth": 40,
+        "legacy": 99
+      }
+    },
+    "ben-ainslie": {
+      "raw": {
+        "worldTitles": 14,
+        "awards": 9,
+        "longevity": 38,
+        "dominance": 0.37,
+        "breadth": 5,
+        "legacy": 98
+      },
+      "norm": {
+        "worldTitles": 69,
+        "awards": 81,
+        "longevity": 99,
+        "dominance": 11,
+        "breadth": 65,
+        "legacy": 98
+      }
+    },
+    "faker": {
+      "raw": {
+        "worldTitles": 8,
+        "awards": 10,
+        "longevity": 14,
+        "dominance": 1.43,
+        "breadth": 4,
+        "legacy": 99.9
+      },
+      "norm": {
+        "worldTitles": 56,
+        "awards": 85,
+        "longevity": 73,
+        "dominance": 30,
+        "breadth": 58,
+        "legacy": 99.9
+      }
+    },
+    "gary-hunt": {
+      "raw": {
+        "worldTitles": 9,
+        "awards": 0,
+        "longevity": 18,
+        "dominance": 0.5,
+        "breadth": 2,
+        "legacy": 98
+      },
+      "norm": {
+        "worldTitles": 59,
+        "awards": 0,
+        "longevity": 79,
+        "dominance": 14,
+        "breadth": 40,
+        "legacy": 98
+      }
+    },
+    "hakuho": {
+      "raw": {
+        "worldTitles": 24,
+        "awards": 3,
+        "longevity": 21,
+        "dominance": 1.14,
+        "breadth": 1,
+        "legacy": 99.9
+      },
+      "norm": {
+        "worldTitles": 82,
+        "awards": 49,
+        "longevity": 83,
+        "dominance": 25,
+        "breadth": 25,
+        "legacy": 99.9
+      }
+    },
+    "levan-saginashvili": {
+      "raw": {
+        "worldTitles": 4,
+        "awards": 0,
+        "longevity": 1,
+        "dominance": 5,
+        "breadth": 5,
+        "legacy": 95
+      },
+      "norm": {
+        "worldTitles": 41,
+        "awards": 0,
+        "longevity": 19,
+        "dominance": 60,
+        "breadth": 65,
+        "legacy": 95
+      }
+    },
+    "magnus-carlsen": {
+      "raw": {
+        "worldTitles": 22,
+        "awards": 10,
+        "longevity": 28,
+        "dominance": 0.79,
+        "breadth": 5,
+        "legacy": 99.9
+      },
+      "norm": {
+        "worldTitles": 80,
+        "awards": 85,
+        "longevity": 91,
+        "dominance": 19,
+        "breadth": 65,
+        "legacy": 99.9
+      }
+    },
+    "novak-djokovic": {
+      "raw": {
+        "worldTitles": 25,
+        "awards": 5,
+        "longevity": 24,
+        "dominance": 1.04,
+        "breadth": 5,
+        "legacy": 100
+      },
+      "norm": {
+        "worldTitles": 83,
+        "awards": 63,
+        "longevity": 87,
+        "dominance": 24,
+        "breadth": 65,
+        "legacy": 100
+      }
+    },
+    "roger-gracie": {
+      "raw": {
+        "worldTitles": 13,
+        "awards": 2,
+        "longevity": 19,
+        "dominance": 0.68,
+        "breadth": 2,
+        "legacy": 98
+      },
+      "norm": {
+        "worldTitles": 67,
+        "awards": 39,
+        "longevity": 81,
+        "dominance": 17,
+        "breadth": 40,
+        "legacy": 98
+      }
+    },
+    "ronnie-coleman": {
+      "raw": {
+        "worldTitles": 10,
+        "awards": 2,
+        "longevity": 18,
+        "dominance": 0.56,
+        "breadth": 3,
+        "legacy": 99
+      },
+      "norm": {
+        "worldTitles": 61,
+        "awards": 39,
+        "longevity": 79,
+        "dominance": 15,
+        "breadth": 50,
+        "legacy": 99
+      }
+    },
+    "saenchai": {
+      "raw": {
+        "worldTitles": 5,
+        "awards": 4,
+        "longevity": 1,
+        "dominance": 19,
+        "breadth": 9,
+        "legacy": 97
+      },
+      "norm": {
+        "worldTitles": 46,
+        "awards": 57,
+        "longevity": 19,
+        "dominance": 100,
+        "breadth": 83,
+        "legacy": 97
+      }
+    },
+    "themista": {
+      "raw": {
+        "worldTitles": 0,
+        "awards": 0,
+        "longevity": 20,
+        "dominance": 0,
+        "breadth": 0,
+        "legacy": 90
+      },
+      "norm": {
+        "worldTitles": 0,
+        "awards": 0,
+        "longevity": 82,
+        "dominance": 0,
+        "breadth": 0,
+        "legacy": 90
+      }
+    },
+    "tiger-woods": {
+      "raw": {
+        "worldTitles": 15,
+        "awards": 9,
+        "longevity": 31,
+        "dominance": 0.48,
+        "breadth": 4,
+        "legacy": 100
+      },
+      "norm": {
+        "worldTitles": 71,
+        "awards": 81,
+        "longevity": 93,
+        "dominance": 13,
+        "breadth": 58,
+        "legacy": 100
+      }
+    }
+  }
+}

@@ -23,6 +23,7 @@ import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 import { BaseService } from '../../core/base.service';
 import type { AppDeps } from '../../http/app-deps.interface';
 import { forbidden, notFound } from '../../http/http-error.helper';
+import { RankingPublicationService } from './ranking-publication.service';
 import { EVIDENCE } from './rankings.const';
 import { competitorsOf } from './rankings-evidence.helper';
 import { rows } from './rankings-sql.helper';
@@ -125,6 +126,8 @@ export class RankingsService extends BaseService {
         created.push(snapshotId);
       });
     }
+    // D12: auto-publish only when the reproducibility gate passes (RANKING_AUTO_PUBLISH=true in production).
+    if (deps.config.rankingAutoPublish) for (const snapshotId of created) await RankingPublicationService.autoPublish(deps, snapshotId);
     await deps.repo.audit(
       actor,
       AdminAuditAction.RankingCalculated,
@@ -176,6 +179,13 @@ export class RankingsService extends BaseService {
   /** Approves a snapshot as the current actor (publishes on the second distinct approval). */
   approve(snapshotId: string, reason: string): Promise<{ ok: true; published: boolean }> {
     return RankingsService.approveSnapshot(this.ctx.deps, snapshotId, this.actor, reason);
+  }
+
+  /** Reverts a publication to the previous snapshot of the same ranking (D12). */
+  async revert(snapshotId: string, reason: string): Promise<{ ok: true }> {
+    const result = await RankingPublicationService.revert(this.ctx.deps, snapshotId, this.actor, reason);
+    if (!result.ok) throw forbidden();
+    return { ok: true as const };
   }
 
   async listPublished(): Promise<RankingsListResponse> {

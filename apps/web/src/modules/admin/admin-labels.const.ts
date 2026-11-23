@@ -143,6 +143,11 @@ export const ADMIN_LABELS_TEXT: {
     ranking_calculated: 'Ranking calculado',
     ranking_approved: 'Ranking aprovado',
     ranking_published: 'Ranking publicado',
+    ranking_auto_published: 'Ranking publicado automaticamente',
+    ranking_reverted: 'Ranking revertido',
+    ranking_auto_publish_skipped: 'Publicação automática ignorada',
+    entity_merged: 'Entidades mescladas',
+    entity_unmerged: 'Mescla desfeita',
   },
   matchMode: {
     word: 'Palavra inteira',

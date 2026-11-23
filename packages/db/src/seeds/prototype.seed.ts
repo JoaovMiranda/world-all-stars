@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 
 import { AdminAuditAction, ConsentPurpose, DEMO_SESSION_EMAILS, LEGAL_DOCUMENT_VERSIONS, NotificationKind, REQUIRED_LEGAL_DOCUMENTS } from '@was/shared';
 import { eq, getTableColumns, getTableName, isNull, sql } from 'drizzle-orm';
+import { toCamelCase } from 'drizzle-orm/casing';
 import type { PgTable } from 'drizzle-orm/pg-core';
 import countryCodes from 'i18n-iso-countries';
 
@@ -19,8 +20,11 @@ import type { SeedReport } from '../interfaces/seed-report.interface';
 import * as schema from '../schema';
 import { countries } from '../tables/geography.table';
 import { fieldConflicts } from '../tables/source.table';
+import type { BackfillRow } from '../types/backfill-row.type';
 import type { Database } from '../types/database.type';
 import type { ProtoRow } from '../types/proto-row.type';
+import type { LegacyRows } from './legacy-rows.interface';
+import { emptyLegacyRows } from './universal-backfill.seed';
 
 const LOCALE = 'pt-BR';
 /** Locales of content-translations.json written by the seed (pt-BR comes from the mock rows). */
@@ -44,6 +48,24 @@ const CONTENT_FK: Record<string, string> = {
   organization_kind_translations: 'organization_kind_id',
   prize_form_translations: 'prize_form_id',
 };
+/**
+ * Prototype tables of the retired legacy model → LegacyRows key. Their rows go to the universal backfill; they are
+ * written to the database only while the Drizzle table still exists (dropped by the drop-legacy migration).
+ */
+const LEGACY_TABLES: Record<string, keyof LegacyRows> = {
+  achievements: 'achievements',
+  awards: 'awards',
+  award_translations: 'awardTranslations',
+  award_editions: 'awardEditions',
+  title_reigns: 'titleReigns',
+  athlete_nationalities: 'athleteNationalities',
+  athlete_teams: 'athleteTeams',
+  athlete_stats: 'athleteStats',
+  sport_categories: 'sportCategories',
+  sport_category_translations: 'sportCategoryTranslations',
+};
+/** Retired identity columns of the prototype athletes: they become aliases and external ids. */
+const LEGACY_ATHLETE_COLUMNS = new Set(['nicknames', 'wikidata_qid', 'external_ids', 'social_links']);
 const SIGNED_UP_AT = '2026-10-01T12:00:00.000Z';
 const SEED_CURATORS = [
   { email: 'curador1@exemplo.invalid', name: 'Curador 1 (seed)' },
@@ -109,9 +131,13 @@ const loadPrototype = async (
   return { proto, mockDir, mappers };
 };
 
-export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: string) => void = () => undefined): Promise<SeedReport> => {
+export const seedPrototype = async (
+  db: Database,
+  repoRoot: string,
+  log: (msg: string) => void = () => undefined,
+): Promise<SeedReport & { legacy: LegacyRows }> => {
   const loaded = await loadPrototype(repoRoot);
-  if (!loaded) return { tables: {}, skipped: 'plan/front-prototype not found: only configuration was seeded' };
+  if (!loaded) return { tables: {}, skipped: 'plan/front-prototype not found: only configuration was seeded', legacy: emptyLegacyRows() };
   const { proto, mockDir, mappers } = loaded;
   const protoSchema = proto.schema;
   const tables = tablesByName();
@@ -129,24 +155,44 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
     return id;
   };
 
-  // 1 · Every prototype table, generically (columns by database name, FKs remapped to the ids in the database).
+  // 1 · Every prototype table, generically (columns by database name, FKs remapped to the ids in the database). Rows
+  // of the retired legacy model are collected for the universal backfill (and written only while their table exists).
+  const legacy = emptyLegacyRows();
   for (const name of tableOrder(protoSchema)) {
     const table = tables.get(name);
-    if (!table) throw new Error(`Seed: prototype table ${name} has no Drizzle table`);
-    const keys = columnKeysByDbName(table);
-    const columns = getTableColumns(table);
+    const legacyKey = LEGACY_TABLES[name];
+    if (!table && !legacyKey) throw new Error(`Seed: prototype table ${name} has no Drizzle table`);
+    const keys = table ? columnKeysByDbName(table) : new Map<string, string>();
+    const columns = table ? getTableColumns(table) : {};
     for (const row of parentsFirst(proto.db.tables[name] ?? [], selfFkColumns(protoSchema, name))) {
       if (row.deleted_at) continue;
       const values: Record<string, unknown> = {};
+      const collected: Record<string, unknown> = {};
       for (const [col, raw] of Object.entries(row)) {
         const key = keys.get(col);
-        if (!key) throw new Error(`Seed: column ${name}.${col} is not in the Drizzle schema`);
+        const retired = !!legacyKey || (name === 'athletes' && LEGACY_ATHLETE_COLUMNS.has(col));
+        if (!key && !retired) throw new Error(`Seed: column ${name}.${col} is not in the Drizzle schema`);
         if (raw === null || raw === undefined) continue;
         const value = mapId(raw);
-        values[key] = columns[key]!.columnType === 'PgTimestamp' && typeof value === 'string' ? new Date(value) : value;
+        if (retired || name === 'athletes') collected[toCamelCase(col)] = value;
+        if (key) values[key] = columns[key]!.columnType === 'PgTimestamp' && typeof value === 'string' ? new Date(value) : value;
       }
       values.createdVia = 'seed';
-      await put(name, values, row.id);
+      const id = table ? await put(name, values, row.id) : row.id;
+      if (!table) idMap.set(row.id, row.id);
+      if (legacyKey) legacy[legacyKey].push({ ...collected, id });
+      if (name === 'athletes') legacy.athletes.push({ ...collected, id });
+      // A sport category is a named category set of its sport (same id), referenced by athlete_sports and competitions.
+      if (name === 'sport_categories')
+        await put('category_sets', {
+          id,
+          createdVia: 'seed',
+          slug: collected.slug,
+          label: collected.slug,
+          sportId: collected.sportId,
+          parentSetId: collected.parentCategoryId ?? null,
+          sortOrder: collected.sortOrder ?? 0,
+        });
     }
   }
   const P = (id: unknown) => mapId(id) as string;
@@ -206,8 +252,8 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
     for (const [name, entries] of Object.entries(content.tables)) {
       const fk = CONTENT_FK[name];
       const table = tables.get(name);
-      if (!fk || !table) continue;
-      const keys = columnKeysByDbName(table);
+      const legacyKey = LEGACY_TABLES[name];
+      if (!fk || (!table && !legacyKey)) continue;
       for (const [parentProtoId, entry] of Object.entries(entries)) {
         const parentId = idMap.get(parentProtoId);
         if (!parentId) continue;
@@ -215,10 +261,12 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
         for (const locale of CONTENT_LOCALES) {
           const translated = (entry[locale] as Record<string, string | null> | undefined) ?? {};
           if (!Object.values(translated).some(Boolean)) continue;
-          const values: Record<string, unknown> = { id: seedId('ct', name, parentProtoId, locale), createdVia: 'seed', [keys.get(fk)!]: parentId, locale };
+          const values: Record<string, unknown> = { id: seedId('ct', name, parentProtoId, locale), createdVia: 'seed', [toCamelCase(fk)]: parentId, locale };
           // A field not translated in this locale keeps the pt-BR text (NOT NULL columns); the mapper falls back anyway.
-          for (const [col, v] of Object.entries(source)) if (v) values[keys.get(col)!] = translated[col] ?? v;
-          await put(name, values);
+          for (const [col, v] of Object.entries(source)) if (v) values[toCamelCase(col)] = translated[col] ?? v;
+          if (table) await put(name, values);
+          // Retired translation tables (awards, sport categories) feed the universal backfill.
+          if (legacyKey) legacy[legacyKey].push(values as BackfillRow);
         }
       }
     }
@@ -416,5 +464,5 @@ export const seedPrototype = async (db: Database, repoRoot: string, log: (msg: s
     });
   }
   log(`prototype: ${Object.values(report).reduce((s, n) => s + n, 0)} rows in ${Object.keys(report).length} tables`);
-  return { tables: report };
+  return { tables: report, legacy };
 };

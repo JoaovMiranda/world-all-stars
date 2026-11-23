@@ -4,6 +4,7 @@ import { boolean, date, index, integer, pgTable, real, text, uniqueIndex, uuid }
 
 import { baseColumns, live } from '../columns/base.column';
 import { competitions } from './competition.table';
+import { achievementTypes, competitionLevels, prizeForms } from './config.table';
 import { domainValues } from './domain.table';
 import { calendarDays, cities } from './geography.table';
 import { organizations } from './organization.table';
@@ -24,6 +25,9 @@ export const recognitionDefinitions = pgTable(
     categorySetId: uuid().references(() => categorySets.id),
     /** Record definitions: what is measured. */
     metricId: uuid().references(() => metricDefinitions.id),
+    /** Scope of an award-like recognition (world, continental…), weighting the display legacy score. */
+    competitionLevelId: uuid().references(() => competitionLevels.id),
+    prizeFormId: uuid().references(() => prizeForms.id),
   },
   (t) => [uniqueIndex().on(t.slug).where(live(t.deletedAt)), index().on(t.competitionId).where(live(t.deletedAt))],
 );
@@ -59,6 +63,10 @@ export const recognitionGrants = pgTable(
     shared: boolean().notNull().default(false),
     statusId: uuid().notNull().references(() => domainValues.id),
     sourceLinkId: uuid(),
+    /** Division it was granted in (200 m butterfly of an Olympic edition). */
+    categorySetId: uuid().references(() => categorySets.id),
+    /** Display class (champion, title_won, mvp…) weighting the display legacy score; derived from the level when null. */
+    achievementTypeId: uuid().references(() => achievementTypes.id),
   },
   (t) => [
     // Not unique: level/result/year may be null (Postgres NULLs are distinct); writers key grants by a deterministic id.
@@ -83,6 +91,8 @@ export const titleHoldings = pgTable(
     toYear: integer(),
     toCalendarDayId: uuid().references(() => calendarDays.id),
     endReasonId: uuid().references(() => domainValues.id),
+    /** End of the holding as the source wrote it ("Lost to Buster Douglas"). */
+    endNote: text(),
     defenses: integer(),
     sourceLinkId: uuid(),
   },

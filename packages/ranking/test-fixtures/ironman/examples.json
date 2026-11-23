@@ -1,0 +1,135 @@
+{
+  "description": "Examples 1-3 of ironman/METHODOLOGY.md: three-time champion (a), podium finisher (b), course-record specialist (c).",
+  "competitors": [
+    {
+      "id": "a",
+      "name": "A",
+      "kind": "person"
+    },
+    {
+      "id": "b",
+      "name": "B",
+      "kind": "person"
+    },
+    {
+      "id": "c",
+      "name": "C",
+      "kind": "person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "i01",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "a",
+      "attributes": {
+        "event": "ironman-world-championship",
+        "placement": 1,
+        "year": 2010
+      }
+    },
+    {
+      "id": "i02",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "a",
+      "attributes": {
+        "event": "ironman-world-championship",
+        "placement": 1,
+        "year": 2012
+      }
+    },
+    {
+      "id": "i03",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "a",
+      "attributes": {
+        "event": "ironman-world-championship",
+        "placement": 1,
+        "year": 2014
+      }
+    },
+    {
+      "id": "i04",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "a",
+      "attributes": {
+        "event": "ironman-world-championship",
+        "placement": 2,
+        "year": 2016
+      }
+    },
+    {
+      "id": "i05",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "a",
+      "attributes": {
+        "event": "kona",
+        "placement": 1,
+        "year": 2013,
+        "courseRecord": true
+      }
+    },
+    {
+      "id": "i06",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "b",
+      "attributes": {
+        "event": "ironman-world-championship",
+        "placement": 1,
+        "year": 2000
+      }
+    },
+    {
+      "id": "i07",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "b",
+      "attributes": {
+        "event": "ironman-world-championship",
+        "placement": 2,
+        "year": 2001
+      }
+    },
+    {
+      "id": "i08",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "b",
+      "attributes": {
+        "event": "ironman-world-championship",
+        "placement": 3,
+        "year": 2002
+      }
+    },
+    {
+      "id": "i09",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "c",
+      "attributes": {
+        "event": "roth",
+        "placement": 1,
+        "year": 2015,
+        "courseRecord": true
+      }
+    },
+    {
+      "id": "i10",
+      "version": 1,
+      "kind": "ironman_result",
+      "competitorId": "c",
+      "attributes": {
+        "event": "kona",
+        "placement": 4,
+        "year": 2016,
+        "courseRecord": true
+      }
+    }
+  ]
+}

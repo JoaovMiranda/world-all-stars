@@ -51,6 +51,8 @@ export const competitorMemberships = pgTable(
     memberId: uuid().notNull().references(() => competitors.id),
     parentId: uuid().notNull().references(() => competitors.id),
     roleId: uuid().references(() => domainValues.id),
+    /** Role as the source wrote it ("Athlete (coach: Bob Bowman)"). */
+    roleLabel: text(),
     fromDate: date({ mode: 'string' }),
     toDate: date({ mode: 'string' }),
     fromYear: integer(),

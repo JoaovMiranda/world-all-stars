@@ -1,14 +1,16 @@
-// Legacy → universal model (handoff v3 §4, §13). Idempotent (deterministic ids + natural keys): reads the legacy tables
-// (achievements, awards, title_reigns, athlete_nationalities, athlete_teams, sport_governing_bodies, sport_categories,
-// athlete_stats, nicknames/external ids) and writes the competitor-first model. Legacy tables stay until 0014.
+// Legacy → universal model (handoff v3 §4, §13). Idempotent (deterministic ids + natural keys): takes the legacy rows
+// (achievements, awards, title reigns, nationalities, athlete teams, sport categories, athlete stats, nicknames and
+// external ids; see LegacyRows) and writes the competitor-first model losslessly: the catalog reads only this model.
 import { DomainKind, normalizeForSearch } from '@was/shared';
 import { eq, getTableName } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
 
+import { ATHLETE_STATS_EXTENSION_PREFIX } from '../tables/structure.table';
 import { TITLE_END_REASON_PATTERNS } from '../consts/title-end-reason-patterns.const';
 import { seedId } from '../helpers/seed-id.helper';
 import { upsertRow } from '../helpers/upsert.helper';
 import type { BackfillReport } from '../interfaces/backfill-report.interface';
+import type { LegacyRows } from './legacy-rows.interface';
 import * as T from '../schema';
 import type { BackfillRow } from '../types/backfill-row.type';
 import type { Database } from '../types/database.type';
@@ -120,7 +122,30 @@ const endReason = (text: unknown): string | null => {
   return 'unknown';
 };
 
-export const backfillUniversalModel = async (db: Database): Promise<BackfillReport> => {
+/** Nesting depth of a legacy category (parents are written first). */
+const depthOf = (categories: BackfillRow[], c: BackfillRow, seen = new Set<string>()): number => {
+  const parent = c.parentCategoryId ? categories.find((p) => p.id === c.parentCategoryId) : undefined;
+  if (!parent || seen.has(parent.id)) return 0;
+  seen.add(parent.id);
+  return 1 + depthOf(categories, parent, seen);
+};
+
+/** No legacy rows (database seeded without the prototype). */
+export const emptyLegacyRows = (): LegacyRows => ({
+  athletes: [],
+  achievements: [],
+  awards: [],
+  awardTranslations: [],
+  awardEditions: [],
+  titleReigns: [],
+  athleteNationalities: [],
+  athleteTeams: [],
+  athleteStats: [],
+  sportCategories: [],
+  sportCategoryTranslations: [],
+});
+
+export const backfillUniversalModel = async (db: Database, legacy: LegacyRows): Promise<BackfillReport> => {
   const report: BackfillReport = {};
   const put = async (table: PgTable, values: Record<string, unknown>) => {
     report[getTableName(table)] = (report[getTableName(table)] ?? 0) + 1;
@@ -133,46 +158,18 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
     return id;
   };
 
-  const [
-    athletes,
-    teams,
-    sports,
-    competitions,
-    editions,
-    compTr,
-    awards,
-    awardTr,
-    awardEditions,
-    types,
-    achievements,
-    reigns,
-    nationalities,
-    athleteTeams,
-    governing,
-    categories,
-    stats,
-    orgs,
-    sportTr,
-  ] = await Promise.all([
-    all(db, T.athletes),
+  const { athletes, achievements, awards, awardEditions, titleReigns: reigns, athleteNationalities: nationalities, athleteTeams, athleteStats: stats } = legacy;
+  const { awardTranslations: awardTr, sportCategories: categories } = legacy;
+  const [teams, sports, competitions, editions, compTr, types, governing, orgs, sourceLinks] = await Promise.all([
     all(db, T.teams),
     all(db, T.sports),
     all(db, T.competitions),
     all(db, T.competitionEditions),
     all(db, T.competitionTranslations),
-    all(db, T.awards),
-    all(db, T.awardTranslations),
-    all(db, T.awardEditions),
     all(db, T.achievementTypes),
-    all(db, T.achievements),
-    all(db, T.titleReigns),
-    all(db, T.athleteNationalities),
-    all(db, T.athleteTeams),
     all(db, T.sportGoverningBodies),
-    all(db, T.sportCategories),
-    all(db, T.athleteStats),
     all(db, T.organizations),
-    all(db, T.sportTranslations),
+    all(db, T.sourceLinks),
   ]);
   const sportById = new Map(sports.map((s) => [s.id, s]));
   const typeById = new Map(types.map((t) => [t.id, String(t.slug)]));
@@ -203,7 +200,7 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
     for (const [provider, externalId] of ids) await put(T.entityExternalIds, { id: seedId('xid', provider, externalId), entityId: a.id, provider, externalId });
   }
   // Wikipedia titles of the people (from their source links): the identity resolver matches them by id, not by name.
-  for (const l of await all(db, T.sourceLinks)) {
+  for (const l of sourceLinks) {
     const m = /^https:\/\/en\.wikipedia\.org\/wiki\/([^?#]+)$/.exec(String(l.url));
     if (l.entityType !== 'athletes' || !l.entityId || !m) continue;
     const title = decodeURIComponent(m[1]!).replaceAll('_', ' ');
@@ -244,6 +241,7 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
       memberId: m.athleteId,
       parentId: m.teamId,
       roleId: dv(DomainKind.MembershipRole, 'athlete'),
+      roleLabel: m.role ?? null,
       fromDate: m.fromDate,
       toDate: m.toDate,
       fromYear: m.fromYear,
@@ -260,14 +258,22 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
     });
   }
 
-  // ── Categories → dimensions, values and sets ──
+  // ── Categories → named sets of their sport (same id), with dimension values when the slug is understood ──
   const dimensionIds = new Map<string, string>();
   const setByCategory = new Map<string, string>();
-  for (const c of categories) {
-    const pairs = CATEGORY_VALUES[String(c.slug)];
-    if (!pairs) continue;
-    const valueIds: string[] = [];
-    for (const [dimension, value] of pairs) {
+  for (const c of [...categories].sort((a, b) => depthOf(categories, a) - depthOf(categories, b))) {
+    const setId = await put(T.categorySets, {
+      id: c.id,
+      slug: String(c.slug),
+      label: String(c.slug),
+      sportId: c.sportId,
+      parentSetId: c.parentCategoryId ? (setByCategory.get(String(c.parentCategoryId)) ?? null) : null,
+      sortOrder: c.sortOrder ?? 0,
+    });
+    setByCategory.set(c.id, setId);
+    for (const tr of legacy.sportCategoryTranslations.filter((t) => t.categoryId === c.id))
+      await put(T.categorySetTranslations, { id: seedId('catset_tr', setId, String(tr.locale)), setId, locale: tr.locale, name: tr.name });
+    for (const [dimension, value] of CATEGORY_VALUES[String(c.slug)] ?? []) {
       if (!dimensionIds.has(dimension))
         dimensionIds.set(
           dimension,
@@ -277,13 +283,14 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
             valueType: ORDINAL_DIMENSIONS.has(dimension) ? 'ordinal' : 'label',
           }),
         );
-      valueIds.push(
-        await put(T.categoryValues, { id: seedId('catval', dimension, value), dimensionId: dimensionIds.get(dimension), slug: value, originalLabel: value }),
-      );
+      const valueId = await put(T.categoryValues, {
+        id: seedId('catval', dimension, value),
+        dimensionId: dimensionIds.get(dimension),
+        slug: value,
+        originalLabel: value,
+      });
+      await put(T.categorySetValues, { id: seedId('catsetval', setId, valueId), setId, valueId });
     }
-    const setId = await put(T.categorySets, { id: seedId('catset', String(c.slug)), slug: String(c.slug), label: String(c.slug) });
-    for (const valueId of valueIds) await put(T.categorySetValues, { id: seedId('catsetval', setId, valueId), setId, valueId });
-    setByCategory.set(c.id, setId);
   }
 
   // ── Competition structure: one main event per edition (results/entries hang from it) ──
@@ -332,7 +339,13 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
   const awardDefinition = async (award: BackfillRow) =>
     ensureDefinition(
       `award--${award.slug}`,
-      { kindId: dv(DomainKind.RecognitionKind, AWARD_KIND[String(award.awardKind)] ?? 'award'), issuerOrgId: award.organizationId, sportId: award.sportId },
+      {
+        kindId: dv(DomainKind.RecognitionKind, AWARD_KIND[String(award.awardKind)] ?? 'award'),
+        issuerOrgId: award.organizationId,
+        sportId: award.sportId,
+        competitionLevelId: award.competitionLevelId,
+        prizeFormId: award.prizeFormId ?? null,
+      },
       {
         en: nameOf(awardTr, 'awardId', award.id, 'en'),
         'pt-BR': nameOf(awardTr, 'awardId', award.id, 'pt-BR'),
@@ -340,6 +353,8 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
       },
     );
   const awardById = new Map(awards.map((a) => [a.id, a]));
+  // Every award becomes a definition, in the awards' order (the catalog lists award organizers in that order).
+  for (const award of awards) await awardDefinition(award);
 
   // ── Achievements → entries + results (competitions) and grants (everything) ──
   for (const a of achievements) {
@@ -395,8 +410,9 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
         calendarDayId: edition.calendarDayId,
       });
     }
+    // The grant keeps the achievement's id (the API exposes it).
     await put(T.recognitionGrants, {
-      id: seedId('grant', a.id),
+      id: a.id,
       definitionId,
       cycleId,
       competitorId: a.athleteId,
@@ -408,6 +424,8 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
       calendarDayId: a.calendarDayId,
       statusId: dv(DomainKind.GrantStatus, 'granted'),
       sourceLinkId: a.sourceLinkId,
+      categorySetId: a.sportCategoryId ? (setByCategory.get(String(a.sportCategoryId)) ?? null) : null,
+      achievementTypeId: a.achievementTypeId,
     });
   }
 
@@ -427,15 +445,32 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
       toYear: r.lostYear,
       toCalendarDayId: r.lostCalendarDayId,
       endReasonId: reason ? dv(DomainKind.TitleEndReason, reason) : null,
+      endNote: r.endReason ?? null,
       defenses: r.defenses,
       sourceLinkId: r.sourceLinkId,
     });
   }
 
-  // ── Free-JSON stats → defined metrics (numeric leaves; presentation hints stay out of the database) ──
+  // ── Free-JSON stats → defined metrics (numeric/text leaves) + the whole document as a registered extension ──
   for (const s of stats) {
     const json = (s.stats ?? {}) as Record<string, unknown>;
     const schema = String(s.statsSchemaKey);
+    const extensionKey = `${ATHLETE_STATS_EXTENSION_PREFIX}${schema}`;
+    const extensionSchemaId = await put(T.extensionSchemas, {
+      id: seedId('ext', extensionKey),
+      key: extensionKey,
+      sportId: s.sportId,
+      jsonSchema: { type: 'object' },
+      description: `Career statistics shown by the ${schema} profile panel`,
+    });
+    await put(T.competitorStatExtensions, {
+      id: seedId('statext', s.id),
+      competitorId: s.athleteId,
+      sportId: s.sportId,
+      periodLabel: String(s.period ?? 'career'),
+      extensionSchemaId,
+      data: json,
+    });
     for (const [key, value] of Object.entries(json)) {
       if (key.startsWith('_') || key === 'schema' || (typeof value !== 'number' && typeof value !== 'string')) continue;
       const slug = `${schema}.${key}`;
@@ -457,7 +492,6 @@ export const backfillUniversalModel = async (db: Database): Promise<BackfillRepo
       });
     }
   }
-  void sportTr;
   return report;
 };
 

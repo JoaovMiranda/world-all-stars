@@ -38,6 +38,8 @@ export const createDatabase = async (options: DatabaseOptions = {}): Promise<Dat
     });
     // An idle client that loses its connection emits 'error' on the pool: log it instead of crashing the process.
     pool.on('error', (error) => console.error('[db] idle Postgres client error', error));
+    // A client whose server process dies mid-query also emits 'error' on itself: log it instead of crashing.
+    pool.on('connect', (client) => client.on('error', (error) => console.error('[db] Postgres client error', error)));
     const db = drizzleNodePg(pool, { schema, casing: 'snake_case' });
     return {
       db: db as unknown as Database,

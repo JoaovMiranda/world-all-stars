@@ -46,11 +46,11 @@ const bjj: RankingInput = {
   ],
 };
 
-const FOOTBALL_A = {
-  methodologyVersion: '1.0.0',
-  configHash: '8ce4da9a976e326362d233622803c0dd5a8567662b0572b40a0d324c82baded6',
+const FOOTBALL_WORLD_CUP_MEN = {
+  methodologyVersion: '1.1.0',
+  configHash: '31cbcc8a0d22eb7ea7fcf83b0c2436d2c0ad3a77a57fd77b39e93a4967bf6fdc',
   inputHash: '6afb14b9eb349789af99d527a5c4ac56ac9ae55f1c90848cd792b33d3c106281',
-  outputHash: '4c43099177f1279fe63f6bc852dd7cb371fe5669e53aab558eb3359434dabcb2',
+  outputHash: '35137667df7a9eec02b93de669d4bb69c4f4f07334c06e9be05e8fdec52556ab',
 };
 const BJJ_BLACK_GI_MEN = {
   methodologyVersion: '1.0.0',
@@ -60,9 +60,9 @@ const BJJ_BLACK_GI_MEN = {
 };
 
 describe('methodology hashes are unchanged by the BaseMethodology refactor', () => {
-  it('football-champions A', () => {
-    expect(runRanking(footballChampions, 'A', football)).toMatchObject(FOOTBALL_A);
-    expect(METHODOLOGIES['football-champions']?.calculate('A', football)).toMatchObject(FOOTBALL_A);
+  it('football-champions world-cup-men', () => {
+    expect(runRanking(footballChampions, 'world-cup-men', football)).toMatchObject(FOOTBALL_WORLD_CUP_MEN);
+    expect(METHODOLOGIES['football-champions']?.calculate('world-cup-men', football)).toMatchObject(FOOTBALL_WORLD_CUP_MEN);
   });
 
   it('bjj-career black-gi-men', () => {

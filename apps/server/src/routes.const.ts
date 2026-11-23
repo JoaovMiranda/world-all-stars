@@ -4,6 +4,7 @@ import { adminRoutes } from './modules/admin/admin.route';
 import { athletesRoutes } from './modules/athletes/athletes.route';
 import { commentsRoutes } from './modules/comments/comments.route';
 import { contactRoutes } from './modules/contact/contact.route';
+import { entityMergeRoutes } from './modules/admin/entity-merge.route';
 import { discoveryRoutes } from './modules/discovery/discovery.route';
 import { homeRoutes } from './modules/home/home.route';
 import { rankingsRoutes } from './modules/rankings/rankings.route';
@@ -24,6 +25,7 @@ export const ALL_ROUTES: readonly RouteDefinition[] = [
   ...contactRoutes,
   ...accountRoutes,
   ...adminRoutes,
+  ...entityMergeRoutes,
   ...telemetryRoutes,
   ...rankingsRoutes,
 ];

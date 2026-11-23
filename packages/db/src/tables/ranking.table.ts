@@ -101,3 +101,24 @@ export const rankingEntryItems = pgTable(
   { ...baseColumns(), entryId: uuid().notNull().references(() => rankingEntries.id), evidenceType: text().notNull(), evidenceId: uuid().notNull(), contribution: real().notNull(), note: text() },
   (t) => [index().on(t.entryId).where(live(t.deletedAt))],
 );
+
+/**
+ * Cross-sport band mappings (D07): one row per sport × competitive fact × optional period. The ruleset is data, so a
+ * new band mapping never needs a schema change; `ruleset_key` carries the version (e.g. `cross-sport@1`).
+ */
+export const crossSportMappings = pgTable(
+  'cross_sport_mappings',
+  {
+    ...baseColumns(),
+    rulesetKey: text().notNull(),
+    sport: text().notNull(),
+    kind: text().notNull(),
+    value: text().notNull(),
+    band: text().notNull(),
+    /** 0 means "open start": the natural key must not contain NULL (Postgres treats NULLs as distinct). */
+    fromYear: integer().notNull().default(0),
+    toYear: integer(),
+    sourceNote: text(),
+  },
+  (t) => [uniqueIndex().on(t.rulesetKey, t.sport, t.kind, t.value, t.fromYear).where(live(t.deletedAt))],
+);

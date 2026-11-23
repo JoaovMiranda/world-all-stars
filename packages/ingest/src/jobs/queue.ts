@@ -46,7 +46,17 @@ export const enqueueJob = async (
         paramsHash,
         requestedBy: input.requestedBy ?? null,
       })
+      // A concurrent caller may have opened the same run (unique index on active params): return that run instead.
+      .onConflictDoNothing()
       .returning();
+    if (!run) {
+      const [existing] = await tx
+        .select()
+        .from(ingestionRuns)
+        .where(active(ingestionRuns, and(eq(ingestionRuns.paramsHash, paramsHash), eq(ingestionRuns.status, IngestionRunStatus.Running))));
+      if (existing) return { run: existing, created: false };
+      throw new Error(`Could not open or find the running job ${input.jobKey}`);
+    }
     if (input.items.length) {
       await tx
         .insert(ingestionJobItems)

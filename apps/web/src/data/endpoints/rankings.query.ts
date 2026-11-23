@@ -28,3 +28,5 @@ export const rankingMethodologiesQuery = defineQuery(RankingsApi.methodologies, 
 export const adminRankingsQuery = defineQuery(RankingsApi.adminList, { sample: () => ({ items: [] }) });
 export const calculateRanking = defineMutation(RankingsApi.calculate, () => ({ ok: true as const }), { invalidates: [adminRankingsQuery] });
 export const approveRanking = defineMutation(RankingsApi.approve, () => ({ ok: true as const }), { invalidates: [adminRankingsQuery, rankingsQuery] });
+/** Admin: revert a publication (archive it and republish the previous snapshot), with a required reason (D12). */
+export const revertRanking = defineMutation(RankingsApi.revert, () => ({ ok: true as const }), { invalidates: [adminRankingsQuery, rankingsQuery] });

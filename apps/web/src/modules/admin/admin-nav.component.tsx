@@ -4,11 +4,13 @@ import { adminSummaryQuery } from '@/data/endpoints/admin.query';
 import { useText } from '@/i18n/use-text.hook';
 
 import { ADMIN_MESSAGES } from './admin.const';
+import { ADMIN_MERGE_MESSAGES } from './admin-merge.const';
 import { ADMIN_NAV_GROUPS, ADMIN_SECTION_PATH } from './admin-routes.const';
 
 /** Section navigation of the admin area with the pending counters (hidden while loading or on error). */
 export function AdminNav() {
   const adminText = useText(ADMIN_MESSAGES);
+  const mergeText = useText(ADMIN_MERGE_MESSAGES);
   const summary = adminSummaryQuery.useQuery();
   const pending = summary.data?.pending;
   return (
@@ -45,6 +47,18 @@ export function AdminNav() {
           </ul>
         </div>
       ))}
+      <div className="admin-nav-group" role="group" aria-labelledby="admin-nav-identity">
+        <p className="admin-nav-label" id="admin-nav-identity">
+          {mergeText.navGroup}
+        </p>
+        <ul>
+          <li>
+            <Link to="/admin/merge" activeProps={{ 'aria-current': 'page' }}>
+              <span>{mergeText.navLink}</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
     </nav>
   );
 }

@@ -1,5 +1,5 @@
-// Sports taxonomy (doc 03/18/19): group › subgroup › sport › categories, governing bodies, collection reports.
-import { type AnyPgColumn, boolean, integer, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+// Sports taxonomy (doc 03/18/19): group › subgroup › sport, governing bodies, collection reports (categories are category sets).
+import { boolean, integer, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 import { baseColumns, live } from '../columns/base.column';
 import { governanceModels } from './config.table';
@@ -58,23 +58,6 @@ export const sportTranslations = pgTable(
     pinnacle: text(),
   },
   (t) => [uniqueIndex().on(t.sportId, t.locale).where(live(t.deletedAt))],
-);
-
-export const sportCategories = pgTable(
-  'sport_categories',
-  {
-    ...baseColumns(),
-    sportId: uuid().notNull().references(() => sports.id),
-    parentCategoryId: uuid().references((): AnyPgColumn => sportCategories.id),
-    slug: text().notNull(),
-    sortOrder: integer().notNull().default(0),
-  },
-  (t) => [uniqueIndex().on(t.sportId, t.slug).where(live(t.deletedAt))],
-);
-export const sportCategoryTranslations = pgTable(
-  'sport_category_translations',
-  { ...baseColumns(), categoryId: uuid().notNull().references(() => sportCategories.id), locale: text().notNull(), name: text().notNull() },
-  (t) => [uniqueIndex().on(t.categoryId, t.locale).where(live(t.deletedAt))],
 );
 
 /** Who governs a sport and in which role (world federation, sanctioning body, publisher…), doc 18/19. */
