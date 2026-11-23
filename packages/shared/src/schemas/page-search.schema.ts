@@ -14,11 +14,11 @@ export const AthleteProfileSearchSchema = z.object({
   sort: optionalEnum(COMMENT_SORT_VALUES),
 });
 
-/** URL state of /contact (doc 21: `?tipo=mensagem` opens the message tab). */
-export const ContactSearchSchema = z.object({ tipo: optionalEnum(CONTACT_TAB_VALUES) });
+/** URL state of /contact (doc 21: `?type=message` opens the message tab). */
+export const ContactSearchSchema = z.object({ type: optionalEnum(CONTACT_TAB_VALUES) });
 
 /** URL state of the home: `date` simulates another day for "On this day" and the calendar. */
 export const HomeSearchSchema = z.object({ date: IsoDateSchema.optional().catch(undefined) });
 
-/** URL state of /me/notifications (E4): read-state filter (`?filtro=nao-lidas|lidas`). */
-export const NotificationsSearchSchema = z.object({ filtro: optionalEnum(NOTIFICATION_FILTER_VALUES) });
+/** URL state of /me/notifications (E4): read-state filter (`?filter=unread|read`). */
+export const NotificationsSearchSchema = z.object({ filter: optionalEnum(NOTIFICATION_FILTER_VALUES) });

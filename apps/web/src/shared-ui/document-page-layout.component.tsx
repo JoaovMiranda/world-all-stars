@@ -14,7 +14,6 @@ import { PageLayout } from './page-layout.component';
 import { Tag } from './tag.component';
 
 // Kept for modules/legal/legal.const.ts (user-owned), which still imports the type from this file.
-export type { DocumentContent } from './document-content.interface';
 
 /** Content block of a long-form section: data in `<module>.const.ts`, rendered the same way on every document. */
 export type DocBlock =

@@ -59,7 +59,7 @@ export const ENGLISH_SLUGS = {
     'selecao-britanica-de-saltos-ornamentais': 'great-britain-diving-team', 'selecao-francesa-de-saltos-ornamentais': 'france-diving-team',
     'selecao-da-servia-copa-davis': 'serbia-davis-cup-team', servia: 'serbia', 'selecao-dos-eua-ryder-cup': 'united-states-ryder-cup-team',
   },
-  organizations: { coi: 'ioc', 'comite-intertribal': 'intertribal-committee', 'coroa-britanica': 'british-crown', 'comunidade-aom': 'aom-community', 'governo-eua': 'us-government' },
+  organizations: { coi: 'ioc', 'comite-intertribal': 'intertribal-committee', 'coroa-britanica': 'british-crown', 'comunidade-aom': 'aom-community', 'governo-eua': 'us-government', 'organizador-nao-informado': 'organizer-not-informed' },
   observance_days: {
     'dia-do-esportista': 'sportspersons-day', 'dia-esporte-desenvolvimento-paz': 'international-day-of-sport-for-development-and-peace',
     'dia-mundial-do-futebol': 'world-football-day', 'dia-olimpico': 'olympic-day', 'dia-nacional-do-futebol': 'national-football-day',

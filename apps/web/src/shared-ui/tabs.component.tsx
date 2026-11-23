@@ -14,7 +14,7 @@ interface TabsProps<V extends string> {
 
 /**
  * WAI-ARIA tabs (roving tabindex, ←/→/Home/End). Controlled: keep `value` in the URL with
- * useUrlFilters(schema) so tabs are shareable (`?tab=comentarios`).
+ * useUrlFilters(schema) so tabs are shareable (`?tab=comments`).
  */
 export function Tabs<V extends string>({ label, tabs, value, onChange, children }: TabsProps<V>) {
   const base = useId();

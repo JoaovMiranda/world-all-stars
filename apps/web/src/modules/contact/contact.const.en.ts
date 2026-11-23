@@ -9,7 +9,7 @@ export const CONTACT_TEXT_EN = {
     lead: 'Suggest a champion who isn’t on the site yet or send us a message. No account needed. The site’s data always comes from the collected sources: an approved suggestion adds the link to the collection, and the athlete arrives in the next round.',
   },
   tabsLabel: 'Type of contact',
-  tabs: { sugestao: 'Suggest an athlete', mensagem: 'Message' },
+  tabs: { suggestion: 'Suggest an athlete', message: 'Message' },
   suggestion: {
     name: 'Athlete name',
     sport: 'Sport',

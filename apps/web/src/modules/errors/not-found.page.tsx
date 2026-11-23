@@ -27,7 +27,7 @@ export function NotFoundPage() {
           <ButtonLink to="/" variant="primary">
             {t.home}
           </ButtonLink>
-          <ButtonLink to="/contact" search={{ tipo: ContactTab.Message }}>
+          <ButtonLink to="/contact" search={{ type: ContactTab.Message }}>
             {t.report}
           </ButtonLink>
         </>

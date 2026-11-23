@@ -37,7 +37,7 @@ export const ACCOUNT_TEXT = {
     title: 'Notificações',
     lead: 'Respostas aos seus comentários e avisos da curadoria.',
     filterLabel: 'Filtrar notificações',
-    filters: { all: 'Todas', 'nao-lidas': 'Não lidas', lidas: 'Lidas' },
+    filters: { all: 'Todas', unread: 'Não lidas', read: 'Lidas' },
     unread: (n: number) => (n === 1 ? '1 não lida' : `${n} não lidas`),
     markAll: 'Marcar todas como lidas',
     markRead: 'Marcar como lida',

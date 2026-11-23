@@ -1,6 +1,7 @@
 import { ACCESS_LOG_RETENTION_MONTHS, ACCOUNT_MIN_AGE, CONTACT_RETENTION_MONTHS, defineMessages, type Locale } from '@was/shared';
 
-import type { DocumentContent } from '@/shared-ui/document-page-layout.component';
+import type { DocumentContent } from '@/shared-ui/document-content.interface';
+import type { LegalDocs } from './legal-docs.interface';
 
 import { LEGAL_DOCS_EN, LEGAL_TEXT_EN } from './legal.const.en';
 import { LEGAL_DOCS_ES, LEGAL_TEXT_ES } from './legal.const.es';
@@ -472,13 +473,6 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
     },
   ],
 };
-
-export interface LegalDocs {
-  privacy: DocumentContent;
-  terms: DocumentContent;
-  cookies: DocumentContent;
-  accessibility: DocumentContent;
-}
 
 /** Legal documents of each language (read with useLocalized / currentLocalized). */
 export const LEGAL_DOCS: Record<Locale, LegalDocs> = {

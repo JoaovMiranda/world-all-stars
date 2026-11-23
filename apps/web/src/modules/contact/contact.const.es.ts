@@ -9,7 +9,7 @@ export const CONTACT_TEXT_ES = {
     lead: 'Sugiere un campeón que todavía no está en el sitio o envíanos un mensaje. No necesitas cuenta. Los datos del sitio vienen siempre de las fuentes recopiladas: una sugerencia aprobada añade el enlace a la recopilación y el atleta entra en la próxima ronda.',
   },
   tabsLabel: 'Tipo de contacto',
-  tabs: { sugestao: 'Sugerir atleta', mensagem: 'Mensaje' },
+  tabs: { suggestion: 'Sugerir atleta', message: 'Mensaje' },
   suggestion: {
     name: 'Nombre del atleta',
     sport: 'Deporte',

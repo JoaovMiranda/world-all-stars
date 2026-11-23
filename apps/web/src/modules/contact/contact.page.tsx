@@ -19,15 +19,15 @@ import type { Receipt } from './receipt.interface';
 import { SubmissionReceipt } from './submission-receipt.component';
 import { SuggestionForm } from './suggestion-form.component';
 
-/** P17 Contact (doc 21): tabs Suggest an athlete / Message (`?tipo=mensagem`), shared validators, protocol on success. */
+/** P17 Contact (doc 21): tabs Suggest an athlete / Message (`?type=message`), shared validators, protocol on success. */
 export function ContactPage() {
   const t = useText(CONTACT_MESSAGES);
   const TABS = [
-    { value: ContactTab.Suggestion, label: t.tabs.sugestao },
-    { value: ContactTab.Message, label: t.tabs.mensagem },
+    { value: ContactTab.Suggestion, label: t.tabs.suggestion },
+    { value: ContactTab.Message, label: t.tabs.message },
   ] as const;
   const { filters, setFilter } = useUrlFilters(ContactSearchSchema);
-  const tab = filters.tipo ?? ContactTab.Suggestion;
+  const tab = filters.type ?? ContactTab.Suggestion;
   const { user } = useSession();
   const context = validationContextQuery.useQuery();
   const [receipt, setReceipt] = useState<Receipt | null>(null);
@@ -46,7 +46,7 @@ export function ContactPage() {
           value={tab}
           onChange={(v) => {
             setReceipt(null);
-            setFilter('tipo', v === ContactTab.Suggestion ? undefined : v);
+            setFilter('type', v === ContactTab.Suggestion ? undefined : v);
           }}
         >
           <div className="card">

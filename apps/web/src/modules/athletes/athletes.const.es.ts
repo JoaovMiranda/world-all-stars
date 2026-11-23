@@ -35,7 +35,7 @@ export const ATHLETE_PROFILE_TEXT_ES = {
   eyebrow: 'Atleta',
   breadcrumb: 'Atletas',
   tabsLabel: 'Secciones del perfil',
-  tabs: { 'visao-geral': 'Resumen', conquistas: 'Logros', carreira: 'Carrera', analise: 'Análisis', fontes: 'Fuentes', comentarios: 'Comentarios' },
+  tabs: { overview: 'Resumen', achievements: 'Logros', career: 'Carrera', analysis: 'Análisis', sources: 'Fuentes', comments: 'Comentarios' },
   notFoundTitle: 'Atleta no encontrado',
   notFoundText: 'Revisa la dirección o busca el nombre en el buscador.',
   metaDescription: (name, sport) => `${name} (${sport}): carrera, logros, estadísticas y la fuente de cada dato en World All Stars.`,

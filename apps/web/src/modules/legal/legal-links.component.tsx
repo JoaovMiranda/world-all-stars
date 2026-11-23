@@ -10,7 +10,7 @@ export function ContactMessageLink({ label }: { label?: string }) {
   const t = useText(LEGAL_MESSAGES).actions;
   return (
     <div className="row">
-      <ButtonLink to="/contact" search={{ tipo: ContactTab.Message }} size="sm">
+      <ButtonLink to="/contact" search={{ type: ContactTab.Message }} size="sm">
         {label ?? t.contactPrivacy}
       </ButtonLink>
     </div>
@@ -25,7 +25,7 @@ export function PrivacyRightsLinks() {
       <ButtonLink to="/me/data" size="sm" variant="primary">
         {t.myData}
       </ButtonLink>
-      <ButtonLink to="/contact" search={{ tipo: ContactTab.Message }} size="sm">
+      <ButtonLink to="/contact" search={{ type: ContactTab.Message }} size="sm">
         {t.contactPrivacy}
       </ButtonLink>
     </div>

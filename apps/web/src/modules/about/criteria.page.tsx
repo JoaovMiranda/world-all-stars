@@ -17,7 +17,7 @@ export function CriteriaPage() {
   const sections = withSectionExtras(doc.sections, {
     criterios: (
       <div className="row">
-        <ButtonLink to="/contact" search={{ tipo: ContactTab.Suggestion }} size="sm">
+        <ButtonLink to="/contact" search={{ type: ContactTab.Suggestion }} size="sm">
           {t.actions.suggest}
         </ButtonLink>
       </div>

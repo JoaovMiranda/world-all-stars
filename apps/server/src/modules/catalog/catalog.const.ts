@@ -3,7 +3,7 @@ import { CONTENT_SOURCE_LOCALE, DEFAULT_LOCALE, type Locale, WINNING_ACHIEVEMENT
 /** Content fallback after the requested locale: the data's source language (English), then the interface default. */
 export const FALLBACK_CHAIN: readonly Locale[] = [CONTENT_SOURCE_LOCALE, DEFAULT_LOCALE];
 /** Placeholder organizer of the prototype: never shown as an association. */
-export const UNKNOWN_ORGANIZER_SLUG = 'organizador-nao-informado';
+export const UNKNOWN_ORGANIZER_SLUG = 'organizer-not-informed';
 export const WINNING = new Set<string>(WINNING_ACHIEVEMENT_TYPES);
 /** Flag shown for a historical entity without an emoji (its Commons flag comes via flag_media_link_id later). */
 export const HISTORICAL_FLAG = '🏳️';

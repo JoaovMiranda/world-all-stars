@@ -35,7 +35,7 @@ export const ACCOUNT_TEXT_ES = {
     title: 'Notificaciones',
     lead: 'Respuestas a tus comentarios y avisos del equipo de curaduría.',
     filterLabel: 'Filtrar notificaciones',
-    filters: { all: 'Todas', 'nao-lidas': 'No leídas', lidas: 'Leídas' },
+    filters: { all: 'Todas', unread: 'No leídas', read: 'Leídas' },
     unread: (n) => (n === 1 ? '1 no leída' : `${n} no leídas`),
     markAll: 'Marcar todas como leídas',
     markRead: 'Marcar como leída',

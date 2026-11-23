@@ -20,8 +20,8 @@ import { ACCOUNT_MESSAGES } from './account.const';
 const FILTER_OPTIONS = () => {
   const t = currentText(ACCOUNT_MESSAGES).notifications;
   return [
-    { value: NotificationFilter.Unread, label: t.filters['nao-lidas'] },
-    { value: NotificationFilter.Read, label: t.filters.lidas },
+    { value: NotificationFilter.Unread, label: t.filters.unread },
+    { value: NotificationFilter.Read, label: t.filters.read },
   ];
 };
 
@@ -86,7 +86,7 @@ function NotificationsContent() {
       }
     >
       {({ items, unread }) => {
-        const shown = items.filter((n) => matches(n, filters.filtro));
+        const shown = items.filter((n) => matches(n, filters.filter));
         return (
           <Section
             title={t.unread(unread)}
@@ -99,7 +99,7 @@ function NotificationsContent() {
             }
           >
             <div className="mb-4">
-              <ChipToggleGroup label={t.filterLabel} options={FILTER_OPTIONS()} value={filters.filtro} onChange={(v) => setFilter('filtro', v)} />
+              <ChipToggleGroup label={t.filterLabel} options={FILTER_OPTIONS()} value={filters.filter} onChange={(v) => setFilter('filter', v)} />
             </div>
             {shown.length ? (
               <ul className="account-list" aria-live="polite">

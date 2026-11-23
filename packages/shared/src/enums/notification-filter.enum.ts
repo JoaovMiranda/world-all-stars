@@ -1,7 +1,7 @@
-/** Read-state filter of /me/notifications (E4), synced to `?filtro=` (absent = all). */
+/** Read-state filter of /me/notifications (E4), synced to `?filter=` (absent = all). */
 export const NotificationFilter = {
-  Unread: 'nao-lidas',
-  Read: 'lidas',
+  Unread: 'unread',
+  Read: 'read',
 } as const;
 export type NotificationFilter = (typeof NotificationFilter)[keyof typeof NotificationFilter];
 export const NOTIFICATION_FILTER_VALUES = Object.values(NotificationFilter) as [NotificationFilter, ...NotificationFilter[]];

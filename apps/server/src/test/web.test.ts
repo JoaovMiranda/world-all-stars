@@ -227,6 +227,16 @@ describe('web pages mounted on the API server', () => {
     expect((await app().request('/sports/football')).status).toBe(200);
   });
 
+  it.each([
+    ['/athletes/pele?tab=comentarios', '/athletes/pele?tab=comments'],
+    ['/contact?tipo=mensagem', '/contact?type=message'],
+    ['/me/notifications?filtro=nao-lidas', '/me/notifications?filter=unread'],
+  ])('old Portuguese query keys/values answer 301 (D35): %s', async (old, next) => {
+    const res = await app().request(old);
+    expect(res.status).toBe(301);
+    expect(res.headers.get('location')).toBe(next);
+  });
+
   it.skipIf(!HAS_PROTOTYPE)('lists catalog athletes and sports with lastmod', async () => {
     const athletes = await (await app().request('/sitemaps/athletes.xml')).text();
     expect(athletes).toMatch(/<url><loc>https:\/\/example\.org\/athletes\/pele<\/loc><lastmod>\d{4}-\d{2}-\d{2}<\/lastmod><\/url>/);

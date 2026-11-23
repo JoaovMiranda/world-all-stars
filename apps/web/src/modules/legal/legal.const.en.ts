@@ -1,6 +1,7 @@
 import { ACCESS_LOG_RETENTION_MONTHS, ACCOUNT_MIN_AGE, CONTACT_RETENTION_MONTHS, type Messages } from '@was/shared';
 
-import type { LEGAL_TEXT, LegalDocs } from './legal.const';
+import type { LegalDocs } from './legal-docs.interface';
+import type { LEGAL_TEXT } from './legal.const';
 
 const PENDING = {
   controller: '[PENDING: legal name, CNPJ and address of the company]',

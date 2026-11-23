@@ -30,7 +30,7 @@ export function ErrorPage({ error, reset }: ErrorComponentProps) {
             {t.retry}
           </Button>
           <ButtonLink to="/">{t.home}</ButtonLink>
-          <ButtonLink to="/contact" search={{ tipo: ContactTab.Message }} variant="link" size="sm">
+          <ButtonLink to="/contact" search={{ type: ContactTab.Message }} variant="link" size="sm">
             {t.report}
           </ButtonLink>
         </>

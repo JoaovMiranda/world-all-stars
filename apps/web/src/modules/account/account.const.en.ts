@@ -35,7 +35,7 @@ export const ACCOUNT_TEXT_EN = {
     title: 'Notifications',
     lead: 'Replies to your comments and notices from the curators.',
     filterLabel: 'Filter notifications',
-    filters: { all: 'All', 'nao-lidas': 'Unread', lidas: 'Read' },
+    filters: { all: 'All', unread: 'Unread', read: 'Read' },
     unread: (n) => `${n} unread`,
     markAll: 'Mark all as read',
     markRead: 'Mark as read',

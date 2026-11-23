@@ -14,7 +14,7 @@ export const CONTACT_TEXT = {
     lead: 'Sugira um campeão que ainda não está no site ou mande uma mensagem. Não precisa de conta. Os dados do site vêm sempre das fontes coletadas: uma sugestão aprovada coloca o link na coleta, e o atleta entra pela próxima rodada.',
   },
   tabsLabel: 'Tipo de contato',
-  tabs: { sugestao: 'Sugerir atleta', mensagem: 'Mensagem' },
+  tabs: { suggestion: 'Sugerir atleta', message: 'Mensagem' },
   suggestion: {
     name: 'Nome do atleta',
     sport: 'Esporte',
