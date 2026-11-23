@@ -1,9 +1,9 @@
 import { InformationKind, type Observation } from '@was/shared';
 import { describe, expect, it, vi } from 'vitest';
 
-import { RetryableFetchError } from '../http/safe-fetch';
+import { RetryableFetchError } from '../http/retryable-fetch.error';
 import { BaseProvider } from './base.provider';
-import type { IngestContext } from './context';
+import type { IngestContext } from './ingest-context.interface';
 import { ProviderRegistry } from './provider.registry';
 
 interface ProbeOptions {

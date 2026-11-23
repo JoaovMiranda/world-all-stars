@@ -1,24 +1,19 @@
 // Provider `football-champions` (handoff v3 §6.5): champion squads, final starters and titles of the men's and
 // women's World Cups (Fjelstul 1930–2022 / 1991–2019 + Wikipedia 2023/2026 and missing lineups) and of Olympic
 // football (Wikipedia). Port of scripts/crawler/crawl_athletes.py; produces ONLY general contracts.
-import { InformationKind, type DiscoveredCompetitor, type EntityRef, type EventRecord } from '@was/shared';
+import { type DiscoveredCompetitor, type EntityRef, type EventRecord, InformationKind } from '@was/shared';
 
-import { type NameLink, finalStarters, IOC_NAMES, infoboxWinner, lineupBlocks, medalistsGold, olympicGolds, section, squadPlayers, FIFA_TO_IOC } from '../parsers/wikitext';
-import type { IngestContext } from './context';
+import { FIFA_TO_IOC } from '../parsers/fifa-to-ioc.const';
+import { IOC_NAMES } from '../parsers/ioc-names.const';
+import type { NameLink } from '../parsers/name-link.type';
+import { finalStarters, infoboxWinner, lineupBlocks, medalistsGold, olympicGolds, section, squadPlayers } from '../parsers/wikitext';
+import type { ChampionSquad } from './champion-squad.interface';
+import { FOOTBALL_COMPETITIONS, FOOTBALL_PROVIDER, MEN_OLYMPIC_YEARS, WOMEN_OLYMPIC_YEARS } from './football-champions.const';
+import type { FootballOptions } from './football-options.interface';
+import type { IngestContext } from './ingest-context.interface';
 
-export const FOOTBALL_PROVIDER = 'football-champions';
 const PARSER = { key: 'football-champions', version: '1' };
 const FJELSTUL = 'https://raw.githubusercontent.com/jfjelstul/worldcup/master/data-csv/';
-export const MEN_OLYMPIC_YEARS = [1908, 1912, 1920, 1924, 1928, 1936, 1948, 1952, 1956, 1960, 1964, 1968, 1972, 1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020, 2024];
-export const WOMEN_OLYMPIC_YEARS = [1996, 2000, 2004, 2008, 2012, 2016, 2020, 2024];
-
-/** Competitions this provider feeds (the canonical writer ensures them). */
-export const FOOTBALL_COMPETITIONS = {
-  'fifa-world-cup': { org: 'fifa', names: ['FIFA World Cup', 'Copa do Mundo FIFA', 'Copa Mundial de la FIFA'] },
-  'fifa-womens-world-cup': { org: 'fifa', names: ["FIFA Women's World Cup", 'Copa do Mundo Feminina FIFA', 'Copa Mundial Femenina de la FIFA'] },
-  'olympic-football': { org: 'ioc', names: ['Olympic football tournament (men)', 'Torneio olímpico de futebol (masculino)', 'Torneo olímpico de fútbol (masculino)'] },
-  'olympic-football-women': { org: 'ioc', names: ['Olympic football tournament (women)', 'Torneio olímpico de futebol (feminino)', 'Torneo olímpico de fútbol (femenino)'] },
-} as const;
 
 const csv = (text: string): Record<string, string>[] => {
   const rows: string[][] = [];
@@ -28,28 +23,54 @@ const csv = (text: string): Record<string, string>[] => {
   for (let i = 0; i < text.length; i++) {
     const ch = text[i]!;
     if (quoted) {
-      if (ch === '"' && text[i + 1] === '"') { cell += '"'; i++; } else if (ch === '"') quoted = false; else cell += ch;
+      if (ch === '"' && text[i + 1] === '"') {
+        cell += '"';
+        i++;
+      } else if (ch === '"') quoted = false;
+      else cell += ch;
     } else if (ch === '"') quoted = true;
-    else if (ch === ',') { row.push(cell); cell = ''; }
-    else if (ch === '\n' || ch === '\r') {
+    else if (ch === ',') {
+      row.push(cell);
+      cell = '';
+    } else if (ch === '\n' || ch === '\r') {
       if (ch === '\r' && text[i + 1] === '\n') i++;
-      row.push(cell); rows.push(row); row = []; cell = '';
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = '';
     } else cell += ch;
   }
-  if (cell || row.length) { row.push(cell); rows.push(row); }
+  if (cell || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
   const [head, ...body] = rows.filter((r) => r.length > 1);
   return body.map((r) => Object.fromEntries(head!.map((h, i) => [h, r[i] ?? ''])));
 };
 
 const titleFromUrl = (url: string) => decodeURIComponent(url.split('/wiki/')[1] ?? '').replaceAll('_', ' ');
-const norm = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z]+/g, ' ').trim();
+const norm = (s: string) =>
+  s
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z]+/g, ' ')
+    .trim();
 export const personRef = (name: string, link: string | null, extra: Record<string, string> = {}): EntityRef => ({
   recordKey: `person:${link ? norm(link) : norm(name)}`,
   name: name.replace(/\s+/g, ' ').trim(),
   externalIds: { ...(link ? { wikipedia_en: link } : {}), ...extra },
 });
 const teamCompetitor = (country: string, gender: 'men' | 'women', members: DiscoveredCompetitor['members'] = []): DiscoveredCompetitor => ({
-  recordKey: `team:football:${gender}:${norm(country)}`, name: country, externalIds: {}, kind: 'team', sports: ['football'], aliases: [], members, birthDate: null, gender: null,
+  recordKey: `team:football:${gender}:${norm(country)}`,
+  name: country,
+  externalIds: {},
+  kind: 'team',
+  sports: ['football'],
+  aliases: [],
+  members,
+  birthDate: null,
+  gender: null,
 });
 const eventOf = (competition: keyof typeof FOOTBALL_COMPETITIONS, year: number, gender: 'men' | 'women'): EventRecord => ({
   competition: { recordKey: `competition:${competition}`, name: FOOTBALL_COMPETITIONS[competition].names[0], externalIds: {} },
@@ -57,18 +78,14 @@ const eventOf = (competition: keyof typeof FOOTBALL_COMPETITIONS, year: number, 
   organization: { recordKey: `organization:${FOOTBALL_COMPETITIONS[competition].org}`, name: FOOTBALL_COMPETITIONS[competition].org, externalIds: {} },
   edition: { label: String(year), year, kind: 'edition' },
   stage: null,
-  event: { label: gender === 'men' ? "Men's tournament" : "Women's tournament", discipline: null, format: 'group_and_knockout', composition: 'team', categories: { sex_category: gender } },
+  event: {
+    label: gender === 'men' ? "Men's tournament" : "Women's tournament",
+    discipline: null,
+    format: 'group_and_knockout',
+    composition: 'team',
+    categories: { sex_category: gender },
+  },
 });
-
-interface ChampionSquad {
-  competition: keyof typeof FOOTBALL_COMPETITIONS;
-  year: number;
-  gender: 'men' | 'women';
-  country: string;
-  documentId: string;
-  members: { person: EntityRef; appeared: boolean | null; reserve: boolean }[];
-  starters: { person: EntityRef; documentId: string }[];
-}
 
 /** Writes entry (squad), participation (final starters) and result (title) observations of one champion squad. */
 const observeSquad = async (ctx: IngestContext, sq: ChampionSquad) => {
@@ -78,8 +95,17 @@ const observeSquad = async (ctx: IngestContext, sq: ChampionSquad) => {
   await ctx.observe(sq.documentId, FOOTBALL_PROVIDER, PARSER, `${key}:entry`, InformationKind.Entry, {
     contract: 'entry',
     record: {
-      event, competitor: team, representation: { recordKey: `country:${norm(sq.country)}`, name: sq.country, externalIds: {} }, status: 'registered',
-      members: sq.members.map((m) => ({ person: m.person, role: null, status: 'registered', appearance: m.reserve ? 'did_not_appear' : m.appeared === null ? 'unknown' : m.appeared ? 'appeared' : 'did_not_appear', shirtNumber: null })),
+      event,
+      competitor: team,
+      representation: { recordKey: `country:${norm(sq.country)}`, name: sq.country, externalIds: {} },
+      status: 'registered',
+      members: sq.members.map((m) => ({
+        person: m.person,
+        role: null,
+        status: 'registered',
+        appearance: m.reserve ? 'did_not_appear' : m.appeared === null ? 'unknown' : m.appeared ? 'appeared' : 'did_not_appear',
+        shirtNumber: null,
+      })),
     },
   });
   await ctx.observe(sq.documentId, FOOTBALL_PROVIDER, PARSER, `${key}:result`, InformationKind.Result, {
@@ -89,18 +115,19 @@ const observeSquad = async (ctx: IngestContext, sq: ChampionSquad) => {
   for (const st of sq.starters) {
     await ctx.observe(st.documentId, FOOTBALL_PROVIDER, PARSER, `${key}:final:${st.person.recordKey}`, InformationKind.Lineup, {
       contract: 'participation',
-      record: { event, contest: { label: 'Final', sequence: 999, date: null }, competitor: { recordKey: team.recordKey, name: team.name, externalIds: {} }, person: st.person, role: 'starter' },
+      record: {
+        event,
+        contest: { label: 'Final', sequence: 999, date: null },
+        competitor: { recordKey: team.recordKey, name: team.name, externalIds: {} },
+        person: st.person,
+        role: 'starter',
+      },
     });
   }
 };
 
-const starterPages = (year: number, women: boolean) => (year === 1950 ? ['Uruguay v Brazil (1950 FIFA World Cup)', 'Maracanazo'] : [`${year} FIFA ${women ? "Women's " : ''}World Cup final`]);
-
-export interface FootballOptions {
-  /** Restrict to some editions, e.g. ['fifa-world-cup:2002']. */
-  only?: string[] | undefined;
-  olympics?: boolean | undefined;
-}
+const starterPages = (year: number, women: boolean) =>
+  year === 1950 ? ['Uruguay v Brazil (1950 FIFA World Cup)', 'Maracanazo'] : [`${year} FIFA ${women ? "Women's " : ''}World Cup final`];
 
 export const runFootballChampions = async (ctx: IngestContext, opts: FootballOptions = {}) => {
   const wanted = (competition: string, year: number) => !opts.only?.length || opts.only.includes(`${competition}:${year}`);
@@ -125,7 +152,8 @@ export const runFootballChampions = async (ctx: IngestContext, opts: FootballOpt
   for (const a of tables.player_appearances!.rows) {
     if (champion.get(a.tournament_id!) !== a.team_id) continue;
     (appeared.get(a.tournament_id!) ?? appeared.set(a.tournament_id!, new Set()).get(a.tournament_id!)!).add(a.player_id!);
-    if (lastMatch.get(a.tournament_id!)?.id === a.match_id && a.starter === '1') (starters.get(a.tournament_id!) ?? starters.set(a.tournament_id!, new Set()).get(a.tournament_id!)!).add(a.player_id!);
+    if (lastMatch.get(a.tournament_id!)?.id === a.match_id && a.starter === '1')
+      (starters.get(a.tournament_id!) ?? starters.set(a.tournament_id!, new Set()).get(a.tournament_id!)!).add(a.player_id!);
   }
   const tournaments = new Map(tables.tournaments!.rows.map((t) => [t.tournament_id!, t]));
   const squads = new Map<string, ChampionSquad>();
@@ -137,7 +165,17 @@ export const runFootballChampions = async (ctx: IngestContext, opts: FootballOpt
     const competition = women ? 'fifa-womens-world-cup' : 'fifa-world-cup';
     const year = Number(t.year);
     if (!wanted(competition, year)) continue;
-    const sq = squads.get(tid) ?? { competition, year, gender: women ? 'women' : 'men', country: s.team_name!, documentId: tables.squads!.documentId, members: [], starters: [] } as ChampionSquad;
+    const sq =
+      squads.get(tid) ??
+      ({
+        competition,
+        year,
+        gender: women ? 'women' : 'men',
+        country: s.team_name!,
+        documentId: tables.squads!.documentId,
+        members: [],
+        starters: [],
+      } as ChampionSquad);
     const p = players.get(s.player_id!);
     const link = p?.player_wikipedia_link?.startsWith('http') ? titleFromUrl(p.player_wikipedia_link) : null;
     const name = `${s.given_name} ${s.family_name}`.replace('not applicable', '').trim();
@@ -164,7 +202,10 @@ export const runFootballChampions = async (ctx: IngestContext, opts: FootballOpt
     report.push(`${sq.competition} ${sq.year} ${sq.country}: squad ${sq.members.length}, final starters ${sq.starters.length}`);
   }
   // 2023 (women) and 2026 (men): squads + final from Wikipedia.
-  for (const [year, women, squadsPage, finalPage] of [[2023, true, "2023 FIFA Women's World Cup squads", "2023 FIFA Women's World Cup final"], [2026, false, '2026 FIFA World Cup squads', '2026 FIFA World Cup final']] as const) {
+  for (const [year, women, squadsPage, finalPage] of [
+    [2023, true, "2023 FIFA Women's World Cup squads", "2023 FIFA Women's World Cup final"],
+    [2026, false, '2026 FIFA World Cup squads', '2026 FIFA World Cup final'],
+  ] as const) {
     const competition = women ? 'fifa-womens-world-cup' : 'fifa-world-cup';
     if (!wanted(competition, year)) continue;
     const final = await ctx.wiki(finalPage);
@@ -175,8 +216,13 @@ export const runFootballChampions = async (ctx: IngestContext, opts: FootballOpt
       continue;
     }
     const sq: ChampionSquad = {
-      competition, year, gender: women ? 'women' : 'men', country: winner, documentId: squadsDoc.documentId,
-      members: squadPlayers(section(squadsDoc.text, escapeRe(winner)) ?? '').map(([n, l]) => ({ person: personRef(n, l), appeared: null, reserve: false })), starters: [],
+      competition,
+      year,
+      gender: women ? 'women' : 'men',
+      country: winner,
+      documentId: squadsDoc.documentId,
+      members: squadPlayers(section(squadsDoc.text, escapeRe(winner)) ?? '').map(([n, l]) => ({ person: personRef(n, l), appeared: null, reserve: false })),
+      starters: [],
     };
     sq.starters = (finalStarters(final.text, [winner]) ?? []).map(([n, l]) => ({ person: matchMember(sq, n, l), documentId: final.documentId }));
     await observeSquad(ctx, sq);
@@ -200,7 +246,10 @@ const runOlympicFootball = async (ctx: IngestContext, wanted: (c: string, y: num
   const overview = await ctx.wiki('Football at the Summer Olympics');
   if (!overview) return ['olympic football: overview page not found'];
   const golds = olympicGolds(overview.text);
-  for (const [gender, years] of [['Men', MEN_OLYMPIC_YEARS], ['Women', WOMEN_OLYMPIC_YEARS]] as const) {
+  for (const [gender, years] of [
+    ['Men', MEN_OLYMPIC_YEARS],
+    ['Women', WOMEN_OLYMPIC_YEARS],
+  ] as const) {
     const competition = gender === 'Men' ? 'olympic-football' : 'olympic-football-women';
     for (const y of years) {
       if (!wanted(competition, y)) continue;
@@ -225,7 +274,12 @@ const runOlympicFootball = async (ctx: IngestContext, wanted: (c: string, y: num
       if (gold.core.length < 11) {
         const names = IOC_NAMES[code] ?? [code];
         const g = gender === 'Men' ? "Men's" : "Women's";
-        for (const title of [`Football at the ${y} Summer Olympics – ${g} team squads`, `Football at the ${y} Summer Olympics – ${g} tournament squads`, `Football at the ${y} Summer Olympics – Team squads`, `Football at the ${y} Summer Olympics squads`]) {
+        for (const title of [
+          `Football at the ${y} Summer Olympics – ${g} team squads`,
+          `Football at the ${y} Summer Olympics – ${g} tournament squads`,
+          `Football at the ${y} Summer Olympics – Team squads`,
+          `Football at the ${y} Summer Olympics squads`,
+        ]) {
           const pg = await ctx.wiki(title);
           if (!pg) continue;
           const sec = names.map((n) => section(pg.text, escapeRe(n))).find(Boolean);
@@ -243,12 +297,25 @@ const runOlympicFootball = async (ctx: IngestContext, wanted: (c: string, y: num
         continue;
       }
       const sq: ChampionSquad = {
-        competition, year: y, gender: gender === 'Men' ? 'men' : 'women', country, documentId: goldDoc,
-        members: [...gold.core.map(([n, l]) => ({ person: personRef(n, l), appeared: null, reserve: false })), ...gold.reserves.map(([n, l]) => ({ person: personRef(n, l), appeared: false, reserve: true }))],
+        competition,
+        year: y,
+        gender: gender === 'Men' ? 'men' : 'women',
+        country,
+        documentId: goldDoc,
+        members: [
+          ...gold.core.map(([n, l]) => ({ person: personRef(n, l), appeared: null, reserve: false })),
+          ...gold.reserves.map(([n, l]) => ({ person: personRef(n, l), appeared: false, reserve: true })),
+        ],
         starters: [],
       };
       const tname = `${gender}'s tournament`;
-      const aliases = [...(IOC_NAMES[code] ?? []), code, ...Object.entries(FIFA_TO_IOC).filter(([, v]) => v === code).map(([k]) => k)];
+      const aliases = [
+        ...(IOC_NAMES[code] ?? []),
+        code,
+        ...Object.entries(FIFA_TO_IOC)
+          .filter(([, v]) => v === code)
+          .map(([k]) => k),
+      ];
       for (const title of [`${base} – ${tname} final`, `${base} – ${tname} – Knockout stage`, `${base} – ${tname}`, base]) {
         const pg = await ctx.wiki(title);
         if (!pg) continue;

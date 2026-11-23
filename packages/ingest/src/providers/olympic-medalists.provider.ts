@@ -1,24 +1,17 @@
 // Provider `olympic-medalists` (handoff v3 §6.5, F03): ONLY medallists, from "List of Olympic medalists in <sport>"
 // (Wikipedia; the IOC library is forbidden). Each event section × Games row × medal column becomes a result:
 // individual events → a person; relays/teams (several names in one cell) → a group competitor with its members.
-import { InformationKind, type DiscoveredCompetitor, type EventRecord } from '@was/shared';
+import { type DiscoveredCompetitor, type EventRecord, InformationKind } from '@was/shared';
 
 import { linkOrText } from '../parsers/wikitext';
-import type { IngestContext } from './context';
 import { personRef } from './football-champions.provider';
+import type { IngestContext } from './ingest-context.interface';
+import type { MedalCell } from './medal-cell.interface';
+import { MEDAL_COLUMNS } from './medal-columns.const';
+import { OLYMPIC_PROVIDER } from './olympic-medalists.const';
 
-export const OLYMPIC_PROVIDER = 'olympic-medalists';
 const PARSER = { key: 'olympic-medal-list', version: '1' };
-const MEDAL_COLUMNS = ['gold', 'silver', 'bronze'] as const;
 const MEDALIST_TPL = /\{\{\s*flagIOCmedalist\s*\|\s*((?:\[\[[^\]]*\]\]|[^|{}])+?)\s*\|\s*([A-Z]{3})\s*(?:\|[^{}]*)?\}\}/g;
-
-export interface MedalCell {
-  event: string;
-  year: number;
-  medal: (typeof MEDAL_COLUMNS)[number];
-  athletes: { name: string; link: string | null }[];
-  country: string;
-}
 
 /** Medal cells of a "List of Olympic medalists in X" page: section = event; row = Games; columns = gold/silver/bronze. */
 export const parseMedalList = (text: string): MedalCell[] => {
@@ -32,7 +25,16 @@ export const parseMedalList = (text: string): MedalCell[] => {
         const medalists = [...cell.matchAll(MEDALIST_TPL)];
         if (!medalists.length) return;
         const country = medalists[0]![2]!;
-        out.push({ event, year, medal: MEDAL_COLUMNS[i]!, country, athletes: medalists.map((m) => { const [name, link] = linkOrText(m[1]!); return { name, link }; }) });
+        out.push({
+          event,
+          year,
+          medal: MEDAL_COLUMNS[i]!,
+          country,
+          athletes: medalists.map((m) => {
+            const [name, link] = linkOrText(m[1]!);
+            return { name, link };
+          }),
+        });
       });
     }
     row = [];
@@ -68,11 +70,35 @@ export const runOlympicMedalists = async (ctx: IngestContext, opts: { sport: str
       organization: { recordKey: 'organization:ioc', name: 'IOC', externalIds: {} },
       edition: { label: String(c.year), year: c.year, kind: 'edition' },
       stage: null,
-      event: { label: c.event, discipline: null, format: 'race_measured', composition: team ? 'relay' : 'individual', categories: { sex_category: women ? 'women' : /mixed/i.test(c.event) ? 'mixed' : 'men' } },
+      event: {
+        label: c.event,
+        discipline: null,
+        format: 'race_measured',
+        composition: team ? 'relay' : 'individual',
+        categories: { sex_category: women ? 'women' : /mixed/i.test(c.event) ? 'mixed' : 'men' },
+      },
     };
-    const people = c.athletes.map((a) => ({ ...personRef(a.name, a.link), kind: 'person' as const, sports: [opts.sport], aliases: [], members: [], birthDate: null, gender: null }));
+    const people = c.athletes.map((a) => ({
+      ...personRef(a.name, a.link),
+      kind: 'person' as const,
+      sports: [opts.sport],
+      aliases: [],
+      members: [],
+      birthDate: null,
+      gender: null,
+    }));
     const competitor: DiscoveredCompetitor = team
-      ? { recordKey: `group:${opts.sport}:${c.year}:${c.event}:${c.country}`, name: `${c.country} · ${c.event} ${c.year}`, externalIds: {}, kind: 'group', sports: [opts.sport], aliases: [], members: people.map((p) => ({ person: p, role: null })), birthDate: null, gender: null }
+      ? {
+          recordKey: `group:${opts.sport}:${c.year}:${c.event}:${c.country}`,
+          name: `${c.country} · ${c.event} ${c.year}`,
+          externalIds: {},
+          kind: 'group',
+          sports: [opts.sport],
+          aliases: [],
+          members: people.map((p) => ({ person: p, role: null })),
+          birthDate: null,
+          gender: null,
+        }
       : people[0]!;
     await ctx.observe(page.documentId, OLYMPIC_PROVIDER, PARSER, `${c.year}:${c.event}:${c.medal}:${competitor.recordKey}`, InformationKind.Result, {
       contract: 'result',

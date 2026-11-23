@@ -2,43 +2,22 @@
 // the observation writer. Providers never touch canonical tables (A01).
 import fs from 'node:fs';
 import path from 'node:path';
-
-import { type Database, active, sources } from '@was/db';
-import { findRepoRoot } from '@was/db';
-import type { InformationKind, Observation } from '@was/shared';
+import { active, type Database, findRepoRoot, sources } from '@was/db';
 import { eq } from 'drizzle-orm';
 
 import { recordObservation, storeDocument } from '../documents/document-store';
-import { FetchRefusedError, type FetchPolicy, SafeFetcher } from '../http/safe-fetch';
-
-export interface WikiPage {
-  title: string;
-  url: string;
-  revisionId: string | null;
-  text: string;
-  documentId: string;
-}
-
-export interface IngestContext {
-  db: Database;
-  fetcher: SafeFetcher;
-  jobId: string | null;
-  /** No network: only the local caches (tests, CI). */
-  offline: boolean;
-  log: (message: string) => void;
-  /** Cooperative cancellation (job cancel_requested_at). */
-  cancelled?: () => boolean;
-  policy(sourceSlug: string): Promise<FetchPolicy>;
-  /** Raw document of a permitted source (stored in source_documents; cache-first). */
-  document(sourceSlug: string, url: string, opts?: { revisionId?: string | null; cacheFile?: string | null }): Promise<{ text: string; documentId: string } | null>;
-  wiki(title: string, lang?: string): Promise<WikiPage | null>;
-  observe(documentId: string, provider: string, parser: { key: string; version: string }, recordKey: string, kind: InformationKind, observation: Observation): Promise<{ id: string; isNew: boolean }>;
-}
+import type { FetchPolicy } from '../http/fetch-policy.interface';
+import { FetchRefusedError } from '../http/fetch-refused.error';
+import { SafeFetcher } from '../http/safe-fetcher';
+import type { IngestContext } from './ingest-context.interface';
 
 /** Same safe-name rule as scripts/crawler/crawl_athletes.py, so its cache serves as an offline mirror. */
 export const crawlerCacheName = (title: string) => `${title.replace(/[^\p{L}\p{N}_-]+/gu, '_').slice(0, 150)}.wiki`;
 
-export const createContext = (db: Database, opts: { offline?: boolean; jobId?: string | null; log?: (m: string) => void; fetcher?: SafeFetcher } = {}): IngestContext => {
+export const createContext = (
+  db: Database,
+  opts: { offline?: boolean; jobId?: string | null; log?: (m: string) => void; fetcher?: SafeFetcher } = {},
+): IngestContext => {
   const root = findRepoRoot();
   const crawlerCache = path.join(root, 'data/seeds/.cache');
   const fetcher = opts.fetcher ?? new SafeFetcher({ cacheDir: path.join(root, '.data/ingest-cache') });
@@ -46,7 +25,10 @@ export const createContext = (db: Database, opts: { offline?: boolean; jobId?: s
   const policy = async (slug: string) => {
     const hit = policies.get(slug);
     if (hit) return hit;
-    const [s] = await db.select().from(sources).where(active(sources, eq(sources.slug, slug)));
+    const [s] = await db
+      .select()
+      .from(sources)
+      .where(active(sources, eq(sources.slug, slug)));
     if (!s) throw new Error(`Unknown source ${slug}`);
     const p = { allowedHosts: s.allowedHosts, minIntervalMs: s.minIntervalMs, crawl: s.crawlPolicy };
     policies.set(slug, p);
@@ -91,7 +73,9 @@ export const createContext = (db: Database, opts: { offline?: boolean; jobId?: s
       else if (!ctx.offline) {
         const api = `https://${lang}.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', prop: 'revisions', rvprop: 'ids|content', rvslots: 'main', titles: title, redirects: '1', format: 'json', formatversion: '2' })}`;
         const res = await fetcher.get(api, await policy(sourceSlug));
-        const json = JSON.parse(res.bytes.toString('utf8')) as { query?: { pages?: { title: string; missing?: boolean; revisions?: { revid: number; slots: { main: { content: string } } }[] }[] } };
+        const json = JSON.parse(res.bytes.toString('utf8')) as {
+          query?: { pages?: { title: string; missing?: boolean; revisions?: { revid: number; slots: { main: { content: string } } }[] }[] };
+        };
         const pg = json.query?.pages?.[0];
         if (!pg || pg.missing || !pg.revisions?.[0]) return null;
         text = pg.revisions[0].slots.main.content;
@@ -101,13 +85,27 @@ export const createContext = (db: Database, opts: { offline?: boolean; jobId?: s
       if (text === null) return null;
       const redirect = /^\s*#REDIRECT\s*\[\[([^\]|#]+)/i.exec(text);
       if (redirect) return ctx.wiki(redirect[1]!.trim(), lang);
-      const stored = await storeDocument(db, { sourceSlug, url: pageUrl, revisionId, httpStatus: 200, contentType: 'text/x-wiki', bytes: Buffer.from(text), jobId: ctx.jobId });
+      const stored = await storeDocument(db, {
+        sourceSlug,
+        url: pageUrl,
+        revisionId,
+        httpStatus: 200,
+        contentType: 'text/x-wiki',
+        bytes: Buffer.from(text),
+        jobId: ctx.jobId,
+      });
       return { title: resolved, url: pageUrl, revisionId, text: stored.text, documentId: stored.document.id };
     },
     async observe(documentId, provider, parser, recordKey, kind, observation) {
       const r = await recordObservation(db, {
-        documentId, providerKey: provider, parserKey: parser.key, parserVersion: parser.version, recordKey, informationKind: kind,
-        contract: `${observation.contract}@1`, extracted: observation as unknown as Record<string, unknown>,
+        documentId,
+        providerKey: provider,
+        parserKey: parser.key,
+        parserVersion: parser.version,
+        recordKey,
+        informationKind: kind,
+        contract: `${observation.contract}@1`,
+        extracted: observation as unknown as Record<string, unknown>,
       });
       return { id: r.observation.id, isNew: r.isNew };
     },

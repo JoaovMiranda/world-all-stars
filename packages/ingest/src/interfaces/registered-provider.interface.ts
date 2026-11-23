@@ -1,4 +1,4 @@
-import type { IngestContext } from '../providers/context';
+import type { IngestContext } from '../providers/ingest-context.interface';
 
 /** Type-erased view of a provider, as stored in the `ProviderRegistry` (CLI, job queue and admin runner). */
 export interface RegisteredProvider {

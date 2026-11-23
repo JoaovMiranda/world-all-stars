@@ -8,54 +8,18 @@ import fs from 'node:fs';
 import { isIP } from 'node:net';
 import path from 'node:path';
 
-export const INGEST_USER_AGENT = 'WorldAllStarsBot/0.2 (athlete knowledge base; polite, cached)';
+import type { FetchPolicy } from './fetch-policy.interface';
+import { FetchRefusedError } from './fetch-refused.error';
+import type { FetchedDocument } from './fetched-document.interface';
+import { INGEST_USER_AGENT } from './ingest-user-agent.const';
+import { isPrivateAddress } from './private-address.helper';
+import { RetryableFetchError } from './retryable-fetch.error';
+import type { SafeFetchOptions } from './safe-fetch-options.interface';
+
 const ALLOWED_TYPES = [/^text\//, /^application\/(json|xml|x-wiki|csv)/, /\+json/, /\+xml/];
 
-export class FetchRefusedError extends Error {
-  constructor(readonly url: string, readonly reason: string) {
-    super(`Refused ${url}: ${reason}`);
-    this.name = 'FetchRefusedError';
-  }
-}
-
-/** True for addresses a crawler must never reach (RFC1918, loopback, link-local, CGNAT, metadata, ULA, multicast…). */
-export const isPrivateAddress = (ip: string): boolean => {
-  if (isIP(ip) === 4) {
-    const [a = 0, b = 0] = ip.split('.').map(Number);
-    return a === 0 || a === 10 || a === 127 || (a === 100 && b >= 64 && b <= 127) || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || a >= 224;
-  }
-  const v6 = ip.toLowerCase();
-  if (v6 === '::' || v6 === '::1') return true;
-  if (v6.startsWith('::ffff:')) return isPrivateAddress(v6.slice(7));
-  return /^(fc|fd|fe8|fe9|fea|feb|ff)/.test(v6);
-};
-
-export interface FetchPolicy {
-  /** Hosts this source may be fetched from (exact or `*.domain`). */
-  allowedHosts: readonly string[];
-  /** Minimum interval between requests to the same host (ms). */
-  minIntervalMs: number;
-}
-export interface SafeFetchOptions {
-  cacheDir?: string | null;
-  maxBytes?: number;
-  timeoutMs?: number;
-  maxRedirects?: number;
-  fetchImpl?: typeof fetch;
-  resolve?: (host: string) => Promise<string[]>;
-  sleep?: (ms: number) => Promise<void>;
-  now?: () => number;
-}
-export interface FetchedDocument {
-  url: string;
-  finalUrl: string;
-  status: number;
-  contentType: string | null;
-  bytes: Buffer;
-  fromCache: boolean;
-}
-
-const hostAllowed = (host: string, allowed: readonly string[]) => allowed.some((h) => (h.startsWith('*.') ? host === h.slice(2) || host.endsWith(h.slice(1)) : host === h));
+const hostAllowed = (host: string, allowed: readonly string[]) =>
+  allowed.some((h) => (h.startsWith('*.') ? host === h.slice(2) || host.endsWith(h.slice(1)) : host === h));
 
 export class SafeFetcher {
   private readonly lastRequest = new Map<string, number>();
@@ -110,7 +74,8 @@ export class SafeFetcher {
         throw new RetryableFetchError(url.href, res.status, retry * 1000);
       }
       const contentType = res.headers.get('content-type');
-      if (res.ok && contentType && !ALLOWED_TYPES.some((t) => t.test(contentType))) throw new FetchRefusedError(url.href, `content type ${contentType} not allowed`);
+      if (res.ok && contentType && !ALLOWED_TYPES.some((t) => t.test(contentType)))
+        throw new FetchRefusedError(url.href, `content type ${contentType} not allowed`);
       const bytes = await this.readCapped(res, url.href);
       const doc = { url: rawUrl, finalUrl: url.href, status: res.status, contentType, bytes, fromCache: false };
       if (cache && res.ok) {
@@ -134,7 +99,11 @@ export class SafeFetcher {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.opts.timeoutMs);
     try {
-      return await this.opts.fetchImpl(url, { redirect: 'manual', signal: controller.signal, headers: { 'User-Agent': INGEST_USER_AGENT, 'Accept-Encoding': 'gzip' } });
+      return await this.opts.fetchImpl(url, {
+        redirect: 'manual',
+        signal: controller.signal,
+        headers: { 'User-Agent': INGEST_USER_AGENT, 'Accept-Encoding': 'gzip' },
+      });
     } finally {
       clearTimeout(timer);
     }
@@ -158,12 +127,5 @@ export class SafeFetcher {
       chunks.push(value);
     }
     return Buffer.concat(chunks);
-  }
-}
-
-export class RetryableFetchError extends Error {
-  constructor(readonly url: string, readonly status: number, readonly retryAfterMs: number) {
-    super(`HTTP ${status} on ${url}: retry after ${retryAfterMs} ms`);
-    this.name = 'RetryableFetchError';
   }
 }

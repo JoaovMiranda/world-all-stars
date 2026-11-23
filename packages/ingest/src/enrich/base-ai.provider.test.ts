@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { AiResult } from './ai';
+import type { AiResult } from './ai-result.interface';
 import { BaseAiProvider } from './base-ai.provider';
 
 class EchoAiProvider extends BaseAiProvider {

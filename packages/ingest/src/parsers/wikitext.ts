@@ -1,7 +1,11 @@
 // Wikitext parsing shared by the providers: a faithful TypeScript port of scripts/crawler/crawl_athletes.py
 // (lineups, medal sections, squads, infobox winner), plus a generic wikitable reader that keeps the year and the
 // column header (division) of every cell — the data the Python crawler threw away for BJJ.
-export type NameLink = readonly [name: string, link: string | null];
+import type { BjjChampion } from './bjj-champion.interface';
+import { FIFA_TO_IOC } from './fifa-to-ioc.const';
+import { IOC_NAMES } from './ioc-names.const';
+import type { NameLink } from './name-link.type';
+import type { TableCell } from './table-cell.interface';
 
 const LINK = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
 const LINK_ONE = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/;
@@ -15,7 +19,10 @@ export const stripMarkup = (s: string): string => {
 /** Last [[link]] of a cell (label, target) or its plain text. Handles &nbsp; and {{sortname|A|B|link}}. */
 export const linkOrText = (raw: string): NameLink => {
   let cell = raw.replace(/&nbsp;/g, ' ');
-  cell = cell.replace(/\{\{\s*sortname\s*\|([^|}]*)\|([^|}]*)(?:\|([^|}=]*))?[^}]*\}\}/g, (_m, a: string, b: string, c?: string) => `[[${(c || `${a} ${b}`).trim()}|${a.trim()} ${b.trim()}]]`);
+  cell = cell.replace(
+    /\{\{\s*sortname\s*\|([^|}]*)\|([^|}]*)(?:\|([^|}=]*))?[^}]*\}\}/g,
+    (_m, a: string, b: string, c?: string) => `[[${(c || `${a} ${b}`).trim()}|${a.trim()} ${b.trim()}]]`,
+  );
   cell = stripMarkup(cell);
   const links = [...cell.matchAll(LINK)].filter((m) => !/^(File:|Image:|Captain)/.test(m[1]!));
   if (links.length) {
@@ -77,7 +84,10 @@ export const lineupBlocks = (text: string): NameLink[][] => {
 
 export const winnerSide = (box: string, names: readonly string[]): 0 | 1 | null => {
   for (const line of box.split('\n')) {
-    for (const [side, idx] of [['team1', 0], ['team2', 1]] as const) {
+    for (const [side, idx] of [
+      ['team1', 0],
+      ['team2', 1],
+    ] as const) {
       if (new RegExp(`^\\s*\\|\\s*${side}\\s*=`).test(line) && names.some((n) => line.toLowerCase().includes(n.toLowerCase()))) return idx;
     }
   }
@@ -113,13 +123,8 @@ export const squadPlayers = (sec: string): NameLink[] =>
   [...sec.matchAll(/\{\{nat fs (?:g )?player([^}]*(?:\{\{[^}]*\}\}[^}]*)*)\}\}/g)].map((m) => playerName(m[1]!)).filter((n): n is NameLink => !!n && !!n[0]);
 
 // ── Olympic football medals ──
-export const IOC_NAMES: Record<string, string[]> = {
-  GBR: ['Great Britain'], BEL: ['Belgium'], URU: ['Uruguay'], ITA: ['Italy'], SWE: ['Sweden'], HUN: ['Hungary'], URS: ['Soviet Union'], YUG: ['Yugoslavia'],
-  POL: ['Poland'], GDR: ['East Germany'], TCH: ['Czechoslovakia'], FRA: ['France'], FRG: ['West Germany'], EUN: ['Unified Team'], ESP: ['Spain'], NGR: ['Nigeria'],
-  CMR: ['Cameroon'], ARG: ['Argentina'], MEX: ['Mexico'], BRA: ['Brazil'], USA: ['United States'], NOR: ['Norway'], GER: ['Germany'], CAN: ['Canada'],
-};
-export const FIFA_TO_IOC: Record<string, string> = { SPA: 'ESP', NGA: 'NGR', CSK: 'TCH', DDR: 'GDR', FRG: 'FRG', URS: 'URS' };
-const COUNTRY_TPL = /\{\{\s*(?:[Ff][Ll][Aa][Gg][Ii][Oo][Cc]\w*|[Ff][Bb][\w-]*|[Ff]lagcountry|[Ff]lag)\s*\|(?:\s*\d+\s*\|)?\s*([A-Z]{3}\b|[A-Z][a-z][A-Za-z .]+?)\s*(?:\|[^{}]*)?\}\}/g;
+const COUNTRY_TPL =
+  /\{\{\s*(?:[Ff][Ll][Aa][Gg][Ii][Oo][Cc]\w*|[Ff][Bb][\w-]*|[Ff]lagcountry|[Ff]lag)\s*\|(?:\s*\d+\s*\|)?\s*([A-Z]{3}\b|[A-Z][a-z][A-Za-z .]+?)\s*(?:\|[^{}]*)?\}\}/g;
 const SKIP_NAME = /^(?:coach|manager|gold|silver|bronze|men|women|valign|style|width|rowspan|colspan|event)\b/i;
 
 export const toIoc = (val: string): string => {
@@ -150,7 +155,10 @@ export const chunkNames = (raw: string): { core: NameLink[]; reserves: NameLink[
 /** Champion of each edition from the finals table of "Football at the Summer Olympics". */
 export const olympicGolds = (text: string): Map<string, string> => {
   const out = new Map<string, string>();
-  for (const [gender, head] of [['Men', /==Men's tournament==/], ['Women', /==Women's tournament==/]] as const) {
+  for (const [gender, head] of [
+    ['Men', /==Men's tournament==/],
+    ['Women', /==Women's tournament==/],
+  ] as const) {
     const m = head.exec(text);
     if (!m) continue;
     let body = text.slice(m.index + m[0].length);
@@ -197,14 +205,6 @@ export const medalistsGold = (text: string, event: 'Men' | 'Women', code: string
 };
 
 // ── Generic wikitable reader (BJJ champions by year × division) ──
-export interface TableCell {
-  year: number | null;
-  column: string;
-  heading: string;
-  /** Every heading above the cell, outermost first (gender often lives in a parent heading). */
-  path: string[];
-  raw: string;
-}
 
 /** Every data cell of every wikitable in `text`, with its column header, the row's year and the current heading. */
 export const wikitableCells = (text: string): TableCell[] => {
@@ -257,7 +257,12 @@ export const wikitableCells = (text: string): TableCell[] => {
       header = line
         .slice(1)
         .split('!!')
-        .map((c) => stripMarkup(c.includes('|') && !c.includes('[[') ? c.slice(c.lastIndexOf('|') + 1) : c).replace(/&nbsp;/g, ' ').replace(/'''/g, '').trim());
+        .map((c) =>
+          stripMarkup(c.includes('|') && !c.includes('[[') ? c.slice(c.lastIndexOf('|') + 1) : c)
+            .replace(/&nbsp;/g, ' ')
+            .replace(/'''/g, '')
+            .trim(),
+        );
       continue;
     }
     if (line.startsWith('|')) rowCells.push(...line.slice(1).split('||'));
@@ -267,14 +272,6 @@ export const wikitableCells = (text: string): TableCell[] => {
 };
 
 const CHAMP = /(?:<small>|\{\{\s*small\s*\|)\s*\(\s*\d+\s*\/\s*\d+\s*\)/;
-
-export interface BjjChampion {
-  name: string;
-  link: string | null;
-  gender: 'men' | 'women';
-  year: number | null;
-  division: string;
-}
 
 /** Champions between the start and end headings: name/link, gender (from headings), year and division (column). */
 export const bjjChampions = (text: string, startRe: RegExp, endRe: RegExp): BjjChampion[] => {

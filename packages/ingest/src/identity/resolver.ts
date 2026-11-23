@@ -1,32 +1,22 @@
 // Identity resolution (handoff v3 §7.1, D01): signals in priority order — internal id, Wikidata QID, other external
 // ids, name + birth date + sport, name + sport. A NAME ALONE never merges two records. Thresholds are a calibrated
 // starting point (pnpm ingest:identity-eval measures precision/recall on the labelled sample).
-import { type Database, active, athleteSports, athletes, entityAliases, entityExternalIds, sports } from '@was/db';
+import { active, athleteSports, athletes, type Database, entityAliases, entityExternalIds, sports } from '@was/db';
 import { normalizeForSearch } from '@was/shared';
 import { eq } from 'drizzle-orm';
 
-export const IDENTITY_THRESHOLDS = { auto: 0.98, review: 0.75 } as const;
-
-export interface IdentityQuery {
-  name: string;
-  externalIds: Record<string, string>;
-  sport: string | null;
-  birthDate?: string | null;
-}
-export interface IdentityCandidate {
-  entityId: string;
-  confidence: number;
-  signals: string[];
-}
-export type IdentityDecision =
-  | { kind: 'match'; entityId: string; confidence: number; signals: string[] }
-  | { kind: 'review'; candidates: IdentityCandidate[] }
-  | { kind: 'new' };
+import type { IdentityCandidate } from './identity-candidate.interface';
+import type { IdentityDecision } from './identity-decision.type';
+import type { IdentityQuery } from './identity-query.interface';
+import { IDENTITY_THRESHOLDS } from './identity-thresholds.const';
 
 /** Provider of the external id → weight of an exact match (stable ids weigh more than mutable titles). */
 const ID_WEIGHT: Record<string, number> = { wikidata: 1, fjelstul: 0.99, wikipedia_en: 0.99, olympedia: 0.99 };
 
-export const normalizeName = (s: string) => normalizeForSearch(s).replace(/[^a-z0-9]+/g, ' ').trim();
+export const normalizeName = (s: string) =>
+  normalizeForSearch(s)
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
 
 /** Pure scoring of one candidate (exported for the calibration test). */
 export const scoreCandidate = (
@@ -123,4 +113,10 @@ export class PersonIndex {
   }
 }
 
-export const sportIdBySlug = async (db: Database, slug: string) => (await db.select().from(sports).where(active(sports, eq(sports.slug, slug))))[0]?.id ?? null;
+export const sportIdBySlug = async (db: Database, slug: string) =>
+  (
+    await db
+      .select()
+      .from(sports)
+      .where(active(sports, eq(sports.slug, slug)))
+  )[0]?.id ?? null;

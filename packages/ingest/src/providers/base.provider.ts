@@ -1,11 +1,11 @@
 import type { InformationKind, Observation } from '@was/shared';
 import { chunk, retryWithBackoff } from '@was/shared';
 
-import { RetryableFetchError } from '../http/safe-fetch';
+import { RetryableFetchError } from '../http/retryable-fetch.error';
 import type { FetchedJson } from '../interfaces/fetched-json.interface';
 import type { ParserRef } from '../interfaces/parser-ref.interface';
 import type { RegisteredProvider } from '../interfaces/registered-provider.interface';
-import type { IngestContext } from './context';
+import type { IngestContext } from './ingest-context.interface';
 
 /**
  * Base of every ingestion provider: reads permitted sources through `ctx.document` (safe fetch + document store) and

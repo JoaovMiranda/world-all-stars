@@ -1,4 +1,5 @@
-import type { AiProvider, AiResult } from './ai';
+import type { AiProvider } from './ai-provider.interface';
+import type { AiResult } from './ai-result.interface';
 
 /**
  * Base of every AI backend (Ollama today; a paid API is a follow-up). One call = one prompt in, JSON out plus token

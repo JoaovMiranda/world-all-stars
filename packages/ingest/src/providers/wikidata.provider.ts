@@ -1,21 +1,16 @@
 // Provider `wikidata` (handoff v3 §6.5): enriches people that already have a Wikipedia title — QID through the
 // enwiki SITELINK (never built from the name), birth date (P569), gender (P21). CC0, batches of 50, polite.
 // Writes `evidence` observations; the canonical writer applies them under the SoT rules (Wikidata = birth, ids).
-import { type Database, active, athletes, entityExternalIds } from '@was/db';
+import { active, athletes, type Database, entityExternalIds } from '@was/db';
 import { InformationKind } from '@was/shared';
 import { and, eq } from 'drizzle-orm';
 
-import type { IngestContext } from './context';
+import type { IngestContext } from './ingest-context.interface';
+import { WIKIDATA_PROVIDER } from './wikidata.const';
+import type { WdEntity } from './wikidata-entity.interface';
 
-export const WIKIDATA_PROVIDER = 'wikidata';
 const PARSER = { key: 'wikidata-entity', version: '1' };
 const GENDER: Record<string, 'male' | 'female'> = { Q6581097: 'male', Q6581072: 'female', Q1052281: 'female', Q2449503: 'male' };
-
-interface WdEntity {
-  id: string;
-  sitelinks?: { enwiki?: { title: string } };
-  claims?: Record<string, { mainsnak: { datavalue?: { value: unknown } } }[]>;
-}
 
 /** Facts of one entity (pure: exported for tests with a fixture). */
 export const wikidataFacts = (e: WdEntity) => {
@@ -28,9 +23,26 @@ export const wikidataFacts = (e: WdEntity) => {
 
 /** Titles of people without a QID yet (the work list). */
 export const peopleToEnrich = async (db: Database, limit = 500) => {
-  const titles = await db.select({ entityId: entityExternalIds.entityId, title: entityExternalIds.externalId }).from(entityExternalIds).where(active(entityExternalIds, eq(entityExternalIds.provider, 'wikipedia_en')));
-  const qids = new Set((await db.select({ id: entityExternalIds.entityId }).from(entityExternalIds).where(active(entityExternalIds, eq(entityExternalIds.provider, 'wikidata')))).map((r) => r.id));
-  const people = new Set((await db.select({ id: athletes.id }).from(athletes).where(and(active(athletes)))).map((r) => r.id));
+  const titles = await db
+    .select({ entityId: entityExternalIds.entityId, title: entityExternalIds.externalId })
+    .from(entityExternalIds)
+    .where(active(entityExternalIds, eq(entityExternalIds.provider, 'wikipedia_en')));
+  const qids = new Set(
+    (
+      await db
+        .select({ id: entityExternalIds.entityId })
+        .from(entityExternalIds)
+        .where(active(entityExternalIds, eq(entityExternalIds.provider, 'wikidata')))
+    ).map((r) => r.id),
+  );
+  const people = new Set(
+    (
+      await db
+        .select({ id: athletes.id })
+        .from(athletes)
+        .where(and(active(athletes)))
+    ).map((r) => r.id),
+  );
   return titles.filter((t) => people.has(t.entityId) && !qids.has(t.entityId)).slice(0, limit);
 };
 
@@ -60,10 +72,22 @@ export const runWikidata = async (ctx: IngestContext, opts: { limit?: number | u
       found++;
       const evidence = (field: string, value: string | number | null) =>
         value !== null &&
-        ctx.observe(doc.documentId, WIKIDATA_PROVIDER, PARSER, `${f.qid}:${field}`, field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth, {
-          contract: 'evidence',
-          record: { informationKind: field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth, field: `${person.entityId}:${field}`, value: { original: String(value), value, unit: null }, evidence: { quote: null, section: f.qid } },
-        });
+        ctx.observe(
+          doc.documentId,
+          WIKIDATA_PROVIDER,
+          PARSER,
+          `${f.qid}:${field}`,
+          field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth,
+          {
+            contract: 'evidence',
+            record: {
+              informationKind: field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth,
+              field: `${person.entityId}:${field}`,
+              value: { original: String(value), value, unit: null },
+              evidence: { quote: null, section: f.qid },
+            },
+          },
+        );
       await evidence('wikidata', f.qid);
       await evidence('birth_date', f.birthDate);
       await evidence('birth_year', f.birthYear);

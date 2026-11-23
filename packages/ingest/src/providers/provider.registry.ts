@@ -1,5 +1,5 @@
 import type { RegisteredProvider } from '../interfaces/registered-provider.interface';
-import type { IngestContext } from './context';
+import type { IngestContext } from './ingest-context.interface';
 
 /** The single provider map shared by the CLI (`pnpm ingest`), the job worker and the admin ingestion runner. */
 export class ProviderRegistry {

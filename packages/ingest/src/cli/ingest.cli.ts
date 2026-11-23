@@ -18,17 +18,27 @@ import { desc, sql } from 'drizzle-orm';
 
 import { CanonicalWriter } from '../canonical/canonical-writer';
 import { firstCollect, updateCollect } from '../collect';
-import { parseAthleteList } from '../providers/athlete-list.provider';
-import { aiReport, OllamaProvider, runBiography, runEnrichment } from '../enrich/ai';
-import { IDENTITY_SAMPLE } from '../identity/identity-sample';
-import { IDENTITY_THRESHOLDS, scoreCandidate } from '../identity/resolver';
+import { aiReport } from '../enrich/ai-report.helper';
+import { OllamaProvider } from '../enrich/ollama.provider';
+import { runBiography } from '../enrich/run-biography.service';
+import { runEnrichment } from '../enrich/run-enrichment.service';
+import { IDENTITY_SAMPLE } from '../identity/identity-sample.const';
+import { IDENTITY_THRESHOLDS } from '../identity/identity-thresholds.const';
+import { scoreCandidate } from '../identity/resolver';
 import { enqueueJob, runWorker } from '../jobs/queue';
-import { BJJ_PROVIDER, runBjjChampions } from '../providers/bjj-champions.provider';
-import { createContext, type IngestContext } from '../providers/context';
-import { FOOTBALL_PROVIDER, runFootballChampions } from '../providers/football-champions.provider';
-import { OLYMPIC_PROVIDER, runOlympicMedalists } from '../providers/olympic-medalists.provider';
-import { runWikidata, WIKIDATA_PROVIDER } from '../providers/wikidata.provider';
-import { runWikidataProfile, WIKIDATA_PROFILE_PROVIDER } from '../providers/wikidata-profile.provider';
+import { parseAthleteList } from '../providers/athlete-list.provider';
+import { BJJ_PROVIDER } from '../providers/bjj-champions.const';
+import { runBjjChampions } from '../providers/bjj-champions.provider';
+import { createContext } from '../providers/context';
+import { FOOTBALL_PROVIDER } from '../providers/football-champions.const';
+import { runFootballChampions } from '../providers/football-champions.provider';
+import type { IngestContext } from '../providers/ingest-context.interface';
+import { OLYMPIC_PROVIDER } from '../providers/olympic-medalists.const';
+import { runOlympicMedalists } from '../providers/olympic-medalists.provider';
+import { WIKIDATA_PROVIDER } from '../providers/wikidata.const';
+import { runWikidata } from '../providers/wikidata.provider';
+import { WIKIDATA_PROFILE_PROVIDER } from '../providers/wikidata-profile.const';
+import { runWikidataProfile } from '../providers/wikidata-profile.provider';
 
 const args = process.argv.slice(2);
 const command = args[0] ?? 'report';
@@ -85,10 +95,16 @@ try {
   } else if (command === 'worker') {
     const processed = await runWorker(
       db,
-      Object.fromEntries(Object.entries(discovery).map(([key, fn]) => [key, async (item, run) => {
-        if (item.itemKey === 'discover') return { report: await fn(createContext(db, { jobId: run.id, offline: flag('offline') === 'true', log }), run.params) };
-        await write([key]);
-      }])),
+      Object.fromEntries(
+        Object.entries(discovery).map(([key, fn]) => [
+          key,
+          async (item, run) => {
+            if (item.itemKey === 'discover')
+              return { report: await fn(createContext(db, { jobId: run.id, offline: flag('offline') === 'true', log }), run.params) };
+            await write([key]);
+          },
+        ]),
+      ),
       { maxItems: flag('max') ? Number(flag('max')) : undefined },
     );
     log(`worker: ${processed} item(s) processed`);
@@ -102,7 +118,8 @@ try {
       union all select 'conflicts (pending)', count(*) from field_conflicts where resolution = 'pending'
       union all select 'dead job items', count(*) from ingestion_job_items where status = 'dead'`)) as unknown as { rows: { k: string; n: number }[] };
     for (const r of counts.rows) log(`${r.k.padEnd(32)} ${String(r.n).padStart(7)}`);
-    for (const r of await db.select().from(ingestionRuns).orderBy(desc(ingestionRuns.startedAt)).limit(5)) log(`run ${r.jobKey} ${r.status} ${r.startedAt.toISOString()} checked=${r.checked} errors=${r.errors}`);
+    for (const r of await db.select().from(ingestionRuns).orderBy(desc(ingestionRuns.startedAt)).limit(5))
+      log(`run ${r.jobKey} ${r.status} ${r.startedAt.toISOString()} checked=${r.checked} errors=${r.errors}`);
   } else if (command === 'enrich') {
     // Optional AI layer: needs OLLAMA_URL (+ OLLAMA_MODEL). Proposals go to the admin queue; nothing is published.
     const provider = OllamaProvider.fromEnv();
@@ -112,7 +129,9 @@ try {
       select a.id, a.known_as name, a.full_name, a.birth_date, a.height_cm, x.external_id title
       from athletes a join entity_external_ids x on x.entity_id = a.id and x.provider = 'wikipedia_en' and x.deleted_at is null and x.is_current
       where a.deleted_at is null ${athlete ? sql`and a.slug = ${athlete}` : sql``}
-      limit ${Number(flag('limit') ?? 20)}`)) as unknown as { rows: { id: string; name: string; full_name: string | null; birth_date: string | null; height_cm: number | null; title: string }[] };
+      limit ${Number(flag('limit') ?? 20)}`)) as unknown as {
+      rows: { id: string; name: string; full_name: string | null; birth_date: string | null; height_cm: number | null; title: string }[];
+    };
     const items = [];
     for (const p of provider ? people.rows : []) {
       const url = `https://en.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', prop: 'extracts|revisions', rvprop: 'ids', explaintext: '1', redirects: '1', titles: p.title, format: 'json', formatversion: '2' })}`;
@@ -121,25 +140,52 @@ try {
       if (!page?.extract) continue;
       const titles = (await db.execute(sql`
         select coalesce(t.name, d.slug) name, g.year from recognition_grants g join recognition_definitions d on d.id = g.definition_id
-        left join recognition_definition_translations t on t.definition_id = d.id and t.locale = 'en' where g.competitor_id = ${p.id} and g.deleted_at is null order by g.year`)) as unknown as { rows: { name: string; year: number }[] };
-      const clubs = (await db.execute(sql`select t.name, at.from_year, at.to_year from athlete_teams at join teams t on t.id = at.team_id where at.athlete_id = ${p.id} and at.deleted_at is null order by at.from_year`)) as unknown as { rows: { name: string; from_year: number | null; to_year: number | null }[] };
+        left join recognition_definition_translations t on t.definition_id = d.id and t.locale = 'en' where g.competitor_id = ${p.id} and g.deleted_at is null order by g.year`)) as unknown as {
+        rows: { name: string; year: number }[];
+      };
+      const clubs = (await db.execute(
+        sql`select t.name, at.from_year, at.to_year from athlete_teams at join teams t on t.id = at.team_id where at.athlete_id = ${p.id} and at.deleted_at is null order by at.from_year`,
+      )) as unknown as { rows: { name: string; from_year: number | null; to_year: number | null }[] };
       const facts = [
-        p.full_name && `full name ${p.full_name}`, p.birth_date && `born ${p.birth_date}`, p.height_cm && `height ${p.height_cm} cm`,
+        p.full_name && `full name ${p.full_name}`,
+        p.birth_date && `born ${p.birth_date}`,
+        p.height_cm && `height ${p.height_cm} cm`,
         titles.rows.length && `titles: ${titles.rows.map((t) => `${t.name} ${t.year}`).join(', ')}`,
         clubs.rows.length && `teams: ${clubs.rows.map((c) => `${c.name} (${c.from_year ?? '?'}–${c.to_year ?? '?'})`).join(', ')}`,
-      ].filter(Boolean).join('; ');
-      items.push({ entityId: p.id, name: p.name, sourceText: page.extract, sourceUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replaceAll(' ', '_'))}`, sectionKey: 'article', facts });
+      ]
+        .filter(Boolean)
+        .join('; ');
+      items.push({
+        entityId: p.id,
+        name: p.name,
+        sourceText: page.extract,
+        sourceUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replaceAll(' ', '_'))}`,
+        sectionKey: 'article',
+        facts,
+      });
     }
     const task = flag('task') ?? 'biography';
     if (task === 'biography' || task === 'all') log(`biography: ${JSON.stringify(await runBiography(db, provider, items))}`);
-    if (task === 'facts' || task === 'all') log(`facts: ${JSON.stringify(await runEnrichment(db, provider, items.map((i) => ({ ...i, sourceText: i.sourceText.slice(0, 6000) }))))}`);
+    if (task === 'facts' || task === 'all')
+      log(
+        `facts: ${JSON.stringify(
+          await runEnrichment(
+            db,
+            provider,
+            items.map((i) => ({ ...i, sourceText: i.sourceText.slice(0, 6000) })),
+          ),
+        )}`,
+      );
   } else if (command === 'collect') {
     const provider = OllamaProvider.fromEnv();
     if (!provider) log('collect: OLLAMA_URL not set: profiles are collected and marked needs_enrichment');
     const fs = await import('node:fs');
     const file = flag('list');
     const text = file ? fs.readFileSync(file, 'utf8') : (flag('names') ?? '').split(',').join('\n');
-    const r = flag('update') === 'true' ? await updateCollect(ctx, provider, { limit: flag('limit') ? Number(flag('limit')) : undefined }) : await firstCollect(ctx, provider, parseAthleteList(text, flag('sport') ?? null));
+    const r =
+      flag('update') === 'true'
+        ? await updateCollect(ctx, provider, { limit: flag('limit') ? Number(flag('limit')) : undefined })
+        : await firstCollect(ctx, provider, parseAthleteList(text, flag('sport') ?? null));
     log(`collect: ${JSON.stringify(r)}`);
   } else if (command === 'ai-report') {
     for (const r of await aiReport(db)) log(JSON.stringify(r));
@@ -151,7 +197,9 @@ try {
       const autoTp = r.filter((x) => x.s.same && x.score >= t).length;
       const review = r.filter((x) => x.score >= IDENTITY_THRESHOLDS.review && x.score < t).length;
       const same = r.filter((x) => x.s.same).length;
-      log(`auto ≥ ${t}: precision ${(autoTp / Math.max(1, autoTp + fp)).toFixed(2)} · false positives ${fp} · recall (auto+review) ${((same - fn) / same).toFixed(2)} · false negatives ${fn} · manual review ${review}/${r.length}`);
+      log(
+        `auto ≥ ${t}: precision ${(autoTp / Math.max(1, autoTp + fp)).toFixed(2)} · false positives ${fp} · recall (auto+review) ${((same - fn) / same).toFixed(2)} · false negatives ${fn} · manual review ${review}/${r.length}`,
+      );
     }
   } else {
     throw new Error(`unknown command ${command}`);

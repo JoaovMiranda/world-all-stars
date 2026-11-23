@@ -6,9 +6,12 @@
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 
-import { type Database, active, sourceDocuments, sourceObservations, sourcePayloads, sources } from '@was/db';
+import { active, type Database, sourceDocuments, sourceObservations, sourcePayloads, sources } from '@was/db';
 import { uuidv7 } from '@was/shared';
 import { and, eq, isNull } from 'drizzle-orm';
+
+import type { ObservationInput } from './observation-input.interface';
+import type { StoreDocumentInput } from './store-document-input.interface';
 
 const sha256 = (data: string | Buffer) => createHash('sha256').update(data).digest('hex');
 
@@ -49,20 +52,11 @@ export const canonicalizeUrl = (raw: string): string => {
   return u.href;
 };
 
-export interface StoreDocumentInput {
-  sourceSlug: string;
-  url: string;
-  revisionId: string | null;
-  httpStatus: number;
-  contentType: string | null;
-  bytes: Buffer;
-  jobId?: string | null;
-  /** Sections used as evidence (stored when the policy is evidence_excerpts). */
-  excerpts?: string[];
-}
-
 export const storeDocument = async (db: Database, input: StoreDocumentInput) => {
-  const [source] = await db.select().from(sources).where(active(sources, eq(sources.slug, input.sourceSlug)));
+  const [source] = await db
+    .select()
+    .from(sources)
+    .where(active(sources, eq(sources.slug, input.sourceSlug)));
   if (!source) throw new Error(`Unknown source ${input.sourceSlug}`);
   const { text, rawHash, normalizedHash } = hashDocument(input.bytes, input.contentType);
   const canonicalUrl = canonicalizeUrl(input.url);
@@ -87,31 +81,48 @@ export const storeDocument = async (db: Database, input: StoreDocumentInput) => 
   }
   const [payloadRow] = await db
     .insert(sourcePayloads)
-    .values({ id: uuidv7(), createdVia: 'system:discovery', normalizedHash, contentType: input.contentType ?? 'text/plain', body, bodyKind, bytes: input.bytes.byteLength })
+    .values({
+      id: uuidv7(),
+      createdVia: 'system:discovery',
+      normalizedHash,
+      contentType: input.contentType ?? 'text/plain',
+      body,
+      bodyKind,
+      bytes: input.bytes.byteLength,
+    })
     .onConflictDoNothing()
     .returning();
-  const payload = payloadRow ?? (await db.select().from(sourcePayloads).where(active(sourcePayloads, eq(sourcePayloads.normalizedHash, normalizedHash))))[0];
+  const payload =
+    payloadRow ??
+    (
+      await db
+        .select()
+        .from(sourcePayloads)
+        .where(active(sourcePayloads, eq(sourcePayloads.normalizedHash, normalizedHash)))
+    )[0];
   const [document] = await db
     .insert(sourceDocuments)
     .values({
-      id: uuidv7(), createdVia: 'system:discovery', sourceId: source.id, url: input.url, canonicalUrl, revisionId: input.revisionId, fetchedAt: now, lastSeenAt: now,
-      httpStatus: input.httpStatus, contentType: input.contentType, charset: 'utf-8', rawHash, normalizedHash, payloadId: payload?.id ?? null, licenseId: source.licenseId, jobId: input.jobId ?? null,
+      id: uuidv7(),
+      createdVia: 'system:discovery',
+      sourceId: source.id,
+      url: input.url,
+      canonicalUrl,
+      revisionId: input.revisionId,
+      fetchedAt: now,
+      lastSeenAt: now,
+      httpStatus: input.httpStatus,
+      contentType: input.contentType,
+      charset: 'utf-8',
+      rawHash,
+      normalizedHash,
+      payloadId: payload?.id ?? null,
+      licenseId: source.licenseId,
+      jobId: input.jobId ?? null,
     })
     .returning();
   return { document: document!, text, isNew: true };
 };
-
-export interface ObservationInput {
-  documentId: string;
-  providerKey: string;
-  parserKey: string;
-  parserVersion: string;
-  recordKey: string;
-  informationKind: (typeof sourceObservations.$inferInsert)['informationKind'];
-  contract: string;
-  extracted: Record<string, unknown>;
-  confidence?: number;
-}
 
 /** Idempotent by (document, parser, version, record key): re-parsing the same document never duplicates. */
 export const recordObservation = async (db: Database, o: ObservationInput) => {
@@ -127,7 +138,12 @@ export const recordObservation = async (db: Database, o: ObservationInput) => {
     .where(
       active(
         sourceObservations,
-        and(eq(sourceObservations.documentId, o.documentId), eq(sourceObservations.parserKey, o.parserKey), eq(sourceObservations.parserVersion, o.parserVersion), eq(sourceObservations.recordKey, o.recordKey)),
+        and(
+          eq(sourceObservations.documentId, o.documentId),
+          eq(sourceObservations.parserKey, o.parserKey),
+          eq(sourceObservations.parserVersion, o.parserVersion),
+          eq(sourceObservations.recordKey, o.recordKey),
+        ),
       ),
     );
   return { observation: found!, isNew: false };
