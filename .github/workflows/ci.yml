@@ -1,4 +1,5 @@
-# CI (doc 05): typecheck, tests, production build + smoke, dependency audit, and a Docker build without push.
+# CI (doc 05): Phase 0 gates, typecheck, tests, duplication, production build + smoke, dependency audit, Trivy, and a
+# Docker build without push.
 # Actions are pinned by full commit SHA (the comment says which release); bump SHA and comment together.
 name: CI
 
@@ -40,6 +41,19 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # Phase 0 gates (docs/engineering/conventions.md). ESLint and dependency-cruiser are deferred while the repo is on
+      # TypeScript 7 (no JS compiler API); scripts/scan/declaration-rules.mjs checks the one-declaration-kind rules.
+      - name: Declaration rules (one declaration kind per file)
+        run: pnpm lint:declarations
+
+      - name: Language (English outside i18n catalogs and localized data)
+        run: pnpm lint:language
+
+      # Biome and knip report only until the pre-existing findings are cleared (see docs/engineering/tooling.md).
+      - name: Biome (report only)
+        continue-on-error: true
+        run: pnpm lint
+
       - name: Typecheck
         run: pnpm typecheck
 
@@ -50,6 +64,13 @@ jobs:
       # plan/ is gitignored: the prototype-based tests and the db seed skip without it; web fixtures are committed.
       - name: Test
         run: pnpm test
+
+      - name: Duplication (jscpd, threshold 1 %)
+        run: pnpm dup
+
+      - name: Dead code (knip, report only)
+        continue-on-error: true
+        run: pnpm deadcode
 
       - name: Build (production, real API)
         run: pnpm build
@@ -66,6 +87,17 @@ jobs:
 
       - name: Audit production dependencies
         run: pnpm audit --prod --audit-level=high
+
+      # Filesystem vulnerability scan: fails on HIGH/CRITICAL findings that have a fix available.
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          skip-dirs: plan,data,node_modules
 
   lighthouse:
     name: Lighthouse (mobile, slow 4G, accessibility)
