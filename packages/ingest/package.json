@@ -15,8 +15,9 @@
     "@was/db": "workspace:*",
     "@was/shared": "workspace:*",
     "drizzle-orm": "0.45.4",
-    "zod": "4.6.7",
-    "i18n-iso-countries": "7.14.0"
+    "i18n-iso-countries": "7.14.0",
+    "read-excel-file": "9.3.14",
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

@@ -1,0 +1,19 @@
+{
+  "threshold": 1,
+  "minTokens": 40,
+  "reporters": ["console"],
+  "absolute": false,
+  "gitignore": true,
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/migrations/**",
+    "**/fixtures/**",
+    "**/*.json",
+    "**/*.css",
+    "data/**",
+    "plan/**"
+  ]
+}

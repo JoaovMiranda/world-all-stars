@@ -1,0 +1,69 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": [
+        "scripts/**/*.{mjs,js}",
+        "!scripts/crawler/**",
+        "!scripts/load/**"
+      ],
+      "project": [
+        "scripts/**/*.{mjs,js}",
+        "!scripts/crawler/**",
+        "!scripts/load/**"
+      ]
+    },
+    "apps/server": {
+      "entry": [
+        "src/observability/instrumentation.ts",
+        "src/cli/*.cli.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "scripts/*.mjs",
+        "e2e/**/*.spec.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}",
+        "e2e/**/*.ts"
+      ]
+    },
+    "packages/db": {
+      "entry": [
+        "src/cli/*.cli.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
+    "packages/ingest": {
+      "entry": [
+        "src/cli/*.cli.ts"
+      ],
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
+    "packages/ranking": {
+      "project": [
+        "src/**/*.ts"
+      ]
+    },
+    "packages/shared": {
+      "project": [
+        "src/**/*.ts"
+      ]
+    }
+  },
+  "ignoreBinaries": [
+    "k6",
+    "dev"
+  ],
+  "ignoreDependencies": [
+    "k6"
+  ]
+}

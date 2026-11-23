@@ -27,7 +27,8 @@ const ALLOWLIST = [
 ];
 
 const ACCENTS = /[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]/;
-const WORDS = /\b(nao|sim|rodar|agora|atleta|esporte|conquista|fonte|sugestao|mensagem|lidas|filtro|tipo|visao|carreira|organizador|informado|campeao|titulo|pais|comentarios|analise)s?\b/i;
+const WORDS =
+  /\b(nao|sim|rodar|agora|atleta|esporte|conquista|fonte|sugestao|mensagem|lidas|filtro|tipo|visao|carreira|organizador|informado|campeao|titulo|pais|comentarios|analise)s?\b/i;
 
 const args = new Set(process.argv.slice(2));
 
