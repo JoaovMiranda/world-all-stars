@@ -1,16 +1,14 @@
 import { active, athleteSuggestions } from '@was/db';
 import {
   BJJ_PROVIDER,
-  type createContext,
   FOOTBALL_PROVIDER,
   firstCollect,
+  type IngestContext,
   OllamaProvider,
+  PROVIDERS,
   parseAthleteList,
-  runBjjChampions,
-  runFootballChampions,
-  runWikidata,
-  runWikidataProfile,
   updateCollect,
+  WIKIDATA_PROFILE_PROVIDER,
   WIKIDATA_PROVIDER,
 } from '@was/ingest';
 import { eq } from 'drizzle-orm';
@@ -29,11 +27,12 @@ export const PROVIDER_OF_JOB: Record<string, string> = {
 };
 export const COLLECT = new Set(['collect.list', 'collect.update', 'collect.discovery']);
 
-export const DISCOVERY: Record<string, (ctx: ReturnType<typeof createContext>, params: Record<string, unknown>) => Promise<unknown>> = {
-  [FOOTBALL_PROVIDER]: (ctx) => runFootballChampions(ctx),
-  [BJJ_PROVIDER]: (ctx) => runBjjChampions(ctx),
+/** Discovery step of each admin job: providers run from the shared registry (`PROVIDERS`), with their defaults. */
+export const DISCOVERY: Record<string, (ctx: IngestContext, params: Record<string, unknown>) => Promise<unknown>> = {
+  [FOOTBALL_PROVIDER]: (ctx) => PROVIDERS.run(FOOTBALL_PROVIDER, ctx),
+  [BJJ_PROVIDER]: (ctx) => PROVIDERS.run(BJJ_PROVIDER, ctx),
   // Identity (QID) first, then the profile (bio, photo, birthplace, clubs…).
-  [WIKIDATA_PROVIDER]: async (ctx) => [...(await runWikidata(ctx)), ...(await runWikidataProfile(ctx))],
+  [WIKIDATA_PROVIDER]: async (ctx) => [...(await PROVIDERS.run(WIKIDATA_PROVIDER, ctx)), ...(await PROVIDERS.run(WIKIDATA_PROFILE_PROVIDER, ctx))],
   // Without OLLAMA_URL the profiles are still collected and reported as needs_enrichment.
   'collect.list': (ctx, p) => firstCollect(ctx, OllamaProvider.fromEnv(), parseAthleteList(String(p.names ?? ''))),
   'collect.update': (ctx) => updateCollect(ctx, OllamaProvider.fromEnv()),

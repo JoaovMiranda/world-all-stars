@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { active, type Database, findRepoRoot, sources } from '@was/db';
+import { wikipediaApiUrl, wikipediaPageUrl } from '@was/shared';
 import { eq } from 'drizzle-orm';
 
 import { recordObservation, storeDocument } from '../documents/document-store';
@@ -64,14 +65,23 @@ export const createContext = (
     },
     async wiki(title, lang = 'en') {
       const sourceSlug = `wikipedia-${lang}`;
-      const pageUrl = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(title.replaceAll(' ', '_'))}`;
+      const pageUrl = wikipediaPageUrl(lang, title);
       const local = path.join(crawlerCache, 'wiki', crawlerCacheName(title));
       let text: string | null = null;
       let revisionId: string | null = null;
       let resolved = title;
       if (lang === 'en' && fs.existsSync(local)) text = fs.readFileSync(local, 'utf8');
       else if (!ctx.offline) {
-        const api = `https://${lang}.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', prop: 'revisions', rvprop: 'ids|content', rvslots: 'main', titles: title, redirects: '1', format: 'json', formatversion: '2' })}`;
+        const api = wikipediaApiUrl(lang, {
+          action: 'query',
+          prop: 'revisions',
+          rvprop: 'ids|content',
+          rvslots: 'main',
+          titles: title,
+          redirects: '1',
+          format: 'json',
+          formatversion: '2',
+        });
         const res = await fetcher.get(api, await policy(sourceSlug));
         const json = JSON.parse(res.bytes.toString('utf8')) as {
           query?: { pages?: { title: string; missing?: boolean; revisions?: { revid: number; slots: { main: { content: string } } }[] }[] };

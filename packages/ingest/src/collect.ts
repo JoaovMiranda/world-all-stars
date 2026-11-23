@@ -4,12 +4,14 @@
 //                 → Wikipedia en text + revid → biography (Ollama) → auto-validation → profile.
 //   update:       compares the Wikipedia revid with the last biography input; unchanged pages never reach Ollama.
 import type { Database } from '@was/db';
+import { wikipediaApiUrl, wikipediaPageUrl } from '@was/shared';
 import { sql } from 'drizzle-orm';
 
 import { CanonicalWriter } from './canonical/canonical-writer';
 import type { AiProvider } from './enrich/ai-provider.interface';
 import type { EnrichItem } from './enrich/enrich-item.interface';
 import { runBiography } from './enrich/run-biography.service';
+import type { ArticlePerson } from './interfaces/article-person.interface';
 import type { CollectReport } from './interfaces/collect-report.interface';
 import { ATHLETE_LIST_PROVIDER } from './providers/athlete-list.const';
 import { runAthleteList } from './providers/athlete-list.provider';
@@ -20,9 +22,8 @@ import { runWikidata } from './providers/wikidata.provider';
 import { WIKIDATA_PROFILE_PROVIDER } from './providers/wikidata-profile.const';
 import { runWikidataProfile } from './providers/wikidata-profile.provider';
 
-type Person = { id: string; name: string; full_name: string | null; birth_date: string | null; height_cm: number | null; title: string };
-
-const peopleWithArticle = async (db: Database, ids: string[] | null) =>
+/** Athletes with an English Wikipedia article; optionally only `ids`, one `slug`, at most `limit`. */
+export const peopleWithArticle = async (db: Database, ids: string[] | null, opts: { slug?: string | undefined; limit?: number | undefined } = {}) =>
   (
     (await db.execute(sql`
     select a.id, a.known_as name, a.full_name, a.birth_date, a.height_cm, x.external_id title
@@ -34,11 +35,13 @@ const peopleWithArticle = async (db: Database, ids: string[] | null) =>
             sql`, `,
           )})`
         : sql``
-    }`)) as unknown as { rows: Person[] }
+    }${opts.slug ? sql` and a.slug = ${opts.slug}` : sql``}${opts.limit !== undefined ? sql` limit ${opts.limit}` : sql``}`)) as unknown as {
+      rows: ArticlePerson[];
+    }
   ).rows;
 
 /** Facts from the database given to the biography prompt (titles, clubs, birth, height). */
-const factsOf = async (db: Database, p: Person) => {
+export const factsOf = async (db: Database, p: ArticlePerson) => {
   const titles = (await db.execute(sql`
     select coalesce(t.name, d.slug) name, g.year from recognition_grants g join recognition_definitions d on d.id = g.definition_id
     left join recognition_definition_translations t on t.definition_id = d.id and t.locale = 'en' where g.competitor_id = ${p.id} and g.deleted_at is null order by g.year`)) as unknown as {
@@ -62,7 +65,14 @@ const factsOf = async (db: Database, p: Person) => {
 const currentRevisions = async (ctx: IngestContext, titles: string[]) => {
   const out = new Map<string, string>();
   for (let i = 0; i < titles.length; i += 50) {
-    const url = `https://en.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', prop: 'revisions', rvprop: 'ids', titles: titles.slice(i, i + 50).join('|'), format: 'json', formatversion: '2' })}`;
+    const url = wikipediaApiUrl('en', {
+      action: 'query',
+      prop: 'revisions',
+      rvprop: 'ids',
+      titles: titles.slice(i, i + 50).join('|'),
+      format: 'json',
+      formatversion: '2',
+    });
     const doc = await ctx.document('wikipedia-en', url);
     if (!doc) continue;
     for (const pg of (JSON.parse(doc.text) as { query?: { pages?: { title: string; revisions?: { revid: number }[] }[] } }).query?.pages ?? [])
@@ -82,22 +92,40 @@ const lastBiographyRevisions = async (db: Database) =>
     ).rows.map((r) => [r.id, r.rev]),
   );
 
-const biographies = async (ctx: IngestContext, provider: AiProvider | null, people: Person[]) => {
+/**
+ * AI input of one athlete: the article's plain text (Wikipedia en), its URL and the database facts; `null` without an
+ * extract. `sectionKey` defaults to `rev:<revid>` (what the update mode compares); `pnpm ingest enrich` passes `article`.
+ */
+export const enrichItemOf = async (ctx: IngestContext, p: ArticlePerson, sectionKey?: string): Promise<EnrichItem | null> => {
+  const url = wikipediaApiUrl('en', {
+    action: 'query',
+    prop: 'extracts|revisions',
+    rvprop: 'ids',
+    explaintext: '1',
+    redirects: '1',
+    titles: p.title,
+    format: 'json',
+    formatversion: '2',
+  });
+  const doc = await ctx.document('wikipedia-en', url);
+  const page = doc && (JSON.parse(doc.text) as { query?: { pages?: { extract?: string; revisions?: { revid: number }[] }[] } }).query?.pages?.[0];
+  if (!page?.extract) return null;
+  return {
+    entityId: p.id,
+    name: p.name,
+    sourceText: page.extract,
+    sourceUrl: wikipediaPageUrl('en', p.title),
+    sectionKey: sectionKey ?? `rev:${page.revisions?.[0]?.revid ?? ''}`,
+    facts: await factsOf(ctx.db, p),
+  };
+};
+
+const biographies = async (ctx: IngestContext, provider: AiProvider | null, people: ArticlePerson[]) => {
   const items: EnrichItem[] = [];
   for (const p of provider ? people : []) {
     if (ctx.cancelled?.()) break; // cooperative cancel of the job
-    const url = `https://en.wikipedia.org/w/api.php?${new URLSearchParams({ action: 'query', prop: 'extracts|revisions', rvprop: 'ids', explaintext: '1', redirects: '1', titles: p.title, format: 'json', formatversion: '2' })}`;
-    const doc = await ctx.document('wikipedia-en', url);
-    const page = doc && (JSON.parse(doc.text) as { query?: { pages?: { extract?: string; revisions?: { revid: number }[] }[] } }).query?.pages?.[0];
-    if (!page?.extract) continue;
-    items.push({
-      entityId: p.id,
-      name: p.name,
-      sourceText: page.extract,
-      sourceUrl: `https://en.wikipedia.org/wiki/${encodeURIComponent(p.title.replaceAll(' ', '_'))}`,
-      sectionKey: `rev:${page.revisions?.[0]?.revid ?? ''}`,
-      facts: await factsOf(ctx.db, p),
-    });
+    const item = await enrichItemOf(ctx, p);
+    if (item) items.push(item);
   }
   // OLLAMA_CONCURRENCY=1: items run one after the other (the local model is the bottleneck).
   return provider ? runBiography(ctx.db, provider, items) : null;

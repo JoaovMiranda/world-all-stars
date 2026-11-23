@@ -1,9 +1,8 @@
 // Real ingestion from the admin (A2 "run now", handoff v3 §6.3): the job is queued in Postgres and an in-process
 // worker drains it in the background (the request never waits for the crawl). Job keys of the prototype map to the
 // provider that replaces them; a key without a provider keeps the simulated run (said explicitly in its log).
-import { active, type BaseRepository, type Database, ingestionRuns } from '@was/db';
+import type { BaseRepository, Database } from '@was/db';
 import { CanonicalWriter, createContext, enqueueJob, runWorker, WIKIDATA_PROFILE_PROVIDER, WIKIDATA_PROVIDER } from '@was/ingest';
-import { and, desc, eq, inArray } from 'drizzle-orm';
 
 import { COLLECT, DISCOVERY, PROVIDER_OF_JOB } from './ingestion-runner.const';
 
@@ -48,40 +47,4 @@ export const startIngestion = async (
       draining = null;
     });
   return { runId: run.id, created };
-};
-
-/**
- * Fase 13 §1.3: every INGEST_SCHEDULE_MONTHS (default 6; 0 = off) runs `collect.update` then `collect.discovery`.
- * The next run is derived from the last scheduled run stored in ingestion_runs, so it survives a restart. Checked
- * hourly; the timer is unref'd. Returns a stop function.
- */
-export const nextScheduledCollect = async (db: Database, months: number) => {
-  const [last] = await db
-    .select({ at: ingestionRuns.startedAt })
-    .from(ingestionRuns)
-    .where(active(ingestionRuns, and(inArray(ingestionRuns.jobKey, ['collect.update']), eq(ingestionRuns.mode, 'scheduled'))))
-    .orderBy(desc(ingestionRuns.startedAt))
-    .limit(1);
-  if (!last) return new Date(0);
-  const next = new Date(last.at);
-  next.setMonth(next.getMonth() + months);
-  return next;
-};
-
-export const startCollectScheduler = (db: Database, repo: BaseRepository, months: number, log: (m: string) => void = console.log): (() => void) => {
-  if (months <= 0) return () => {};
-  const tick = async () => {
-    try {
-      if ((await nextScheduledCollect(db, months)) > new Date()) return;
-      log('[collect] scheduled update + discovery');
-      await startIngestion(db, repo, 'collect.update', null, {}, 'scheduled');
-      await startIngestion(db, repo, 'collect.discovery', null, {}, 'scheduled');
-    } catch (error) {
-      console.error('[collect] scheduler failed', error);
-    }
-  };
-  const timer = setInterval(() => void tick(), 3_600_000);
-  timer.unref();
-  setTimeout(() => void tick(), 60_000).unref();
-  return () => clearInterval(timer);
 };

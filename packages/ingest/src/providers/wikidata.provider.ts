@@ -2,18 +2,18 @@
 // enwiki SITELINK (never built from the name), birth date (P569), gender (P21). CC0, batches of 50, polite.
 // Writes `evidence` observations; the canonical writer applies them under the SoT rules (Wikidata = birth, ids).
 import { active, athletes, type Database, entityExternalIds } from '@was/db';
-import { InformationKind } from '@was/shared';
+import { InformationKind, type WikidataEntity, wikidataApiUrl } from '@was/shared';
 import { and, eq } from 'drizzle-orm';
 
+import { BaseProvider } from './base.provider';
 import type { IngestContext } from './ingest-context.interface';
 import { WIKIDATA_PROVIDER } from './wikidata.const';
-import type { WdEntity } from './wikidata-entity.interface';
+import type { WikidataOptions } from './wikidata-options.interface';
 
-const PARSER = { key: 'wikidata-entity', version: '1' };
 const GENDER: Record<string, 'male' | 'female'> = { Q6581097: 'male', Q6581072: 'female', Q1052281: 'female', Q2449503: 'male' };
 
 /** Facts of one entity (pure: exported for tests with a fixture). */
-export const wikidataFacts = (e: WdEntity) => {
+export const wikidataFacts = (e: WikidataEntity) => {
   const time = (e.claims?.P569?.[0]?.mainsnak.datavalue?.value as { time?: string; precision?: number } | undefined) ?? undefined;
   const birth = time?.time && (time.precision ?? 0) >= 11 ? time.time.replace(/^\+/, '').slice(0, 10) : null;
   const birthYear = time?.time ? Number(time.time.replace(/^\+/, '').slice(0, 4)) : null;
@@ -46,53 +46,61 @@ export const peopleToEnrich = async (db: Database, limit = 500) => {
   return titles.filter((t) => people.has(t.entityId) && !qids.has(t.entityId)).slice(0, limit);
 };
 
-export const runWikidata = async (ctx: IngestContext, opts: { limit?: number | undefined } = {}) => {
-  const todo = await peopleToEnrich(ctx.db, opts.limit ?? 500);
-  let found = 0;
-  for (let i = 0; i < todo.length; i += 50) {
-    const batch = todo.slice(i, i + 50);
-    const url = `https://www.wikidata.org/w/api.php?${new URLSearchParams({ action: 'wbgetentities', sites: 'enwiki', titles: batch.map((b) => b.title).join('|'), props: 'sitelinks|claims', sitefilter: 'enwiki', redirects: 'yes', format: 'json' })}`;
-    let doc: Awaited<ReturnType<IngestContext['document']>> = null;
-    for (let attempt = 0; attempt < 4 && !doc; attempt++) {
-      try {
-        doc = await ctx.document('wikidata', url);
-      } catch (error) {
-        const wait = (error as { retryAfterMs?: number }).retryAfterMs;
-        if (!wait || attempt === 3) throw error;
-        ctx.log(`wikidata: rate limited, waiting ${Math.round(wait / 1000)} s (Retry-After)`);
-        await new Promise((r) => setTimeout(r, wait));
+export class WikidataProvider extends BaseProvider<WikidataOptions> {
+  readonly key = WIKIDATA_PROVIDER;
+  readonly parser = { key: 'wikidata-entity', version: '1' };
+
+  protected parseOptions(params: Record<string, unknown>): WikidataOptions {
+    return { limit: params.limit ? Number(params.limit) : undefined };
+  }
+
+  async run(ctx: IngestContext, opts: WikidataOptions = {}): Promise<string[]> {
+    const todo = await peopleToEnrich(ctx.db, opts.limit ?? 500);
+    let found = 0;
+    for (const batch of this.batch(todo)) {
+      const url = wikidataApiUrl({
+        action: 'wbgetentities',
+        sites: 'enwiki',
+        titles: batch.map((b) => b.title).join('|'),
+        props: 'sitelinks|claims',
+        sitefilter: 'enwiki',
+        redirects: 'yes',
+        format: 'json',
+      });
+      const doc = await this.fetchJson<{ entities?: Record<string, WikidataEntity> }>(ctx, 'wikidata', url);
+      if (!doc) continue;
+      const entities = Object.values(doc.data.entities ?? {}).filter((e) => e.id?.startsWith('Q'));
+      for (const e of entities) {
+        const f = wikidataFacts(e);
+        const person = batch.find((b) => b.title === f.title);
+        if (!person) continue;
+        found++;
+        const evidence = (field: string, value: string | number | null) =>
+          value !== null &&
+          this.observe(
+            ctx,
+            doc.documentId,
+            `${f.qid}:${field}`,
+            field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth,
+            {
+              contract: 'evidence',
+              record: {
+                informationKind: field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth,
+                field: `${person.entityId}:${field}`,
+                value: { original: String(value), value, unit: null },
+                evidence: { quote: null, section: f.qid },
+              },
+            },
+          );
+        await evidence('wikidata', f.qid);
+        await evidence('birth_date', f.birthDate);
+        await evidence('birth_year', f.birthYear);
+        await evidence('gender', f.gender);
       }
     }
-    if (!doc) continue;
-    const entities = Object.values((JSON.parse(doc.text) as { entities?: Record<string, WdEntity> }).entities ?? {}).filter((e) => e.id?.startsWith('Q'));
-    for (const e of entities) {
-      const f = wikidataFacts(e);
-      const person = batch.find((b) => b.title === f.title);
-      if (!person) continue;
-      found++;
-      const evidence = (field: string, value: string | number | null) =>
-        value !== null &&
-        ctx.observe(
-          doc.documentId,
-          WIKIDATA_PROVIDER,
-          PARSER,
-          `${f.qid}:${field}`,
-          field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth,
-          {
-            contract: 'evidence',
-            record: {
-              informationKind: field === 'wikidata' ? InformationKind.ExternalId : field === 'gender' ? InformationKind.Identity : InformationKind.Birth,
-              field: `${person.entityId}:${field}`,
-              value: { original: String(value), value, unit: null },
-              evidence: { quote: null, section: f.qid },
-            },
-          },
-        );
-      await evidence('wikidata', f.qid);
-      await evidence('birth_date', f.birthDate);
-      await evidence('birth_year', f.birthYear);
-      await evidence('gender', f.gender);
-    }
+    return [`wikidata: ${todo.length} people looked up, ${found} resolved through enwiki sitelinks`];
   }
-  return [`wikidata: ${todo.length} people looked up, ${found} resolved through enwiki sitelinks`];
-};
+}
+
+/** Runs the provider (kept for callers and tests that predate the registry). */
+export const runWikidata = (ctx: IngestContext, opts: WikidataOptions = {}): Promise<string[]> => new WikidataProvider().run(ctx, opts);
