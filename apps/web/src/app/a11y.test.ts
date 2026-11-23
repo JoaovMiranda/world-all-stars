@@ -61,7 +61,8 @@ const PUBLIC_PAGES = [
   '/this-page-does-not-exist',
 ];
 
-describe('accessibility of the server-rendered pages (axe, WCAG 2.2 AA)', () => {
+// The first SSR render warms the module graph and can exceed the 5 s default when every package's suite runs in parallel.
+describe('accessibility of the server-rendered pages (axe, WCAG 2.2 AA)', { timeout: 20_000 }, () => {
   it.each(PUBLIC_PAGES)('%s has no axe violations', async (path) => {
     const { html } = await ssrHtml(path);
     expect(await audit(html)).toEqual([]);
