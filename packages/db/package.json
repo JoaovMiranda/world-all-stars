@@ -16,7 +16,7 @@
     "cleanup": "tsx src/cli/cleanup.cli.ts"
   },
   "dependencies": {
-    "@electric-sql/pglite": "0.5.15",
+    "@electric-sql/pglite": "0.5.17",
     "@was/shared": "workspace:*",
     "drizzle-orm": "0.45.4",
     "i18n-iso-countries": "7.14.0",
