@@ -51,10 +51,10 @@
     "collect:bg": "caffeinate -i nohup pnpm ingest collect --update --priority > data/review/collect.log 2>&1 &"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.6",
+    "@biomejs/biome": "2.6.8",
     "jscpd": "5.4.3",
-    "knip": "6.44.2",
-    "turbo": "2.11.10",
+    "knip": "6.47.0",
+    "turbo": "2.11.13",
     "typescript": "7.0.2"
   }
 }
