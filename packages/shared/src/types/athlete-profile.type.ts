@@ -4,6 +4,7 @@ import type {
   AchievementSchema,
   AthleteProfileSchema,
   AthleteSlugParamsSchema,
+  DivisionClassSchema,
   DossierSchema,
   FieldConflictSchema,
   FieldProvenanceSchema,
@@ -13,6 +14,7 @@ import type {
   TitleReignSchema,
 } from '../schemas/athlete-profile.schema';
 
+export type DivisionClass = z.infer<typeof DivisionClassSchema>;
 export type Achievement = z.infer<typeof AchievementSchema>;
 export type TeamStint = z.infer<typeof TeamStintSchema>;
 export type TitleReign = z.infer<typeof TitleReignSchema>;

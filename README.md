@@ -58,6 +58,42 @@ pnpm build && pnpm start   # apps/web/dist (client + server/entry-server.js) + a
 - **Ingestion**: `pnpm ingest <command>` (commands listed at the top of `packages/ingest/src/cli/ingest.cli.ts`),
   `pnpm ingest:report`, `pnpm ingest:worker`. Rankings: `pnpm rankings:calculate`.
 
+## Run with Docker (local)
+
+`docker-compose.yml` runs the whole app (SSR pages, API and Vite HMR) in one container on http://localhost:8787, with
+its own database (`.data/pglite-docker`), the seed and published rankings. Edits on the host reload the page.
+
+| Command | What it does |
+|---|---|
+| `pnpm docker:up` | Start the app in the background (first run installs, seeds and publishes rankings) |
+| `pnpm docker:logs` | Follow the logs (wait for the seed on the first run) |
+| `pnpm docker:down` | Stop and remove the containers (named volumes stay) |
+| `pnpm docker:reset` | Recreate `.data/pglite-docker` from scratch — use it after a new migration |
+| `pnpm docker:pg` | Start the optional Postgres 17 on port 5433 for the concurrency tests: `DATABASE_URL=postgres://postgres:pw@localhost:5433/postgres pnpm --filter @was/db test` |
+
+### Bulk biography collection (worker)
+
+The `ingest-worker` service (profile `worker`) runs `pnpm ingest collect` in the background against the compose Postgres
+(port 5433), never against the app's PGlite. Ollama stays native on the Mac (Docker on macOS has no GPU/Metal); the worker
+calls it at `host.docker.internal:11434`.
+
+| Command | What it does |
+|---|---|
+| `pnpm docker:worker` | Start Postgres + the worker with the default job `--update --priority` (public, top-tier athletes first) |
+| `COLLECT_ARGS="--list data/review/sample-200.csv" pnpm docker:worker` | Run another job, e.g. a list made by `pnpm collect:sample --n 200 --seed 42` |
+| `pnpm docker:worker:logs` | Follow `data/review/collect.log` (one line per athlete: accepted / queued / rejected) |
+| `DATABASE_URL=postgres://postgres:pw@localhost:5433/postgres pnpm ingest ai-report` | Calls, tokens, acceptance per model |
+
+The job is resumable: after a reboot or restart it skips athletes that already have a biography of the current article
+revision, and a finished job stays idle until `COLLECT_ARGS` changes. Without Docker: `pnpm collect:bg` (keeps the Mac
+awake with `caffeinate`, logs to `data/review/collect.log`).
+
+To have the app back by itself after a reboot, enable Docker Desktop → Settings → General → "Start Docker Desktop
+when you sign in" (the container uses `restart: unless-stopped`).
+
+Do not run `pnpm ingest …` or `pnpm db:*` on the host against `.data/pglite-docker` while the container is running:
+PGlite accepts a single process. Stop the container first, or keep using your own `.data/pglite` on the host.
+
 ## Quality checks
 
 | Check | Command |

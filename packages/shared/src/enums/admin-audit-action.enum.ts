@@ -26,6 +26,7 @@ export const AdminAuditAction = {
   RankingAutoPublishSkipped: 'ranking_auto_publish_skipped',
   EntityMerged: 'entity_merged',
   EntityUnmerged: 'entity_unmerged',
+  TierVoteFlagReviewed: 'tier_vote_flag_reviewed',
 } as const;
 export type AdminAuditAction = (typeof AdminAuditAction)[keyof typeof AdminAuditAction];
 export const ADMIN_AUDIT_ACTION_VALUES = Object.values(AdminAuditAction) as [AdminAuditAction, ...AdminAuditAction[]];

@@ -31,4 +31,8 @@ export const SITEMAP_PATHS = {
   static: '/sitemaps/static.xml',
   athletes: '/sitemaps/athletes.xml',
   sports: '/sitemaps/sports.xml',
+  rankings: '/sitemaps/rankings.xml',
+  competitions: '/sitemaps/competitions.xml',
+  images: '/sitemaps/images.xml',
+  today: '/sitemaps/today.xml',
 } as const;

@@ -30,3 +30,11 @@ export const calculateRanking = defineMutation(RankingsApi.calculate, () => ({ o
 export const approveRanking = defineMutation(RankingsApi.approve, () => ({ ok: true as const }), { invalidates: [adminRankingsQuery, rankingsQuery] });
 /** Admin: revert a publication (archive it and republish the previous snapshot), with a required reason (D12). */
 export const revertRanking = defineMutation(RankingsApi.revert, () => ({ ok: true as const }), { invalidates: [adminRankingsQuery, rankingsQuery] });
+
+/** GET /api/rankings/:id/filters: URL filters of the snapshot's methodology with the values present (T2.5). */
+export const rankingFilterOptionsQuery = defineQuery(RankingsApi.filterOptions, {
+  sample: () => {
+    throw new ApiError(404, { error: 'not_found' });
+  },
+  empty: 'not-found',
+});

@@ -3,6 +3,9 @@ import { z } from 'zod';
 
 import { RANKING_OUTPUT_KIND_VALUES } from '../enums/ranking-output-kind.enum';
 import { RANKING_SNAPSHOT_STATUS_VALUES } from '../enums/ranking-snapshot-status.enum';
+import { RANKING_SORT_VALUES } from '../enums/ranking-sort.enum';
+import { RankingFilterFieldsSchema } from './ranking-search.schema';
+import { optionalEnum } from './url-filter.schema';
 
 export const RankingSnapshotSummarySchema = z.object({
   id: z.string().min(1),
@@ -40,10 +43,14 @@ export const RankingDetailResponseSchema = z.object({
   page: z.number().int().positive(),
   pageSize: z.number().int().positive(),
 });
-export const RankingDetailQuerySchema = z.object({
-  page: z.coerce.number().int().positive().default(1),
-  pageSize: z.coerce.number().int().positive().max(200).default(50),
-});
+/** Query of GET /api/rankings/:id: page + the URL filters (T2.5, all optional; none = the whole snapshot) + sort. */
+export const RankingDetailQuerySchema = z
+  .object({
+    page: z.coerce.number().int().positive().default(1),
+    pageSize: z.coerce.number().int().positive().max(200).default(50),
+  })
+  .extend(RankingFilterFieldsSchema.shape)
+  .extend({ sort: optionalEnum(RANKING_SORT_VALUES) });
 
 export const RankingMethodologySchema = z.object({
   key: z.string().min(1),
@@ -62,6 +69,10 @@ export const AthleteRankingsResponseSchema = z.object({
       rank: z.number().int().positive().nullable(),
       rankTied: z.boolean(),
       score: z.number().nullable(),
+      /** Ranking key of the snapshot (methodology scope, e.g. world-cup-men). */
+      rankingKey: z.string().min(1).optional(),
+      /** Designation/band of the entry when the methodology outputs one (boxing: legendary…). */
+      band: z.string().nullable().optional(),
     }),
   ),
 });

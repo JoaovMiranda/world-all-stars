@@ -1,0 +1,71 @@
+# Local development environment (not production: the production image is ./Dockerfile).
+# One container runs the whole app: `pnpm dev:api` serves SSR pages, the API and Vite HMR on port 8787.
+# `restart: unless-stopped` brings it back after a reboot once Docker Desktop starts at sign-in.
+services:
+  app:
+    image: node:26-slim
+    working_dir: /repo
+    command: sh scripts/docker/dev-entrypoint.sh
+    ports:
+      - '8787:8787'
+    environment:
+      HOST: 0.0.0.0
+      # Own database: never the owner's .data/pglite (PGlite accepts a single process).
+      # Override to show another database, e.g. APP_PGLITE_DATA_DIR=.data/pglite-pilot pnpm docker:up (copy of a pilot run).
+      PGLITE_DATA_DIR: ${APP_PGLITE_DATA_DIR:-.data/pglite-docker}
+      RANKING_AUTO_PUBLISH: 'true'
+    volumes:
+      - .:/repo
+      # Linux node_modules (native binaries such as esbuild), kept apart from the macOS ones.
+      - node_modules:/repo/node_modules
+      - pnpm_store:/pnpm/store
+    restart: unless-stopped
+
+  # Optional Postgres for the T1.9 concurrency tests:
+  #   DATABASE_URL=postgres://postgres:pw@localhost:5433/postgres pnpm --filter @was/db test
+  postgres:
+    image: postgres:17
+    profiles: [postgres, worker]
+    environment:
+      POSTGRES_PASSWORD: pw
+    ports:
+      - '5433:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  # Bulk biography collection (T1.8) in the background: `pnpm docker:worker` (see README "Run with Docker").
+  # Ollama stays native on the Mac (Docker on macOS has no GPU/Metal); the worker reaches it via host.docker.internal.
+  # COLLECT_ARGS picks the job, e.g. COLLECT_ARGS="--list data/review/sample-200.csv" pnpm docker:worker.
+  ingest-worker:
+    image: node:26-slim
+    profiles: [worker]
+    working_dir: /repo
+    command: bash scripts/docker/ingest-worker.sh
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://postgres:pw@postgres:5432/postgres
+      OLLAMA_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:14b}
+      COLLECT_ARGS: ${COLLECT_ARGS:---update --priority}
+    volumes:
+      - .:/repo
+      # Own Linux node_modules (installing into the app's volume at the same time would race).
+      - worker_node_modules:/repo/node_modules
+      - pnpm_store:/pnpm/store
+      - worker_state:/state
+    restart: unless-stopped
+
+volumes:
+  node_modules:
+  pnpm_store:
+  pg_data:
+  worker_node_modules:
+  worker_state:

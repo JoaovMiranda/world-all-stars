@@ -1,0 +1,66 @@
+/* Cross-sport bands and legacy levels: the letter is always visible text, colour only reinforces it. */
+@layer components {
+  .band-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.4rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    background: var(--surface);
+    color: var(--text);
+  }
+  .band-badge[data-band="S"] {
+    border-color: var(--accent-text);
+    color: var(--accent-text);
+  }
+  .band-badge[data-band="A"] {
+    border-color: var(--tier-legendary);
+    color: var(--tier-legendary);
+  }
+  .band-badge[data-band="B"] {
+    border-color: var(--info-text);
+    color: var(--info-text);
+  }
+  .band-badge-sm {
+    min-width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.8rem;
+  }
+  .band-entry {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.25rem 0.75rem;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .band-entry:last-child {
+    border-bottom: 0;
+  }
+  .band-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    grid-column: 2 / -1;
+    font-size: 0.875rem;
+  }
+  .band-readout-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .cross-sport-hash {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+  }
+  .legacy-level {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+}

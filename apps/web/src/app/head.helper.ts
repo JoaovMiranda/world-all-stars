@@ -8,6 +8,7 @@ import { currentText } from '@/i18n/text-for.helper';
 import { ERRORS_MESSAGES } from '@/modules/errors/errors.const';
 import { LAYOUT_MESSAGES } from '@/shared-ui/layout.const';
 import type { HeadMatch } from './head-match.interface';
+import { ogImageUrl } from './og-image.helper';
 import type { PageMeta } from './page-meta.interface';
 import { getBoot } from './request-scope';
 
@@ -53,12 +54,12 @@ const baseLinks = [
   ...(DATA_SOURCE === 'http' ? [] : [{ rel: 'preconnect', href: 'https://upload.wikimedia.org', crossOrigin: 'anonymous' as const }]),
 ];
 
-/** Title, description, canonical and Open Graph of one page (canonical = PUBLIC_URL + path, without the search). */
+/** Title, description, canonical and Open Graph of one page (canonical = PUBLIC_URL + path + `meta.canonicalSearch`). */
 export const buildHead = (meta: PageMeta | undefined, pathname: string) => {
   const layout = currentText(LAYOUT_MESSAGES);
   if (!meta) return {};
   const title = meta.fullTitle ? meta.title : `${meta.title} · ${layout.brand}`;
-  const url = `${getBoot().publicUrl}${pathname === '/' ? '/' : pathname.replace(/\/+$/, '')}`;
+  const url = `${getBoot().publicUrl}${pathname === '/' ? '/' : pathname.replace(/\/+$/, '')}${meta.canonicalSearch ?? ''}`;
   const description = meta.description ?? layout.description;
   return {
     meta: [
@@ -67,8 +68,9 @@ export const buildHead = (meta: PageMeta | undefined, pathname: string) => {
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:url', content: url },
-      { name: 'twitter:card', content: meta.image ? 'summary_large_image' : 'summary' },
-      ...(meta.image ? [{ property: 'og:image', content: meta.image }] : []),
+      // Every page has a large card: its licensed Commons image via the proxy, else the default 1200×630 (T4.5).
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { property: 'og:image', content: ogImageUrl(getBoot().publicUrl, meta.image, meta.imageLicense) },
       ...(meta.noindex ? [{ name: 'robots', content: 'noindex' }] : []),
     ],
     links: meta.noindex ? [] : [{ rel: 'canonical', href: url }],

@@ -14,3 +14,16 @@ export const LEGACY_HONOR_POINTS: Readonly<Record<string, number>> = {
   record: 5,
   hall_of_fame: 8,
 };
+
+/** Legacy honor of a title by the level of its competition (world → world_champion…). */
+export const LEGACY_TITLE_BY_LEVEL: Readonly<Record<string, string>> = {
+  world: 'world_champion',
+  continental: 'continental_champion',
+  national: 'national_champion',
+};
+
+/** Recognition kinds read as awards by the legacy ruleset. */
+export const LEGACY_AWARD_KINDS: readonly string[] = ['award', 'ranking_honor', 'traditional_honor'];
+
+/** Recognition kinds that are titles (and gold/winner medals) for the legacy ruleset. */
+export const LEGACY_TITLE_KINDS: readonly string[] = ['championship_title', 'belt_title', 'medal'];

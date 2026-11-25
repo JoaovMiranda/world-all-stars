@@ -10,16 +10,10 @@ import type { MergeRepointTable } from './merge-repoint-table.interface';
  */
 export const MERGE_REPOINT_TABLES: readonly MergeRepointTable[] = [
   // Legacy athlete tables (until T1.2 drops them).
-  { table: 'athlete_nationalities', column: 'athlete_id' },
   { table: 'athlete_sports', column: 'athlete_id' },
-  { table: 'athlete_teams', column: 'athlete_id' },
   { table: 'athlete_translations', column: 'athlete_id' },
   { table: 'athlete_milestones', column: 'athlete_id' },
   { table: 'athlete_tier_history', column: 'athlete_id' },
-  { table: 'athlete_stats', column: 'athlete_id' },
-  { table: 'achievements', column: 'athlete_id' },
-  { table: 'achievements', column: 'team_id' },
-  { table: 'title_reigns', column: 'athlete_id' },
   { table: 'greats_dossiers', column: 'athlete_id' },
   { table: 'athlete_suggestions', column: 'existing_athlete_id' },
   // Participation: votes and comments.

@@ -1,7 +1,8 @@
-import { commentReactions, comments, notifications, users } from '@was/db';
+import { commentReactions, commentReports, comments, notifications, users } from '@was/db';
 import {
   ApiErrorCode,
   buildCommentThreads,
+  COMMENT_EDIT_WINDOW_MS,
   COMMENTS_PAGE_SIZE,
   type Comment,
   type CommentReaction,
@@ -21,6 +22,8 @@ import { CommentsRepository } from './comments.repository';
 
 const NOTIFICATION_EXCERPT = 140;
 const counterOf = (r: CommentReaction) => (r === 'like' ? 'likesCount' : 'dislikesCount');
+/** End of the author's edit window (T3.3), in epoch ms. */
+const editableUntil = (createdAt: Date) => createdAt.getTime() + COMMENT_EDIT_WINDOW_MS;
 
 /** Comments of a profile (doc 20): threads, replies, reactions and the author's own deletion. */
 export class CommentsService extends BaseService {
@@ -61,6 +64,7 @@ export class CommentsService extends BaseService {
           ).map((r) => [r.commentId, r.reaction]),
         )
       : new Map();
+    const now = Date.now();
     const flat: Comment[] = rows.map(({ c, author }) => ({
       id: c.id,
       parentId: c.parentCommentId,
@@ -71,6 +75,8 @@ export class CommentsService extends BaseService {
       likes: c.likesCount,
       dislikes: c.dislikesCount,
       myReaction: mine.get(c.id) ?? null,
+      ...(c.editedAt ? { editedAt: c.editedAt.toISOString() } : {}),
+      ...(me && c.userId === me.id && editableUntil(c.createdAt) > now ? { editableUntil: new Date(editableUntil(c.createdAt)).toISOString() } : {}),
     }));
     const built = buildCommentThreads(flat, sort, { limit: Number.POSITIVE_INFINITY, total });
     return { ...built, nextCursor: page.length > COMMENTS_PAGE_SIZE ? (tops.at(-1)?.c.id ?? null) : null };
@@ -79,6 +85,8 @@ export class CommentsService extends BaseService {
   /** POST comment/reply: shared validateComment (422), reply to a reply goes to the top comment, notifies the parent author. */
   async postComment(user: AuthUser, slug: string, body: string, parentId: string | null | undefined) {
     const read = this.comments;
+    // Daily cap per account on top of the per-minute route limit (RATE_LIMITS.commentDaily, doc 20).
+    await this.ctx.deps.rateLimiter.hit('commentDaily', user.id);
     // Independent reads in one round-trip: the athlete (404 when unknown), the banned words and the parent comment.
     const [athleteId, words, found] = await Promise.all([
       this.athleteIdOf(slug),
@@ -136,6 +144,41 @@ export class CommentsService extends BaseService {
       const after = (await read.findComment(id))!;
       return { reaction, likes: after.likesCount, dislikes: after.dislikesCount };
     });
+  }
+
+  /**
+   * PATCH my comment (T3.3): author only (403), within COMMENT_EDIT_WINDOW_MS of posting (422 edit_window_closed), same
+   * validation as posting (length + banned words of every locale); versioned like any write, `edited_at` shown to readers.
+   */
+  async editComment(user: AuthUser, id: string, body: string) {
+    const [target, words] = await Promise.all([this.comments.findComment(id), new ModerationRepository(this.db).loadBannedWords()]);
+    if (!target || target.status !== CommentStatus.Visible) throw notFound();
+    if (target.userId !== user.id) throw forbidden();
+    if (Date.now() > editableUntil(target.createdAt)) throw unprocessableKey(ApiErrorCode.EditWindowClosed, 'editWindowClosed');
+    const result = validateComment(body, words, this.ctx.locale);
+    if (!result.ok) throw unprocessable(result.error, result.message, { body: result.message });
+    const editedAt = new Date();
+    if (result.text !== target.body) await this.repo.update(comments, id, { body: result.text, editedAt }, this.actor, { summary: 'edited by the author' });
+    return { id, editedAt: (result.text !== target.body ? editedAt : (target.editedAt ?? editedAt)).toISOString() };
+  }
+
+  /**
+   * POST report (T3.3): one report per reader per comment (idempotent: reporting again changes nothing), never your own
+   * comment (403). Any report puts a visible comment in the admin moderation queue (isCommentFlagged).
+   */
+  async reportComment(user: AuthUser, id: string, reason: string | undefined) {
+    const target = await this.comments.findComment(id);
+    if (!target || target.status !== CommentStatus.Visible) throw notFound();
+    if (target.userId === user.id) throw forbidden();
+    await this.transaction(async (repo) => {
+      const read = new CommentsRepository(repo.db);
+      // Row lock on the comment: parallel reports of the same reader cannot both pass the "not reported yet" check.
+      await read.lockComment(id);
+      if (await read.findReport(id, user.id)) return;
+      await repo.insert(commentReports, { commentId: id, userId: user.id, reason: reason || null }, this.actor, { summary: 'reported' });
+      await repo.increment(comments, id, { reportsCount: 1 });
+    });
+    return { reported: true as const };
   }
 
   /** DELETE my comment (soft delete by the author). */

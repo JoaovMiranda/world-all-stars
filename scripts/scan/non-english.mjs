@@ -25,6 +25,7 @@ const ALLOWLIST = [
   /^packages\/db\/src\/seeds\/content-translations\.json$/,
   // Tests: localized inputs (pt-BR comments, names) and assertions on pt-BR/es output.
   /\.test\.(ts|tsx)$/,
+  /\/__snapshots__\//, // recorded API output (localized catalog content)
   // Fixtures and demo data mirror localized prototype content.
   /^apps\/web\/src\/fixtures\//,
   /^apps\/web\/src\/data\/fixtures\//,

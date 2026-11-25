@@ -41,11 +41,13 @@ describe.skipIf(!hasPrototype)('universal model backfill (handoff v3 §4)', () =
     }
   });
 
+  // The legacy tables are dropped (migrations 0017/0019); the counts are the prototype's legacy rows, verified equal by
+  // `legacy-parity.cli.ts` (data/review/legacy-diff.md) before the drop.
   it('turns every legacy achievement into a recognition grant and every reign into a holding', async () => {
-    expect(await n(h, 'select count(*)::int n from recognition_grants')).toBe(await n(h, 'select count(*)::int n from achievements'));
-    expect(await n(h, 'select count(*)::int n from title_holdings')).toBe(await n(h, 'select count(*)::int n from title_reigns'));
-    expect(await n(h, 'select count(*)::int n from competitor_representations')).toBe(await n(h, 'select count(*)::int n from athlete_nationalities'));
-    expect(await n(h, 'select count(*)::int n from competitor_memberships')).toBe(await n(h, 'select count(*)::int n from athlete_teams'));
+    expect(await n(h, 'select count(*)::int n from recognition_grants')).toBe(416);
+    expect(await n(h, 'select count(*)::int n from title_holdings')).toBe(12);
+    expect(await n(h, 'select count(*)::int n from competitor_representations')).toBe(21);
+    expect(await n(h, 'select count(*)::int n from competitor_memberships')).toBe(43);
     // Competition achievements also became entries + results of an event of their edition.
     expect(await n(h, 'select count(*)::int n from recognition_grants where result_id is not null')).toBeGreaterThan(0);
   });

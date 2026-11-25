@@ -79,6 +79,11 @@ export function SourceItem({ source }: { source: SourceOverview }) {
       </summary>
       <div className="src-body">
         {source.usageNote && <Notice className="mt-3">{source.usageNote}</Notice>}
+        {T.attribution[source.slug] && (
+          <p className="mt-2.5 text-sm">
+            <b>{T.licensing.attributionLabel}</b> {T.attribution[source.slug]}
+          </p>
+        )}
         {run && <p className="muted mt-2.5 text-sm">{t.lastRun(run.checked, run.unchanged, run.updated, run.errors, run.mode)}</p>}
         {source.links.length > 0 ? (
           <div className="mt-2.5">

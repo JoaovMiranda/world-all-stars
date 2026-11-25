@@ -148,6 +148,7 @@ export const ADMIN_LABELS_TEXT: {
     ranking_auto_publish_skipped: 'Publicação automática ignorada',
     entity_merged: 'Entidades mescladas',
     entity_unmerged: 'Mescla desfeita',
+    tier_vote_flag_reviewed: 'Conta sinalizada revisada (votos de tier)',
   },
   matchMode: {
     word: 'Palavra inteira',

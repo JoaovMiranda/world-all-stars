@@ -6,7 +6,7 @@ import { FootballPanel } from './football-panel.component';
 import { awardsCount, kpi, metric, percent, titleMetrics } from './sport-panel.helper';
 import type { SportPanelDef } from './sport-panel.type';
 
-const WORLD_CUP = 'copa-do-mundo-fifa';
+const WORLD_CUP = 'fifa-world-cup';
 
 export const FOOTBALL_PANEL: SportPanelDef<FootballStats> = {
   schema: FootballStatsSchema,

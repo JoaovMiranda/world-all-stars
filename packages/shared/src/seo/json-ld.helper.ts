@@ -1,6 +1,8 @@
 import { isCompetitionWin } from '../helpers/achievement.helper';
+import { competitionEditionPath, competitionPath } from '../helpers/competition-edition.helper';
 import type { Crumb } from '../interfaces/crumb.interface';
 import type { AthleteProfile } from '../types/athlete-profile.type';
+import type { CompetitionPage, CompetitorRef, EditionPage } from '../types/competition-page.type';
 import type { JsonLd } from '../types/json-ld.type';
 import type { SportPage } from '../types/sport-page.type';
 import { SITE_LANGUAGE, SITE_NAME } from './seo.const';
@@ -119,6 +121,64 @@ export const sportJsonLd = (origin: string, s: SportPage): JsonLd => ({
     compact({ '@type': 'SportsOrganization', name: a.name, sport: s.name, url: a.wikipedia ?? undefined, logo: a.image ?? undefined }),
   ),
 });
+
+/** Competitor of a sports event: a team or a person (with its profile URL when public). */
+const competitorLd = (origin: string, c: CompetitorRef) =>
+  compact({ '@type': c.kind === 'person' ? 'Person' : 'SportsTeam', name: c.name, url: c.slug ? siteUrl(origin, `/athletes/${c.slug}`) : undefined });
+
+/** Competition page: the recurring competition as an EventSeries whose sub-events are its editions. */
+export const competitionJsonLd = (origin: string, c: CompetitionPage): JsonLd => ({
+  '@context': CONTEXT,
+  '@type': 'EventSeries',
+  '@id': siteUrl(origin, `${competitionPath(c.slug)}#series`),
+  name: c.name,
+  url: siteUrl(origin, competitionPath(c.slug)),
+  inLanguage: SITE_LANGUAGE,
+  ...compact({
+    sport: c.sport?.name,
+    organizer: c.organization ? { '@type': 'SportsOrganization', name: c.organization.name } : undefined,
+    sameAs: c.wikidataQid ? [`https://www.wikidata.org/wiki/${c.wikidataQid}`] : undefined,
+    subEvent: c.editions.map((e) =>
+      compact({
+        '@type': 'SportsEvent',
+        name: e.label ?? [c.name, e.year].filter(Boolean).join(' '),
+        url: siteUrl(origin, competitionEditionPath(c.slug, e.key)),
+        startDate: e.startDate ?? undefined,
+        endDate: e.endDate ?? undefined,
+      }),
+    ),
+  }),
+});
+
+/** Edition page: one SportsEvent (dates, host country, organizer, competitors), part of its competition's series. */
+export const competitionEditionJsonLd = (origin: string, e: EditionPage): JsonLd => {
+  const competitors = new Map<string, CompetitorRef>();
+  for (const ev of e.events) for (const r of ev.results) competitors.set(`${r.competitor.kind}:${r.competitor.slug ?? r.competitor.name}`, r.competitor);
+  return {
+    '@context': CONTEXT,
+    '@type': 'SportsEvent',
+    name: e.label ?? [e.competition.name, e.year].filter(Boolean).join(' '),
+    url: siteUrl(origin, competitionEditionPath(e.competition.slug, e.key)),
+    inLanguage: SITE_LANGUAGE,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    ...compact({
+      startDate: e.startDate ?? (e.year ? String(e.year) : undefined),
+      endDate: e.endDate ?? undefined,
+      eventStatus: e.status === 'scheduled' ? 'https://schema.org/EventScheduled' : undefined,
+      sport: e.competition.sport?.name,
+      location: e.host
+        ? compact({
+            '@type': 'Place',
+            name: [e.hostCity, e.host.name].filter(Boolean).join(', '),
+            address: { '@type': 'PostalAddress', addressCountry: e.host.name },
+          })
+        : undefined,
+      organizer: e.competition.organization ? { '@type': 'SportsOrganization', name: e.competition.organization.name } : undefined,
+      superEvent: { '@id': siteUrl(origin, `${competitionPath(e.competition.slug)}#series`) },
+      competitor: [...competitors.values()].slice(0, 50).map((c) => competitorLd(origin, c)),
+    }),
+  };
+};
 
 /**
  * JSON for a <script type="application/ld+json">: `<`, `>`, `&` and line separators are escaped, so no value can

@@ -7,6 +7,7 @@ import { ON_THIS_DAY_KIND_VALUES } from '../enums/on-this-day-kind.enum';
 import { TIER_VALUES } from '../enums/tier.enum';
 import { AthleteStatsSchema } from './athlete-stats.schema';
 import { AthleteSummarySchema } from './athlete-summary.schema';
+import { InteractionCountsSchema } from './competitor-interaction.schema';
 import { CountryRefSchema } from './country-ref.schema';
 import { IsoDateSchema } from './iso-date.schema';
 import { ContentLocaleSchema } from './locale.schema';
@@ -26,6 +27,16 @@ const achievementBase = {
   source: SourceRefSchema.nullable(),
 };
 
+/** One class of the division a result was earned in (belt, gi mode, weight, sex, age…), as the organization names it. */
+export const DivisionClassSchema = z.object({
+  /** Dimension slug (category_dimensions.slug: belt, gi_mode, weight, sex_category, age…). */
+  dimension: z.string().min(1),
+  /** Value slug (category_values.slug: black, no-gi, absolute…). */
+  value: z.string().min(1),
+  /** Label in the request language, or the organization's original label. */
+  label: z.string().min(1),
+});
+
 export const CompetitionAchievementSchema = z.object({
   ...achievementBase,
   kind: z.literal(AchievementKind.Competition),
@@ -34,6 +45,8 @@ export const CompetitionAchievementSchema = z.object({
   isOlympic: z.boolean(),
   category: z.string().nullable(),
   team: z.string().nullable(),
+  /** Classes of the division (BJJ belt, gi/no-gi, weight, absolute…); present only when the division has classes. */
+  classes: z.array(DivisionClassSchema).optional(),
 });
 export const AwardAchievementSchema = z.object({
   ...achievementBase,
@@ -140,6 +153,8 @@ export const AthleteProfileSchema = AthleteSummarySchema.extend({
   legacy: LegacyScoreSchema,
   version: z.object({ current: z.number().int().positive(), history: z.array(EntityVersionSchema) }),
   sourceLinks: z.array(SourceRefSchema),
+  /** Public star/heart counts (D03); absent when nobody starred or hearted the competitor yet. */
+  interactions: InteractionCountsSchema.optional(),
 });
 
 /** Path params of every /api/athletes/:slug/* endpoint. */

@@ -34,6 +34,18 @@
         "AUTH_SIMULATED": "0"
       },
       "port": 8798
+    },
+    {
+      "name": "dev-api-check",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "dev:api"
+      ],
+      "env": {
+        "PGLITE_DATA_DIR": ".data/pglite-check",
+        "RANKING_AUTO_PUBLISH": "true"
+      },
+      "port": 8787
     }
   ]
 }

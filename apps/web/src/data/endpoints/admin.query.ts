@@ -1,4 +1,5 @@
 import { AdminApi } from '@was/shared';
+import { ApiError } from '../api-error.error';
 import { defineMutation, defineQuery } from '../define-endpoint.helper';
 import { demoStore } from '../demo.store';
 import {
@@ -50,6 +51,15 @@ export const decideIdentity = defineMutation(AdminApi.decideIdentity, () => ({ o
 
 /** GET /api/admin/tier-signals (A1, doc 17): reader votes vs official tier. */
 export const adminTierSignalsQuery = defineQuery(AdminApi.tierSignals, { sample: ({ sample }) => buildTierSignals(sample) });
+
+/** PATCH /api/admin/tier-vote-flags/:id (T3.2): clear or reject an account flagged by the anomaly rule (none in fixtures). */
+export const reviewTierVoteFlag = defineMutation(
+  AdminApi.reviewTierVoteFlag,
+  () => {
+    throw new ApiError(404, { error: 'not_found' });
+  },
+  { invalidates: [adminTierSignalsQuery, adminSummaryQuery] },
+);
 
 /** GET /api/admin/ingestion-runs (A2): runs, gates, tokens, logs and the AI queue. */
 export const adminIngestionQuery = defineQuery(AdminApi.ingestion, { sample: ({ sample }) => buildIngestion(sample) });

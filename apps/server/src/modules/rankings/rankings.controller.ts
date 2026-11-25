@@ -6,12 +6,17 @@ import { RankingsService } from './rankings.service';
 
 /** Rankings (handoff v3 §8): public = published snapshots only; admin = calculate + two approvals to publish. */
 export class RankingsController extends BaseController {
-  list() {
-    return this.service(RankingsService).listPublished();
+  list({ query }: ContractInputOf<typeof RankingsApi.list>) {
+    return this.service(RankingsService).listPublished(query);
   }
 
   detail({ params, query }: ContractInputOf<typeof RankingsApi.detail>) {
-    return this.service(RankingsService).detail(params.id, query.page, query.pageSize);
+    const { page, pageSize, ...filters } = query;
+    return this.service(RankingsService).detail(params.id, page, pageSize, true, filters);
+  }
+
+  filterOptions({ params }: ContractInputOf<typeof RankingsApi.filterOptions>) {
+    return this.service(RankingsService).filterOptions(params.id);
   }
 
   methodologies() {

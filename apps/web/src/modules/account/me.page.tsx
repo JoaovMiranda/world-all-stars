@@ -18,6 +18,7 @@ import { TierTag } from '@/shared-ui/tier-tag.component';
 import { AccountLayout } from './account-layout.component';
 import { ACCOUNT_MESSAGES } from './account.const';
 import { AthleteChip } from './athlete-chip.component';
+import { MyInteractions } from './my-interactions.component';
 
 type Vote = MeResponse['votes'][number];
 
@@ -105,12 +106,13 @@ function MeContent() {
   );
 }
 
-/** E2 My profile (docs 09/17/20): tier votes given and comments written. */
+/** E2 My profile (docs 09/17/20): tier votes given, comments written, and my star and hearts (D02). */
 export function MePage() {
   const t = useText(ACCOUNT_MESSAGES).me;
   return (
     <AccountLayout title={t.title} lead={t.lead}>
       <MeContent />
+      <MyInteractions />
     </AccountLayout>
   );
 }

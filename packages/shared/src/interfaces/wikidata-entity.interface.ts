@@ -7,6 +7,8 @@ export interface WikidataSnak {
 export interface WikidataStatement {
   mainsnak: WikidataSnak;
   qualifiers?: Record<string, WikidataSnak[]>;
+  /** Statement rank: `preferred` first, `deprecated` statements are not facts. */
+  rank?: 'preferred' | 'normal' | 'deprecated';
 }
 
 /** Entity as returned by `wbgetentities` (only the requested `props` are present). */

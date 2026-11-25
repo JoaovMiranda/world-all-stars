@@ -127,6 +127,41 @@
       "when": 1795469139746,
       "tag": "0017_drop-legacy",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1795490881221,
+      "tag": "0018_source-documents-nulls-not-distinct",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1795493492041,
+      "tag": "0019_drop-legacy-rest",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1795535003112,
+      "tag": "0020_competitor-interactions",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1795535403995,
+      "tag": "0021_tier-vote-anti-fraud",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1795554084137,
+      "tag": "0022_comment-reports-and-edits",
+      "breakpoints": true
     }
   ]
 }

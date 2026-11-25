@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { CONSENT_PURPOSE_VALUES } from '../enums/consent-purpose.enum';
 import { LEGAL_DOCUMENT_KIND_VALUES } from '../enums/legal-document-kind.enum';
+import { MyInteractionsResponseSchema } from './competitor-interaction.schema';
 import { MeResponseSchema, NotificationSchema } from './session.schema';
 
 /** One acceptance of a legal document version (doc 13 `user_consents`). */
@@ -39,4 +40,6 @@ export const MyDataExportSchema = MeResponseSchema.extend({
   notifications: z.array(NotificationSchema),
   acceptances: z.array(LegalAcceptanceSchema),
   consents: z.array(ConsentSchema),
+  /** My star and hearts (D02/D03). */
+  interactions: MyInteractionsResponseSchema.optional(),
 });

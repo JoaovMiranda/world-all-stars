@@ -7,14 +7,16 @@ import {
   ApproveRankingRequestSchema, AthleteRankingsResponseSchema, CalculateRankingRequestSchema, RankingDetailQuerySchema, RankingDetailResponseSchema,
   RankingMethodologiesResponseSchema, RankingsListResponseSchema,
 } from '../schemas/ranking.schema';
+import { RankingFilterOptionsResponseSchema, RankingsListQuerySchema } from '../schemas/ranking-search.schema';
 import { z } from 'zod';
 
 const IdParams = z.object({ id: z.string().min(1) });
 
 /** Public rankings (published snapshots only) — handoff v3 §8. */
 export const RankingsApi = {
-  list: defineContract({ access: ApiAccess.Public, method: HttpMethod.Get, path: '/api/rankings', summary: 'Published ranking snapshots', response: RankingsListResponseSchema }),
+  list: defineContract({ access: ApiAccess.Public, method: HttpMethod.Get, path: '/api/rankings', summary: 'Published ranking snapshots (optional methodology/sport/gender filters)', query: RankingsListQuerySchema, response: RankingsListResponseSchema }),
   detail: defineContract({ access: ApiAccess.Public, method: HttpMethod.Get, path: '/api/rankings/:id', summary: 'Entries of a published snapshot (paginated)', params: IdParams, query: RankingDetailQuerySchema, response: RankingDetailResponseSchema }),
+  filterOptions: defineContract({ access: ApiAccess.Public, method: HttpMethod.Get, path: '/api/rankings/:id/filters', summary: 'URL filters of a published snapshot and the values present in it', params: IdParams, response: RankingFilterOptionsResponseSchema }),
   methodologies: defineContract({ access: ApiAccess.Public, method: HttpMethod.Get, path: '/api/ranking-methodologies', summary: 'Registered methodologies and their rankings', response: RankingMethodologiesResponseSchema }),
   athlete: defineContract({ access: ApiAccess.Public, method: HttpMethod.Get, path: '/api/athletes/:slug/rankings', summary: 'Positions of an athlete in published rankings', params: AthleteSlugParamsSchema, response: AthleteRankingsResponseSchema }),
   adminList: defineContract({ access: ApiAccess.Admin, method: HttpMethod.Get, path: '/api/admin/rankings', summary: 'All snapshots (calculated, published, archived) with approvals', response: RankingsListResponseSchema }),

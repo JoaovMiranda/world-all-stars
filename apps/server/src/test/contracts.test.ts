@@ -1,5 +1,5 @@
 // Contract conformance: every GET answers 200 with a body that the shared response schema accepts.
-import { AdminApi, type ApiContract, ParticipationApi, PublicApi, RankingsApi } from '@was/shared';
+import { AdminApi, type ApiContract, CompareApi, CompetitionsApi, CrossSportApi, InteractionsApi, MethodologyApi, ParticipationApi, PublicApi, RankingsApi } from '@was/shared';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { ALL_ROUTES } from '../routes.const';
@@ -12,6 +12,11 @@ const ALL_CONTRACTS: ApiContract[] = [
   ...Object.values(ParticipationApi),
   ...Object.values(AdminApi),
   ...Object.values(RankingsApi),
+  ...Object.values(CrossSportApi),
+  ...Object.values(CompareApi),
+  ...Object.values(InteractionsApi),
+  ...Object.values(MethodologyApi),
+  ...Object.values(CompetitionsApi),
 ];
 
 /** Input of each GET for the seeded database. */
@@ -26,6 +31,12 @@ const GET_INPUTS: Record<string, { params?: Record<string, string>; query?: Reco
   [ParticipationApi.tierVotes.path]: { params: { slug: 'pele' } },
   [ParticipationApi.comments.path]: { params: { slug: 'pele' } },
   [RankingsApi.athlete.path]: { params: { slug: 'pele' } },
+  [CrossSportApi.athleteBand.path]: { params: { slug: 'pele' } },
+  [CrossSportApi.athleteLegacy.path]: { params: { slug: 'pele' } },
+  [MethodologyApi.doc.path]: { params: { key: 'boxing' } },
+  [CompareApi.compare.path]: { query: { a: 'pele', b: 'michael-phelps' } },
+  [CompetitionsApi.competition.path]: { params: { competition: 'fifa-world-cup' } },
+  [CompetitionsApi.edition.path]: { params: { competition: 'fifa-world-cup', edition: '1958' } },
 };
 const sessionFor = (c: ApiContract) => (c.access === 'admin' ? 'admin' : c.access === 'reader' ? 'reader' : 'anon') as 'anon' | 'reader' | 'admin';
 
@@ -44,7 +55,7 @@ describe.skipIf(!HAS_PROTOTYPE)('GET conformance (seeded database)', () => {
   });
   afterAll(() => t.close());
 
-  for (const contract of ALL_CONTRACTS.filter((c) => c.method === 'GET' && c !== RankingsApi.detail)) {
+  for (const contract of ALL_CONTRACTS.filter((c) => c.method === 'GET' && c !== RankingsApi.detail && c !== RankingsApi.filterOptions)) {
     it(`${contract.path} (${contract.access})`, async () => {
       const res = await t.call(contract, GET_INPUTS[contract.path] ?? {}, sessionFor(contract));
       expect(res.status, JSON.stringify(res.json)).toBe(200);

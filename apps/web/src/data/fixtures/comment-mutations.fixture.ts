@@ -1,6 +1,6 @@
-import { API_ERROR_MESSAGES, ApiErrorCode, type ReactToCommentResponse, type SessionUser, validateComment } from '@was/shared';
-import { currentText } from '@/i18n/text-for.helper';
+import { API_ERROR_MESSAGES, ApiErrorCode, COMMENT_EDIT_WINDOW_MS, type ReactToCommentResponse, type SessionUser, validateComment } from '@was/shared';
 import { localeStore } from '@/i18n/locale.store';
+import { currentText } from '@/i18n/text-for.helper';
 
 import { ApiError } from '../api-error.error';
 import { demoId, demoStore } from '../demo.store';
@@ -26,7 +26,12 @@ export const postDemoComment = async (sample: typeof loadSample, user: SessionUs
 };
 
 /** PUT reaction in fixture mode: one per user per comment, never on your own comment (403). */
-export const reactDemoComment = async (sample: typeof loadSample, user: SessionUser, id: string, reaction: 'like' | 'dislike' | null): Promise<ReactToCommentResponse> => {
+export const reactDemoComment = async (
+  sample: typeof loadSample,
+  user: SessionUser,
+  id: string,
+  reaction: 'like' | 'dislike' | null,
+): Promise<ReactToCommentResponse> => {
   const target = (await commentRows(sample, user)).find((c) => c.id === id);
   if (!target) throw new ApiError(404, { error: 'not_found' });
   if (target.isMine) throw new ApiError(403, { error: ApiErrorCode.Own, message: currentText(API_ERROR_MESSAGES).ownComment });
@@ -36,4 +41,30 @@ export const reactDemoComment = async (sample: typeof loadSample, user: SessionU
   });
   const after = (await commentRows(sample, user)).find((c) => c.id === id);
   return { reaction, likes: after?.likes ?? 0, dislikes: after?.dislikes ?? 0 };
+};
+
+/** PATCH comment in fixture mode (T3.3): only the tester's own demo comments, within 10 minutes, same validation. */
+export const editDemoComment = async (sample: typeof loadSample, user: SessionUser, id: string, body: string) => {
+  const target = demoStore.get().comments.find((c) => c.id === id);
+  if (!target) throw new ApiError(404, { error: 'not_found' });
+  if (target.author !== user.name) throw new ApiError(403, { error: ApiErrorCode.Forbidden, message: currentText(API_ERROR_MESSAGES).forbidden });
+  if (Date.now() > Date.parse(target.at) + COMMENT_EDIT_WINDOW_MS)
+    throw new ApiError(422, { error: ApiErrorCode.EditWindowClosed, message: currentText(API_ERROR_MESSAGES).editWindowClosed });
+  const { bannedWords } = await sample('validation-context.json');
+  const result = validateComment(body, bannedWords, localeStore.get());
+  if (!result.ok) throw new ApiError(422, { error: result.error, message: result.message });
+  const editedAt = new Date().toISOString();
+  demoStore.update((d) => {
+    const row = d.comments.find((c) => c.id === id);
+    if (row) Object.assign(row, { body: result.text, editedAt });
+  });
+  return { id, editedAt };
+};
+
+/** POST report in fixture mode (T3.3): any visible comment but your own (403); nothing else is stored. */
+export const reportDemoComment = async (sample: typeof loadSample, user: SessionUser, id: string) => {
+  const target = (await commentRows(sample, user)).find((c) => c.id === id);
+  if (!target) throw new ApiError(404, { error: 'not_found' });
+  if (target.isMine) throw new ApiError(403, { error: ApiErrorCode.Forbidden, message: currentText(API_ERROR_MESSAGES).forbidden });
+  return { reported: true as const };
 };

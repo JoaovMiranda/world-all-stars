@@ -6,6 +6,7 @@ import { seedDomainVocabulary } from './domain.seed';
 import { seedPrototype } from './prototype.seed';
 import { seedSourcesPolicy } from './sources-policy.seed';
 import { seedSportContent } from './sport-content.seed';
+import { seedSportImages } from './sport-images.seed';
 import { seedSportsCatalog } from './sports-catalog.seed';
 import { backfillUniversalModel } from './universal-backfill.seed';
 
@@ -25,6 +26,8 @@ export const seedDatabase = async (db: Database, repoRoot: string, log: (msg: st
     if (catalog) log(`sports catalog: ${catalog.sports} sports/disciplines, ${catalog.programmes} programme entries`);
     const sections = await seedSportContent(t, repoRoot);
     if (sections) log(`sport content: ${sections} sections`);
+    const sportImages = await seedSportImages(t, repoRoot);
+    if (sportImages) log(`sport images: ${sportImages} Commons images with attribution`);
     const crossSport = await seedCrossSportMappings(t);
     log(`cross-sport mappings: ${crossSport} rows`);
     // The universal model (recognitions, holdings, representations…) from the prototype's legacy rows.

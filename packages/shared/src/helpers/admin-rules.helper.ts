@@ -1,4 +1,4 @@
-import { COMMENT_FLAG_MIN_DISLIKES, DOSSIER_APPROVALS_REQUIRED, PRIVACY_DUE_SOON_DAYS, PRIVACY_RESPONSE_DAYS } from '../consts/admin-rules.const';
+import { COMMENT_FLAG_MIN_DISLIKES, COMMENT_FLAG_MIN_REPORTS, DOSSIER_APPROVALS_REQUIRED, PRIVACY_DUE_SOON_DAYS, PRIVACY_RESPONSE_DAYS } from '../consts/admin-rules.const';
 import { TIER_SIGNAL_MIN_SHARE, TIER_SIGNAL_MIN_VOTES } from '../consts/tier-vote.const';
 import { CommentStatus } from '../enums/comment-status.enum';
 import { PrivacyRequestStatus } from '../enums/privacy-request-status.enum';
@@ -20,8 +20,8 @@ export const tierSignalOf = (counts: Partial<Record<Tier, number>>, official: Ti
 };
 
 /** A7: a visible comment with many dislikes needs a moderator look (doc 20). */
-export const isCommentFlagged = (comment: { status: CommentStatus; dislikes: number }): boolean =>
-  comment.status === CommentStatus.Visible && comment.dislikes >= COMMENT_FLAG_MIN_DISLIKES;
+export const isCommentFlagged = (comment: { status: CommentStatus; dislikes: number; reports?: number | undefined }): boolean =>
+  comment.status === CommentStatus.Visible && (comment.dislikes >= COMMENT_FLAG_MIN_DISLIKES || (comment.reports ?? 0) >= COMMENT_FLAG_MIN_REPORTS);
 
 /** A5: legal deadline of a privacy request created at `createdAt` (ISO datetime). */
 export const privacyDueAt = (createdAt: string): string => new Date(new Date(createdAt).getTime() + PRIVACY_RESPONSE_DAYS * DAY_MS).toISOString();

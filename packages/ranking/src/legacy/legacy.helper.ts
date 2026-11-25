@@ -1,8 +1,8 @@
 import type { RankingEvidence } from '../core/ranking-evidence.interface';
+import { LEGACY_HONOR_POINTS, LEGACY_LEVELS, LEGACY_RULESET_VERSION, LEGACY_THRESHOLDS } from './legacy.const';
 import type { LegacyHonor } from './legacy-honor.interface';
 import type { LegacyLevel } from './legacy-level.type';
 import type { LegacyResult } from './legacy-result.interface';
-import { LEGACY_HONOR_POINTS, LEGACY_LEVELS, LEGACY_RULESET_VERSION, LEGACY_THRESHOLDS } from './legacy.const';
 
 /**
  * Legacy L1–L5 (D11): computed from recognitions, honors, records and longevity. An approved Hall dossier is the only

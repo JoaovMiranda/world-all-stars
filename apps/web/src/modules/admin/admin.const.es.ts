@@ -281,6 +281,7 @@ export const ADMIN_TEXT_ES = {
     on: 'en',
     likes: 'Me gusta',
     dislikes: 'No me gusta',
+    reports: 'Denuncias',
     replies: 'Respuestas',
     hiddenReason: 'Motivo de la ocultación',
     decisionLabel: 'Moderación del comentario',

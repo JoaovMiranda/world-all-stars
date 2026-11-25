@@ -64,6 +64,38 @@ describe.skipIf(!HAS_PROTOTYPE || !hasCache)('rankings: calculate → approve tw
     expect(RankingsApi.detail.response.safeParse(detail).success).toBe(true);
   });
 
+  it('URL filters (T2.5): the detail keeps matching entries, ignores keys of other methodologies; options and list filters', async () => {
+    const [published] = await t.deps.db.select().from(rankingSnapshots).where(eq(rankingSnapshots.status, 'published'));
+    const detail = async (qs: string) =>
+      (await (await t.app.request(`${buildApiPath(RankingsApi.detail.path, { id: published!.id })}${qs}`)).json()) as {
+        total: number;
+        entries: { competitor: { name: string } }[];
+      };
+    const all = await detail('');
+    const only2002 = await detail('?edition=2002');
+    expect(only2002.total).toBeGreaterThan(0);
+    expect(only2002.total).toBeLessThan(all.total);
+    expect((await detail('?edition=1994&competition=fifa-world-cup')).total).toBeGreaterThan(0);
+    expect((await detail('?edition=1950')).total).toBe(0);
+    // A BJJ key on a football snapshot is ignored, an invalid value is dropped (never a 400).
+    expect((await detail('?belt=black&gi=nope')).total).toBe(all.total);
+    const byName = await detail('?sort=name&pageSize=200');
+    const names = byName.entries.map((e) => e.competitor.name);
+    expect(names).toEqual([...names].sort(new Intl.Collator('pt-BR').compare));
+
+    const options = (await (await t.app.request(buildApiPath(RankingsApi.filterOptions.path, { id: published!.id }))).json()) as {
+      filters: { key: string; options: { value: string }[] }[];
+    };
+    expect(RankingsApi.filterOptions.response.safeParse(options).success).toBe(true);
+    expect(options.filters.map((f) => f.key)).toEqual(['gender', 'competition', 'nationality', 'edition', 'position']);
+    expect(options.filters.find((f) => f.key === 'edition')?.options.map((o) => o.value)).toEqual(expect.arrayContaining(['2002', '1994']));
+
+    const list = async (qs: string) => ((await (await t.app.request(`${RankingsApi.list.path}${qs}`)).json()) as { items: unknown[] }).items;
+    expect(await list('?methodology=football-champions&gender=men')).toHaveLength(1);
+    expect(await list('?methodology=bjj-career')).toHaveLength(0);
+    expect(await list('?gender=women')).toHaveLength(0);
+  });
+
   it('a published snapshot is immutable (trigger) and a recalculation creates a new candidate', async () => {
     const [published] = await t.deps.db.select().from(rankingSnapshots).where(eq(rankingSnapshots.status, 'published'));
     await expect(t.deps.db.update(rankingSnapshots).set({ outputHash: 'tampered' }).where(eq(rankingSnapshots.id, published!.id))).rejects.toThrow();

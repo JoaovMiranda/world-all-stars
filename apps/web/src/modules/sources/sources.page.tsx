@@ -4,17 +4,19 @@ import { SOURCE_USAGE_STATUS_VALUES, SourcesFiltersSchema } from '@was/shared';
 
 import { collectionRunsQuery, sourcesQuery } from '@/data/endpoints/discovery.query';
 import { useText } from '@/i18n/use-text.hook';
+import { ATTRIBUTED_SOURCES } from '@/shared-ui/attributed-sources.const';
 import { ChipToggleGroup } from '@/shared-ui/chip-toggle-group.component';
 import { DOMAIN_LABELS_MESSAGES } from '@/shared-ui/domain-labels.const';
 import { EmptyState } from '@/shared-ui/empty-state.component';
 import { KpiGrid } from '@/shared-ui/kpi-grid.component';
 import { PageLayout } from '@/shared-ui/page-layout.component';
 import { QueryBoundary } from '@/shared-ui/query-boundary.component';
+import { Reveal } from '@/shared-ui/reveal.component';
 import { Section } from '@/shared-ui/section.component';
 import { Skeleton, SkeletonList } from '@/shared-ui/skeleton.component';
+import { SourceAttribution } from '@/shared-ui/source-attribution.component';
 import { StatTile } from '@/shared-ui/stat-tile.component';
 import { useUrlFilters } from '@/shared-ui/use-url-filters.hook';
-import { Reveal } from '@/shared-ui/reveal.component';
 
 import { CollectionRuns } from './collection-runs.component';
 import { SourceItem } from './source-item.component';
@@ -82,6 +84,21 @@ export function SourcesPage() {
           );
         }}
       </QueryBoundary>
+
+      <Section title={T.licensing.title} eyebrow={T.licensing.eyebrow} id="licenses">
+        <p className="muted max-w-[80ch] text-sm">{T.licensing.intro}</p>
+        <h3 className="label mt-4">{T.licensing.shareAlikeTitle}</h3>
+        <p className="mt-1.5 max-w-[80ch]">{T.licensing.shareAlike}</p>
+        <SourceAttribution source="fjelstul" className="mt-2" />
+        <p className="mt-1.5 text-sm">
+          <a href={ATTRIBUTED_SOURCES.fjelstul.licenseUrl} target="_blank" rel="noopener noreferrer">
+            {T.licensing.licenseLink}
+            <span className="sr-only"> {T.list.external}</span>
+          </a>
+        </p>
+        <h3 className="label mt-4">{T.licensing.imagesTitle}</h3>
+        <p className="mt-1.5 max-w-[80ch]">{T.licensing.images}</p>
+      </Section>
 
       <Section title={T.runs.title} eyebrow={T.runs.eyebrow}>
         <p className="muted max-w-[80ch] text-sm">{T.runs.intro}</p>

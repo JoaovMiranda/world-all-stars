@@ -1,3 +1,4 @@
+import type { AiCallOptions } from './ai-call-options.interface';
 import type { AiProvider } from './ai-provider.interface';
 import type { AiResult } from './ai-result.interface';
 
@@ -11,8 +12,11 @@ export abstract class BaseAiProvider implements AiProvider {
   /** Model revision when the backend reports one ('' when unknown). */
   readonly version: string = '';
 
-  /** Sends one prompt and returns the parsed JSON output. */
-  abstract generate(prompt: string, signal?: AbortSignal): Promise<AiResult>;
+  /**
+   * Sends one prompt and returns the parsed JSON output. `options.schema` asks for structured output (a full JSON
+   * Schema); without it the backend asks for plain JSON (career extractor).
+   */
+  abstract generate(prompt: string, options?: AiCallOptions): Promise<AiResult>;
 
   /** `provider:model`, for logs and reports. */
   get label(): string {

@@ -16,6 +16,10 @@ export interface DemoState {
   reviewedSuggestions: Record<string, SuggestionStatus>;
   /** Optional consents granted/revoked in /me/data (E6), by purpose. */
   consents: Record<string, { granted: boolean; at: string }>;
+  /** My exclusive star (D02): athlete slug + when, or null. */
+  star: { slug: string; at: string } | null;
+  /** My hearts (D02): athlete slug → when. */
+  hearts: Record<string, string>;
   /** Admin decisions (A1–A8), see fixtures/admin-demo.type.ts. */
   admin: AdminDemoState;
 }

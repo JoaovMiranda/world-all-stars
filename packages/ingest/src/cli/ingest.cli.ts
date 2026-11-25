@@ -4,18 +4,22 @@
 //   olympics --sport swimming --list "List of Olympic medalists in swimming" [--year 2016]
 //   wikidata [--limit 500]                                      QIDs, birth and gender through enwiki sitelinks
 //   profiles [--limit N]                                        profile from Wikidata + Commons photo (bio, birthplace, clubs…)
+//   sport-images [--only football,chess] [--limit N]           Commons image per sport (P18) → data/content + data/review
 //   write [--providers football-champions,bjj-champions,...]    canonical writer (identity + domain)
 //   enqueue <provider> [--only …]                               queue a job; `worker` processes queued jobs
 //   worker [--max N]                                            claims and runs job items (retries, dead-letter)
 //   report                                                      counts per stage, last runs, AI usage
 //   identity-eval                                               precision/recall of the identity thresholds
 //   enrich [--athlete slug] [--task biography|facts|all] [--limit 20]   optional AI (OLLAMA_URL) → admin queue
-//   collect --list <file> [--sport slug] | --names "Cafu,Pelé" | --update [--limit N]   autonomous collection (Phase 13)
+//   collect --list <file> [--sport slug] | --names "Cafu,Pelé" | --update [--limit N] [--priority]   autonomous collection
+//           (resumable: people with a biography of the current article revision are skipped; --priority = public, top tier first)
 //   ai-report                                                   calls, tokens, latency, approvals per model × task
 // Flags: --offline (crawler cache only, no network). PGlite is single-process: stop `pnpm dev` first.
 import fs from 'node:fs';
+import path from 'node:path';
 
-import { BaseCli, ingestionRuns, selectRows } from '@was/db';
+import { BaseCli, findRepoRoot, ingestionRuns, selectRows } from '@was/db';
+import { SPORT_IMAGES_DATA_FILE, SPORT_IMAGES_REVIEW_FILE } from '@was/shared';
 import { desc, sql } from 'drizzle-orm';
 
 import { CanonicalWriter } from '../canonical/canonical-writer';
@@ -36,6 +40,8 @@ import { FOOTBALL_PROVIDER } from '../providers/football-champions.const';
 import type { IngestContext } from '../providers/ingest-context.interface';
 import { OLYMPIC_PROVIDER } from '../providers/olympic-medalists.const';
 import { PROVIDERS } from '../providers/providers.const';
+import { SportImagesProvider } from '../providers/sport-images.provider';
+import { sportImagesReview } from '../providers/sport-images-review.helper';
 import { WIKIDATA_PROVIDER } from '../providers/wikidata.const';
 import { WIKIDATA_PROFILE_PROVIDER } from '../providers/wikidata-profile.const';
 
@@ -67,6 +73,19 @@ class IngestCli extends BaseCli {
     } else if (command === 'profiles') {
       for (const l of await PROVIDERS.run(WIKIDATA_PROFILE_PROVIDER, ctx, { limit: flag('limit') })) log(l);
       await write([WIKIDATA_PROFILE_PROVIDER]);
+    } else if (command === 'sport-images') {
+      // Stored as data (seeded into media_links), never fetched at page-render time.
+      const file = await new SportImagesProvider().collect(ctx, { only: list('only'), limit: flag('limit') ? Number(flag('limit')) : undefined });
+      const root = findRepoRoot();
+      for (const [target, body] of [
+        [SPORT_IMAGES_DATA_FILE, `${JSON.stringify(file, null, 1)}\n`],
+        [SPORT_IMAGES_REVIEW_FILE, sportImagesReview(file)],
+      ] as const) {
+        fs.mkdirSync(path.dirname(path.join(root, target)), { recursive: true });
+        fs.writeFileSync(path.join(root, target), body);
+        log(`wrote ${target}`);
+      }
+      log(`sport-images: ${file.images.length} images, ${file.missing.length} without (run pnpm db:seed to link them)`);
     } else if (command === 'write') {
       await write(list('providers') ?? PROVIDERS.keys());
     } else if (command === 'enqueue') {
@@ -133,10 +152,11 @@ class IngestCli extends BaseCli {
       if (!provider) log('collect: OLLAMA_URL not set: profiles are collected and marked needs_enrichment');
       const file = flag('list');
       const text = file ? fs.readFileSync(file, 'utf8') : (flag('names') ?? '').split(',').join('\n');
+      const opts = { limit: flag('limit') ? Number(flag('limit')) : undefined, priority: flag('priority') === 'true' };
       const r =
         flag('update') === 'true'
-          ? await updateCollect(ctx, provider, { limit: flag('limit') ? Number(flag('limit')) : undefined })
-          : await firstCollect(ctx, provider, parseAthleteList(text, flag('sport') ?? null));
+          ? await updateCollect(ctx, provider, opts)
+          : await firstCollect(ctx, provider, parseAthleteList(text, flag('sport') ?? null), opts);
       log(`collect: ${JSON.stringify(r)}`);
     } else if (command === 'ai-report') {
       for (const r of await aiReport(db)) log(JSON.stringify(r));

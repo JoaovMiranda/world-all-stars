@@ -6,12 +6,16 @@ import { PrivacyRequestStatus } from '../enums/privacy-request-status.enum';
 import { ReviewStatus } from '../enums/review-status.enum';
 import { SourceUsageStatus } from '../enums/source-usage-status.enum';
 import { SuggestionStatus } from '../enums/suggestion-status.enum';
+import { TierVoteFlagStatus } from '../enums/tier-vote-flag-status.enum';
 import type { AdminQueues } from '../interfaces/admin-queues.interface';
 import { isCommentFlagged } from './admin-rules.helper';
 
 /** Painel: what is waiting in each admin section (navigation badges). One rule for server and fixtures. */
 export const adminPendingCounts = (q: AdminQueues): Record<AdminSection, number> => ({
-  review: q.proposals.filter((p) => p.status === ReviewStatus.Pending).length + q.signals.filter((s) => s.isSignal).length,
+  review:
+    q.proposals.filter((p) => p.status === ReviewStatus.Pending).length +
+    q.signals.filter((s) => s.isSignal).length +
+    (q.tierVoteFlags ?? []).filter((f) => f.status === TierVoteFlagStatus.Pending).length,
   ingestion: q.runs.filter((r) => r.status === IngestionRunStatus.Failed || r.status === IngestionRunStatus.Partial).length,
   sources: q.sources.sources.filter((s) => s.usageStatus === SourceUsageStatus.PendingPermission).length + q.sources.queuedLinks.length,
   users: 0,

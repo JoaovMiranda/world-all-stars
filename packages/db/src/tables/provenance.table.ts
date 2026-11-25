@@ -89,6 +89,7 @@ export const sourceDocuments = pgTable(
     licenseId: uuid(),
     jobId: uuid(),
   },
+  // The unique index is NULLS NOT DISTINCT in the database (migration 0018); Drizzle cannot express it on a partial index.
   (t) => [uniqueIndex().on(t.canonicalUrl, t.revisionId, t.normalizedHash).where(live(t.deletedAt)), index().on(t.sourceId).where(live(t.deletedAt))],
 );
 

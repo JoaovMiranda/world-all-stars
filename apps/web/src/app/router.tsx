@@ -13,13 +13,19 @@ import {
   AthleteProfileTab,
   athleteJsonLd,
   breadcrumbJsonLd,
+  competitionEditionJsonLd,
+  competitionJsonLd,
   ContactSearchSchema,
+  CrossSportFiltersSchema,
+  HeadToHeadSearchSchema,
   HomeSearchSchema,
   itemListJsonLd,
   MonthDaySchema,
   monthDayToIso,
   NotificationsSearchSchema,
   organizationJsonLd,
+  RankingDetailSearchSchema,
+  RankingsListQuerySchema,
   SourcesFiltersSchema,
   SportPageFiltersSchema,
   SportsFiltersSchema,
@@ -69,8 +75,10 @@ const AdminDossiersPage = lazyPage('admin/admin-dossiers', 'AdminDossiersPage');
 const AdminCommentsPage = lazyPage('admin/admin-comments', 'AdminCommentsPage');
 const AdminContactPage = lazyPage('admin/admin-contact', 'AdminContactPage');
 const AdminMergePage = lazyPage('admin/admin-merge', 'AdminMergePage');
+const AdminCrossSportPage = lazyPage('admin/admin-cross-sport', 'AdminCrossSportPage');
 const AthleteProfilePage = lazyPage('athletes/athlete-profile', 'AthleteProfilePage');
 const AthletesPage = lazyPage('athletes/athletes', 'AthletesPage');
+const ComparePage = lazyPage('compare/compare', 'ComparePage');
 const ContactPage = lazyPage('contact/contact', 'ContactPage');
 const HallOfGreatsPage = lazyPage('hall-of-greats/hall-of-greats', 'HallOfGreatsPage');
 const HomePage = lazyPage('home/home', 'HomePage');
@@ -81,8 +89,13 @@ const TermsPage = lazyPage('legal/terms', 'TermsPage');
 const OnThisDayPage = lazyPage('on-this-day/on-this-day', 'OnThisDayPage');
 const RankingPage = lazyPage('rankings/ranking', 'RankingPage');
 const RankingsPage = lazyPage('rankings/rankings', 'RankingsPage');
+const AllSportsPage = lazyPage('rankings/all-sports', 'AllSportsPage');
+const AllSportsMethodologyPage = lazyPage('rankings/all-sports-methodology', 'AllSportsMethodologyPage');
+const MethodologyPage = lazyPage('rankings/methodology', 'MethodologyPage');
 const SourcesPage = lazyPage('sources/sources', 'SourcesPage');
 const SportPage = lazyPage('sports/sport', 'SportPage');
+const CompetitionPage = lazyPage('competitions/competition', 'CompetitionPage');
+const CompetitionEditionPage = lazyPage('competitions/competition-edition', 'CompetitionEditionPage');
 const SportsPage = lazyPage('sports/sports', 'SportsPage');
 
 // Every screen of doc 09 has a typed route. Search params are validated by the shared filter schemas, so links
@@ -224,15 +237,30 @@ const athleteRoute = createRoute({
   validateSearch: AthleteProfileSearchSchema,
   loaderDeps: ({ search }) => ({ sort: search.sort, tab: search.tab }),
   loader: async ({ context, deps, params }) => {
-    const [{ athleteProfileQuery, athletesQuery, analysisDimensionsQuery }, { commentsQuery }, { tierVotesQuery }, input, { ATHLETE_PROFILE_MESSAGES }] =
-      await Promise.all([
-        import('@/data/endpoints/athletes.query'),
-        import('@/data/endpoints/comments.query'),
-        import('@/data/endpoints/tier-votes.query'),
-        import('@/modules/athletes/athletes-query.helper'),
-        import('@/modules/athletes/athletes.const'),
-      ]);
-    const extra: { queryKey: readonly unknown[] }[] = [commentsQuery.queryOptions(input.commentsInput(params.slug, deps.sort))];
+    const [
+      { athleteProfileQuery, athletesQuery, analysisDimensionsQuery },
+      { commentsQuery },
+      { tierVotesQuery },
+      { athleteRankingsQuery },
+      { athleteBandQuery, athleteLegacyQuery },
+      input,
+      { ATHLETE_PROFILE_MESSAGES },
+    ] = await Promise.all([
+      import('@/data/endpoints/athletes.query'),
+      import('@/data/endpoints/comments.query'),
+      import('@/data/endpoints/tier-votes.query'),
+      import('@/data/endpoints/athlete-rankings.query'),
+      import('@/data/endpoints/cross-sport.query'),
+      import('@/modules/athletes/athletes-query.helper'),
+      import('@/modules/athletes/athletes.const'),
+    ]);
+    // Rankings, cross-sport band and legacy render on the server instead of a skeleton until the client fetches them.
+    const extra: { queryKey: readonly unknown[] }[] = [
+      commentsQuery.queryOptions(input.commentsInput(params.slug, deps.sort)),
+      athleteRankingsQuery.queryOptions({ params: { slug: params.slug } }),
+      athleteBandQuery.queryOptions({ params: { slug: params.slug } }),
+      athleteLegacyQuery.queryOptions({ params: { slug: params.slug } }),
+    ];
     // Signed in: the vote card's shares come with the page instead of a second round-trip after it renders.
     if (context.queryClient.getQueryData(sessionQuery.queryOptions().queryKey)?.user)
       extra.push(tierVotesQuery.queryOptions({ params: { slug: params.slug } }));
@@ -247,6 +275,7 @@ const athleteRoute = createRoute({
       title: athlete.knownAs,
       description: t.metaDescription(athlete.knownAs, athlete.sport.name),
       image: athlete.photo?.url,
+      imageLicense: athlete.photo?.license,
       jsonLd: [
         athleteJsonLd(origin(), athlete),
         breadcrumbJsonLd(origin(), [
@@ -305,11 +334,69 @@ const sportRoute = createRoute({
     return {
       title: sport.name,
       description: t.metaDescription(sport.name),
+      image: sport.image?.url,
+      imageLicense: sport.image?.license,
       jsonLd: [sportJsonLd(origin(), sport), breadcrumbJsonLd(origin(), [homeCrumb(), { name: t.sports, path: '/sports' }, { name: sport.name }])],
     } satisfies PageMeta;
   },
   head,
   ...SportPage,
+});
+/** T4.1: competition page (editions, champions, sources) with JSON-LD EventSeries. */
+const competitionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/competitions/$competition',
+  loader: async ({ context, params }) => {
+    const [{ competitionPageQuery }, { competitionPageInput }, { COMPETITIONS_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/competitions.query'),
+      import('@/modules/competitions/competitions-query.helper'),
+      import('@/modules/competitions/competitions.const'),
+    ]);
+    const c = await ensureOr404(context.queryClient, competitionPageQuery.queryOptions(competitionPageInput(params.competition)));
+    const t = currentText(COMPETITIONS_MESSAGES);
+    if (!c) return { title: t.eyebrow } satisfies PageMeta;
+    const sportCrumb = c.sport ? [{ name: c.sport.name, path: `/sports/${c.sport.slug}` }] : [];
+    return {
+      title: c.name,
+      description: t.metaDescription(c.name),
+      jsonLd: [competitionJsonLd(origin(), c), breadcrumbJsonLd(origin(), [homeCrumb(), { name: t.sports, path: '/sports' }, ...sportCrumb, { name: c.name }])],
+    } satisfies PageMeta;
+  },
+  head,
+  ...CompetitionPage,
+});
+/** T4.1: edition page (results, squads, final lineup, medal table, sources) with JSON-LD SportsEvent. */
+const competitionEditionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/competitions/$competition/$edition',
+  loader: async ({ context, params }) => {
+    const [{ editionPageQuery }, { editionPageInput }, { COMPETITIONS_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/competitions.query'),
+      import('@/modules/competitions/competitions-query.helper'),
+      import('@/modules/competitions/competitions.const'),
+    ]);
+    const e = await ensureOr404(context.queryClient, editionPageQuery.queryOptions(editionPageInput(params.competition, params.edition)));
+    const t = currentText(COMPETITIONS_MESSAGES);
+    if (!e) return { title: t.editionEyebrow } satisfies PageMeta;
+    const title = e.label ?? t.editionTitle(e.competition.name, e.year?.toString() ?? '');
+    const sportCrumb = e.competition.sport ? [{ name: e.competition.sport.name, path: `/sports/${e.competition.sport.slug}` }] : [];
+    return {
+      title,
+      description: t.editionMetaDescription(title),
+      jsonLd: [
+        competitionEditionJsonLd(origin(), e),
+        breadcrumbJsonLd(origin(), [
+          homeCrumb(),
+          { name: t.sports, path: '/sports' },
+          ...sportCrumb,
+          { name: e.competition.name, path: `/competitions/${e.competition.slug}` },
+          { name: title },
+        ]),
+      ],
+    } satisfies PageMeta;
+  },
+  head,
+  ...CompetitionEditionPage,
 });
 /** P22 was merged into /sports (04/11/2026): the old route redirects to the hierarchy section. */
 const organizationsRoute = createRoute({
@@ -330,14 +417,17 @@ const calendarRoute = createRoute({
 const rankingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/rankings',
-  loader: async ({ context }) => {
-    const [{ rankingsQuery }, { RANKINGS_MESSAGES }] = await Promise.all([
+  validateSearch: RankingsListQuerySchema,
+  loaderDeps: ({ search }) => search,
+  loader: async ({ context, deps }) => {
+    const [{ rankingsQuery, rankingMethodologiesQuery }, { RANKINGS_MESSAGES }, { rankingsListInput, rankingCanonicalSearch }] = await Promise.all([
       import('@/data/endpoints/rankings.query'),
       import('@/modules/rankings/rankings.const'),
+      import('@/modules/rankings/rankings-query.helper'),
     ]);
-    await prefetchQueries(context.queryClient, [rankingsQuery.queryOptions()]);
+    await prefetchQueries(context.queryClient, [rankingsQuery.queryOptions(rankingsListInput(deps)), rankingMethodologiesQuery.queryOptions()]);
     const t = currentText(RANKINGS_MESSAGES).list;
-    return { title: t.title, description: t.lead } satisfies PageMeta;
+    return { title: t.title, description: t.lead, canonicalSearch: rankingCanonicalSearch(deps) } satisfies PageMeta;
   },
   head,
   ...RankingsPage,
@@ -345,16 +435,107 @@ const rankingsRoute = createRoute({
 const rankingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/rankings/$id',
-  loader: async ({ context, params }) => {
-    const [{ rankingDetailQuery }, { RANKINGS_MESSAGES }] = await Promise.all([
+  validateSearch: RankingDetailSearchSchema,
+  loaderDeps: ({ search }) => search,
+  loader: async ({ context, params, deps }) => {
+    const [
+      { rankingDetailQuery, rankingFilterOptionsQuery },
+      { RANKINGS_MESSAGES },
+      { rankingDetailInput, rankingFilterOptionsInput, rankingCanonicalSearch },
+    ] = await Promise.all([
       import('@/data/endpoints/rankings.query'),
       import('@/modules/rankings/rankings.const'),
+      import('@/modules/rankings/rankings-query.helper'),
     ]);
-    await prefetchQueries(context.queryClient, [rankingDetailQuery.queryOptions({ params: { id: params.id }, query: { page: 1, pageSize: 50 } })]);
-    return { title: currentText(RANKINGS_MESSAGES).list.title } satisfies PageMeta;
+    await prefetchQueries(context.queryClient, [
+      rankingDetailQuery.queryOptions(rankingDetailInput(params.id, deps)),
+      rankingFilterOptionsQuery.queryOptions(rankingFilterOptionsInput(params.id)),
+    ]);
+    return { title: currentText(RANKINGS_MESSAGES).list.title, canonicalSearch: rankingCanonicalSearch(deps) } satisfies PageMeta;
   },
   head,
   ...RankingPage,
+});
+/** D07: competitors by cross-sport band (static path: ranks above `/rankings/$id`). */
+const allSportsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/rankings/all-sports',
+  validateSearch: CrossSportFiltersSchema,
+  loaderDeps: ({ search }) => search,
+  loader: async ({ context, deps }) => {
+    const [{ crossSportListQuery }, { allSportsInput }, { CROSS_SPORT_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/cross-sport.query'),
+      import('@/modules/rankings/cross-sport-query.helper'),
+      import('@/modules/rankings/cross-sport.const'),
+    ]);
+    await prefetchQueries(context.queryClient, [crossSportListQuery.queryOptions(allSportsInput(deps))]);
+    const t = currentText(CROSS_SPORT_MESSAGES).page;
+    return { title: t.title, description: t.lead } satisfies PageMeta;
+  },
+  head,
+  ...AllSportsPage,
+});
+const allSportsMethodologyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/rankings/all-sports/methodology',
+  loader: async ({ context }) => {
+    const [{ crossSportMethodologyQuery }, { CROSS_SPORT_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/cross-sport.query'),
+      import('@/modules/rankings/cross-sport.const'),
+    ]);
+    await prefetchQueries(context.queryClient, [crossSportMethodologyQuery.queryOptions()]);
+    const t = currentText(CROSS_SPORT_MESSAGES).methodology;
+    return { title: t.title, description: t.lead } satisfies PageMeta;
+  },
+  head,
+  ...AllSportsMethodologyPage,
+});
+/** T4.2: public methodology page of a registered methodology (the static `/rankings/all-sports/methodology` ranks above it). */
+const methodologyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/rankings/$key/methodology',
+  loader: async ({ context, params }) => {
+    const [{ methodologyDocQuery }, { METHODOLOGY_MESSAGES }, { RANKINGS_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/methodology.query'),
+      import('@/modules/rankings/methodology.const'),
+      import('@/modules/rankings/rankings.const'),
+    ]);
+    const doc = await ensureOr404(context.queryClient, methodologyDocQuery.queryOptions({ params: { key: params.key } }));
+    const t = currentText(METHODOLOGY_MESSAGES);
+    if (!doc) return { title: t.notFoundTitle } satisfies PageMeta;
+    const name = currentText(RANKINGS_MESSAGES).list.methodologies[doc.key] ?? doc.key;
+    return {
+      title: t.documentTitle(name),
+      description: t.metaDescription(name),
+      jsonLd: [breadcrumbJsonLd(origin(), [homeCrumb(), { name: t.breadcrumb, path: '/rankings' }, { name: t.documentTitle(name) }])],
+    } satisfies PageMeta;
+  },
+  head,
+  ...MethodologyPage,
+});
+/** D04: head-to-head of two competitors; the pair is in the URL (share link). Arbitrary pairs are never indexed. */
+const compareRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/compare',
+  validateSearch: HeadToHeadSearchSchema,
+  loaderDeps: ({ search }) => ({ a: search.a, b: search.b }),
+  loader: async ({ context, deps }) => {
+    const [{ athletesQuery }, { headToHeadQuery }, { ALL_ATHLETES_INPUT }, { headToHeadInput, isComparablePair }, { COMPARE_MESSAGES }] = await Promise.all([
+      import('@/data/endpoints/athletes.query'),
+      import('@/data/endpoints/compare.query'),
+      import('@/modules/athletes/athletes-query.const'),
+      import('@/modules/compare/compare-query.helper'),
+      import('@/modules/compare/compare.const'),
+    ]);
+    await prefetchQueries(context.queryClient, [
+      athletesQuery.queryOptions(ALL_ATHLETES_INPUT),
+      ...(isComparablePair(deps) ? [headToHeadQuery.queryOptions(headToHeadInput(deps))] : []),
+    ]);
+    const t = currentText(COMPARE_MESSAGES).page;
+    return { title: t.title, description: t.lead, noindex: true } satisfies PageMeta;
+  },
+  head,
+  ...ComparePage,
 });
 const sourcesRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -457,6 +638,12 @@ const adminDossiersRoute = adminPage('/admin/dossiers', AdminQueueSearchSchema, 
 const adminCommentsRoute = adminPage('/admin/comments', AdminCommentsSearchSchema, AdminCommentsPage, 'comments');
 const adminContactRoute = adminPage('/admin/contact', AdminContactSearchSchema, AdminContactPage, 'contact');
 /** D14: merge/unmerge of competitors (not an A1–A8 queue: own title catalog). */
+/** T2.6: review list of competitive facts without a cross-sport mapping. */
+const adminCrossSportRoute = privatePage(
+  '/admin/cross-sport',
+  AdminCrossSportPage,
+  async () => currentText((await import('@/modules/admin/admin-cross-sport.const')).ADMIN_CROSS_SPORT_MESSAGES).title,
+);
 const adminMergeRoute = privatePage('/admin/merge', AdminMergePage, async () => currentText((await import('@/modules/admin/admin-merge.const')).ADMIN_MERGE_MESSAGES).title);
 
 export const routeTree = rootRoute.addChildren([
@@ -466,10 +653,16 @@ export const routeTree = rootRoute.addChildren([
   athleteRoute,
   sportsRoute,
   sportRoute,
+  competitionRoute,
+  competitionEditionRoute,
   organizationsRoute,
   calendarRoute,
   rankingsRoute,
   rankingRoute,
+  allSportsRoute,
+  allSportsMethodologyRoute,
+  methodologyRoute,
+  compareRoute,
   sourcesRoute,
   contactRoute,
   onThisDayRoute,
@@ -491,4 +684,5 @@ export const routeTree = rootRoute.addChildren([
   adminCommentsRoute,
   adminContactRoute,
   adminMergeRoute,
+  adminCrossSportRoute,
 ]);

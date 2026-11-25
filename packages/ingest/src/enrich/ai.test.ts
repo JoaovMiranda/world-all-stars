@@ -86,6 +86,7 @@ import { eq as eqOp } from 'drizzle-orm';
 
 import { biographyPrompt } from './biography-prompt.helper';
 import { copiesSource } from './evidence.helper';
+import { numberCorpus } from './numbered-corpus.helper';
 import { runBiography } from './run-biography.service';
 import { runFactCheck } from './run-fact-check.service';
 
@@ -150,15 +151,15 @@ describe('Biography Enricher (§7.2 task 3)', () => {
 });
 
 describe('biography prompt rules (T1.6)', () => {
-  const prompt = biographyPrompt('Pelé', 'titles: FIFA World Cup 1958', SOURCE);
+  const prompt = biographyPrompt('Pelé', numberCorpus(SOURCE, 'titles: FIFA World Cup 1958'));
 
-  it('asks for character-for-character quotes from SOURCE or FACTS, at most 6 claims, the verbatim schema and no 12-word run', () => {
-    expect(prompt).toContain('copy evidence_quote character-for-character from SOURCE or FACTS; never paraphrase');
+  it('numbers SOURCE and FACTS, asks for sentence IDs (never quotes), at most 6 claims, the schema and no 12-word run', () => {
+    expect(prompt).toContain('Write only the ID in "evidence", never quoted text');
     expect(prompt).toContain('at most 6 claims');
-    expect(prompt).toContain('{"bio_en":"string","bio_pt":"string","bio_es":"string","claims":[{"text":"string","evidence_quote":"string"}]}');
+    expect(prompt).toContain('{"claims":[{"text":"string","evidence":"S1"}],"bio_en":"string","bio_pt":"string","bio_es":"string"}');
     expect(prompt).toContain('must not reuse any run of 12 consecutive words from SOURCE');
-    expect(prompt).toContain(`--- SOURCE ---\n${SOURCE}`);
-    expect(prompt).toContain('FACTS: titles: FIFA World Cup 1958');
+    expect(prompt).toContain(`--- SOURCE ---\n[S1] ${SOURCE}`);
+    expect(prompt).toContain('--- FACTS ---\n[F1] titles: FIFA World Cup 1958');
   });
 
   it('flags a reused run of 12 words, ignoring case and whitespace, but not an 11-word run', () => {
@@ -320,11 +321,12 @@ describe('Fact validator stage (T1.7)', () => {
       version: '1',
       generate: async () => ({ output, tokensIn: 1, tokensOut: 1 }),
     });
-    const claims = [{ text: 'world cups', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' }];
+    const claims = [{ text: 'world cups', evidence_id: null, evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' }];
+    const corpus = numberCorpus(SOURCE, '');
     const invented = { claims: [{ text: 'world cups', status: 'supported', evidence_quote: 'he won five World Cups with Brazil' }] };
-    expect((await runFactCheck(answer(invented), claims, SOURCE, '')).status).toBe('unsupported');
-    expect((await runFactCheck(answer({ claims: [] }), claims, SOURCE, '')).status).toBe('invalid');
+    expect((await runFactCheck(answer(invented), claims, corpus)).status).toBe('unsupported');
+    expect((await runFactCheck(answer({ claims: [] }), claims, corpus)).status).toBe('invalid');
     const literal = { claims: [{ text: 'world cups', status: 'supported', evidence_quote: 'won the FIFA World Cup in 1958, 1962 and 1970' }] };
-    expect((await runFactCheck(answer(literal), claims, SOURCE, '')).status).toBe('supported');
+    expect((await runFactCheck(answer(literal), claims, corpus)).status).toBe('supported');
   });
 });

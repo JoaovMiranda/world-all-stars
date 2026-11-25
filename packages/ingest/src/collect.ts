@@ -22,13 +22,22 @@ import { runWikidata } from './providers/wikidata.provider';
 import { WIKIDATA_PROFILE_PROVIDER } from './providers/wikidata-profile.const';
 import { runWikidataProfile } from './providers/wikidata-profile.provider';
 
-/** Athletes with an English Wikipedia article; optionally only `ids`, one `slug`, at most `limit`. */
-export const peopleWithArticle = async (db: Database, ids: string[] | null, opts: { slug?: string | undefined; limit?: number | undefined } = {}) =>
+/**
+ * Athletes with an English Wikipedia article; optionally only `ids`, one `slug`, at most `limit`. `priority` orders public
+ * profiles first, then the highest champion tier (bulk collection spends the model on the athletes readers see first).
+ */
+export const peopleWithArticle = async (
+  db: Database,
+  ids: string[] | null,
+  opts: { slug?: string | undefined; limit?: number | undefined; priority?: boolean | undefined } = {},
+) =>
   await selectRows<ArticlePerson>(
     db,
     sql`
     select a.id, a.known_as name, a.full_name, a.birth_date, a.height_cm, x.external_id title
     from athletes a join entity_external_ids x on x.entity_id = a.id and x.provider = 'wikipedia_en' and x.deleted_at is null and x.is_current
+    left join competitors c on c.id = a.id
+    left join champion_tiers t on t.id = a.champion_tier_id
     where a.deleted_at is null ${
       ids
         ? sql`and a.id in (${sql.join(
@@ -36,7 +45,9 @@ export const peopleWithArticle = async (db: Database, ids: string[] | null, opts
             sql`, `,
           )})`
         : sql``
-    }${opts.slug ? sql` and a.slug = ${opts.slug}` : sql``}${opts.limit !== undefined ? sql` limit ${opts.limit}` : sql``}`,
+    }${opts.slug ? sql` and a.slug = ${opts.slug}` : sql``}${
+      opts.priority ? sql` order by (c.profile_visibility = 'public') desc, t.sort_order desc nulls last, a.known_as` : sql``
+    }${opts.limit !== undefined ? sql` limit ${opts.limit}` : sql``}`,
   );
 
 /** Facts from the database given to the biography prompt (titles, clubs, birth, height). */
@@ -49,7 +60,7 @@ export const factsOf = async (db: Database, p: ArticlePerson) => {
   );
   const clubs = await selectRows<{ name: string; from_year: number | null; to_year: number | null }>(
     db,
-    sql`select t.name, at.from_year, at.to_year from athlete_teams at join teams t on t.id = at.team_id where at.athlete_id = ${p.id} and at.deleted_at is null order by at.from_year`,
+    sql`select t.name, m.from_year, m.to_year from competitor_memberships m join teams t on t.id = m.parent_id where m.member_id = ${p.id} and m.deleted_at is null order by m.from_year`,
   );
   return [
     p.full_name && `full name ${p.full_name}`,
@@ -124,39 +135,38 @@ export const enrichItemOf = async (ctx: IngestContext, p: ArticlePerson, section
   };
 };
 
+type BiographyTotals = NonNullable<Awaited<ReturnType<typeof runBiography>>>;
+const addTotals = (a: BiographyTotals, b: BiographyTotals): BiographyTotals => ({
+  skipped: a.skipped && b.skipped,
+  invocations: a.invocations + b.invocations,
+  unchanged: a.unchanged + b.unchanged,
+  accepted: a.accepted + b.accepted,
+  proposals: a.proposals + b.proposals,
+  rejected: a.rejected + b.rejected,
+});
+
+/**
+ * Biographies one athlete at a time: each result is stored before the next article is fetched, so an interrupted run
+ * (reboot, container restart) keeps everything done so far and the next run skips it by revision.
+ */
 const biographies = async (ctx: IngestContext, provider: AiProvider | null, people: ArticlePerson[]) => {
-  const items: EnrichItem[] = [];
-  for (const p of provider ? people : []) {
+  if (!provider) return null;
+  let totals: BiographyTotals = { skipped: false, invocations: 0, unchanged: 0, accepted: 0, proposals: 0, rejected: 0 };
+  for (const [i, p] of people.entries()) {
     if (ctx.cancelled?.()) break; // cooperative cancel of the job
     const item = await enrichItemOf(ctx, p);
-    if (item) items.push(item);
+    if (!item) continue;
+    // OLLAMA_CONCURRENCY=1: items run one after the other (the local model is the bottleneck).
+    const r = await runBiography(ctx.db, provider, [item]);
+    totals = addTotals(totals, r);
+    const outcome = r.accepted ? 'accepted' : r.proposals ? 'queued' : r.rejected ? 'rejected' : r.unchanged ? 'unchanged' : 'no output';
+    ctx.log(`[${i + 1}/${people.length}] ${p.name}: ${outcome}`);
   }
-  // OLLAMA_CONCURRENCY=1: items run one after the other (the local model is the bottleneck).
-  return provider ? runBiography(ctx.db, provider, items) : null;
+  return totals;
 };
 
-const write = (db: Database, providers: string[]) => new CanonicalWriter(db).writeProviders(providers);
-
-/** First collection of a list of athletes (names, links or CSV lines). */
-export const firstCollect = async (ctx: IngestContext, provider: AiProvider | null, entries: ListEntry[]): Promise<CollectReport> => {
-  const list = await runAthleteList(ctx, entries);
-  ctx.log(`athlete-list: ${list.resolved} resolved, ${list.missing.length} without an unambiguous article`);
-  await write(ctx.db, [ATHLETE_LIST_PROVIDER]);
-  const wanted = new Set(list.titles);
-  const people = (await peopleWithArticle(ctx.db, null)).filter((p) => wanted.has(p.title));
-  for (const l of await runWikidata(ctx, {})) ctx.log(l);
-  await write(ctx.db, [WIKIDATA_PROVIDER]);
-  for (const l of await runWikidataProfile(ctx, { entityIds: new Set(people.map((p) => p.id)) })) ctx.log(l);
-  await write(ctx.db, [WIKIDATA_PROFILE_PROVIDER]);
-  const biography = await biographies(ctx, provider, people);
-  return { mode: 'first', people: people.length, missing: list.missing, biography, needsEnrichment: provider ? 0 : people.length, skippedUnchanged: 0 };
-};
-
-/** Periodic update: only articles whose revid changed since their last biography reach the model. */
-export const updateCollect = async (ctx: IngestContext, provider: AiProvider | null, opts: { limit?: number | undefined } = {}): Promise<CollectReport> => {
-  const people = (await peopleWithArticle(ctx.db, null)).slice(0, opts.limit ?? 100_000);
-  for (const l of await runWikidataProfile(ctx, { entityIds: new Set(people.map((p) => p.id)) })) ctx.log(l);
-  await write(ctx.db, [WIKIDATA_PROFILE_PROVIDER]);
+/** People whose last biography was made from another revision of the article (or never): the only ones the model sees. */
+const changedSinceLastBiography = async (ctx: IngestContext, people: ArticlePerson[]) => {
   const [current, last] = await Promise.all([
     currentRevisions(
       ctx,
@@ -164,7 +174,51 @@ export const updateCollect = async (ctx: IngestContext, provider: AiProvider | n
     ),
     lastBiographyRevisions(ctx.db),
   ]);
-  const changed = people.filter((p) => !last.has(p.id) || (current.get(p.title) ?? '') !== last.get(p.id));
+  return people.filter((p) => !last.has(p.id) || (current.get(p.title) ?? '') !== last.get(p.id));
+};
+
+const write = (db: Database, providers: string[]) => new CanonicalWriter(db).writeProviders(providers);
+
+/** First collection of a list of athletes (names, links or CSV lines). */
+export const firstCollect = async (
+  ctx: IngestContext,
+  provider: AiProvider | null,
+  entries: ListEntry[],
+  opts: { limit?: number | undefined; priority?: boolean | undefined } = {},
+): Promise<CollectReport> => {
+  const list = await runAthleteList(ctx, entries);
+  ctx.log(`athlete-list: ${list.resolved} resolved, ${list.missing.length} without an unambiguous article`);
+  await write(ctx.db, [ATHLETE_LIST_PROVIDER]);
+  const wanted = new Set(list.titles);
+  const people = (await peopleWithArticle(ctx.db, null, { priority: opts.priority })).filter((p) => wanted.has(p.title)).slice(0, opts.limit ?? 100_000);
+  for (const l of await runWikidata(ctx, {})) ctx.log(l);
+  await write(ctx.db, [WIKIDATA_PROVIDER]);
+  for (const l of await runWikidataProfile(ctx, { entityIds: new Set(people.map((p) => p.id)) })) ctx.log(l);
+  await write(ctx.db, [WIKIDATA_PROFILE_PROVIDER]);
+  // A re-run of the same list (restart, resume) only sends people without a biography of the current revision.
+  const changed = await changedSinceLastBiography(ctx, people);
+  if (changed.length < people.length) ctx.log(`collect: ${people.length - changed.length} already have a biography of the current revision (skipped)`);
+  const biography = await biographies(ctx, provider, changed);
+  return {
+    mode: 'first',
+    people: people.length,
+    missing: list.missing,
+    biography,
+    needsEnrichment: provider ? 0 : changed.length,
+    skippedUnchanged: people.length - changed.length,
+  };
+};
+
+/** Periodic update: only articles whose revid changed since their last biography reach the model. */
+export const updateCollect = async (
+  ctx: IngestContext,
+  provider: AiProvider | null,
+  opts: { limit?: number | undefined; priority?: boolean | undefined } = {},
+): Promise<CollectReport> => {
+  const people = (await peopleWithArticle(ctx.db, null, { priority: opts.priority })).slice(0, opts.limit ?? 100_000);
+  for (const l of await runWikidataProfile(ctx, { entityIds: new Set(people.map((p) => p.id)) })) ctx.log(l);
+  await write(ctx.db, [WIKIDATA_PROFILE_PROVIDER]);
+  const changed = await changedSinceLastBiography(ctx, people);
   const biography = await biographies(ctx, provider, changed);
   return {
     mode: 'update',

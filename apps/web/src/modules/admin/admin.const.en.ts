@@ -281,6 +281,7 @@ export const ADMIN_TEXT_EN = {
     on: 'on',
     likes: 'Likes',
     dislikes: 'Dislikes',
+    reports: 'Reports',
     replies: 'Replies',
     hiddenReason: 'Reason for hiding',
     decisionLabel: 'Comment moderation',

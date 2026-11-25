@@ -30,8 +30,14 @@ export const SPORTS_TEXT = {
     all: 'Todos os programas',
     partOf: (name: string) => `Disciplina de ${name}`,
     status: {
-      current: 'programa atual', discontinued: 'descontinuado', demonstration: 'demonstração', confirmed_future: 'confirmado', core: 'obrigatório',
-      optional: 'opcional', recognized: 'reconhecido', youth_only: 'Juventude',
+      current: 'programa atual',
+      discontinued: 'descontinuado',
+      demonstration: 'demonstração',
+      confirmed_future: 'confirmado',
+      core: 'obrigatório',
+      optional: 'opcional',
+      recognized: 'reconhecido',
+      youth_only: 'Juventude',
     } as Record<string, string>,
     sectionTitle: 'Programas multiesportivos',
     none: 'Ainda não faz parte de nenhum programa multiesportivo cadastrado.',
@@ -49,13 +55,22 @@ export const SPORTS_TEXT = {
   hierarchy: {
     title: 'Hierarquia completa das associações',
     count: (orgs: number, roots: number) => `${orgs} associações · ${roots} raízes`,
-    intro: 'Quem é membro de quem, quem licencia quem. Cada associação tem um tipo e uma natureza (associação sem fins lucrativos, empresa, marca, comunidade, mídia).',
+    intro:
+      'Quem é membro de quem, quem licencia quem. Cada associação tem um tipo e uma natureza (associação sem fins lucrativos, empresa, marca, comunidade, mídia).',
     natureLabel: 'Filtrar por natureza',
     governs: 'Governa',
     relationUp: (label: string) => `${label} ↑`,
     noMatch: 'Nenhuma associação desta natureza.',
     emptyTitle: 'Nenhuma associação cadastrada',
     emptyText: 'A hierarquia (federações, ligas, empresas e marcas) aparece aqui conforme as associações forem coletadas.',
+  },
+  image: {
+    alt: (sport: string) => `Foto ilustrativa: ${sport}`,
+    by: 'Foto:',
+    unknownAuthor: 'autor não informado',
+    license: 'Licença',
+    via: 'via Wikimedia Commons',
+    filePage: (file: string) => `Página do arquivo ${file} no Wikimedia Commons`,
   },
   page: {
     title: 'Esporte',
@@ -158,7 +173,6 @@ export const SPORTS_TEXT = {
     judged: 'julgado por juízes',
   } as Record<string, string>,
 } as const;
-
 
 /** In-page anchors (linked from cards, the sport page and the /organizations redirect). */
 export const SPORTS_HASH = { hierarchy: 'hierarquia', associations: 'associacoes' } as const;

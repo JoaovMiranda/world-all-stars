@@ -49,9 +49,18 @@ export const SOURCES_TEXT_ES = {
       { title: 'Agenda y revisión', text: '¿Le toca revisión a la fuente y cambió su versión (revid, ETag)? Si no cambió, ni se descarga el contenido.' },
       { title: 'Sección y ruido', text: 'Solo la sección relevante, comparada por hash. Los cambios solo de formato, enlace u ortografía se descartan.' },
       { title: 'Primero el parser', text: 'Una tabla bien formada va al parser determinista, sin IA. Un fragmento ya procesado reutiliza el resultado.' },
-      { title: 'Diff mínimo y presupuesto', text: 'El modelo recibe solo las líneas modificadas, dentro de un límite por ejecución. Lo que sobra queda para la siguiente.' },
-      { title: 'Fragmento literal', text: 'Cada valor incluye el fragmento de la fuente (evidence_quote). Si el fragmento no existe en el texto original, el dato se descarta.' },
-      { title: 'Aprobación', text: 'Nada se publica directamente: se convierte en una propuesta en la cola de curaduría, con el fragmento de la fuente junto a cada valor.' },
+      {
+        title: 'Diff mínimo y presupuesto',
+        text: 'El modelo recibe solo las líneas modificadas, dentro de un límite por ejecución. Lo que sobra queda para la siguiente.',
+      },
+      {
+        title: 'Fragmento literal',
+        text: 'Cada valor incluye el fragmento de la fuente (evidence_quote). Si el fragmento no existe en el texto original, el dato se descarta.',
+      },
+      {
+        title: 'Aprobación',
+        text: 'Nada se publica directamente: se convierte en una propuesta en la cola de curaduría, con el fragmento de la fuente junto a cada valor.',
+      },
     ],
     caption: 'Ejecuciones de la recopilación asistida por IA',
     colStarted: 'Ejecución',
@@ -75,6 +84,26 @@ export const SOURCES_TEXT_ES = {
       { title: '5. Comunidad', text: 'Wikipedia, Liquipedia, TheSportsDB copiando de 1 a 4.' },
       { title: '6. Reventa', text: 'Feeds comerciales con licencia (Opta, Sportradar, GRID).' },
     ],
+  },
+  licensing: {
+    title: 'Licencias y atribución',
+    eyebrow: 'cómo usamos cada fuente',
+    intro: 'Toda fuente cuya licencia pide crédito aparece con autor y licencia donde se muestran sus datos. Las fuentes solo de enlace no se copian.',
+    attributionLabel: 'Atribución:',
+    shareAlikeTitle: 'Datos de fútbol derivados: CC BY-SA 4.0',
+    shareAlike:
+      'Planteles, alineaciones, partidos y títulos de la Copa del Mundo provienen de la Fjelstul World Cup Database (© 2023 Joshua C. Fjelstul, Ph.D.), bajo CC BY-SA 4.0. Los conjuntos que este sitio deriva de ellos (perfiles de fútbol, rankings de fútbol y páginas de competición) se distribuyen bajo la misma licencia CC BY-SA 4.0: puedes copiarlos y adaptarlos siempre que des crédito y compartas con la misma licencia.',
+    imagesTitle: 'Imágenes',
+    images:
+      'Fotos de Wikimedia Commons, solo por enlace, con autor, licencia y página del archivo junto a cada imagen. Solo aceptamos CC0, dominio público, CC BY y CC BY-SA.',
+    licenseLink: 'Texto de la licencia CC BY-SA 4.0',
+  },
+  attribution: {
+    wikidata: 'Wikidata, CC0 (dominio público): crédito por cortesía; no se exige ninguno.',
+    'wikipedia-en': 'Hechos de artículos de la Wikipedia en inglés (CC BY-SA 4.0); el texto no se republica y cada hecho enlaza a su artículo.',
+    'wikipedia-pt': 'Hechos de artículos de la Wikipedia en portugués (CC BY-SA 4.0); el texto no se republica y cada hecho enlaza a su artículo.',
+    commons: 'Wikimedia Commons: licencia por archivo; autor y licencia aparecen junto a cada imagen.',
+    fjelstul: '© 2023 Joshua C. Fjelstul, Ph.D. Fjelstul World Cup Database, CC BY-SA 4.0. Los datos derivados también son CC BY-SA 4.0.',
   },
   commercialUse: {
     yes: 'Uso comercial permitido',

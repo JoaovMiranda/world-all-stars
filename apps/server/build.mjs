@@ -27,4 +27,9 @@ await build({
   logLevel: 'info',
 });
 fs.cpSync(path.join(here, '../../packages/db/src/migrations'), path.join(out, 'migrations'), { recursive: true });
-console.log('[build] dist/main.js + dist/instrumentation.js + dist/migrations');
+// T4.2: METHODOLOGY*.md of every methodology, read once at start by the methodologies module (dist/methodologies).
+fs.cpSync(path.join(here, '../../packages/ranking/src/methodologies'), path.join(out, 'methodologies'), {
+  recursive: true,
+  filter: (src) => fs.statSync(src).isDirectory() || /^METHODOLOGY(\.[\w-]+)?\.md$/.test(path.basename(src)),
+});
+console.log('[build] dist/main.js + dist/instrumentation.js + dist/migrations + dist/methodologies');

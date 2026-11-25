@@ -17,6 +17,8 @@ const initial = (): DemoState => ({
   messages: [],
   reviewedSuggestions: {},
   consents: {},
+  star: null,
+  hearts: {},
   admin: initialAdminDemo(),
 });
 

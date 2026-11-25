@@ -1904,7 +1904,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "medley-relay",
+            "label": "medley-relay"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000019f",
@@ -1938,7 +1950,19 @@
         },
         "isOlympic": true,
         "category": "100 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "100m",
+            "label": "100m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001a7",
@@ -1972,7 +1996,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "medley-relay",
+            "label": "medley-relay"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000017c",
@@ -2006,7 +2042,19 @@
         },
         "isOlympic": true,
         "category": "100 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "100m",
+            "label": "100m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000017f",
@@ -2040,7 +2088,19 @@
         },
         "isOlympic": true,
         "category": "200 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000184",
@@ -2074,7 +2134,19 @@
         },
         "isOlympic": true,
         "category": "200 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "individual-medley",
+            "label": "individual-medley"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000187",
@@ -2108,7 +2180,19 @@
         },
         "isOlympic": true,
         "category": "400 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "400m",
+            "label": "400m"
+          },
+          {
+            "dimension": "style",
+            "value": "individual-medley",
+            "label": "individual-medley"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000018c",
@@ -2142,7 +2226,19 @@
         },
         "isOlympic": true,
         "category": "4×200 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x200m",
+            "label": "4x200m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000018f",
@@ -2176,7 +2272,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "medley-relay",
+            "label": "medley-relay"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000194",
@@ -2210,7 +2318,19 @@
         },
         "isOlympic": true,
         "category": "200 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000197",
@@ -2244,7 +2364,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001a0",
@@ -2278,7 +2410,19 @@
         },
         "isOlympic": true,
         "category": "200 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001a1",
@@ -2312,7 +2456,19 @@
         },
         "isOlympic": true,
         "category": "200 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001a2",
@@ -2346,7 +2502,19 @@
         },
         "isOlympic": true,
         "category": "200 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "individual-medley",
+            "label": "individual-medley"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001a3",
@@ -2380,7 +2548,19 @@
         },
         "isOlympic": true,
         "category": "400 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "400m",
+            "label": "400m"
+          },
+          {
+            "dimension": "style",
+            "value": "individual-medley",
+            "label": "individual-medley"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001a4",
@@ -2414,7 +2594,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001a5",
@@ -2448,7 +2640,19 @@
         },
         "isOlympic": true,
         "category": "4×200 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x200m",
+            "label": "4x200m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001ab",
@@ -2482,7 +2686,19 @@
         },
         "isOlympic": true,
         "category": "100 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "100m",
+            "label": "100m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001ac",
@@ -2516,7 +2732,19 @@
         },
         "isOlympic": true,
         "category": "200 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "individual-medley",
+            "label": "individual-medley"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001ad",
@@ -2550,7 +2778,19 @@
         },
         "isOlympic": true,
         "category": "4×200 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x200m",
+            "label": "4x200m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001ae",
@@ -2584,7 +2824,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "medley-relay",
+            "label": "medley-relay"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001af",
@@ -2618,7 +2870,19 @@
         },
         "isOlympic": true,
         "category": "200 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001b0",
@@ -2652,7 +2916,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001b4",
@@ -2686,7 +2962,19 @@
         },
         "isOlympic": true,
         "category": "200 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001b5",
@@ -2720,7 +3008,19 @@
         },
         "isOlympic": true,
         "category": "200 m medley",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "200m",
+            "label": "200m"
+          },
+          {
+            "dimension": "style",
+            "value": "individual-medley",
+            "label": "individual-medley"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001b6",
@@ -2754,7 +3054,19 @@
         },
         "isOlympic": true,
         "category": "4×100 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x100m",
+            "label": "4x100m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001b7",
@@ -2788,7 +3100,19 @@
         },
         "isOlympic": true,
         "category": "4×200 m livre",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "4x200m",
+            "label": "4x200m"
+          },
+          {
+            "dimension": "style",
+            "value": "freestyle",
+            "label": "freestyle"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001b9",
@@ -2822,7 +3146,19 @@
         },
         "isOlympic": true,
         "category": "100 m borboleta",
-        "team": "United States team"
+        "team": "United States team",
+        "classes": [
+          {
+            "dimension": "distance",
+            "value": "100m",
+            "label": "100m"
+          },
+          {
+            "dimension": "style",
+            "value": "butterfly",
+            "label": "butterfly"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000001c0",
@@ -4384,7 +4720,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000758",
@@ -4414,7 +4762,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000075d",
@@ -4444,7 +4804,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000762",
@@ -4474,7 +4846,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000765",
@@ -4504,7 +4888,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000768",
@@ -4534,7 +4930,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000076b",
@@ -4564,7 +4972,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000076e",
@@ -4594,7 +5014,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000771",
@@ -4624,7 +5056,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000774",
@@ -4654,7 +5098,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000777",
@@ -4684,7 +5140,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000077c",
@@ -4714,7 +5182,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000077f",
@@ -4744,7 +5224,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000782",
@@ -4774,7 +5266,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000785",
@@ -4804,7 +5308,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000788",
@@ -4834,7 +5350,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000078b",
@@ -4864,7 +5392,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000078e",
@@ -4894,7 +5434,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000791",
@@ -4924,7 +5476,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000794",
@@ -4954,7 +5518,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000797",
@@ -4984,7 +5560,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000079a",
@@ -5014,7 +5602,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000079d",
@@ -5044,7 +5644,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000007a0",
@@ -5074,7 +5686,19 @@
         },
         "isOlympic": false,
         "category": "Simples masculino",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000007a6",
@@ -5104,7 +5728,19 @@
         },
         "isOlympic": true,
         "category": "Simples masculino",
-        "team": "Serbia"
+        "team": "Serbia",
+        "classes": [
+          {
+            "dimension": "entry_format",
+            "value": "singles",
+            "label": "singles"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000007ac",
@@ -5674,7 +6310,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000098f",
@@ -5704,7 +6352,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000995",
@@ -5734,7 +6394,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000099b",
@@ -5764,7 +6436,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009a1",
@@ -5794,7 +6478,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009a4",
@@ -5824,7 +6520,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009a7",
@@ -5854,7 +6562,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009aa",
@@ -5884,7 +6604,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009ad",
@@ -5914,7 +6646,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009b0",
@@ -5944,7 +6688,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009b3",
@@ -5974,7 +6730,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009b6",
@@ -6004,7 +6772,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009b9",
@@ -6034,7 +6814,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009bc",
@@ -6064,7 +6856,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009bf",
@@ -6094,7 +6898,19 @@
         },
         "isOlympic": false,
         "category": "Golfe masculino (profissional)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "professional_status",
+            "value": "professional",
+            "label": "professional"
+          },
+          {
+            "dimension": "sex_category",
+            "value": "men",
+            "label": "men"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000009c7",
@@ -8198,7 +9014,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005dd",
@@ -8228,7 +9051,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005df",
@@ -8258,7 +9088,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005e1",
@@ -8288,7 +9125,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005e4",
@@ -8318,7 +9162,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005e7",
@@ -8348,7 +9199,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005e9",
@@ -8378,7 +9236,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005ec",
@@ -8408,7 +9273,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005ef",
@@ -8438,7 +9310,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005f1",
@@ -8468,7 +9347,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005f4",
@@ -8498,7 +9384,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005f6",
@@ -8528,7 +9421,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005f9",
@@ -8558,7 +9458,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005fb",
@@ -8588,7 +9495,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000005fe",
@@ -8618,7 +9532,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000600",
@@ -8648,7 +9569,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000603",
@@ -8678,7 +9606,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000605",
@@ -8708,7 +9643,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000608",
@@ -8738,7 +9680,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000060b",
@@ -8768,7 +9717,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000060d",
@@ -8798,7 +9754,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000610",
@@ -8828,7 +9791,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000613",
@@ -8858,7 +9828,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000616",
@@ -8888,7 +9865,14 @@
         },
         "isOlympic": false,
         "category": "Makuuchi (divisão principal)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "makuuchi",
+            "label": "makuuchi"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000061b",
@@ -9393,7 +10377,14 @@
         },
         "isOlympic": false,
         "category": "Clássico",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "classical",
+            "label": "classical"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006a7",
@@ -9423,7 +10414,14 @@
         },
         "isOlympic": false,
         "category": "Clássico",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "classical",
+            "label": "classical"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006a4",
@@ -9453,7 +10451,14 @@
         },
         "isOlympic": false,
         "category": "Clássico",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "classical",
+            "label": "classical"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006ab",
@@ -9483,7 +10488,14 @@
         },
         "isOlympic": false,
         "category": "Clássico",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "classical",
+            "label": "classical"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006b6",
@@ -9513,7 +10525,14 @@
         },
         "isOlympic": false,
         "category": "Rápido",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "rapid",
+            "label": "rapid"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006cd",
@@ -9543,7 +10562,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006ae",
@@ -9573,7 +10599,14 @@
         },
         "isOlympic": false,
         "category": "Clássico",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "classical",
+            "label": "classical"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006b9",
@@ -9603,7 +10636,14 @@
         },
         "isOlympic": false,
         "category": "Rápido",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "rapid",
+            "label": "rapid"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006bc",
@@ -9633,7 +10673,14 @@
         },
         "isOlympic": false,
         "category": "Rápido",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "rapid",
+            "label": "rapid"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006bf",
@@ -9663,7 +10710,14 @@
         },
         "isOlympic": false,
         "category": "Rápido",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "rapid",
+            "label": "rapid"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006c2",
@@ -9693,7 +10747,14 @@
         },
         "isOlympic": false,
         "category": "Rápido",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "rapid",
+            "label": "rapid"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006c5",
@@ -9723,7 +10784,14 @@
         },
         "isOlympic": false,
         "category": "Rápido",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "rapid",
+            "label": "rapid"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006d0",
@@ -9753,7 +10821,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006d3",
@@ -9783,7 +10858,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006d6",
@@ -9813,7 +10895,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006d9",
@@ -9843,7 +10932,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006dc",
@@ -9873,7 +10969,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006df",
@@ -9903,7 +11006,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006e2",
@@ -9933,7 +11043,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006e5",
@@ -9963,7 +11080,14 @@
         },
         "isOlympic": false,
         "category": "Blitz",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "blitz",
+            "label": "blitz"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006ea",
@@ -9993,7 +11117,14 @@
         },
         "isOlympic": false,
         "category": "Clássico",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "time_control",
+            "value": "classical",
+            "label": "classical"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000006ef",
@@ -11272,7 +12403,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000086e",
@@ -11302,7 +12440,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000871",
@@ -11332,7 +12477,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000874",
@@ -11362,7 +12514,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000877",
@@ -11392,7 +12551,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000087a",
@@ -11422,7 +12588,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000087d",
@@ -11452,7 +12625,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000880",
@@ -11482,7 +12662,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000883",
@@ -11512,7 +12699,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000888",
@@ -11542,7 +12736,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000088e",
@@ -11572,7 +12773,14 @@
         },
         "isOlympic": false,
         "category": "Open (masculino)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "division",
+            "value": "open",
+            "label": "open"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000894",
@@ -11985,7 +13193,14 @@
         },
         "isOlympic": true,
         "category": "Laser (monotipo individual)",
-        "team": "Great Britain"
+        "team": "Great Britain",
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "laser",
+            "label": "laser"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000449",
@@ -12015,7 +13230,14 @@
         },
         "isOlympic": true,
         "category": "Laser (monotipo individual)",
-        "team": "Great Britain"
+        "team": "Great Britain",
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "laser",
+            "label": "laser"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000044c",
@@ -12045,7 +13267,14 @@
         },
         "isOlympic": true,
         "category": "Finn (monotipo individual pesado)",
-        "team": "Great Britain"
+        "team": "Great Britain",
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000044f",
@@ -12075,7 +13304,14 @@
         },
         "isOlympic": true,
         "category": "Finn (monotipo individual pesado)",
-        "team": "Great Britain"
+        "team": "Great Britain",
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000452",
@@ -12105,7 +13341,14 @@
         },
         "isOlympic": true,
         "category": "Finn (monotipo individual pesado)",
-        "team": "Great Britain"
+        "team": "Great Britain",
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000045d",
@@ -12135,7 +13378,14 @@
         },
         "isOlympic": false,
         "category": "Laser (monotipo individual)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "laser",
+            "label": "laser"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000460",
@@ -12165,7 +13415,14 @@
         },
         "isOlympic": false,
         "category": "Laser (monotipo individual)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "laser",
+            "label": "laser"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000465",
@@ -12195,7 +13452,14 @@
         },
         "isOlympic": false,
         "category": "Finn (monotipo individual pesado)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000468",
@@ -12225,7 +13489,14 @@
         },
         "isOlympic": false,
         "category": "Finn (monotipo individual pesado)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000046b",
@@ -12255,7 +13526,14 @@
         },
         "isOlympic": false,
         "category": "Finn (monotipo individual pesado)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000046e",
@@ -12285,7 +13563,14 @@
         },
         "isOlympic": false,
         "category": "Finn (monotipo individual pesado)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000471",
@@ -12315,7 +13600,14 @@
         },
         "isOlympic": false,
         "category": "Finn (monotipo individual pesado)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000474",
@@ -12345,7 +13637,14 @@
         },
         "isOlympic": false,
         "category": "Finn (monotipo individual pesado)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "boat_class",
+            "value": "finn",
+            "label": "finn"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000479",
@@ -16573,7 +17872,19 @@
         },
         "isOlympic": false,
         "category": "Superpesado (braço direito)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "arm",
+            "value": "right",
+            "label": "right"
+          },
+          {
+            "dimension": "weight",
+            "value": "super-heavyweight",
+            "label": "super-heavyweight"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000663",
@@ -16633,7 +17944,19 @@
         },
         "isOlympic": false,
         "category": "Superpesado (braço direito)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "arm",
+            "value": "right",
+            "label": "right"
+          },
+          {
+            "dimension": "weight",
+            "value": "super-heavyweight",
+            "label": "super-heavyweight"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-00000000066e",
@@ -16663,7 +17986,19 @@
         },
         "isOlympic": false,
         "category": "Superpesado (braço direito)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "arm",
+            "value": "right",
+            "label": "right"
+          },
+          {
+            "dimension": "weight",
+            "value": "super-heavyweight",
+            "label": "super-heavyweight"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-000000000674",
@@ -16693,7 +18028,19 @@
         },
         "isOlympic": false,
         "category": "Superpesado (braço direito)",
-        "team": null
+        "team": null,
+        "classes": [
+          {
+            "dimension": "arm",
+            "value": "right",
+            "label": "right"
+          },
+          {
+            "dimension": "weight",
+            "value": "super-heavyweight",
+            "label": "super-heavyweight"
+          }
+        ]
       }
     ],
     "teams": [],
@@ -17316,7 +18663,14 @@
         },
         "isOlympic": false,
         "category": "CS:GO",
-        "team": "Luminosity Gaming"
+        "team": "Luminosity Gaming",
+        "classes": [
+          {
+            "dimension": "game_version",
+            "value": "cs-go",
+            "label": "cs-go"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000002cd",
@@ -17350,7 +18704,14 @@
         },
         "isOlympic": false,
         "category": "CS:GO",
-        "team": "SK Gaming"
+        "team": "SK Gaming",
+        "classes": [
+          {
+            "dimension": "game_version",
+            "value": "cs-go",
+            "label": "cs-go"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000002d2",
@@ -17384,7 +18745,14 @@
         },
         "isOlympic": false,
         "category": "CS:GO",
-        "team": "SK Gaming"
+        "team": "SK Gaming",
+        "classes": [
+          {
+            "dimension": "game_version",
+            "value": "cs-go",
+            "label": "cs-go"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000002dc",
@@ -17418,7 +18786,14 @@
         },
         "isOlympic": false,
         "category": "CS:GO",
-        "team": "Luminosity Gaming"
+        "team": "Luminosity Gaming",
+        "classes": [
+          {
+            "dimension": "game_version",
+            "value": "cs-go",
+            "label": "cs-go"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000002e2",
@@ -17500,7 +18875,14 @@
         },
         "isOlympic": false,
         "category": "CS:GO",
-        "team": "Luminosity Gaming"
+        "team": "Luminosity Gaming",
+        "classes": [
+          {
+            "dimension": "game_version",
+            "value": "cs-go",
+            "label": "cs-go"
+          }
+        ]
       },
       {
         "id": "019a3f2c-7d00-7000-8000-0000000002e9",

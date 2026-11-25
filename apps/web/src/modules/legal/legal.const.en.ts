@@ -374,6 +374,14 @@ export const LEGAL_DOCS_EN: LegalDocs = {
             kind: 'p',
             text: 'We follow the Web Content Accessibility Guidelines (WCAG) 2.2, level AA, with eMAG as the Brazilian reference, as required by the Brazilian Inclusion Law (Law 13,146/2015, art. 63).',
           },
+          {
+            kind: 'p',
+            text: 'Conformance status: partially conformant. Most of the site meets WCAG 2.2 AA; the exceptions are listed under “Known limitations”, with the alternative offered for each one.',
+          },
+          {
+            kind: 'p',
+            text: 'Statement prepared on 18 November 2026, based on the audit below, and reviewed on 24 November 2026.',
+          },
         ],
       },
       {
@@ -426,9 +434,12 @@ export const LEGAL_DOCS_EN: LegalDocs = {
           {
             kind: 'list',
             items: [
+              'Charts: they are drawn on a canvas, so screen readers and the keyboard cannot step through the data points one by one. Every chart has a text summary and the same data in a table.',
               'The gold chart bars have low contrast in the light theme: the same data is in a table next to them.',
-              'Photos come from Wikimedia Commons (served through our own server) and may load slowly on a first visit; the athlete’s name is always in text.',
-              'The interface is available in Portuguese, English and Spanish; part of the athlete content still exists only in Portuguese (the site says so when that happens).',
+              'Home page globe: it is an interactive 3D image that screen readers cannot describe. The list of countries next to it has the same content and works with the keyboard alone; the globe stops spinning when the system asks for reduced motion.',
+              'Third-party images: photos and logos come from Wikimedia Commons and other open sources. Their alternative text is the name of the athlete or organization, not a description of the picture, and photos may load slowly on a first visit. Credits and licenses follow the original.',
+              'Languages: the interface is available in Portuguese, English and Spanish; part of the athlete content and the ranking methodology pages still exist only in English (the site says so when that happens and marks the language of the passage for screen readers).',
+              'External links (Wikipedia, federations, databases) lead to sites we do not control, which may not meet WCAG 2.2 AA.',
             ],
           },
         ],
@@ -453,6 +464,14 @@ export const LEGAL_DOCS_EN: LegalDocs = {
           {
             kind: 'p',
             text: 'Found something that prevents or hinders use? Send a message through Contact, with the topic “Something else”, telling us the page and what happened. We reply within 5 business days.',
+          },
+          {
+            kind: 'list',
+            items: [
+              'The address (URL) of the page and what you were trying to do.',
+              'What happened and, if possible, the browser and assistive technology you used (screen reader, magnifier, voice control).',
+              'If you prefer, ask for the content in another format: we will send the information as plain text.',
+            ],
           },
         ],
       },

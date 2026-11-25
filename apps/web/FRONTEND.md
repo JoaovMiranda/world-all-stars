@@ -51,7 +51,8 @@ Available endpoints (a GET exports `<name>Query`; mutations are exported by name
 | `rankings.query.ts` | `rankingsQuery`, `rankingDetailQuery`, `rankingMethodologiesQuery`, `adminRankingsQuery`, `calculateRanking`, `approveRanking` |
 | `session.query.ts` | `sessionQuery`, `meQuery`, `notificationsQuery`, `markNotificationRead` |
 | `tier-votes.query.ts` | `tierVotesQuery`, `castTierVote`, `setOfficialTier` |
-| `comments.query.ts` | `commentsQuery`, `postComment`, `reactToComment`, `deleteComment` |
+| `comments.query.ts` | `commentsQuery`, `postComment`, `reactToComment`, `editComment`, `reportComment`, `deleteComment` |
+| `interactions.query.ts` | `myInteractionsQuery` (private, client-side only), `setStar`, `clearStar`, `toggleHeart` |
 | `contact.query.ts` | `submitSuggestion`, `submitContact` |
 | `account.query.ts` | `myDataQuery`, `updateConsent`, `exportMyData`, `deleteAccount`, `acceptConsent` |
 | `admin.query.ts` | admin screens (summary, proposals, identities, tier signals, ingestion, sources, users, privacy, dossiers, comments, inbox); demo data in `data/fixtures/admin.fixture.ts` with audit |

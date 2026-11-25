@@ -44,6 +44,7 @@ import {
   SOURCE_USAGE_STATUS_VALUES,
   SUGGESTION_STATUS_VALUES,
   TIER_VALUES,
+  TIER_VOTE_FLAG_STATUS_VALUES,
   USER_ROLE_VALUES,
 } from '@was/shared';
 import { pgEnum } from 'drizzle-orm/pg-core';
@@ -95,3 +96,4 @@ export const provenanceReviewStatusEnum = pgEnum('provenance_review_status', PRO
 export const rankingOutputKindEnum = pgEnum('ranking_output_kind', RANKING_OUTPUT_KIND_VALUES);
 export const rankingSnapshotStatusEnum = pgEnum('ranking_snapshot_status', RANKING_SNAPSHOT_STATUS_VALUES);
 export const retentionPolicyEnum = pgEnum('retention_policy', RETENTION_POLICY_VALUES);
+export const tierVoteFlagStatusEnum = pgEnum('tier_vote_flag_status', TIER_VOTE_FLAG_STATUS_VALUES);

@@ -41,6 +41,7 @@ export class AdminController extends BaseController {
       pending: adminPendingCounts({
         proposals: proposals.items,
         signals: signals.items,
+        tierVoteFlags: signals.flags,
         runs: ingestion.runs,
         sources,
         comments: comments.items,
@@ -62,6 +63,10 @@ export class AdminController extends BaseController {
 
   tierSignals() {
     return this.review.listTierSignals();
+  }
+
+  reviewTierVoteFlag({ params, body }: ContractInputOf<typeof AdminApi.reviewTierVoteFlag>) {
+    return this.review.reviewTierVoteFlag(params.id, body.decision, body.reason);
   }
 
   dossiers() {

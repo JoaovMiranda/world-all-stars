@@ -1,10 +1,11 @@
 import './document-page-layout.css';
 
-import type { IsoDate } from '@was/shared';
+import type { IsoDate, Locale } from '@was/shared';
 import { type ReactNode, useId } from 'react';
 
 import { useText } from '@/i18n/use-text.hook';
 import type { BreadcrumbItem } from './breadcrumb-item.interface';
+import { useContentLang } from './content-lang.helper';
 import type { DocSection } from './doc-section.interface';
 import type { DocumentContent } from './document-content.interface';
 import { DOCUMENT_PAGE_MESSAGES } from './document-page.const';
@@ -33,6 +34,8 @@ interface DocumentPageLayoutProps extends DocumentContent {
   /** Banner above the sections (e.g. "draft pending legal review"). */
   notice?: ReactNode;
   noticeTone?: NoticeTone;
+  /** Language the document came in (API content): untranslated note + `lang` on the title (PageLayout). */
+  contentLocale?: Locale | undefined;
 }
 
 export function DocBlocks({ blocks }: { blocks: readonly DocBlock[] }) {
@@ -110,7 +113,7 @@ export function DocBlocks({ blocks }: { blocks: readonly DocBlock[] }) {
 function DocSectionCard({ section, index }: { section: DocSection; index: number }) {
   const headingId = useId();
   return (
-    <section id={section.id} className="doc-section" aria-labelledby={headingId}>
+    <section id={section.id} className="doc-section" aria-labelledby={headingId} lang={section.lang}>
       <h2 id={headingId}>
         <span className="doc-num" aria-hidden="true">
           {String(index + 1).padStart(2, '0')}
@@ -138,7 +141,9 @@ export function DocumentPageLayout({
   updatedAt,
   notice,
   noticeTone = 'warning',
+  contentLocale,
 }: DocumentPageLayoutProps) {
+  const contentLang = useContentLang(contentLocale);
   const docText = useText(DOCUMENT_PAGE_MESSAGES);
   const tocId = useId();
   const meta = [
@@ -149,6 +154,8 @@ export function DocumentPageLayout({
   return (
     <PageLayout
       title={title}
+      {...(contentLang ? { heading: <span lang={contentLang}>{title}</span> } : {})}
+      contentLocale={contentLocale}
       eyebrow={eyebrow}
       lead={lead}
       breadcrumb={breadcrumb}
@@ -172,7 +179,9 @@ export function DocumentPageLayout({
           <ol>
             {sections.map((s) => (
               <li key={s.id}>
-                <a href={`#${s.id}`}>{s.title}</a>
+                <a href={`#${s.id}`} lang={s.lang}>
+                  {s.title}
+                </a>
               </li>
             ))}
           </ol>

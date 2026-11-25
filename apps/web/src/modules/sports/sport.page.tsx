@@ -33,6 +33,7 @@ import { SportChampions } from './sport-champions.component';
 import { SportCompetitions } from './sport-competitions.component';
 import { SportFilters } from './sport-filters.component';
 import { SportGovernance } from './sport-governance.component';
+import { SportImage } from './sport-image.component';
 import { SPORTS_MESSAGES } from './sports.const';
 import { sportPageInput } from './sports-query.helper';
 
@@ -153,6 +154,7 @@ function SportContent({ sport }: { sport: SportPageData }) {
           ))}
         </div>
         <aside className="c-4 stack">
+          {sport.image && <SportImage image={sport.image} sport={sport.name} />}
           {(sport.partOf || sport.disciplines.length > 0) && (
             <Section title={sport.partOf ? programme.partOfTitle : programme.disciplinesTitle}>
               {sport.partOf && (

@@ -283,6 +283,7 @@ export const ADMIN_TEXT = {
     on: 'em',
     likes: 'Curtidas',
     dislikes: 'Descurtidas',
+    reports: 'Denúncias',
     replies: 'Respostas',
     hiddenReason: 'Motivo da ocultação',
     decisionLabel: 'Moderação do comentário',

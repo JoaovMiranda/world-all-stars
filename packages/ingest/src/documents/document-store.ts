@@ -62,10 +62,14 @@ export const storeDocument = async (db: Database, input: StoreDocumentInput) => 
   const canonicalUrl = canonicalizeUrl(input.url);
   const now = new Date();
   const revisionMatch = input.revisionId === null ? isNull(sourceDocuments.revisionId) : eq(sourceDocuments.revisionId, input.revisionId);
-  const [existing] = await db
-    .select()
-    .from(sourceDocuments)
-    .where(active(sourceDocuments, and(eq(sourceDocuments.canonicalUrl, canonicalUrl), revisionMatch, eq(sourceDocuments.normalizedHash, normalizedHash))));
+  const findExisting = async () =>
+    (
+      await db
+        .select()
+        .from(sourceDocuments)
+        .where(active(sourceDocuments, and(eq(sourceDocuments.canonicalUrl, canonicalUrl), revisionMatch, eq(sourceDocuments.normalizedHash, normalizedHash))))
+    )[0];
+  const existing = await findExisting();
   if (existing) {
     await db.update(sourceDocuments).set({ lastSeenAt: now }).where(eq(sourceDocuments.id, existing.id));
     return { document: existing, text, isNew: false };
@@ -120,8 +124,14 @@ export const storeDocument = async (db: Database, input: StoreDocumentInput) => 
       licenseId: source.licenseId,
       jobId: input.jobId ?? null,
     })
+    // Another worker may have stored the same document meanwhile (unique index, NULLS NOT DISTINCT): reuse it.
+    .onConflictDoNothing()
     .returning();
-  return { document: document!, text, isNew: true };
+  if (document) return { document, text, isNew: true };
+  const stored = await findExisting();
+  if (!stored) throw new Error(`Could not store or find the document ${canonicalUrl}`);
+  await db.update(sourceDocuments).set({ lastSeenAt: now }).where(eq(sourceDocuments.id, stored.id));
+  return { document: stored, text, isNew: false };
 };
 
 /** Idempotent by (document, parser, version, record key): re-parsing the same document never duplicates. */

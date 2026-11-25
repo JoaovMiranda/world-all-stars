@@ -21,6 +21,8 @@ export const API_ERROR_TEXT = {
   bannedWordExistsField: 'Esta palavra já está na lista deste idioma.',
   invalidLinks: 'Há links inválidos.',
   rateLimited: 'Muitas tentativas. Espere um pouco e tente de novo.',
+  accountTooNew: 'Contas novas votam depois de 24 horas. Volte amanhã.',
+  editWindowClosed: 'O prazo de 10 minutos para editar este comentário acabou.',
   internal: 'Algo deu errado do nosso lado. Tente de novo.',
   invalidJson: 'JSON inválido.',
   payloadTooLarge: 'O conteúdo enviado é grande demais.',

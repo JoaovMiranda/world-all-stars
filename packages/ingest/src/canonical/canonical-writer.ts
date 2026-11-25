@@ -7,7 +7,6 @@ import {
   active,
   athleteSports,
   athletes,
-  athleteTeams,
   athleteTranslations,
   BaseRepository,
   categoryDimensions,
@@ -373,8 +372,6 @@ export class CanonicalWriter {
         { entityId, provider: 'wikidata', externalId: value, url: `https://www.wikidata.org/wiki/${value}` } as never,
         CANONICAL_ACTOR,
       );
-      if (!person.wikidataQid)
-        await this.repo.update(athletes, entityId, { wikidataQid: value } as never, CANONICAL_ACTOR, { summary: 'Wikidata QID (sitelink)' });
       return;
     }
     const column = field === 'birth_date' ? 'birthDate' : field === 'birth_year' ? 'birthYear' : field === 'gender' ? 'gender' : null;
@@ -459,14 +456,15 @@ export class CanonicalWriter {
         .set({ profileVisibility: 'none', visibilityReason: 'teams have no profile page yet' })
         .where(eq(competitors.id, team.id));
       const fromYear = (v.from as number | null) ?? null;
+      // Club spells are memberships of the person (competitor) in the team (competitor): universal model (T1.2).
       const [existing] = await this.db
         .select()
-        .from(athleteTeams)
-        .where(and(eq(athleteTeams.athleteId, person.id), eq(athleteTeams.teamId, team.id)));
+        .from(competitorMemberships)
+        .where(active(competitorMemberships, and(eq(competitorMemberships.memberId, person.id), eq(competitorMemberships.parentId, team.id))));
       if (!existing)
         await this.repo.insert(
-          athleteTeams,
-          { athleteId: person.id, teamId: team.id, fromYear, toYear: (v.to as number | null) ?? null } as never,
+          competitorMemberships,
+          { memberId: person.id, parentId: team.id, fromYear, toYear: (v.to as number | null) ?? null } as never,
           CANONICAL_ACTOR,
         );
       return true;

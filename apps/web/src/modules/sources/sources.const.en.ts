@@ -46,11 +46,17 @@ export const SOURCES_TEXT_EN = {
       'The AI only proposes: every fact becomes a proposal that an admin approves. Before spending a single token, each run goes through gates. If the source revision hasn’t changed, the extractor isn’t even called (0 tokens). A proposed fact only gets in if the quoted excerpt exists verbatim in the source.',
     gatesTitle: 'The gates, from cheapest to most expensive',
     gates: [
-      { title: 'Schedule and revision', text: 'Is the source due for a check, and has its revision changed (revid, ETag)? If not, the content isn’t even downloaded.' },
+      {
+        title: 'Schedule and revision',
+        text: 'Is the source due for a check, and has its revision changed (revid, ETag)? If not, the content isn’t even downloaded.',
+      },
       { title: 'Section and noise', text: 'Only the relevant section, compared by hash. Changes to formatting, links or spelling alone are discarded.' },
       { title: 'Parser first', text: 'A well-formed table goes to the deterministic parser, with no AI. An excerpt already processed reuses the result.' },
       { title: 'Minimal diff and budget', text: 'The model only receives the changed lines, within a per-run limit. Whatever is left waits for the next run.' },
-      { title: 'Verbatim excerpt', text: 'Every value carries its excerpt from the source (evidence_quote). If the excerpt isn’t in the original text, the fact is discarded.' },
+      {
+        title: 'Verbatim excerpt',
+        text: 'Every value carries its excerpt from the source (evidence_quote). If the excerpt isn’t in the original text, the fact is discarded.',
+      },
       { title: 'Approval', text: 'Nothing goes live directly: it becomes a proposal in the curators’ queue, with the source excerpt next to each value.' },
     ],
     caption: 'AI-assisted collection runs',
@@ -75,6 +81,26 @@ export const SOURCES_TEXT_EN = {
       { title: '5. Community', text: 'Wikipedia, Liquipedia, TheSportsDB copying from 1 to 4.' },
       { title: '6. Resale', text: 'Licensed commercial feeds (Opta, Sportradar, GRID).' },
     ],
+  },
+  licensing: {
+    title: 'Licenses and attribution',
+    eyebrow: 'how we use each source',
+    intro: 'Every source whose license asks for credit is shown with its author and license wherever its data appears. Link-only sources are never copied.',
+    attributionLabel: 'Attribution:',
+    shareAlikeTitle: 'Derived football data: CC BY-SA 4.0',
+    shareAlike:
+      'World Cup squads, lineups, matches and titles come from the Fjelstul World Cup Database (© 2023 Joshua C. Fjelstul, Ph.D.), under CC BY-SA 4.0. The datasets this site derives from them (football profiles, football rankings and competition pages) are distributed under the same CC BY-SA 4.0 license: you may copy and adapt them as long as you give credit and share alike.',
+    imagesTitle: 'Images',
+    images:
+      'Photos from Wikimedia Commons, linked only, with author, license and file page next to each image. Only CC0, public domain, CC BY and CC BY-SA are accepted.',
+    licenseLink: 'CC BY-SA 4.0 license text',
+  },
+  attribution: {
+    wikidata: 'Wikidata, CC0 (public domain): credited as a courtesy; none is required.',
+    'wikipedia-en': 'Facts from English Wikipedia articles (CC BY-SA 4.0); the text is not republished and every fact links to its article.',
+    'wikipedia-pt': 'Facts from Portuguese Wikipedia articles (CC BY-SA 4.0); the text is not republished and every fact links to its article.',
+    commons: 'Wikimedia Commons: license per file; author and license are shown next to every image.',
+    fjelstul: '© 2023 Joshua C. Fjelstul, Ph.D. Fjelstul World Cup Database, CC BY-SA 4.0. Derived data is CC BY-SA 4.0 too.',
   },
   commercialUse: {
     yes: 'Commercial use OK',

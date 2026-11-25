@@ -1,0 +1,56 @@
+/* Compare / head-to-head (D04): pickers side by side on wide screens, stacked at phone width (375 px). */
+@layer components {
+  .compare-select {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.75rem;
+    align-items: end;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .compare-swap {
+    margin-bottom: 0.25rem;
+  }
+  .compare-table th[scope="row"] {
+    width: 28%;
+    text-align: start;
+    font-weight: 600;
+  }
+  .compare-table td,
+  .compare-table th {
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+  .compare-cell-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .compare-band {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  @media (max-width: 640px) {
+    .compare-select {
+      grid-template-columns: 1fr;
+    }
+    .compare-swap {
+      justify-self: start;
+    }
+    /* The table keeps its semantics (no display change): narrow row headers and wrapping cells fit 375 px. */
+    .compare-table th[scope="row"] {
+      width: 30%;
+    }
+    .compare-table th,
+    .compare-table td {
+      padding-inline: 0.4rem;
+      font-size: 0.9rem;
+    }
+  }
+}

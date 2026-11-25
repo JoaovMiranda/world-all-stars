@@ -58,6 +58,8 @@ WORKDIR /app
 COPY --from=build /out/node_modules ./node_modules
 COPY --from=build /repo/apps/server/dist/main.js /repo/apps/server/dist/main.js.map /repo/apps/server/dist/instrumentation.js ./
 COPY --from=build /repo/apps/server/dist/migrations ./migrations
+# Methodology documents served by /api/ranking-methodologies/:key (next to main.js, see methodology-docs-dir.helper.ts).
+COPY --from=build /repo/apps/server/dist/methodologies ./methodologies
 COPY --from=build /repo/apps/web/dist/client ./web/client
 COPY --from=build /repo/apps/web/dist/server ./web/server
 RUN mkdir -p /data/pglite && chown -R node:node /data

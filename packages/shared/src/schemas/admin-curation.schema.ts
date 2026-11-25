@@ -16,6 +16,7 @@ import { USER_ROLE_VALUES } from '../enums/user-role.enum';
 import { AthleteRefSchema } from './athlete-summary.schema';
 import { SourceOverviewSchema } from './source-overview.schema';
 import { SourceRefSchema } from './source-ref.schema';
+import { TierVoteFlagSchema } from './tier-vote-flag.schema';
 
 const tier = z.enum(TIER_VALUES);
 const count = z.number().int().nonnegative();
@@ -38,8 +39,14 @@ export const TierSignalSchema = z.object({
   topOther: tier.nullable(),
   topOtherShare: z.number().min(0).max(1),
   isSignal: z.boolean(),
+  /** Votes left out of `counts` because their account is flagged and not cleared yet (T3.2). */
+  excludedVotes: count.optional(),
 });
-export const TierSignalsResponseSchema = z.object({ items: z.array(TierSignalSchema) });
+export const TierSignalsResponseSchema = z.object({
+  items: z.array(TierSignalSchema),
+  /** Accounts flagged by the anomaly rule (T3.2), pending first. */
+  flags: z.array(TierVoteFlagSchema).optional(),
+});
 
 /** A6 · "Mudou o jogo" dossier with its evidences (each one with a source) and the 2-admin approval. */
 export const GreatsEvidenceSchema = z.object({

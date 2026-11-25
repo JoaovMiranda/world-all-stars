@@ -28,6 +28,7 @@
     "ingest:worker": "pnpm --filter @was/ingest ingest worker",
     "ingest:identity-eval": "pnpm --filter @was/ingest ingest identity-eval",
     "catalog:sports": "node scripts/catalog/build-sports-catalog.mjs",
+    "og:default": "node scripts/og/build-default-og.mjs",
     "rankings:calculate": "pnpm --filter server exec tsx src/cli/rankings.cli.ts",
     "lint": "biome check .",
     "format": "biome format --write .",
@@ -38,7 +39,16 @@
     "scan:mixed": "node scripts/scan/mixed-declarations.mjs",
     "scan:language": "node scripts/scan/non-english.mjs",
     "lint:language": "node scripts/scan/non-english.mjs --fail",
-    "lint:declarations": "node scripts/scan/declaration-rules.mjs --fail"
+    "lint:declarations": "node scripts/scan/declaration-rules.mjs --fail",
+    "docker:up": "docker compose up -d app",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f app",
+    "docker:reset": "docker compose stop app && rm -rf .data/pglite-docker && docker compose up -d app",
+    "docker:pg": "docker compose --profile postgres up -d postgres",
+    "docker:worker": "docker compose --profile worker up -d ingest-worker",
+    "docker:worker:logs": "tail -f data/review/collect.log",
+    "collect:sample": "node scripts/ingest/sample-athletes.mjs",
+    "collect:bg": "caffeinate -i nohup pnpm ingest collect --update --priority > data/review/collect.log 2>&1 &"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.6",

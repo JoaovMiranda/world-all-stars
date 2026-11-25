@@ -48,6 +48,9 @@ const PUBLIC_PAGES = [
   '/athletes/pele?tab=comments',
   '/athletes/pele?tab=analysis',
   '/hall-of-greats',
+  '/compare',
+  '/compare?a=pele&b=michael-phelps',
+  '/compare?a=pele&b=neymar',
   '/sports',
   '/sports/football',
   '/sources',
@@ -55,6 +58,8 @@ const PUBLIC_PAGES = [
   '/on-this-day/07-20',
   '/about/criteria',
   '/accessibility',
+  '/rankings/football-champions/methodology',
+  '/rankings/boxing/methodology',
   '/legal/privacy',
   '/legal/terms',
   '/legal/cookies',
@@ -68,7 +73,7 @@ describe('accessibility of the server-rendered pages (axe, WCAG 2.2 AA)', { time
     expect(await audit(html)).toEqual([]);
   });
 
-  it.each(['en', 'es'].flatMap((l) => ['/', '/athletes/pele'].map((p) => [l, p])))('%s %s has no axe violations', async (locale, path) => {
+  it.each(['en', 'es'].flatMap((l) => ['/', '/athletes/pele', '/rankings/bjj-career/methodology'].map((p) => [l, p])))('%s %s has no axe violations', async (locale, path) => {
     const { html } = await ssrHtml(path, `was_locale=${locale}`);
     expect(await audit(html)).toEqual([]);
   });

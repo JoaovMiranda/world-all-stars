@@ -18,11 +18,23 @@ import {
   teams,
 } from '@was/db';
 import { METHODOLOGIES, type RankingInput, sha256 } from '@was/ranking';
-import { AdminAuditAction, type RankingDetailResponse, type RankingSnapshotSummary, type RankingsListResponse, uuidv7 } from '@was/shared';
+import {
+  AdminAuditAction,
+  type RankingDetailResponse,
+  type RankingFilterFields,
+  type RankingFilterOptionsResponse,
+  type RankingSnapshotSummary,
+  RankingSort,
+  type RankingsListQuery,
+  type RankingsListResponse,
+  uuidv7,
+} from '@was/shared';
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 import { BaseService } from '../../core/base.service';
 import type { AppDeps } from '../../http/app-deps.interface';
 import { forbidden, notFound } from '../../http/http-error.helper';
+import { rankingEntryFacts } from './ranking-facts.helper';
+import { activeRankingFilters, matchesRankingFilters, rankingFilterOptions } from './ranking-filters.helper';
 import { RankingPublicationService } from './ranking-publication.service';
 import { EVIDENCE } from './rankings.const';
 import { competitorsOf } from './rankings-evidence.helper';
@@ -188,26 +200,57 @@ export class RankingsService extends BaseService {
     return { ok: true as const };
   }
 
-  async listPublished(): Promise<RankingsListResponse> {
-    return { items: await this.summaries(sql`s.status = 'published'`) };
+  /** Published snapshots; optional filters (T2.5): methodology, sport and the ranking's sex category (scope gender). */
+  async listPublished(filters: RankingsListQuery = {}): Promise<RankingsListResponse> {
+    const where = sql`s.status = 'published'`;
+    if (filters.methodology) where.append(sql` and m.key = ${filters.methodology}`);
+    if (filters.gender) where.append(sql` and r.scope->>'gender' = ${filters.gender}`);
+    const items = await this.summaries(where);
+    return { items: filters.sport ? items.filter((i) => i.sport === filters.sport) : items };
+  }
+
+  /** URL filters of a published snapshot's methodology with the values present in its entries (T2.5). */
+  async filterOptions(id: string): Promise<RankingFilterOptionsResponse> {
+    const [snapshot] = await this.summaries(sql`s.id = ${id} and s.status in ('published', 'archived')`);
+    if (!snapshot) throw notFound();
+    const facts = await rankingEntryFacts(this.db, id, this.ctx.locale);
+    return rankingFilterOptions(snapshot.methodology, facts.values(), this.ctx.locale);
   }
 
   async listAll(): Promise<RankingsListResponse> {
     return { items: await this.summaries(sql`true`) };
   }
 
-  async detail(id: string, page: number, pageSize: number, publishedOnly = true): Promise<RankingDetailResponse> {
+  /**
+   * Entries of a snapshot, one page. Optional URL filters (T2.5) keep only the entries whose competitor or counted
+   * evidence matches (positions stay those of the whole snapshot); keys outside the methodology are ignored, and
+   * without filters the answer is the whole snapshot as before. `sort=name` orders by competitor name.
+   */
+  async detail(
+    id: string,
+    page: number,
+    pageSize: number,
+    publishedOnly = true,
+    query: RankingFilterFields & { sort?: RankingSort | undefined } = {},
+  ): Promise<RankingDetailResponse> {
     const [snapshot] = await this.summaries(sql`s.id = ${id} and ${publishedOnly ? sql`s.status in ('published', 'archived')` : sql`true`}`);
     if (!snapshot) throw notFound();
-    const entries = await this.db
+    let entries = await this.db
       .select()
       .from(rankingEntries)
       .where(eq(rankingEntries.snapshotId, id))
       .orderBy(sql`${rankingEntries.rank} asc nulls last`, rankingEntries.competitorId);
-    const slice = entries.slice((page - 1) * pageSize, page * pageSize);
-    const ids = slice.map((e) => e.id);
-    const metrics = ids.length ? await this.db.select().from(rankingEntryMetrics).where(inArray(rankingEntryMetrics.entryId, ids)) : [];
-    const people = slice.length
+    const filters = activeRankingFilters(snapshot.methodology, query);
+    if (Object.keys(filters).length) {
+      const facts = await rankingEntryFacts(this.db, id, this.ctx.locale);
+      entries = entries.filter((e) => {
+        const f = facts.get(e.id);
+        return f !== undefined && matchesRankingFilters(f, filters);
+      });
+    }
+    const byName = query.sort === RankingSort.Name;
+    const named = byName ? entries : entries.slice((page - 1) * pageSize, page * pageSize);
+    const people = named.length
       ? await this.db
           .select({ id: athletes.id, name: athletes.knownAs, slug: athletes.slug, visibility: competitors.profileVisibility })
           .from(athletes)
@@ -215,18 +258,18 @@ export class RankingsService extends BaseService {
           .where(
             inArray(
               athletes.id,
-              slice.map((e) => e.competitorId),
+              named.map((e) => e.competitorId),
             ),
           )
       : [];
-    const team = slice.length
+    const team = named.length
       ? await this.db
           .select({ id: teams.id, name: teams.name })
           .from(teams)
           .where(
             inArray(
               teams.id,
-              slice.map((e) => e.competitorId),
+              named.map((e) => e.competitorId),
             ),
           )
       : [];
@@ -235,6 +278,13 @@ export class RankingsService extends BaseService {
       ...people.map((p): [string, Who] => [p.id, { id: p.id, name: p.name, slug: p.slug, kind: 'person', hasProfile: p.visibility === 'public' }]),
       ...team.map((t): [string, Who] => [t.id, { id: t.id, name: t.name, slug: null, kind: 'team', hasProfile: false }]),
     ]);
+    if (byName) {
+      const collator = new Intl.Collator(this.ctx.locale);
+      entries = [...entries].sort((a, b) => collator.compare(who.get(a.competitorId)?.name ?? '', who.get(b.competitorId)?.name ?? ''));
+    }
+    const slice = byName ? entries.slice((page - 1) * pageSize, page * pageSize) : named;
+    const ids = slice.map((e) => e.id);
+    const metrics = ids.length ? await this.db.select().from(rankingEntryMetrics).where(inArray(rankingEntryMetrics.entryId, ids)) : [];
     return {
       snapshot,
       total: entries.length,
@@ -266,6 +316,8 @@ export class RankingsService extends BaseService {
         rank: rankingEntries.rank,
         rankTied: rankingEntries.rankTied,
         score: rankingEntries.score,
+        rankingKey: rankingSnapshots.rankingKey,
+        band: rankingEntries.band,
       })
       .from(rankingEntries)
       .innerJoin(rankingSnapshots, eq(rankingSnapshots.id, rankingEntries.snapshotId))

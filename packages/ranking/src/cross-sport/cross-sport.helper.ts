@@ -1,7 +1,6 @@
-import type { CrossSportBand } from './cross-sport-band.type';
 import { CROSS_SPORT_BAND_ORDER, CROSS_SPORT_BANDS } from './cross-sport.const';
-import type { CrossSportItem } from './cross-sport-item.interface';
-import type { CrossSportEntry } from './cross-sport-item.interface';
+import type { CrossSportBand } from './cross-sport-band.type';
+import type { CrossSportEntry, CrossSportItem } from './cross-sport-item.interface';
 import type { CrossSportMapping } from './cross-sport-mapping.interface';
 import { UnmappedRecognitionError } from './unmapped-recognition.error';
 
@@ -38,7 +37,8 @@ export const calculateCrossSportBands = (items: readonly CrossSportItem[], mappi
   }
   for (const entry of byCompetitor.values()) entry.items.sort((a, b) => CROSS_SPORT_BAND_ORDER.indexOf(a.band) - CROSS_SPORT_BAND_ORDER.indexOf(b.band));
   return [...byCompetitor.values()].sort(
-    (a, b) => CROSS_SPORT_BAND_ORDER.indexOf(a.band) - CROSS_SPORT_BAND_ORDER.indexOf(b.band) || b.points - a.points || a.competitorId.localeCompare(b.competitorId),
+    (a, b) =>
+      CROSS_SPORT_BAND_ORDER.indexOf(a.band) - CROSS_SPORT_BAND_ORDER.indexOf(b.band) || b.points - a.points || a.competitorId.localeCompare(b.competitorId),
   );
 };
 

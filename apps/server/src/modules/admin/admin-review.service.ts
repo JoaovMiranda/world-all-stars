@@ -1,6 +1,6 @@
 // A1 (proposals + tier signals) and A6 (dossiers).
 
-import { active, aiExtractionQueue, type BaseRepository, fieldConflicts, greatsDossierApprovals, greatsDossiers, users } from '@was/db';
+import { active, aiExtractionQueue, type BaseRepository, fieldConflicts, greatsDossierApprovals, greatsDossiers, tierVoteFlags, users } from '@was/db';
 import { applyBiography } from '@was/ingest';
 import {
   AdminAuditAction,
@@ -13,6 +13,8 @@ import {
   ReviewStatus,
   reviewDossierOutcome,
   type TierSignal,
+  type TierVoteFlag,
+  TierVoteFlagStatus,
   tierSignalOf,
   tierVoteCounts,
 } from '@was/shared';
@@ -172,16 +174,71 @@ export class AdminReviewService extends BaseService {
     return { ok: true as const };
   }
 
-  /** A1 "Sinais de tier" (doc 17): shared tierSignalOf over the live votes. */
-  async listTierSignals(): Promise<{ items: TierSignal[] }> {
-    const [view, votes] = await Promise.all([this.ctx.deps.catalog.get(this.ctx.locale), new TierVotesRepository(this.db).allVotes()]);
+  /**
+   * A1 "Sinais de tier" (doc 17): shared tierSignalOf over the live votes. Votes of accounts flagged by the anomaly rule
+   * and not cleared (T3.2) stay out of the counts (`excludedVotes` says how many); the flags come along for review.
+   */
+  async listTierSignals(): Promise<{ items: TierSignal[]; flags: TierVoteFlag[] }> {
+    const read = new TierVotesRepository(this.db);
+    const [view, votes, excluded, flags] = await Promise.all([
+      this.ctx.deps.catalog.get(this.ctx.locale),
+      read.allVotes(),
+      read.excludedAccounts(),
+      this.listTierVoteFlags(),
+    ]);
     const votesByAthlete = Map.groupBy(votes, (v) => v.athleteId);
     const items = view.athletes().map((a) => {
-      const counts = tierVoteCounts((votesByAthlete.get(a.id) ?? []).map((v) => v.tier));
+      const all = votesByAthlete.get(a.id) ?? [];
+      const counted = all.filter((v) => !excluded.has(v.userId));
+      const counts = tierVoteCounts(counted.map((v) => v.tier));
       const total = Object.values(counts).reduce((s, n) => s + n, 0);
-      return { athlete: { slug: a.slug, knownAs: a.knownAs, tier: a.tier }, official: a.tier, counts, total, ...tierSignalOf(counts, a.tier) };
+      const excludedVotes = all.length - counted.length;
+      return {
+        athlete: { slug: a.slug, knownAs: a.knownAs, tier: a.tier },
+        official: a.tier,
+        counts,
+        total,
+        ...tierSignalOf(counts, a.tier),
+        ...(excludedVotes ? { excludedVotes } : {}),
+      };
     });
-    return { items: items.sort((x, y) => Number(y.isSignal) - Number(x.isSignal) || y.topOtherShare - x.topOtherShare) };
+    return { items: items.sort((x, y) => Number(y.isSignal) - Number(x.isSignal) || y.topOtherShare - x.topOtherShare), flags };
+  }
+
+  /** Flags of the tier-vote anomaly rule (T3.2), pending first, with the account's live vote count as evidence. */
+  private async listTierVoteFlags(): Promise<TierVoteFlag[]> {
+    const read = new TierVotesRepository(this.db);
+    const [view, rows] = await Promise.all([this.ctx.deps.catalog.get(this.ctx.locale), read.flags()]);
+    const votes = await read.votesPerAccount(rows.map((r) => r.flag.userId));
+    const listed = new Set(view.rows.athletes.map((a) => a.id));
+    const items = rows.map(({ flag, account, accountCreatedAt }) => ({
+      id: flag.id,
+      account,
+      accountCreatedAt: accountCreatedAt.toISOString(),
+      athlete: listed.has(flag.athleteId) ? view.athleteRef(flag.athleteId) : null,
+      burstVotes: flag.burstVotes,
+      accountVotes: votes.get(flag.userId) ?? 0,
+      flaggedAt: flag.createdAt.toISOString(),
+      status: flag.status,
+      reviewNote: flag.reviewNote,
+    }));
+    return items.sort((x, y) => Number(y.status === TierVoteFlagStatus.Pending) - Number(x.status === TierVoteFlagStatus.Pending));
+  }
+
+  /**
+   * PATCH /api/admin/tier-vote-flags/:id (T3.2): approve = the account is legitimate (cleared: its votes count again);
+   * reject = its votes stay out of the signal for good. Decided once (409 afterwards), audited with the reason.
+   */
+  async reviewTierVoteFlag(id: string, decision: AdminDecision, reason: string) {
+    const flag = await new TierVotesRepository(this.db).findFlag(id);
+    if (!flag) throw notFound();
+    if (flag.status !== TierVoteFlagStatus.Pending) throw unprocessableKey(ApiErrorCode.AlreadyDecided, 'proposalDecided');
+    const status = decision === Decision.Approve ? TierVoteFlagStatus.Cleared : TierVoteFlagStatus.Rejected;
+    await this.transaction(async (repo) => {
+      await repo.update(tierVoteFlags, id, { status, reviewedBy: this.actor.userId, reviewedAt: new Date(), reviewNote: reason }, this.actor, { reason });
+      await repo.audit(this.actor, AdminAuditAction.TierVoteFlagReviewed, { type: 'tier_vote_flags', id }, { target: `${status} · ${flag.userId}`, reason });
+    });
+    return { ok: true as const };
   }
 
   /** A6: dossiers with evidences and the names of the admins who approved. */

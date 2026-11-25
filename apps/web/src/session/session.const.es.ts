@@ -35,6 +35,7 @@ export const SESSION_TEXT_ES = {
     reply: 'responder',
     react: 'dar me gusta o no me gusta a comentarios',
     account: 'ver tu cuenta',
+    interact: 'dar tu estrella o un corazón',
     default: 'continuar',
   },
   consent: {

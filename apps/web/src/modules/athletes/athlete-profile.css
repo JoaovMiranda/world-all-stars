@@ -46,6 +46,20 @@
   .admin-tier-fields { display: grid; grid-template-columns: minmax(140px, 200px) minmax(0, 1fr); gap: 12px; align-items: start; }
   @media (max-width: 600px) { .admin-tier-fields { grid-template-columns: minmax(0, 1fr); } }
 
+  /* BJJ classes (belt · gi/no-gi · weight · absolute · placements) and Olympic medal tally */
+  .bjj-intro { font-size: 0.875rem; max-width: 68ch; margin: 0 0 12px; }
+  .medal-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0; }
+  .bjj-place { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Athlete rankings (positions in published rankings) */
+  .athlete-rankings { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .athlete-rankings > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--border); }
+  .athlete-rankings > li:first-child { border-top: 0; }
+  .athlete-rankings-title { display: block; font-weight: 600; }
+  .athlete-rankings-facts { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.875rem; color: var(--muted); }
+  .athlete-rankings-facts b { color: var(--text); font-weight: 600; }
+  @media (max-width: 600px) { .athlete-rankings > li { grid-template-columns: minmax(0, 1fr); } }
+
   /* Sport panels */
   .panel-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: start; }
   .panel-split-even { grid-template-columns: repeat(2, minmax(0, 1fr)); }

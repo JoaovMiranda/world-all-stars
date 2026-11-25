@@ -147,7 +147,8 @@ export class AdminCommunityService extends BaseService {
         .from(comments)
         .innerJoin(users, eq(users.id, comments.userId))
         .where(active(comments))
-        .orderBy(desc(comments.dislikesCount), desc(comments.createdAt)),
+        // Moderation queue first: most reported, then most disliked, newest.
+        .orderBy(desc(comments.reportsCount), desc(comments.dislikesCount), desc(comments.createdAt)),
       new ModerationRepository(this.db).loadBannedWords(),
     ]);
     const athleteIds = new Set(view.rows.athletes.map((a) => a.id));
@@ -166,6 +167,7 @@ export class AdminCommunityService extends BaseService {
                 replies: c.repliesCount,
                 status: c.status,
                 hiddenReason: c.hiddenReason,
+                reports: c.reportsCount,
               },
             ]
           : [],

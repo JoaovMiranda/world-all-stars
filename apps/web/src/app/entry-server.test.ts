@@ -92,9 +92,11 @@ describe('server render (entry-server)', () => {
     const crumbs = ofType(profile, 'BreadcrumbList')?.itemListElement;
     expect(crumbs.map((c: { position: number }) => c.position)).toEqual([1, 2, 3, 4]);
     expect(crumbs.at(-1).name).toBe('Pelé');
-    expect(profile).toContain('<meta property="og:image" content="https://upload.wikimedia.org/');
+    // Licensed Commons photo → same-origin proxy (T4.5); pages without one get the default card.
+    expect(profile).toContain('<meta property="og:image" content="https://worldallstars.example/img/wm/commons/');
 
     const sport = (await ssr('/sports/football')).html;
+    expect(sport).toContain('<meta property="og:image" content="https://worldallstars.example/og/default.png"');
     expect(ofType(sport, 'CollectionPage')?.about).toMatchObject({ '@type': 'Thing', name: 'Futebol' });
     expect(ofType(sport, 'CollectionPage')?.mentions.some((o: { '@type': string; name: string }) => o['@type'] === 'SportsOrganization' && o.name === 'FIFA')).toBe(true);
     expect(ofType(sport, 'BreadcrumbList')).toBeDefined();

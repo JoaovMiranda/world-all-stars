@@ -47,6 +47,7 @@ export const SESSION_TEXT = {
     reply: 'responder',
     react: 'curtir ou descurtir comentários',
     account: 'ver sua conta',
+    interact: 'dar sua estrela ou um coração',
     default: 'continuar',
   },
   consent: {

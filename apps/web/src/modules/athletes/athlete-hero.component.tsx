@@ -2,7 +2,9 @@ import { Link } from '@tanstack/react-router';
 import { type AthleteProfile, AthleteProfileTab, AthleteStatus } from '@was/shared';
 
 import { useText } from '@/i18n/use-text.hook';
+import { COMPARE_MESSAGES } from '@/modules/compare/compare.const';
 import { Button } from '@/shared-ui/button.component';
+import { ButtonLink } from '@/shared-ui/button-link.component';
 import { DateLink } from '@/shared-ui/date-link.component';
 import { ageAt, formatYears } from '@/shared-ui/format.helper';
 import { Tag } from '@/shared-ui/tag.component';
@@ -91,14 +93,20 @@ export function AthleteBadges({ profile: p }: { profile: AthleteProfile }) {
   );
 }
 
-/** Hero buttons: jump to Analysis, Comments or Sources tabs. */
-export function AthleteHeroActions({ version, onGo }: { version: number; onGo: (tab: AthleteProfileTab) => void }) {
+/** Hero buttons: jump to Analysis, Comments or Sources tabs; with `slug`, a head-to-head link (`/compare?a=`). */
+export function AthleteHeroActions({ version, onGo, slug }: { version: number; onGo: (tab: AthleteProfileTab) => void; slug?: string }) {
   const T = useText(ATHLETE_PROFILE_MESSAGES).hero;
+  const compare = useText(COMPARE_MESSAGES).profileLink;
   return (
     <>
       <Button variant="secondary" onClick={() => onGo(AthleteProfileTab.Analysis)}>
         {T.analyse}
       </Button>
+      {slug && (
+        <ButtonLink variant="secondary" to="/compare" search={{ a: slug }}>
+          {compare}
+        </ButtonLink>
+      )}
       <Button variant="secondary" onClick={() => onGo(AthleteProfileTab.Comments)}>
         {T.comment}
       </Button>

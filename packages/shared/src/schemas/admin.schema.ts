@@ -73,6 +73,8 @@ export const AdminCommentSchema = z.object({
   replies: z.number().int().nonnegative(),
   status: z.enum(COMMENT_STATUS_VALUES),
   hiddenReason: z.string().nullable(),
+  /** Readers who reported it (T3.3); reported comments enter the moderation queue. */
+  reports: z.number().int().nonnegative().optional(),
 });
 export const AdminCommentsResponseSchema = z.object({ items: z.array(AdminCommentSchema), bannedWords: z.array(BannedWordSchema) });
 export const ModerateCommentRequestSchema = z.object({ status: z.enum(COMMENT_STATUS_VALUES), reason: z.string().trim().min(3) });

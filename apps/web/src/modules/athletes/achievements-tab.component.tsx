@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import {
   type AthleteProfile,
   type AwardAchievement,
@@ -46,7 +47,9 @@ function TitlesTable({ groups }: { groups: readonly AchievementGroup<Competition
             const teams = [...new Set(g.items.map((i) => i.team).filter(Boolean))].join(' · ');
             return (
               <>
-                {g.name}
+                <Link to="/competitions/$competition" params={{ competition: g.key }}>
+                  {g.name}
+                </Link>
                 <SourceInfo source={g.items[0]?.source ?? null} field={g.name} />
                 {teams && <span className="cell-sub">{teams}</span>}
               </>

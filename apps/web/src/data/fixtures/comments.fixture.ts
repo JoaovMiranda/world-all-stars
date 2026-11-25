@@ -1,4 +1,12 @@
-import { type Comment, type CommentReaction, type CommentSort, type CommentsResponse, type SessionUser, buildCommentThreads } from '@was/shared';
+import {
+  buildCommentThreads,
+  COMMENT_EDIT_WINDOW_MS,
+  type Comment,
+  type CommentReaction,
+  type CommentSort,
+  type CommentsResponse,
+  type SessionUser,
+} from '@was/shared';
 
 import { demoStore } from '../demo.store';
 import type { loadSample } from '../sample-fixtures.helper';
@@ -12,7 +20,16 @@ export const commentRows = async (sample: typeof loadSample, user: SessionUser |
   const sampleRows = Object.entries(all).flatMap(([slug, r]) =>
     r.threads.flatMap(({ replies, ...top }) => [{ ...top, slug }, ...replies.map((x) => ({ ...x, slug }))]),
   );
-  const demoRows: Row[] = demo.comments.map((c) => ({ ...c, isMine: false, likes: 0, dislikes: 0, myReaction: null }));
+  // The tester's own demo comments stay editable for 10 minutes after posting (T3.3).
+  const editable = (at: string) => Date.parse(at) + COMMENT_EDIT_WINDOW_MS;
+  const demoRows: Row[] = demo.comments.map((c) => ({
+    ...c,
+    isMine: false,
+    likes: 0,
+    dislikes: 0,
+    myReaction: null,
+    ...(editable(c.at) > Date.now() ? { editableUntil: new Date(editable(c.at)).toISOString() } : {}),
+  }));
   return [...sampleRows, ...demoRows]
     .filter((c) => !demo.hiddenComments[c.id] && !demo.deletedComments.includes(c.id))
     .map((c) => {

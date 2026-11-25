@@ -11,6 +11,10 @@ export const ApiErrorCode = {
   SameTier: 'same_tier',
   AlreadyDecided: 'already_decided',
   RateLimited: 'rate_limited',
+  /** The account is younger than the minimum age to vote (tier-vote anti-fraud, T3.2). */
+  AccountTooNew: 'account_too_new',
+  /** The comment can no longer be edited (10-minute window, T3.3). */
+  EditWindowClosed: 'edit_window_closed',
   /** Signed in with an e-mail the identity provider did not verify (doc 05). */
   EmailUnverified: 'email_unverified',
   /** The accepted legal versions are not the current ones (POST /api/account/consent). */

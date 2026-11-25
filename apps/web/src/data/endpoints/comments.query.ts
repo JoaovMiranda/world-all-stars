@@ -2,7 +2,7 @@ import { CommentSort, CommentsQuerySchema, ParticipationApi } from '@was/shared'
 
 import { demoStore } from '../demo.store';
 import { bySlug, defineMutation, defineQuery } from '../define-endpoint.helper';
-import { postDemoComment, reactDemoComment } from '../fixtures/comment-mutations.fixture';
+import { editDemoComment, postDemoComment, reactDemoComment, reportDemoComment } from '../fixtures/comment-mutations.fixture';
 import { buildComments, commentRows } from '../fixtures/comments.fixture';
 import { requireUser } from '../fixtures/require-user.fixture';
 import { meQuery, notificationsQuery, sessionQuery } from './session.query';
@@ -44,4 +44,16 @@ export const deleteComment = defineMutation(
     return { ok: true };
   },
   { invalidates: afterComment },
+);
+
+/** PATCH /api/comments/:id: the author edits within 10 minutes of posting (T3.3). */
+export const editComment = defineMutation(
+  ParticipationApi.editComment,
+  ({ input, sample, session }) => editDemoComment(sample, requireUser(session), input.params.id, input.body.body),
+  { invalidates: afterComment },
+);
+
+/** POST /api/comments/:id/report: report to the moderators (once per reader; idempotent). */
+export const reportComment = defineMutation(ParticipationApi.reportComment, ({ input, sample, session }) =>
+  reportDemoComment(sample, requireUser(session), input.params.id),
 );

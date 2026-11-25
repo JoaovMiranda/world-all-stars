@@ -2,9 +2,12 @@
 export interface BiographyAttempt {
   /** Whether the model answered with a schema-valid biography. */
   valid: boolean;
-  checked: { text: string; evidence_quote: string; literal: boolean }[];
+  /** Claims with the cited sentence ID (null for a quote-text citation) and the literal quote inserted by the code. */
+  checked: { text: string; evidence_id: string | null; evidence_quote: string; literal: boolean }[];
   level: 0 | 1 | 2 | 3;
   copied: boolean;
+  /** The longest run of 12+ words bio_en shares with SOURCE (null when original). */
+  copiedRun: string | null;
   invocationId: string;
   output: unknown;
   error: string | null;

@@ -9,6 +9,7 @@ export const adminRoutes = [
   defineRoute(AdminApi.proposals, (_input, ctx) => new AdminController(ctx).proposals()),
   defineRoute(AdminApi.reviewProposal, (input, ctx) => new AdminController(ctx).reviewProposal(input)),
   defineRoute(AdminApi.tierSignals, (_input, ctx) => new AdminController(ctx).tierSignals()),
+  defineRoute(AdminApi.reviewTierVoteFlag, (input, ctx) => new AdminController(ctx).reviewTierVoteFlag(input)),
   defineRoute(AdminApi.ingestion, (_input, ctx) => new AdminController(ctx).ingestion()),
   defineRoute(AdminApi.identities, (_input, ctx) => new AdminController(ctx).identities()),
   defineRoute(AdminApi.decideIdentity, (input, ctx) => new AdminController(ctx).decideIdentity(input)),

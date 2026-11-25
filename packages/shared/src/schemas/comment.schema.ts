@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { COMMENT_MAX_LENGTH } from '../consts/text-limits.const';
+import { COMMENT_MAX_LENGTH, COMMENT_REPORT_REASON_MAX_LENGTH } from '../consts/text-limits.const';
 import { COMMENT_REACTION_VALUES } from '../enums/comment-reaction.enum';
 import { COMMENT_SORT_VALUES, CommentSort } from '../enums/comment-sort.enum';
 import { validateComment } from '../helpers/text-validation.helper';
@@ -26,6 +26,10 @@ export const CommentSchema = z.object({
   likes: z.number().int().nonnegative(),
   dislikes: z.number().int().nonnegative(),
   myReaction: reaction.nullable(),
+  /** When the author last edited it (T3.3); absent/null = never edited. */
+  editedAt: z.iso.datetime().nullable().optional(),
+  /** Only on my own comments still inside the 10-minute edit window (T3.3): until when I may edit it. */
+  editableUntil: z.iso.datetime().nullable().optional(),
 });
 
 /** Top-level comment with its replies (1 level, chronological). */
@@ -62,3 +66,11 @@ export const ReactToCommentResponseSchema = z.object({
 });
 
 export const CommentIdParamsSchema = z.object({ id: z.string().min(1) });
+
+/** Body of PATCH /api/comments/:id (author only, within COMMENT_EDIT_WINDOW_MS; same rules as posting). */
+export const EditCommentRequestSchema = z.object({ body: z.string() });
+export const EditCommentResponseSchema = z.object({ id: z.string().min(1), editedAt: z.iso.datetime() });
+
+/** Body of POST /api/comments/:id/report (one report per reader per comment; idempotent). */
+export const ReportCommentRequestSchema = z.object({ reason: z.string().trim().max(COMMENT_REPORT_REASON_MAX_LENGTH).optional() });
+export const ReportCommentResponseSchema = z.object({ reported: z.literal(true) });

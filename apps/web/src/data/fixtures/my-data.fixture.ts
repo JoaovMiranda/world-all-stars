@@ -5,6 +5,7 @@ import { localeStore } from '@/i18n/locale.store';
 import { ApiError } from '../api-error.error';
 import { demoStore } from '../demo.store';
 import type { loadSample } from '../sample-fixtures.helper';
+import { buildMyInteractions } from './interactions.fixture';
 import { buildMe, buildNotifications } from './me.fixture';
 
 /** Sign-up of the simulated accounts: Terms + Privacy accepted, notification e-mails opted in (doc 13). */
@@ -40,8 +41,8 @@ export const updateDemoConsent = (purpose: ConsentPurpose, granted: boolean) => 
 
 /** POST /api/me/export: everything tied to the account (portability, LGPD art. 18 V). */
 export const buildMyDataExport = async (sample: typeof loadSample, user: SessionUser): Promise<MyDataExport> => {
-  const [me, notifications] = await Promise.all([buildMe(sample, user), buildNotifications(sample, user)]);
-  return { ...me, ...buildMyData(), notifications: notifications.items, exportedAt: new Date().toISOString() };
+  const [me, notifications, interactions] = await Promise.all([buildMe(sample, user), buildNotifications(sample, user), buildMyInteractions(sample)]);
+  return { ...me, ...buildMyData(), notifications: notifications.items, interactions, exportedAt: new Date().toISOString() };
 };
 
 /** DELETE /api/me: anonymization (name → pseudonym, e-mail erased); comments and votes stay under the pseudonym. */
@@ -50,6 +51,8 @@ export const deleteDemoAccount = (confirmation: string): DeleteAccountResponse =
   if (invalid) throw new ApiError(422, { error: 'validation', message: invalid, errors: { confirmation: invalid } });
   demoStore.update((d) => {
     d.consents = {};
+    d.star = null;
+    d.hearts = {};
   });
   return { pseudonym: anonymizedUserName(Date.now()) };
 };

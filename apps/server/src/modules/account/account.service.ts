@@ -19,6 +19,7 @@ import type { AuthUser } from '../../auth/auth-provider.type';
 import { revokeAuthSessions } from '../../auth/auth-user.helper';
 import { BaseService } from '../../core/base.service';
 import { httpError, unprocessable } from '../../http/http-error.helper';
+import { InteractionsService } from '../interactions/interactions.service';
 import { SessionService } from '../session/session.service';
 
 /** Account of the signed-in reader: legal acceptances, consents, export and deletion (doc 13). */
@@ -98,11 +99,19 @@ export class AccountService extends BaseService {
   /** POST /api/me/export (LGPD portability). */
   async exportMyData(user: AuthUser): Promise<MyDataExport> {
     const session = new SessionService(this.ctx);
-    const [me, notifications, data] = await Promise.all([session.getMe(user), session.getNotifications(user), this.getMyData(user)]);
-    return { ...me, ...data, notifications: notifications.items, exportedAt: new Date().toISOString() };
+    const [me, notifications, data, interactions] = await Promise.all([
+      session.getMe(user),
+      session.getNotifications(user),
+      this.getMyData(user),
+      new InteractionsService(this.ctx).myInteractions(user),
+    ]);
+    return { ...me, ...data, notifications: notifications.items, interactions, exportedAt: new Date().toISOString() };
   }
 
-  /** DELETE /api/me: anonymization (doc 13): pseudonym + e-mail erased, account soft-deleted; comments/votes stay. */
+  /**
+   * DELETE /api/me: anonymization (doc 13): pseudonym + e-mail erased, account soft-deleted; comments/votes stay.
+   * Star and hearts (personal preferences, D03) are soft-deleted, so the public counts drop too.
+   */
   async deleteAccount(user: AuthUser, confirmation: string): Promise<DeleteAccountResponse> {
     const actor = this.actor;
     const invalid = accountDeleteConfirmationError(confirmation, this.ctx.locale);
@@ -112,6 +121,7 @@ export class AccountService extends BaseService {
       await repo.update(users, user.id, { displayName: pseudonym, email: `removed+${user.id}@anon.invalid`, avatarUrl: null }, actor, {
         summary: 'anonymized',
       });
+      await new InteractionsService(this.ctx).removeAllOf(repo, user.id);
       await repo.softDelete(users, user.id, actor, { summary: 'account deleted' });
       // Ephemeral Better Auth rows (exempt from forbid_delete): every browser is signed out, the Google link is gone.
       await revokeAuthSessions(repo.db, user.id);

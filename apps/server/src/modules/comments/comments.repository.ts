@@ -1,4 +1,4 @@
-import { BaseReadRepository, commentReactions, comments, users } from '@was/db';
+import { BaseReadRepository, commentReactions, commentReports, comments, users } from '@was/db';
 import { CommentSort, CommentStatus } from '@was/shared';
 import { and, count, desc, eq, inArray, isNull, type SQL, sql } from 'drizzle-orm';
 
@@ -71,6 +71,19 @@ export class CommentsRepository extends BaseReadRepository {
       .select()
       .from(commentReactions)
       .where(this.active(commentReactions, and(eq(commentReactions.commentId, commentId), eq(commentReactions.userId, userId))));
+    return rows.at(0) ?? null;
+  }
+
+  /** SELECT … FOR UPDATE on the comment (call inside a transaction). */
+  async lockComment(id: string): Promise<void> {
+    await this.db.select({ id: comments.id }).from(comments).where(eq(comments.id, id)).for('update');
+  }
+
+  async findReport(commentId: string, userId: string) {
+    const rows = await this.db
+      .select()
+      .from(commentReports)
+      .where(this.active(commentReports, and(eq(commentReports.commentId, commentId), eq(commentReports.userId, userId))));
     return rows.at(0) ?? null;
   }
 }

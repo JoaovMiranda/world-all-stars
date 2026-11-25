@@ -2,7 +2,7 @@
 import { sql } from 'drizzle-orm';
 import { index, integer, pgTable, text, uniqueIndex, uuid, type AnyPgColumn } from 'drizzle-orm/pg-core';
 
-import { baseColumns, live } from '../columns/base.column';
+import { baseColumns, live, timestamptz } from '../columns/base.column';
 import {
   bannedWordMatchModeEnum,
   commentReactionEnum,
@@ -10,6 +10,7 @@ import {
   contactStatusEnum,
   contactTopicEnum,
   suggestionStatusEnum,
+  tierVoteFlagStatusEnum,
 } from '../columns/pg-enum.column';
 import { athletes } from './athlete.table';
 import { championTiers } from './config.table';
@@ -28,6 +29,27 @@ export const tierVotes = pgTable(
   (t) => [uniqueIndex().on(t.userId, t.athleteId).where(live(t.deletedAt)), index().on(t.athleteId).where(live(t.deletedAt))],
 );
 
+/**
+ * Accounts flagged by the tier-vote anomaly rule (T3.2: a burst of votes on one athlete from young accounts). One live
+ * flag per account; its votes are left out of the admin "Tier signals" until an admin clears it.
+ */
+export const tierVoteFlags = pgTable(
+  'tier_vote_flags',
+  {
+    ...baseColumns(),
+    userId: uuid().notNull().references(() => users.id),
+    /** Athlete of the burst that raised the flag. */
+    athleteId: uuid().notNull().references(() => athletes.id),
+    /** Votes in the window when the flag was raised (evidence for the reviewer). */
+    burstVotes: integer().notNull(),
+    status: tierVoteFlagStatusEnum().notNull().default('pending'),
+    reviewedBy: uuid().references(() => users.id),
+    reviewedAt: timestamptz(),
+    reviewNote: text(),
+  },
+  (t) => [uniqueIndex().on(t.userId).where(live(t.deletedAt)), index().on(t.status).where(live(t.deletedAt))],
+);
+
 export const comments = pgTable(
   'comments',
   {
@@ -41,6 +63,10 @@ export const comments = pgTable(
     likesCount: integer().notNull().default(0),
     dislikesCount: integer().notNull().default(0),
     repliesCount: integer().notNull().default(0),
+    /** Readers who reported it (T3.3): any report puts a visible comment in the moderation queue. */
+    reportsCount: integer().notNull().default(0),
+    /** Last edit by the author (only within the 10-minute window, T3.3). */
+    editedAt: timestamptz(),
   },
   (t) => [
     // Thread of an athlete: visible comments, newest first.
@@ -56,6 +82,18 @@ export const commentReactions = pgTable(
     commentId: uuid().notNull().references(() => comments.id),
     userId: uuid().notNull().references(() => users.id),
     reaction: commentReactionEnum().notNull(),
+  },
+  (t) => [uniqueIndex().on(t.commentId, t.userId).where(live(t.deletedAt))],
+);
+
+/** A reader's report of a comment to the moderators (T3.3): one per reader per comment. */
+export const commentReports = pgTable(
+  'comment_reports',
+  {
+    ...baseColumns(),
+    commentId: uuid().notNull().references(() => comments.id),
+    userId: uuid().notNull().references(() => users.id),
+    reason: text(),
   },
   (t) => [uniqueIndex().on(t.commentId, t.userId).where(live(t.deletedAt))],
 );

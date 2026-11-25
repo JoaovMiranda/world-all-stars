@@ -4,6 +4,7 @@ import { COMPETITION_LEVEL_VALUES } from '../enums/competition-level.enum';
 import { AthleteSummarySchema } from './athlete-summary.schema';
 import { CompetitionEventSchema } from './calendar-event.schema';
 import { ContentLocaleSchema } from './locale.schema';
+import { MediaLinkSchema } from './media-link.schema';
 import { ObservanceSchema } from './observance.schema';
 import { OrganizationSchema, SportAssociationSchema } from './organization.schema';
 import { SportInfoSchema, SportProgrammeSchema, SportRefSchema } from './sport-ref.schema';
@@ -51,6 +52,8 @@ export const SportPageSchema = SportInfoSchema.extend({
   programmes: z.array(SportProgrammeSchema).default([]),
   /** Editorial sections (handoff v3 §10): history, belts, rules… — varies by sport; facts with sources. */
   sections: z.array(z.object({ key: z.string().min(1), title: z.string().min(1), body: z.string().min(1), sources: z.array(z.string()) })).default([]),
+  /** Commons image of the sport (T4.4): linked only, shown with author, license and file page. */
+  image: MediaLinkSchema.nullable().default(null),
 });
 
 export const SportSlugParamsSchema = z.object({ slug: z.string().min(1) });

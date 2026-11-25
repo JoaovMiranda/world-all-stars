@@ -7,7 +7,13 @@ export const RATE_LIMITS = {
   comment: { windowMs: 60_000, max: 5 },
   commentDaily: { windowMs: 86_400_000, max: 50 },
   reaction: { windowMs: 60_000, max: 60 },
+  /** Comment reports per account (T3.3). */
+  report: { windowMs: 3_600_000, max: 20 },
   vote: { windowMs: 60_000, max: 30 },
+  /** Tier votes per IP hash per day (anti-fraud, T3.2): many accounts behind one address. */
+  voteIpDaily: { windowMs: 86_400_000, max: 60 },
+  /** Star and heart toggles (D02). */
+  interactions: { windowMs: 60_000, max: 30 },
   contact: { windowMs: 3_600_000, max: 5 },
   /** RUM beacons (POST /api/vitals): a few per page view. */
   vitals: { windowMs: 60_000, max: 30 },

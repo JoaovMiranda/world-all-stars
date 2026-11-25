@@ -38,3 +38,9 @@
   .facts-list { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 0.875rem; list-style: disc; }
   .evidence-quote { margin: 6px 0 0; padding: 6px 10px; border-left: 3px solid var(--accent); background: var(--surface-2); font-size: 0.8125rem; color: var(--text); }
 }
+/* Sport image (T4.4): Commons photo with its credit line, top of the sport page aside. */
+@layer components {
+  .sport-image { margin: 0; }
+  .sport-image img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-lg); border: 1px solid var(--border); background: var(--surface-2); }
+  .sport-image figcaption { margin-top: 6px; overflow-wrap: anywhere; }
+}

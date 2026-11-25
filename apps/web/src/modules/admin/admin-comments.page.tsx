@@ -66,6 +66,7 @@ function CommentDetail({ c }: { c: AdminComment }) {
           { key: 'at', term: adminText.common.created, detail: formatDateTime(c.at) },
           { key: 'likes', term: T.likes, detail: c.likes },
           { key: 'dislikes', term: T.dislikes, detail: c.dislikes },
+          { key: 'reports', term: T.reports, detail: c.reports ?? 0 },
           { key: 'replies', term: T.replies, detail: c.replies },
         ]}
       />
@@ -143,7 +144,7 @@ export function AdminCommentsPage() {
                         <StatusTag meta={FILTER_META[filterOf(c)]} />
                       </span>
                       <small>
-                        {T.dislikes}: {c.dislikes} · {T.likes}: {c.likes}
+                        {T.reports}: {c.reports ?? 0} · {T.dislikes}: {c.dislikes} · {T.likes}: {c.likes}
                       </small>
                     </>
                   )}

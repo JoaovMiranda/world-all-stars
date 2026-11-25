@@ -7,10 +7,14 @@ import {
   CommentIdParamsSchema,
   CommentsQuerySchema,
   CommentsResponseSchema,
+  EditCommentRequestSchema,
+  EditCommentResponseSchema,
   PostCommentRequestSchema,
   PostCommentResponseSchema,
   ReactToCommentRequestSchema,
   ReactToCommentResponseSchema,
+  ReportCommentRequestSchema,
+  ReportCommentResponseSchema,
 } from '../schemas/comment.schema';
 import { ContactRequestSchema, SubmissionResponseSchema, SuggestionRequestSchema } from '../schemas/contact.schema';
 import {
@@ -48,6 +52,8 @@ export const ParticipationApi = {
   comments: defineContract({ method: HttpMethod.Get, access: ApiAccess.Public, path: '/api/athletes/:slug/comments', summary: 'Comment threads', params: AthleteSlugParamsSchema, query: CommentsQuerySchema, response: CommentsResponseSchema }),
   postComment: defineContract({ method: HttpMethod.Post, access: ApiAccess.Reader, path: '/api/athletes/:slug/comments', summary: 'Post a comment or reply', params: AthleteSlugParamsSchema, body: PostCommentRequestSchema, response: PostCommentResponseSchema }),
   reactToComment: defineContract({ method: HttpMethod.Put, access: ApiAccess.Reader, path: '/api/comments/:id/reaction', summary: 'Like/dislike/undo', params: CommentIdParamsSchema, body: ReactToCommentRequestSchema, response: ReactToCommentResponseSchema }),
+  editComment: defineContract({ method: HttpMethod.Patch, access: ApiAccess.Reader, path: '/api/comments/:id', summary: 'Edit my comment within 10 minutes of posting it', params: CommentIdParamsSchema, body: EditCommentRequestSchema, response: EditCommentResponseSchema }),
+  reportComment: defineContract({ method: HttpMethod.Post, access: ApiAccess.Reader, path: '/api/comments/:id/report', summary: 'Report a comment to the moderators (once per reader)', params: CommentIdParamsSchema, body: ReportCommentRequestSchema, response: ReportCommentResponseSchema }),
   deleteComment: defineContract({ method: HttpMethod.Delete, access: ApiAccess.Reader, path: '/api/comments/:id', summary: 'Soft delete my comment', params: CommentIdParamsSchema, response: OkResponseSchema }),
   submitSuggestion: defineContract({ method: HttpMethod.Post, access: ApiAccess.Public, path: '/api/suggestions', summary: 'Suggest an athlete with source links', body: SuggestionRequestSchema, response: SubmissionResponseSchema }),
   myData: defineContract({ method: HttpMethod.Get, access: ApiAccess.Reader, path: '/api/me/data', summary: 'Terms acceptances and optional consents (E6)', response: MyDataResponseSchema }),

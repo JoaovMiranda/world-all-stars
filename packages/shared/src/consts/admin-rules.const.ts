@@ -1,5 +1,7 @@
 /** A7: a visible comment with at least this many dislikes enters the moderation queue (doc 20). */
 export const COMMENT_FLAG_MIN_DISLIKES = 5;
+/** A7: a visible comment reported by at least this many readers enters the moderation queue (T3.3). */
+export const COMMENT_FLAG_MIN_REPORTS = 1;
 /** A5: legal response window of a privacy request, in days (LGPD art. 19, doc 13). */
 export const PRIVACY_RESPONSE_DAYS = 15;
 /** A5: requests due within this many days are highlighted. */

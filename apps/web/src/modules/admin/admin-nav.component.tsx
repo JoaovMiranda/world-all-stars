@@ -4,6 +4,7 @@ import { adminSummaryQuery } from '@/data/endpoints/admin.query';
 import { useText } from '@/i18n/use-text.hook';
 
 import { ADMIN_MESSAGES } from './admin.const';
+import { ADMIN_CROSS_SPORT_MESSAGES } from './admin-cross-sport.const';
 import { ADMIN_MERGE_MESSAGES } from './admin-merge.const';
 import { ADMIN_NAV_GROUPS, ADMIN_SECTION_PATH } from './admin-routes.const';
 
@@ -11,6 +12,7 @@ import { ADMIN_NAV_GROUPS, ADMIN_SECTION_PATH } from './admin-routes.const';
 export function AdminNav() {
   const adminText = useText(ADMIN_MESSAGES);
   const mergeText = useText(ADMIN_MERGE_MESSAGES);
+  const crossSportText = useText(ADMIN_CROSS_SPORT_MESSAGES);
   const summary = adminSummaryQuery.useQuery();
   const pending = summary.data?.pending;
   return (
@@ -55,6 +57,18 @@ export function AdminNav() {
           <li>
             <Link to="/admin/merge" activeProps={{ 'aria-current': 'page' }}>
               <span>{mergeText.navLink}</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+      <div className="admin-nav-group" role="group" aria-labelledby="admin-nav-cross-sport">
+        <p className="admin-nav-label" id="admin-nav-cross-sport">
+          {crossSportText.navGroup}
+        </p>
+        <ul>
+          <li>
+            <Link to="/admin/cross-sport" activeProps={{ 'aria-current': 'page' }}>
+              <span>{crossSportText.navLink}</span>
             </Link>
           </li>
         </ul>

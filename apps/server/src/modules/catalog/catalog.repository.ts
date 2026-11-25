@@ -21,8 +21,8 @@ import type {
 
 type Row<X extends { $inferSelect: unknown }> = X['$inferSelect'];
 
-/** Athlete columns the catalog reads (the Wikidata QID comes from entity_external_ids, never the legacy column). */
-const { wikidataQid: _wikidataQid, ...ATHLETE_COLUMNS } = getTableColumns(T.athletes);
+/** Athlete columns the catalog reads (the Wikidata QID comes from entity_external_ids). */
+const ATHLETE_COLUMNS = getTableColumns(T.athletes);
 
 /**
  * Read model of the catalog: loads the aspects + athletes and everything tied to them in one go, from the universal

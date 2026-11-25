@@ -18,6 +18,14 @@ export class CommentsController extends BaseController {
     return this.service(CommentsService).reactToComment(this.user, params.id, body.reaction);
   }
 
+  edit({ params, body }: ContractInputOf<typeof ParticipationApi.editComment>) {
+    return this.service(CommentsService).editComment(this.user, params.id, body.body);
+  }
+
+  report({ params, body }: ContractInputOf<typeof ParticipationApi.reportComment>) {
+    return this.service(CommentsService).reportComment(this.user, params.id, body.reason);
+  }
+
   delete({ params }: ContractInputOf<typeof ParticipationApi.deleteComment>) {
     return this.service(CommentsService).deleteComment(this.user, params.id);
   }

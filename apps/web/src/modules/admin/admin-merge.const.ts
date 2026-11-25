@@ -34,7 +34,6 @@ export const ADMIN_MERGE_TEXT = {
     knownAs: 'Nome conhecido',
     fullName: 'Nome completo',
     slug: 'Slug da URL',
-    wikidataQid: 'QID no Wikidata',
     gender: 'Gênero',
     birthDate: 'Data de nascimento',
     birthYear: 'Ano de nascimento',

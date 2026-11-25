@@ -50,6 +50,7 @@ export const ADMIN_LABELS_TEXT_EN = {
     ranking_auto_publish_skipped: 'Auto-publish skipped',
     entity_merged: 'Entities merged',
     entity_unmerged: 'Merge undone',
+    tier_vote_flag_reviewed: 'Flagged account reviewed (tier votes)',
   },
   matchMode: { word: 'Whole word', contains: 'Also inside words' },
   locale: { 'pt-BR': 'Portuguese', en: 'English', es: 'Spanish' },

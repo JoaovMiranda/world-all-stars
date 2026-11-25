@@ -22,6 +22,8 @@ import { ADMIN_MESSAGES } from './admin.const';
 import { formatPercent } from './admin-format.helper';
 import { ADMIN_REASON } from './admin-queue.const';
 import type { QueueState } from './queue-state.type';
+import { TIER_VOTE_FLAGS_MESSAGES } from './tier-vote-flags.const';
+import { TierVoteFlags } from './tier-vote-flags.component';
 
 const SIGNALS = 'signals';
 
@@ -59,11 +61,12 @@ export function TierSignals({ state }: { state: QueueState }) {
   const T = useText(ADMIN_MESSAGES).tiers;
   const adminText = useText(ADMIN_MESSAGES);
   const labels = useText(DOMAIN_LABELS_MESSAGES);
+  const flagsText = useText(TIER_VOTE_FLAGS_MESSAGES);
   const query = adminTierSignalsQuery.useQuery();
   const [editing, setEditing] = useState<TierSignal | null>(null);
   return (
     <QueryBoundary query={query} loading={<SkeletonList rows={8} />}>
-      {({ items }) => {
+      {({ items, flags }) => {
         const onlySignals = state.status === SIGNALS;
         const signals = items.filter((s) => s.isSignal).length;
         return (
@@ -93,6 +96,7 @@ export function TierSignals({ state }: { state: QueueState }) {
                   sortValue: (s) => s.topOtherShare,
                 },
                 { key: 'votes', header: T.votes, cell: (s) => s.total, sortValue: (s) => s.total, align: 'end' },
+                { key: 'excluded', header: flagsText.excluded, cell: (s) => s.excludedVotes ?? 0, sortValue: (s) => s.excludedVotes ?? 0, align: 'end' },
                 {
                   key: 'signal',
                   header: T.signal,
@@ -111,6 +115,7 @@ export function TierSignals({ state }: { state: QueueState }) {
               ]}
             />
             <ChangeTierDialog row={editing} onClose={() => setEditing(null)} />
+            {flags && <TierVoteFlags flags={flags} />}
           </div>
         );
       }}

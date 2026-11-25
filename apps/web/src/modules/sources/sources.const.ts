@@ -80,6 +80,27 @@ export const SOURCES_TEXT = {
       { title: '6. Revenda', text: 'Feeds comerciais licenciados (Opta, Sportradar, GRID).' },
     ],
   },
+  licensing: {
+    title: 'Licenças e atribuição',
+    eyebrow: 'como usamos cada fonte',
+    intro: 'Toda fonte cuja licença pede crédito aparece com autor e licença onde os dados dela são mostrados. Fontes só de link não são copiadas.',
+    attributionLabel: 'Atribuição:',
+    shareAlikeTitle: 'Dados de futebol derivados: CC BY-SA 4.0',
+    shareAlike:
+      'Elencos, escalações, partidas e títulos de Copa do Mundo vêm da Fjelstul World Cup Database (© 2023 Joshua C. Fjelstul, Ph.D.), sob CC BY-SA 4.0. Os conjuntos derivados deles neste site (perfis de futebol, rankings de futebol e páginas de competição) são distribuídos sob a mesma licença CC BY-SA 4.0: você pode copiar e adaptar, desde que dê crédito e compartilhe pela mesma licença.',
+    imagesTitle: 'Imagens',
+    images:
+      'Fotos do Wikimedia Commons, só por link, com autor, licença e página do arquivo ao lado de cada imagem. Aceitamos apenas CC0, domínio público, CC BY e CC BY-SA.',
+    licenseLink: 'Texto da licença CC BY-SA 4.0',
+  },
+  /** Credit line of each source (by slug); sources not listed need none beyond the link. */
+  attribution: {
+    wikidata: 'Wikidata, CC0 (domínio público): crédito por cortesia; nenhum é exigido.',
+    'wikipedia-en': 'Fatos de artigos da Wikipedia em inglês (CC BY-SA 4.0); o texto não é republicado e cada fato traz o link do artigo.',
+    'wikipedia-pt': 'Fatos de artigos da Wikipédia em português (CC BY-SA 4.0); o texto não é republicado e cada fato traz o link do artigo.',
+    commons: 'Wikimedia Commons: licença por arquivo; autor e licença aparecem ao lado de cada imagem.',
+    fjelstul: '© 2023 Joshua C. Fjelstul, Ph.D. Fjelstul World Cup Database, CC BY-SA 4.0. Dados derivados também CC BY-SA 4.0.',
+  } as Record<string, string>,
   /** `commercialUse` of the registry (free text in the contract). Unknown values fall back to the raw key. */
   commercialUse: {
     yes: 'Uso comercial ok',

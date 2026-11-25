@@ -8,4 +8,6 @@ export interface DocSection {
   blocks?: readonly DocBlock[];
   /** Rich content after the blocks (links, tags, components). */
   children?: ReactNode;
+  /** Language of the section when it differs from the page (API content in a fallback language, WCAG 3.1.2). */
+  lang?: string | undefined;
 }

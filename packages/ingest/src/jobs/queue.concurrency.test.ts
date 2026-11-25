@@ -119,7 +119,7 @@ describe.skipIf(!process.env.DATABASE_URL)('job queue concurrency on Postgres (T
   // KNOWN BUG (T1.9 report): storeDocument is check-then-insert. Two workers fetching the same page at the same time
   // store it twice when revision_id is null (the unique index treats NULLs as distinct) and the loser throws a raw
   // unique violation when it is not. Remove `.fails` once document-store uses insert … on conflict + NULLS NOT DISTINCT.
-  it.fails('duplicate ingestion: the same document fetched by two workers at once is stored once', async () => {
+  it('duplicate ingestion: the same document fetched by two workers at once is stored once', async () => {
     const errors: unknown[] = [];
     for (const revisionId of [null, 'rev-1']) {
       for (let i = 0; i < 10; i++) {

@@ -374,6 +374,14 @@ export const LEGAL_DOCS_ES: LegalDocs = {
             kind: 'p',
             text: 'Seguimos las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.2, nivel AA, con el eMAG como referencia brasileña, como exige la Ley Brasileña de Inclusión (Ley 13.146/2015, art. 63).',
           },
+          {
+            kind: 'p',
+            text: 'Estado de conformidad: parcialmente conforme. La mayor parte del sitio cumple las WCAG 2.2 AA; las excepciones están en «Limitaciones conocidas», con la alternativa ofrecida para cada una.',
+          },
+          {
+            kind: 'p',
+            text: 'Declaración preparada el 18 de noviembre de 2026, a partir de la auditoría de abajo, y revisada el 24 de noviembre de 2026.',
+          },
         ],
       },
       {
@@ -426,9 +434,12 @@ export const LEGAL_DOCS_ES: LegalDocs = {
           {
             kind: 'list',
             items: [
+              'Gráficos: se dibujan en un canvas, así que los lectores de pantalla y el teclado no recorren los puntos uno a uno. Cada gráfico tiene un resumen en texto y los mismos datos en una tabla.',
               'Las barras doradas de los gráficos tienen poco contraste en el tema claro: los mismos datos están en una tabla al lado.',
-              'Las fotos vienen de Wikimedia Commons (servidas por nuestro propio servidor) y pueden tardar en la primera visita; el nombre del atleta siempre está en texto.',
-              'La interfaz está en portugués, inglés y español; parte del contenido de los atletas todavía existe solo en portugués (el sitio lo avisa cuando ocurre).',
+              'Globo de la página de inicio: es una imagen 3D interactiva que los lectores de pantalla no describen. La lista de países al lado tiene el mismo contenido y se usa solo con el teclado; el globo deja de girar cuando el sistema pide movimiento reducido.',
+              'Imágenes de terceros: las fotos y los logotipos vienen de Wikimedia Commons y de otras fuentes abiertas. Su texto alternativo es el nombre del atleta o de la organización, no una descripción de la imagen, y las fotos pueden tardar en la primera visita. Los créditos y las licencias siguen el original.',
+              'Idiomas: la interfaz está en portugués, inglés y español; parte del contenido de los atletas y las páginas de metodología de los rankings todavía existen solo en inglés (el sitio lo avisa cuando ocurre y marca el idioma del fragmento para los lectores de pantalla).',
+              'Los enlaces externos (Wikipedia, federaciones, bases de datos) llevan a sitios que no controlamos y que pueden no cumplir las WCAG 2.2 AA.',
             ],
           },
         ],
@@ -453,6 +464,14 @@ export const LEGAL_DOCS_ES: LegalDocs = {
           {
             kind: 'p',
             text: '¿Encontraste algo que impide o dificulta el uso? Envía un mensaje por Contacto, con el asunto «Otro asunto», indicando la página y lo que ocurrió. Respondemos en un plazo de 5 días hábiles.',
+          },
+          {
+            kind: 'list',
+            items: [
+              'La dirección (URL) de la página y lo que intentabas hacer.',
+              'Qué ocurrió y, si es posible, el navegador y la tecnología de apoyo que usaste (lector de pantalla, magnificador, control por voz).',
+              'Si lo prefieres, pide el contenido en otro formato: te enviamos la información en texto simple.',
+            ],
           },
         ],
       },

@@ -1,9 +1,8 @@
 // Cross-sport rules (D07): bands S–D without caps; an unmapped fact is a typed error, never a guess.
 import { describe, expect, it } from 'vitest';
-
+import { calculateCrossSportBands, groupByBand, unmappedCrossSportItems } from './cross-sport.helper';
 import type { CrossSportItem } from './cross-sport-item.interface';
 import type { CrossSportMapping } from './cross-sport-mapping.interface';
-import { calculateCrossSportBands, groupByBand, unmappedCrossSportItems } from './cross-sport.helper';
 import { UnmappedRecognitionError } from './unmapped-recognition.error';
 
 const mappings: CrossSportMapping[] = [

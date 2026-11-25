@@ -386,6 +386,14 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
           kind: 'p',
           text: 'Seguimos as Diretrizes de Acessibilidade para Conteúdo Web (WCAG) 2.2, nível AA, com o eMAG como referência nacional, como pede a Lei Brasileira de Inclusão (Lei 13.146/2015, art. 63).',
         },
+        {
+          kind: 'p',
+          text: 'Situação de conformidade: parcialmente conforme. A maior parte do site atende ao WCAG 2.2 AA; as exceções estão em “Limitações conhecidas”, com a alternativa oferecida para cada uma.',
+        },
+        {
+          kind: 'p',
+          text: 'Declaração preparada em 18/11/2026, com base na auditoria abaixo, e revisada em 24/11/2026.',
+        },
       ],
     },
     {
@@ -441,9 +449,12 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
         {
           kind: 'list',
           items: [
+            'Gráficos: são desenhados em canvas, então leitores de tela e teclado não percorrem os pontos um a um. Cada gráfico tem um resumo em texto e os mesmos dados em tabela.',
             'Barras douradas dos gráficos têm contraste baixo no tema claro: os mesmos dados estão em tabela ao lado.',
-            'Fotos vêm do Wikimedia Commons (servidas pelo nosso próprio servidor) e podem demorar na primeira visita; o nome do atleta está sempre em texto.',
-            'A interface está em português, inglês e espanhol; parte do conteúdo dos atletas ainda existe só em português (o site avisa quando isso acontece).',
+            'Globo da página inicial: é uma imagem 3D interativa que leitores de tela não descrevem. A lista de países ao lado traz o mesmo conteúdo e pode ser usada só com teclado; o globo para de girar quando o sistema pede movimento reduzido.',
+            'Imagens de terceiros: fotos e logotipos vêm do Wikimedia Commons e de outras fontes abertas. O texto alternativo traz o nome do atleta ou da organização, não uma descrição da imagem, e as fotos podem demorar na primeira visita. Créditos e licenças seguem o original.',
+            'Idiomas: a interface está em português, inglês e espanhol; parte do conteúdo dos atletas e as páginas de metodologia dos rankings ainda existem só em inglês (o site avisa quando isso acontece e marca o idioma do trecho para leitores de tela).',
+            'Links externos (Wikipedia, federações, bases de dados) levam a sites que não controlamos e que podem não atender ao WCAG 2.2 AA.',
           ],
         },
       ],
@@ -469,6 +480,14 @@ export const ACCESSIBILITY_DOC: DocumentContent = {
           kind: 'p',
           text: 'Encontrou algo que impede ou dificulta o uso? Mande uma mensagem pelo Contato, com o assunto “Outro assunto”, dizendo a página e o que aconteceu. Respondemos em até 5 dias úteis.',
         },
+        {
+          kind: 'list',
+          items: [
+            'O endereço (URL) da página e o que você estava tentando fazer.',
+            'O que aconteceu e, se possível, o navegador e a tecnologia assistiva usados (leitor de tela, ampliador, controle por voz).',
+            'Se preferir, peça o conteúdo em outro formato: enviamos a informação em texto simples.',
+          ],
+        },
       ],
     },
   ],
@@ -481,5 +500,5 @@ export const LEGAL_DOCS: Record<Locale, LegalDocs> = {
   es: LEGAL_DOCS_ES,
 };
 
-/** Date of the last accessibility audit (doc 14). */
-export const ACCESSIBILITY_AUDITED_AT = '2026-11-18';
+/** Date of the last review of the accessibility statement (T4.8), shown under its title. */
+export const ACCESSIBILITY_STATEMENT_REVIEWED_AT = '2026-11-24';

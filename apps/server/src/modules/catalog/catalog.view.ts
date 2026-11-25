@@ -33,6 +33,7 @@ import {
   type OrgTreeNode,
   type SourceOverview,
   type SourceRef,
+  SPORT_IMAGE_SECTION_KEY,
   type SportAssociation,
   type SportCard,
   type SportGroup,
@@ -611,6 +612,9 @@ export class CatalogView {
         .map((d) => ({ slug: d.slug, name: d.name, colorToken: d.colorToken }))
         .sort((a, b) => a.name.localeCompare(b.name)),
       programmes: this.sportProgrammes(s.id),
+      image: this.media(
+        this.rows.contentSections.find((c) => c.sportId === s.id && c.sectionKey === SPORT_IMAGE_SECTION_KEY && c.status === 'published')?.mediaLinkId ?? null,
+      ),
       sections: this.rows.contentSections
         .filter((c) => c.sportId === s.id && c.status === 'published')
         .sort((a, b) => a.sortOrder - b.sortOrder)
